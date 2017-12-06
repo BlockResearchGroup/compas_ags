@@ -1,3 +1,7 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+
 from time import time
 
 from numpy import abs
@@ -21,7 +25,7 @@ from scipy.sparse.linalg import inv
 from compas.numerical import connectivity_matrix
 from compas.numerical import equilibrium_matrix
 from compas.numerical import normrow
-from compas.numerical import de_solver
+from compas.numerical import devo_numpy
 
 from compas_ags.ags import identify_dof
 from compas_ags.ags import update_forcediagram
@@ -377,7 +381,7 @@ def diff_evo(form, force, bounds, population, steps, results, args):
         float: Optimum load-path value.
         array: Optimum qids
     """
-    fopt, qopt = de_solver(fint, bounds=bounds, population=population, iterations=steps, results=results, args=args)
+    fopt, qopt = devo_numpy(fint, bounds=bounds, population=population, iterations=steps, results=results, args=args)
     return fopt, qopt
 
 

@@ -1,3 +1,7 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+
 from numpy import array
 from numpy import float64
 
@@ -8,7 +12,7 @@ from compas.geometry import angle_vectors_xy
 from compas.numerical import connectivity_matrix
 from compas.numerical import normrow
 
-from compas_ags.ags import _update_formdiagram
+from .graphstatics import update_formdiagram
 
 
 __author__     = ['Tom Van Mele <van.mele@arch.ethz.ch>',
