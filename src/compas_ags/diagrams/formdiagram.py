@@ -1,16 +1,25 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+
 from compas.datastructures import FaceNetwork
 from compas.utilities import geometric_key2
-from compas.utilities import pairwise
 
-from compas.topology import network_is_2d
+from compas.topology import network_is_xy
 from compas.topology import network_is_planar
 from compas.topology import network_is_planar_embedding
+from compas.topology import network_embed_in_plane
 
 
 __author__    = ['Tom Van Mele', ]
 __copyright__ = 'Copyright 2014 - Block Research Group, ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'vanmelet@ethz.ch'
+
+
+__all__ = [
+    'FormDiagram'
+]
 
 
 class FormDiagram(FaceNetwork):
@@ -179,15 +188,12 @@ class FormDiagram(FaceNetwork):
     # Topological functionality
     # --------------------------------------------------------------------------
 
-    # move to graphstatics.py?
     def is_2d(self):
-        return network_is_2d(self)
+        return network_is_xy(self)
 
-    # move to graphstatics.py?
     def is_planar(self):
         return network_is_planar(self)
 
-    # move to graphstatics.py?
     def is_embedded(self):
         return network_is_planar_embedding(self)
 
@@ -195,12 +201,9 @@ class FormDiagram(FaceNetwork):
     # Geometric functionality
     # --------------------------------------------------------------------------
 
-    # move to graphstatics.py
     def embed(self, fix=None):
-        from compas.datastructures.network.algorithms.graph import embed_network_in_plane
-        embed_network_in_plane(self, fix=fix)
+        network_embed_in_plane(self, fix=fix)
 
-    # move to graphstatics.py
     def embedded(self):
         network = self.copy()
         network.embed()
@@ -213,15 +216,24 @@ class FormDiagram(FaceNetwork):
 
 if __name__ == '__main__':
 
-    from compas_ags.ags.graphstatics import identify_dof
-    from compas.visualization.plotters.networkplotter import NetworkPlotter
+    import compas_ags
 
-    form = FormDiagram.from_obj('../../_data/paper/fink.obj')
+    from compas_ags.ags import identify_dof
+    from compas.plotters import NetworkPlotter
 
-    # should this be attached to the form diagram?
+    form = FormDiagram.from_obj(compas_ags.get('paper/fink.obj'))
+
+    lines = []
+    for u, v in form.edges():
+        lines.append({
+            'start': form.vertex_coordinates(u),
+            'end'  : form.vertex_coordinates(v),
+            'color': '#cccccc',
+            'width': 0.5,
+        })
+
     form.identify_fixed()
 
-    # this should not be attached to the form diagram
     form.embed(fix=[1, 12])
 
     k, m, ind = identify_dof(form)
@@ -235,10 +247,12 @@ if __name__ == '__main__':
     vlabel = {key: key for key in form.vertices()}
     ecolor = {(u, v): '#00ff00' for index, (u, v) in enumerate(form.edges()) if index in ind}
     elabel = {(u, v): str(index) for index, (u, v) in enumerate(form.edges())}
+    ewidth = {(u, v): 3.0 for index, (u, v) in enumerate(form.edges()) if index in ind}
 
-    plotter = NetworkPlotter(form)
+    plotter = NetworkPlotter(form, figsize=(10.0, 7.0), fontsize=8)
 
+    plotter.draw_lines(lines)
     plotter.draw_vertices(facecolor=vcolor, text=vlabel, radius=0.3)
-    plotter.draw_edges(color=ecolor, text=elabel)
+    plotter.draw_edges(color=ecolor, text=elabel, width=ewidth)
 
     plotter.show()
