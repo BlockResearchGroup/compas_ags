@@ -1,0 +1,142 @@
+# Rhino
+
+v 0 10 0
+v 0 13 0
+cstype bspline
+deg 1
+curv 10 13 1 2
+parm u 10 10 13 13
+end
+v 0 5 0
+v 0 10 0
+cstype bspline
+deg 1
+curv 5 10 3 4
+parm u 5 5 10 10
+end
+v 0 0 0
+v 0 5 0
+cstype bspline
+deg 1
+curv 0 5 5 6
+parm u 0 0 5 5
+end
+v 10 0 0
+v 13 0 0
+cstype bspline
+deg 1
+curv 10 13 7 8
+parm u 10 10 13 13
+end
+v 5 0 0
+v 10 0 0
+cstype bspline
+deg 1
+curv 5 10 9 10
+parm u 5 5 10 10
+end
+v 0 0 0
+v 5 0 0
+cstype bspline
+deg 1
+curv 0 5 11 12
+parm u 0 0 5 5
+end
+v 0 -10 0
+v 0 -13 0
+cstype bspline
+deg 1
+curv 10 13 13 14
+parm u 10 10 13 13
+end
+v 0 -5 0
+v 0 -10 0
+cstype bspline
+deg 1
+curv 5 10 15 16
+parm u 5 5 10 10
+end
+v 0 0 0
+v 0 -5 0
+cstype bspline
+deg 1
+curv 0 5 17 18
+parm u 0 0 5 5
+end
+v -10 0 0
+v -13 0 0
+cstype bspline
+deg 1
+curv 10 13 19 20
+parm u 10 10 13 13
+end
+v -5 0 0
+v -10 0 0
+cstype bspline
+deg 1
+curv 5 10 21 22
+parm u 5 5 10 10
+end
+v 0 0 0
+v -5 0 0
+cstype bspline
+deg 1
+curv 0 5 23 24
+parm u 0 0 5 5
+end
+v 0 -5 0
+v -5 0 0
+cstype bspline
+deg 1
+curv 21.21320343559643 28.2842712474619 25 26
+parm u 21.21320343559643 21.21320343559643 28.2842712474619 28.2842712474619
+end
+v 5 0 0
+v 0 -5 0
+cstype bspline
+deg 1
+curv 14.14213562373095 21.21320343559643 27 28
+parm u 14.14213562373095 14.14213562373095 21.21320343559643 21.21320343559643
+end
+v 0 5 0
+v 5 0 0
+cstype bspline
+deg 1
+curv 7.071067811865476 14.14213562373095 29 30
+parm u 7.071067811865476 7.071067811865476 14.14213562373095 14.14213562373095
+end
+v -5 0 0
+v 0 5 0
+cstype bspline
+deg 1
+curv 0 7.071067811865476 31 32
+parm u 0 0 7.071067811865476 7.071067811865476
+end
+v 10 0 0
+v 0 -10 0
+cstype bspline
+deg 1
+curv 28.2842712474619 42.42640687119285 33 34
+parm u 28.2842712474619 28.2842712474619 42.42640687119285 42.42640687119285
+end
+v 0 10 0
+v 10 0 0
+cstype bspline
+deg 1
+curv 14.14213562373095 28.2842712474619 35 36
+parm u 14.14213562373095 14.14213562373095 28.2842712474619 28.2842712474619
+end
+v -10 0 0
+v 0 10 0
+cstype bspline
+deg 1
+curv 0 14.14213562373095 37 38
+parm u 0 0 14.14213562373095 14.14213562373095
+end
+v -10 0 0
+v 0 -10 0
+cstype bspline
+deg 1
+curv 0 14.14213562373095 39 40
+parm u 0 0 14.14213562373095 14.14213562373095
+end
