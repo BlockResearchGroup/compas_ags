@@ -1,3 +1,4 @@
+
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
@@ -12,14 +13,13 @@ from compas.geometry import angle_vectors_xy
 from compas.numerical import connectivity_matrix
 from compas.numerical import normrow
 
-from .graphstatics import update_formdiagram
+from compas_ags.ags.graphstatics import update_formdiagram
 
 
-__author__     = ['Tom Van Mele <van.mele@arch.ethz.ch>',
-                  'Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'van.mele@arch.ethz.ch'
+__author__    = ['Tom Van Mele <van.mele@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'van.mele@arch.ethz.ch'
 
 
 __all__ = [
