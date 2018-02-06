@@ -529,7 +529,7 @@ if __name__ == "__main__":
 
     # Optimise differential evolution
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=5, population=20, steps=1000)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=5, population=20, steps=500)
 
     # Optimise function and gradient
 

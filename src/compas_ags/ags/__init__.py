@@ -1,7 +1,7 @@
 """"""
 
-import graphstatics
-import loadpath
+from compas_ags.ags import graphstatics
+from compas_ags.ags import loadpath
 
 from .graphstatics import *
 from .loadpath import *
