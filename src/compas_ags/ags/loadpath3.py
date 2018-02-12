@@ -541,11 +541,18 @@ if __name__ == "__main__":
     lines = []
     for u, v in form.edges():
         qi = form.edge[u][v]['q']
+        isind = form.edge[u][v]['is_ind']
+        if isind:
+            colour = 'ff0000'
+        elif qi <= 0.1:
+            colour = 'eeeeee'
+        else:
+            colour = 'ee0000' if qi > 0 else '0000ff'
         lines.append({
             'start': form.vertex_coordinates(u),
             'end'  : form.vertex_coordinates(v),
-            'color': 'ff0000' if qi > 0 else '0000ff' ,
-            'width': scale * (qi + 0.001),
+            'color': colour,
+            'width': scale * (qi + 0.1),
         })
 
     plotter = NetworkPlotter(form, figsize=(10, 7), fontsize=8)
@@ -553,6 +560,6 @@ if __name__ == "__main__":
     plotter.draw_lines(lines)
     plotter.show()
 
-#    viewer = NetworkViewer(form)
-#    viewer.setup()
-#    viewer.show()
+    viewer = NetworkViewer(form)
+    viewer.setup()
+    viewer.show()
