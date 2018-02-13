@@ -23,4 +23,4 @@ for key in face_network.vertices():
 rs.EnableRedraw(True)
 rs.CurrentLayer('Default')
 
-network.to_json('H:/data/grid_non_orthogonal.json')
+network.to_json('H:/data/diagonal.json')
