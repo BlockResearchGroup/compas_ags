@@ -524,16 +524,15 @@ if __name__ == "__main__":
 
     # Form diagram
 
-    form = FormDiagram.from_json(compas_ags.get('grid_cross.json'))
-    form.update_default_vertex_attributes({'pz': 1})
+    form = FormDiagram.from_json(compas_ags.get('grid_non_orthogonal.json'))
 
     # Optimise differential evolution
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=5, population=20, steps=500)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=3000)
 
     # Optimise function and gradient
 
-    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=20, steps=300)
+    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=10, steps=300)
 
     # Plot
 
@@ -560,6 +559,6 @@ if __name__ == "__main__":
     plotter.draw_lines(lines)
     plotter.show()
 
-    viewer = NetworkViewer(form)
-    viewer.setup()
-    viewer.show()
+    # viewer = NetworkViewer(form)
+    # viewer.setup()
+    # viewer.show()
