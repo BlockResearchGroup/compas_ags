@@ -3,8 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from time import time
-
 from numpy import abs
 from numpy import array
 from numpy import dot
@@ -21,18 +19,7 @@ from numpy.linalg import pinv
 from scipy.optimize import fmin_slsqp
 from scipy.sparse import diags
 from scipy.sparse.linalg import spsolve
-
-# try:
-#    from numba import jit
-#    from numba import f8
-#    from numba import i8
-# except:
-#    pass
-
-try:
-    from scipy.sparse import csr_matrix
-except:
-    pass
+from scipy.sparse import csr_matrix
 
 from compas.numerical import connectivity_matrix
 from compas.numerical import devo_numpy
@@ -42,7 +29,7 @@ from compas.numerical import normrow
 from compas.numerical import nonpivots
 from compas.numerical import rref
 
-from compas_ags.ags import identify_dof
+from time import time
 
 import sympy
 import os
@@ -581,7 +568,7 @@ if __name__ == "__main__":
 
     # Form diagram
 
-    form = FormDiagram.from_json(compas_ags.get('grid_cross.json'))
+    form = FormDiagram.from_json(compas_ags.get('orthogonal.json'))
 
     # Optimise differential evolution
 
