@@ -135,7 +135,7 @@ def optimise_loadpath3(form, solver='devo', gradient=False, qmin=1e-6, qmax=10, 
 
     # Independent and dependent branches
 
-    ind = nonpivots(rref(sympy.Matrix(E).rref()[0].tolist()))
+    ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
     dep = list(set(range(form.number_of_edges())) - set(ind))
     for u, v in form.edges():
         if uv_i[(u, v)] in ind:
@@ -572,11 +572,11 @@ if __name__ == "__main__":
 
     # Optimise differential evolution
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=2000)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=500)
 
     # Optimise genetic algorithm
 
-    # fopt, qopt = optimise_loadpath3(form, solver='ga', qmax=10, population=20, steps=500)
+    # fopt, qopt = optimise_loadpath3(form, solver='ga', qmax=10, population=20, steps=50)
 
     # Optimise function and gradient
 
@@ -607,6 +607,6 @@ if __name__ == "__main__":
     plotter.draw_lines(lines)
     plotter.show()
 
-    # viewer = NetworkViewer(form)
-    # viewer.setup()
-    # viewer.show()
+    viewer = NetworkViewer(form)
+    viewer.setup()
+    viewer.show()
