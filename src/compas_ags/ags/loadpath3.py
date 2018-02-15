@@ -18,8 +18,10 @@ from numpy.linalg import pinv
 
 from scipy.optimize import fmin_slsqp
 from scipy.sparse import diags
-from scipy.sparse.linalg import spsolve
 from scipy.sparse import csr_matrix
+from scipy.sparse.linalg import spsolve
+
+import compas
 
 from compas.numerical import connectivity_matrix
 from compas.numerical import devo_numpy
@@ -27,7 +29,6 @@ from compas.numerical import equilibrium_matrix
 from compas.numerical import ga
 from compas.numerical import normrow
 from compas.numerical import nonpivots
-from compas.numerical import rref
 
 from time import time
 
@@ -90,7 +91,7 @@ def optimise_loadpath3(form, solver='devo', gradient=False, qmin=1e-6, qmax=10, 
     qid0 : list
         Initial starting point qid0 (for slsqp).
     polish : bool
-        Use L-BFGS-B polish.
+        Use L-BFGS-B polish in devo method.
 
     Returns
     -------
@@ -116,8 +117,7 @@ def optimise_loadpath3(form, solver='devo', gradient=False, qmin=1e-6, qmax=10, 
     # Vertices and edges
 
     n = form.number_of_vertices()
-    form.identify_fixed()
-    fixed = [k_i[key] for key in form.fixed()]
+    fixed = [k_i[key] for key in form.vertices_where({'is_fixed': True})]
     free = list(set(range(form.number_of_vertices())) - set(fixed))
     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
 
@@ -240,7 +240,7 @@ def fint(qid, *args):
     f = dot(abs(q.transpose()), l2)
 
     if penalty and any(q[:] < 0):
-        return 10.**6 + sum(q[q < 0]**2)
+        return float(f[0]) + sum(q[q < 0]**2)
     return float(f[0])
 
 
@@ -505,8 +505,6 @@ def diff_ga(form, bounds, population, steps, args):
 
     """
 
-    import compas
-
     num_var = len(bounds)
     num_bin_dig  = [10] * num_var
     output_path = os.path.join(compas.TEMP, 'ga_out/')
@@ -568,7 +566,7 @@ def diff_ga(form, bounds, population, steps, args):
 # Debugging
 # ==============================================================================
 
-if __name__ == "__main__":
+if __name__ == "__main__":1
 
     import compas_ags
 
@@ -578,21 +576,23 @@ if __name__ == "__main__":
 
     from compas.viewers import NetworkViewer
 
+    fnm = 'C:/compas_ags/data/loadpath/dense.json'
+
     # Form diagram
 
-    form = FormDiagram.from_json(compas_ags.get('non_orthogonal.json'))
+    form = FormDiagram.from_json(fnm)
 
     # Optimise differential evolution
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=1000)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=5, population=20, steps=2000)
 
     # Optimise genetic algorithm
 
-    # fopt, qopt = optimise_loadpath3(form, solver='ga', qmax=10, population=20, steps=10000)
+    # fopt, qopt = optimise_loadpath3(form, solver='ga', qmax=5, population=20, steps=2000)
 
     # Optimise function and gradient
 
-    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=10, steps=300)
+    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=5, steps=300)
 
     # Plot
 
@@ -619,6 +619,24 @@ if __name__ == "__main__":
     plotter.draw_lines(lines)
     plotter.show()
 
-    # viewer = NetworkViewer(form)
-    # viewer.setup()
-    # viewer.show()
+    viewer = NetworkViewer(form)
+    viewer.setup()
+    viewer.show()
+
+    form.to_json(fnm)
+
+    # high qmax creates step jumps
+    # 3 to 4 historic, quite dense, then move to other stuff
+    # new pins
+    # crosses with central vertex causes mini domes
+    # need to investigate the behaviour, double check how the ind are working correctly
+    # quads or braces best shape?
+    # force a qmin = 0.01, 0.1, 1?
+    # heavy influence from local minima, longer DE can be better now with new penalty? slsqp wont make it worse
+    # longer devo reduces effect? higher population?
+    # find a symmetry solution, will take time, can do a manual post-processing, let us be informed, make a function for this, this is ok for simple patterns, large complex patterns you wont know the things to manipulate, less engineering judgement, look at the outcome/architecture
+    # new penalty function
+    # multiprocess devo
+    # bypass area loads for manual entry, especially on overlapping edges, bracing shouldnt influence load, can cause asymmetry
+    # overlap braces cause discontinuities, lets not use them
+    # fan required some lateral members for low forces? worked up from simple then to complex, has low dof
