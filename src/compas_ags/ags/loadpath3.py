@@ -98,6 +98,11 @@ def optimise_loadpath3(form, solver='devo', gradient=False, qmin=1e-6, qmax=10, 
 
     """
 
+    print('\n' + '-' * 50)
+    print('Load-path optimisation started')
+
+    tic = time()
+
     # Mapping
 
     k_i = form.key_index()
@@ -158,9 +163,11 @@ def optimise_loadpath3(form, solver='devo', gradient=False, qmin=1e-6, qmax=10, 
     bounds = [[qmin, qmax]] * k
     args = (q, ind, dep, _AdinvAid, C, Ci, Cit, Cf, pzfree, z, fixed, free, lh2)
 
+    print('Set-up completed in {0:.3f}s'.format(time() - tic))
+
     # Start optimisation
 
-    print('\n' + '-' * 50)
+    print('-' * 50)
 
     if solver == 'devo':
 
@@ -568,11 +575,11 @@ if __name__ == "__main__":
 
     # Form diagram
 
-    form = FormDiagram.from_json(compas_ags.get('orthogonal.json'))
+    form = FormDiagram.from_json(compas_ags.get('non_orthogonal.json'))
 
     # Optimise differential evolution
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=500)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=1000)
 
     # Optimise genetic algorithm
 
@@ -591,15 +598,15 @@ if __name__ == "__main__":
         isind = form.edge[u][v]['is_ind']
         if isind:
             colour = 'ff0000'
-        elif qi <= 0.1:
+        elif qi <= 0.01:
             colour = 'eeeeee'
         else:
-            colour = 'ffaaaa' if qi > 0 else '0000ff'
+            colour = 'ff8784' if qi > 0 else '0000ff'
         lines.append({
             'start': form.vertex_coordinates(u),
             'end'  : form.vertex_coordinates(v),
             'color': colour,
-            'width': scale * (qi + 0.1),
+            'width': scale * (qi + 0.5),
         })
 
     plotter = NetworkPlotter(form, figsize=(10, 7), fontsize=8)
@@ -607,6 +614,6 @@ if __name__ == "__main__":
     plotter.draw_lines(lines)
     plotter.show()
 
-    viewer = NetworkViewer(form)
-    viewer.setup()
-    viewer.show()
+    # viewer = NetworkViewer(form)
+    # viewer.setup()
+    # viewer.show()
