@@ -573,19 +573,19 @@ if __name__ == "__main__":
 
     # Form diagram
 
-    form = FormDiagram.from_json(compas_ags.get('dia.json'))
+    form = FormDiagram.from_json(compas_ags.get('fan.json'))
 
     # Optimise differential evolution
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=10000)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=1000)
 
     # Optimise genetic algorithm
 
-    # fopt, qopt = optimise_loadpath3(form, solver='ga', qmax=10, population=20, steps=1000)
+    # fopt, qopt = optimise_loadpath3(form, solver='ga', qmax=10, population=20, steps=10000)
 
     # Optimise function and gradient
 
-    # fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=10, steps=300)
+    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=10, steps=300)
 
     # Plot
 
@@ -612,6 +612,6 @@ if __name__ == "__main__":
     plotter.draw_lines(lines)
     plotter.show()
 
-    # viewer = NetworkViewer(form)
-    # viewer.setup()
-    # viewer.show()
+    viewer = NetworkViewer(form)
+    viewer.setup()
+    viewer.show()
