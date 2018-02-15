@@ -573,11 +573,11 @@ if __name__ == "__main__":
 
     # Form diagram
 
-    form = FormDiagram.from_json(compas_ags.get('non_orthogonal.json'))
+    form = FormDiagram.from_json(compas_ags.get('dia.json'))
 
     # Optimise differential evolution
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=1000)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=10000)
 
     # Optimise genetic algorithm
 
@@ -585,7 +585,7 @@ if __name__ == "__main__":
 
     # Optimise function and gradient
 
-    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=10, steps=300)
+    # fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=10, steps=300)
 
     # Plot
 
