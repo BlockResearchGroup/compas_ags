@@ -25,4 +25,4 @@ for key in network.vertices():
 rs.EnableRedraw(True)
 rs.CurrentLayer('Default')
 
-network.to_json('H:/data/diagonal.json')
+network.to_json('H:/data/fan.json')
