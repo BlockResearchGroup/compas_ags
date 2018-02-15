@@ -79,7 +79,8 @@ def compute_loadpath3(form, force):
     return l.T.dot(f)[0, 0]
 
 
-def optimise_loadpath3(form, solver='devo', gradient=False, qmin=1e-6, qmax=10, population=20, steps=100, qid0=None):
+def optimise_loadpath3(form, solver='devo', gradient=False, qmin=1e-6, qmax=10, population=20, steps=100, qid0=None,
+                       polish=0):
 
     """Finds the optimised loadpath for a FormDiagram with given loads.
 
@@ -101,6 +102,8 @@ def optimise_loadpath3(form, solver='devo', gradient=False, qmin=1e-6, qmax=10, 
         Number of iteration steps.
     qid0 : list
         Initial starting point qid0 (for slsqp).
+    polish : bool
+        Use L-BFGS-B polish.
 
     Returns
     -------
@@ -178,7 +181,7 @@ def optimise_loadpath3(form, solver='devo', gradient=False, qmin=1e-6, qmax=10, 
     if solver == 'devo':
 
         args += (1,)
-        fopt, qopt = diff_evo(form, bounds, population, steps, args)
+        fopt, qopt = diff_evo(form, bounds, population, steps, polish, args)
 
     if solver == 'ga':
 
@@ -451,7 +454,7 @@ def slsqp(form, qid0, bounds, gradient, iterations, args):
 #    return g
 
 
-def diff_evo(form, bounds, population, steps, args):
+def diff_evo(form, bounds, population, steps, polish, args):
 
     """ Finds the optimised loadpath for a FormDiagram with given loads, by Differential Evolution.
 
@@ -465,6 +468,8 @@ def diff_evo(form, bounds, population, steps, args):
         Number of agents.
     steps : int
         Number of iteration steps.
+    polish : bool
+        Use L-BFGS-B polish.
     args : tuple
         Sequence of additional arguments.
 
@@ -477,7 +482,7 @@ def diff_evo(form, bounds, population, steps, args):
 
     """
 
-    return devo_numpy(fn=fint, bounds=bounds, population=population, generations=steps, args=args)
+    return devo_numpy(fn=fint, bounds=bounds, population=population, generations=steps, polish=polish, args=args)
 
 
 def diff_ga(form, bounds, population, steps, args):
@@ -518,7 +523,7 @@ def diff_ga(form, bounds, population, steps, args):
 
     ga_ = ga(fint, 'min', num_var, bounds, num_gen=steps, num_pop=population, num_elite=elites,
              num_bin_dig=num_bin_dig, output_path=output_path, min_fit=0.000001, mutation_probability=0.03,
-             fargs=args)
+             fargs=args, print_refresh=10)
 
     index = ga_.best_individual_index
     qopt = ga_.current_pop['scaled'][index]
@@ -581,15 +586,15 @@ if __name__ == "__main__":
 
     # Form diagram
 
-    form = FormDiagram.from_json(compas_ags.get('diagonal.json'))
+    form = FormDiagram.from_json(compas_ags.get('non_orthogonal.json'))
 
     # Optimise differential evolution
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=500)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=10, population=20, steps=1000)
 
     # Optimise genetic algorithm
 
-    # fopt, qopt = optimise_loadpath3(form, solver='ga', qmax=10, population=20, steps=50)
+    # fopt, qopt = optimise_loadpath3(form, solver='ga', qmax=10, population=20, steps=1000)
 
     # Optimise function and gradient
 
@@ -620,6 +625,6 @@ if __name__ == "__main__":
     plotter.draw_lines(lines)
     plotter.show()
 
-    viewer = NetworkViewer(form)
-    viewer.setup()
-    viewer.show()
+    # viewer = NetworkViewer(form)
+    # viewer.setup()
+    # viewer.show()
