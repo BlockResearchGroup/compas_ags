@@ -9,7 +9,7 @@ import json
 
 # In
 
-fnm = 'H:/data/loadpath/dense.json'
+fnm = 'H:/data/loadpath/fan.json'
 form = FormDiagram.from_json(fnm)
 
 artist = NetworkArtist(form, layer='In')
@@ -31,14 +31,12 @@ rs.LayerVisible('In', False)
 #rs.EnableRedraw(False)
 #rs.CurrentLayer('Out')
 #rs.DeleteObjects(rs.ObjectsByLayer('Out'))
-
+#
 #for uv in form.edges():
 #    u, v = uv
 #    q = form.get_edge_attribute(uv, 'q')
 #    sp = form.vertex_coordinates(u)
 #    ep = form.vertex_coordinates(v)
-#    sp[2] = 0
-#    ep[2] = 0
 #    id = rs.AddLine(sp, ep)
 #    rs.ObjectName(id, str(q))
 #    

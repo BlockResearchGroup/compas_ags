@@ -32,7 +32,7 @@ rs.CurrentLayer('Dots')
 for key in network.vertices():
     xyz = network.vertex_coordinates(key)
     A = face_network.vertex_area(key=key)
-#    A = 1.
+    A = 1.
     network.vertex[key]['pz'] = A
     rs.AddTextDot('{0:.1f}'.format(A), xyz) 
 
@@ -43,4 +43,4 @@ rs.CurrentLayer('Lines')
 
 # Save
 
-network.to_json('C:/compas_ags/data/loadpath/dense.json')
+network.to_json('H:/data/loadpath/diagonal.json')

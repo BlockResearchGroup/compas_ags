@@ -618,7 +618,7 @@ if __name__ == "__main__":
 
     from compas.viewers import NetworkViewer
 
-    fnm = 'C:/compas_ags/data/loadpath/dense.json'
+    fnm = '/al/compas_ags/data/loadpath/fan.json'
 
     # Form diagram
 
@@ -626,15 +626,15 @@ if __name__ == "__main__":
 
     # Optimise differential evolution
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=5, population=20, steps=1000)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=3, population=20, steps=1000)
 
     # Optimise function and gradient
 
-    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=5, steps=300)
+    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=3, steps=300)
 
     # Save
 
-    # form.to_json(fnm)
+    form.to_json(fnm)
 
     # Plot
 
@@ -665,18 +665,8 @@ if __name__ == "__main__":
     viewer.setup()
     viewer.show()
 
-    # high qmax creates step jumps
-    # 3 to 4 historic, quite dense, then move to other stuff
-    # new pins
-    # crosses with central vertex causes mini domes
     # need to investigate the behaviour, double check how the ind are working correctly
-    # quads or braces best shape?
-    # force a qmin = 0.01, 0.1, 1?
     # heavy influence from local minima, longer DE can be better now with new penalty? slsqp wont make it worse
-    # longer devo reduces effect? higher population?
     # find a symmetry solution, will take time, can do a manual post-processing, let us be informed, make a function for this, this is ok for simple patterns, large complex patterns you wont know the things to manipulate, less engineering judgement, look at the outcome/architecture
-    # new penalty function
     # multiprocess devo
-    # bypass area loads for manual entry, especially on overlapping edges, bracing shouldnt influence load, can cause asymmetry
-    # overlap braces cause discontinuities, lets not use them
     # fan required some lateral members for low forces? worked up from simple then to complex, has low dof
