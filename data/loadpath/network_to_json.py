@@ -1,3 +1,8 @@
+
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 from compas.datastructures import Network
 from compas.datastructures import FaceNetwork
 from compas.topology import network_find_faces
@@ -5,10 +10,12 @@ from compas.utilities import geometric_key
 
 import rhinoscriptsyntax as rs
 
-# Clear
 
-rs.EnableRedraw(False)
-rs.DeleteObjects(rs.ObjectsByLayer('Dots'))
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'liew@arch.ethz.ch'
+
 
 # Networks
 
@@ -28,16 +35,16 @@ for guid in rs.ObjectsByLayer('Pins'):
 
 # Loads
 
+rs.EnableRedraw(False)
+rs.DeleteObjects(rs.ObjectsByLayer('Dots'))
 rs.CurrentLayer('Dots')
+
 for key in network.vertices():
-    xyz = network.vertex_coordinates(key)
     A = face_network.vertex_area(key=key)
-    A = 1.
+#    A = 1.
     network.vertex[key]['pz'] = A
-    rs.AddTextDot('{0:.1f}'.format(A), xyz) 
-
-# Return
-
+    rs.AddTextDot('{0:.1f}'.format(A), network.vertex_coordinates(key)) 
+    
 rs.EnableRedraw(True)
 rs.CurrentLayer('Lines')
 

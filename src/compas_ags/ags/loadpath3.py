@@ -36,7 +36,7 @@ import sympy
 import os
 
 
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tom Van Mele <van.mele@arch.ethz.ch>', ]
+__author__    = ['Andrew Liew <liew@arch.ethz.ch>', 'Tom Van Mele <van.mele@arch.ethz.ch>']
 __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
@@ -277,7 +277,11 @@ def fint(qid, *args):
     """
 
     q, ind, dep, _AdinvAid, C, Ci, Cit, Cf, pzfree, z, fixed, free, lh2, penalty = args
-    z = z_from_qid(z, q, qid, ind, dep, Ci, Cit, Cf, _AdinvAid, free, fixed, pzfree)
+    q[ind, 0] = qid
+    q[dep] = _AdinvAid.dot(q[ind])
+    Q = diags(q[:, 0])
+    b = pzfree
+    z[free] = spsolve(Cit.dot(Q).dot(Ci), b)
     l2 = lh2 + C.dot(z[:, newaxis])**2
     f = dot(abs(q.transpose()), l2)
 
@@ -610,15 +614,13 @@ def diff_ga(form, bounds, population, steps, args):
 
 if __name__ == "__main__":
 
-    import compas_ags
-
     from compas_ags.diagrams import FormDiagram
 
     from compas.plotters import NetworkPlotter
 
     from compas.viewers import NetworkViewer
 
-    fnm = '/al/compas_ags/data/loadpath/fan.json'
+    fnm = '/al/compas_ags/data/loadpath/orthogonal.json'
 
     # Form diagram
 
@@ -626,15 +628,15 @@ if __name__ == "__main__":
 
     # Optimise differential evolution
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=3, population=20, steps=1000)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=5, population=50, steps=2000)
 
     # Optimise function and gradient
 
-    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=3, steps=300)
+    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=5, steps=300)
 
     # Save
 
-    form.to_json(fnm)
+    # form.to_json(fnm)
 
     # Plot
 
@@ -661,12 +663,6 @@ if __name__ == "__main__":
     plotter.draw_lines(lines)
     plotter.show()
 
-    viewer = NetworkViewer(form)
-    viewer.setup()
-    viewer.show()
-
-    # need to investigate the behaviour, double check how the ind are working correctly
-    # heavy influence from local minima, longer DE can be better now with new penalty? slsqp wont make it worse
-    # find a symmetry solution, will take time, can do a manual post-processing, let us be informed, make a function for this, this is ok for simple patterns, large complex patterns you wont know the things to manipulate, less engineering judgement, look at the outcome/architecture
-    # multiprocess devo
-    # fan required some lateral members for low forces? worked up from simple then to complex, has low dof
+    # viewer = NetworkViewer(form)
+    # viewer.setup()
+    # viewer.show()
