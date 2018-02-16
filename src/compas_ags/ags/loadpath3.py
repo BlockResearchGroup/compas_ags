@@ -216,6 +216,46 @@ def optimise_loadpath3(form, solver='devo', gradient=False, qmin=1e-6, qmax=10, 
     return fopt, qopt
 
 
+def z_from_form(form):
+
+    # Mapping
+
+    i_k = form.index_key()
+    k_i = form.key_index()
+
+    # Vertices and edges
+
+    n = form.number_of_vertices()
+    fixed = [k_i[key] for key in form.vertices_where({'is_fixed': True})]
+    free = list(set(range(form.number_of_vertices())) - set(fixed))
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+
+    # Connectivity and equillibrium matrices
+
+    C = connectivity_matrix(edges, 'csr')
+    Ci = C[:, free]
+    Cit = Ci.transpose()
+
+    # Co-ordinates and loads
+
+    pz = zeros(n)
+    xyz = zeros((n, 3))
+    for key, vertex in form.vertex.items():
+        i = k_i[key]
+        xyz[i, :] = form.vertex_coordinates(key)
+        pz[i] = vertex.get('pz')
+    z = xyz[:, 2]
+    pzfree = pz[free]
+    q = array(form.q())
+
+    # Update z
+
+    Q = diags(q)
+    z[free] = spsolve(Cit.dot(Q).dot(Ci), pzfree)
+    for i in range(n):
+        form.vertex[i_k[i]]['z'] = z[i]
+
+
 def fint(qid, *args):
 
     """ Calculates the internal loadpath for a given qid set.
@@ -566,7 +606,7 @@ def diff_ga(form, bounds, population, steps, args):
 # Debugging
 # ==============================================================================
 
-if __name__ == "__main__":1
+if __name__ == "__main__":
 
     import compas_ags
 
@@ -584,15 +624,19 @@ if __name__ == "__main__":1
 
     # Optimise differential evolution
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=5, population=20, steps=2000)
-
-    # Optimise genetic algorithm
-
-    # fopt, qopt = optimise_loadpath3(form, solver='ga', qmax=5, population=20, steps=2000)
+    # fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=5, population=20, steps=1000)
 
     # Optimise function and gradient
 
-    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=5, steps=300)
+    # fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=5, steps=300)
+
+    # Analyse
+
+    z_from_form(form)
+
+    # Save
+
+    # form.to_json(fnm)
 
     # Plot
 
@@ -622,8 +666,6 @@ if __name__ == "__main__":1
     viewer = NetworkViewer(form)
     viewer.setup()
     viewer.show()
-
-    form.to_json(fnm)
 
     # high qmax creates step jumps
     # 3 to 4 historic, quite dense, then move to other stuff
