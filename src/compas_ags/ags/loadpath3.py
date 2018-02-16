@@ -255,6 +255,8 @@ def z_from_form(form):
     for i in range(n):
         form.vertex[i_k[i]]['z'] = z[i]
 
+    return form
+
 
 def fint(qid, *args):
 
@@ -624,15 +626,11 @@ if __name__ == "__main__":
 
     # Optimise differential evolution
 
-    # fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=5, population=20, steps=1000)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', qmax=5, population=20, steps=1000)
 
     # Optimise function and gradient
 
-    # fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=5, steps=300)
-
-    # Analyse
-
-    z_from_form(form)
+    fopt, qopt = optimise_loadpath3(form, solver='slsqp', qid0=qopt, qmax=5, steps=300)
 
     # Save
 

@@ -1,6 +1,7 @@
 from compas_ags.diagrams import FormDiagram
 from compas_rhino.helpers import NetworkArtist
 from compas.utilities import geometric_key
+from compas.utilities import XFunc
 
 import rhinoscriptsyntax as rs
 import json
@@ -8,7 +9,7 @@ import json
 
 # In
 
-fnm = 'C:/compas_ags/data/loadpath/dense.json'
+fnm = 'H:/data/loadpath/dense.json'
 form = FormDiagram.from_json(fnm)
 
 artist = NetworkArtist(form, layer='In')
@@ -59,6 +60,10 @@ for guid in rs.ObjectsByLayer('Out'):
     except:
         form.edge[v][u]['q'] = q
 
-# Save
+# Analyse
 
-form.to_json('C:/compas_ags/data/loadpath/dense.json')
+form = XFunc('compas_ags.ags.loadpath3.z_from_form')(form)
+artist = NetworkArtist(form, layer='Analysis')
+artist.clear_layer()
+artist.draw_vertices()
+artist.draw_edges()
