@@ -7,30 +7,24 @@ import rhinoscriptsyntax as rs
 import json
 
 
-# In
+# Plot Thrust Network
 
-fnm = 'H:/data/loadpath/diagonal.json'
+fnm = 'C:/compas_ags/data/loadpath/fan.json'
 form = FormDiagram.from_json(fnm)
 
-artist = NetworkArtist(form, layer='In')
+artist = NetworkArtist(form, layer='Thrust')
 artist.clear_layer()
 artist.draw_vertices()
 artist.draw_edges()
 
-text = {}
-for uv in form.edges():
-    text[uv] = '{0:.2f}'.format(form.get_edge_attribute(uv, 'q'))
-#artist.draw_edgelabels(text)
-
 form.set_vertices_attributes(form.vertices(), {'z': 0})
+rs.LayerVisible('Thrust', False)
 
-rs.LayerVisible('In', False)
-
-# Copy form
+# Copy Form
 
 #rs.EnableRedraw(False)
-#rs.CurrentLayer('Out')
-#rs.DeleteObjects(rs.ObjectsByLayer('Out'))
+#rs.CurrentLayer('Copy')
+#rs.DeleteObjects(rs.ObjectsByLayer('Copy'))
 #
 #for uv in form.edges():
 #    u, v = uv
@@ -45,23 +39,27 @@ rs.LayerVisible('In', False)
 # Analyse
 
 #gkey_key = form.gkey_key()
-#for guid in rs.ObjectsByLayer('Out'):
+#for guid in rs.ObjectsByLayer('Copy'):
 #    q = float(rs.ObjectName(guid))
-#    xyz_sp = rs.CurveStartPoint(guid)
-#    xyz_ep = rs.CurveEndPoint(guid)
-#    gkey_sp = geometric_key(xyz_sp)
-#    gkey_ep = geometric_key(xyz_ep)
-#    u = gkey_key[gkey_sp]
-#    v = gkey_key[gkey_ep]
+#    u = gkey_key[geometric_key(rs.CurveStartPoint(guid))]
+#    v = gkey_key[geometric_key(rs.CurveEndPoint(guid))]
 #    try:
 #        form.edge[u][v]['q'] = q
 #    except:
 #        form.edge[v][u]['q'] = q
-
-# Analyse
-
+#
 #form = XFunc('compas_ags.ags.loadpath3.z_from_form')(form)
+#
+#f = 0
+#for u, v in form.edges():
+#    l = form.edge_length(u, v)
+#    q = form.edge[u][v]['q']
+#    f += q * l * l
+#print(int(f))
+#
 #artist = NetworkArtist(form, layer='Analysis')
 #artist.clear_layer()
 #artist.draw_vertices()
 #artist.draw_edges()
+
+#form.to_json(fnm)

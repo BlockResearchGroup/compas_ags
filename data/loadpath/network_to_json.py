@@ -23,7 +23,7 @@ guids = rs.ObjectsByLayer('Lines')
 lines = [[rs.CurveStartPoint(guid), rs.CurveEndPoint(guid)] for guid in guids]
 network = Network.from_lines(lines)
 face_network = FaceNetwork.from_data(network.to_data())
-network_find_faces(face_network, breakpoints=face_network.leaves())
+network_find_faces(face_network)
 
 # Pins
 
@@ -39,15 +39,20 @@ rs.EnableRedraw(False)
 rs.DeleteObjects(rs.ObjectsByLayer('Dots'))
 rs.CurrentLayer('Dots')
 
+At = 0
 for key in network.vertices():
     A = face_network.vertex_area(key=key)
 #    A = 1.
+    if network.vertex_degree(key) == 3:  # temp hack
+        A = 1.
+    At += A
     network.vertex[key]['pz'] = A
     rs.AddTextDot('{0:.1f}'.format(A), network.vertex_coordinates(key)) 
+print(At)
     
 rs.EnableRedraw(True)
 rs.CurrentLayer('Lines')
 
 # Save
 
-network.to_json('H:/data/loadpath/diagonal.json')
+network.to_json('C:/compas_ags/data/loadpath/fan.json')
