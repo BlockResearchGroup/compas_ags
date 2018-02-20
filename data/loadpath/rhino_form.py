@@ -9,8 +9,15 @@ import json
 
 # Plot Thrust Network
 
-fnm = 'C:/compas_ags/data/loadpath/fan.json'
+fnm = 'H:/data/loadpath/arches.json'
 form = FormDiagram.from_json(fnm)
+
+f = 0
+for u, v in form.edges():
+    l = form.edge_length(u, v)
+    q = form.edge[u][v]['q']
+    f += q * l * l
+print(int(f))
 
 artist = NetworkArtist(form, layer='Thrust')
 artist.clear_layer()
