@@ -592,7 +592,7 @@ def randomise_form(form):
 def worker(sequence):
 
     i, form = sequence
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=50, steps=1000, printout=0)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=50, steps=100000, printout=0)
     print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
 
     return (fopt, form)
@@ -619,38 +619,40 @@ def optimise_multi(form, trials=10):
 
 if __name__ == "__main__":
 
-    from compas.plotters import NetworkPlotter
-    from compas.viewers import NetworkViewer
-
-    fnm = '/al/compas_ags/data/loadpath/arches.json'
+    # fnm = '/al/compas_ags/data/loadpath/arches.json'
+    fnm = '/cluster/home/liewa/compas_ags/data/loadpath/arches.json'
     form = FormDiagram.from_json(fnm)
 
     # fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=100)
-    form = optimise_multi(form, trials=50)
+    form = optimise_multi(form, trials=500)
 
     form.to_json(fnm)
 
-    lines = []
-    qmax = max(form.q())
-    for u, v in form.edges():
-        qi = form.edge[u][v].get('q', 1)
-        if form.edge[u][v]['is_ind']:
-            colour = 'ff0000'
-        elif qi <= 0.001:
-            colour = 'eeeeee'
-        else:
-            colour = 'ff8784' if qi > 0 else '0000ff'
-        lines.append({
-            'start': form.vertex_coordinates(u),
-            'end'  : form.vertex_coordinates(v),
-            'color': colour,
-            'width': (qi / qmax + 0.2) * 10,
-        })
+    # from compas.plotters import NetworkPlotter
 
-    plotter = NetworkPlotter(form, figsize=(10, 7), fontsize=8)
-    plotter.draw_vertices(facecolor={key: '#aaaaaa' for key in form.fixed()}, radius=0.1)
-    plotter.draw_lines(lines)
-    plotter.show()
+    # lines = []
+    # qmax = max(form.q())
+    # for u, v in form.edges():
+    #     qi = form.edge[u][v].get('q', 1)
+    #     if form.edge[u][v]['is_ind']:
+    #         colour = 'ff0000'
+    #     elif qi <= 0.001:
+    #         colour = 'eeeeee'
+    #     else:
+    #         colour = 'ff8784' if qi > 0 else '0000ff'
+    #     lines.append({
+    #         'start': form.vertex_coordinates(u),
+    #         'end'  : form.vertex_coordinates(v),
+    #         'color': colour,
+    #         'width': (qi / qmax + 0.2) * 10,
+    #     })
+
+    # plotter = NetworkPlotter(form, figsize=(10, 7), fontsize=8)
+    # plotter.draw_vertices(facecolor={key: '#aaaaaa' for key in form.fixed()}, radius=0.1)
+    # plotter.draw_lines(lines)
+    # plotter.show()
+
+    # from compas.viewers import NetworkViewer
 
     # viewer = NetworkViewer(form)
     # viewer.setup()
