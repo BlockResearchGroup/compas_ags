@@ -184,6 +184,8 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     # Update FormDiagram
 
+    form.attributes['loadpath'] = fopt
+
     q[ind, 0] = qopt
     q[dep] = _AdinvAid.dot(q[ind])
     Q = diags(q[:, 0])
@@ -592,7 +594,7 @@ def randomise_form(form):
 def worker(sequence):
 
     i, form = sequence
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=50, steps=100000, printout=0)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=20, steps=100, printout=0)
     print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
 
     return (fopt, form)
@@ -600,7 +602,18 @@ def worker(sequence):
 
 def optimise_multi(form, trials=10):
 
-    forms = [randomise_form(form) for i in range(trials)]
+    unique_keys = []
+    forms = []
+    for i in range(trials):
+        print('Combination: {0}'.format(i))
+        form_ = randomise_form(form)
+        key = unique_key(form_)
+        if key not in unique_keys:
+            unique_keys.append(key)
+            forms.append(form_)
+    trials = len(forms)
+    print('Trials: {0}'.format(trials))
+
     pool = Pool()
     sequence = zip(list(range(trials)), forms)
     result = pool.map(worker, sequence)
@@ -608,9 +621,41 @@ def optimise_multi(form, trials=10):
     best = argmin(fopts)
     fopt = fopts[best]
     form = result[best][1]
+    form.attributes['loadpath'] = fopt
     print('Best: {0} - fopt {1:.1f}'.format(best, fopt))
 
     return form
+
+
+def unique_key(form):
+
+    k_i = form.key_index()
+    i_uv = form.index_uv()
+
+    n = form.number_of_vertices()
+    fixed = [k_i[key] for key in form.vertices_where({'is_fixed': True})]
+    free  = list(set(range(n)) - set(fixed))
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+
+    xyz = zeros((n, 3))
+    for key, vertex in form.vertex.items():
+        i = k_i[key]
+        xyz[i, :] = form.vertex_coordinates(key)
+    xy = xyz[:, :2]
+
+    C = connectivity_matrix(edges, 'csr')
+    E   = equilibrium_matrix(C, xy, free, 'csr').toarray()
+    ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
+
+    gkeys = []
+    for i in ind:
+        u, v = i_uv[i]
+        gkey = geometric_key(form.edge_midpoint(u, v))
+        gkeys.append(gkey)
+
+    unique_key = '-'.join(sorted(gkeys))
+
+    return unique_key
 
 
 # ==============================================================================
@@ -619,12 +664,12 @@ def optimise_multi(form, trials=10):
 
 if __name__ == "__main__":
 
-    # fnm = '/al/compas_ags/data/loadpath/arches.json'
-    fnm = '/cluster/home/liewa/compas_ags/data/loadpath/arches.json'
+    fnm = '/al/compas_ags/data/loadpath/plus.json'
+    # fnm = '/cluster/home/liewa/compas_ags/data/loadpath/arches.json'
     form = FormDiagram.from_json(fnm)
 
     # fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=100)
-    form = optimise_multi(form, trials=500)
+    form = optimise_multi(form, trials=300)
 
     form.to_json(fnm)
 

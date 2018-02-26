@@ -12,20 +12,16 @@ import json
 fnm = 'H:/data/loadpath/arches.json'
 form = FormDiagram.from_json(fnm)
 
-f = 0
-for u, v in form.edges():
-    l = form.edge_length(u, v)
-    q = form.edge[u][v]['q']
-    f += q * l * l
-print(int(f))
+print(form.attributes['loadpath'])
 
 artist = NetworkArtist(form, layer='Thrust')
 artist.clear_layer()
-artist.draw_vertices()
-artist.draw_edges()
+artist.draw_edges(color='ee0000')
 
-form.set_vertices_attributes(form.vertices(), {'z': 0})
+rs.LayerVisible('Dots', False)
 rs.LayerVisible('Thrust', False)
+
+#form.set_vertices_attributes(form.vertices(), {'z': 0})
 
 # Copy Form
 
@@ -56,14 +52,7 @@ rs.LayerVisible('Thrust', False)
 #        form.edge[v][u]['q'] = q
 #
 #form = XFunc('compas_ags.ags.loadpath3.z_from_form')(form)
-#
-#f = 0
-#for u, v in form.edges():
-#    l = form.edge_length(u, v)
-#    q = form.edge[u][v]['q']
-#    f += q * l * l
-#print(int(f))
-#
+
 #artist = NetworkArtist(form, layer='Analysis')
 #artist.clear_layer()
 #artist.draw_vertices()
