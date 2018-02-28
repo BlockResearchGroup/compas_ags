@@ -54,4 +54,4 @@ rs.CurrentLayer('Lines')
 
 # Save
 
-network.to_json('H:/data/loadpath/arches.json')
+network.to_json('H:/data/loadpath/fan.json')

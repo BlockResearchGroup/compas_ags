@@ -594,7 +594,7 @@ def randomise_form(form):
 def worker(sequence):
 
     i, form = sequence
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=20, steps=100, printout=0)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=50, steps=100000, printout=0)
     print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
 
     return (fopt, form)
@@ -664,12 +664,12 @@ def unique_key(form):
 
 if __name__ == "__main__":
 
-    fnm = '/al/compas_ags/data/loadpath/plus.json'
-    # fnm = '/cluster/home/liewa/compas_ags/data/loadpath/arches.json'
+    # fnm = '/al/compas_ags/data/loadpath/fan.json'
+    fnm = '/cluster/home/liewa/compas_ags/data/loadpath/fan.json'
     form = FormDiagram.from_json(fnm)
 
     # fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=100)
-    form = optimise_multi(form, trials=300)
+    form = optimise_multi(form, trials=250)
 
     form.to_json(fnm)
 
