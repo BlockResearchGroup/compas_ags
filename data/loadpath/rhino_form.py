@@ -9,7 +9,7 @@ import json
 
 # Plot Thrust Network
 
-fnm = 'H:/data/loadpath/arches.json'
+fnm = 'H:/data/loadpath/star.json'
 form = FormDiagram.from_json(fnm)
 
 print(form.attributes['loadpath'])

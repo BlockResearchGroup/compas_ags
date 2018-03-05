@@ -702,11 +702,11 @@ def unique_key(form):
 
 if __name__ == "__main__":
 
-    fnm = '/al/compas_ags/data/loadpath/arches.json'
+    fnm = '/al/compas_ags/data/loadpath/star.json'
     # fnm = '/cluster/home/liewa/compas_ags/data/loadpath/plus.json'
     form = FormDiagram.from_json(fnm)
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=100)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=20, steps=100)
     # form = optimise_multi(form, trials=4)
 
     form.to_json(fnm)
