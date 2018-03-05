@@ -139,7 +139,6 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     C = connectivity_matrix(edges, 'csr')
     Ci  = C[:, free]
-    Cf  = C[:, fixed]
     Cit = Ci.transpose()
     E   = equilibrium_matrix(C, xy, free, 'csr').toarray()
 
@@ -147,11 +146,14 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
     dep = list(set(range(m)) - set(ind))
+    sym = []
     for u, v in form.edges():
         if uv_i[(u, v)] in ind:
             form.edge[u][v]['is_ind'] = True
         else:
             form.edge[u][v]['is_ind'] = False
+        if form.edge[u][v].get('is_symmetry', False):
+            sym.append(uv_i[(u, v)])
     k = len(ind)
     if printout:
         print('Form diagram has {0} independent branches'.format(len(ind)))
@@ -167,7 +169,7 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
     lh2 = lh**2
     q = ones((m, 1))
     bounds = [[qmin, qmax]] * k
-    args = (q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2)
+    args = (q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym)
 
     if solver == 'devo':
         fopt, qopt = diff_evo(form, bounds, population, steps, printout, args)
@@ -188,6 +190,7 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     q[ind, 0] = qopt
     q[dep] = _AdinvAid.dot(q[ind])
+    q[sym] *= 0
     Q = diags(q[:, 0])
     z[free] = spsolve(Cit.dot(Q).dot(Ci), pz)
 
@@ -269,9 +272,10 @@ def fint(qid, *args):
 
     """
 
-    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2 = args
+    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
     q[ind, 0] = qid
     q[dep] = _AdinvAid.dot(q[ind])
+    q[sym] *= 0
     Q = diags(q[:, 0])
     z[free] = spsolve(Cit.dot(Q).dot(Ci), pz)
     l2 = lh2 + C.dot(z[:, newaxis])**2
@@ -301,9 +305,10 @@ def fint_(qid, *args):
 
     """
 
-    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2 = args
+    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
     q[ind, 0] = qid
     q[dep] = _AdinvAid.dot(q[ind])
+    q[sym] *= 0
     Q = diags(q[:, 0])
     z[free] = spsolve(Cit.dot(Q).dot(Ci), pz)
     l2 = lh2 + C.dot(z[:, newaxis])**2
@@ -328,7 +333,7 @@ def qpos(qid, *args):
 
     """
 
-    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2 = args
+    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
     q[ind, 0] = qid
     q[dep] = _AdinvAid.dot(q[ind])
 
@@ -363,7 +368,7 @@ def slsqp(form, qid0, bounds, gradient, printout, args):
 
     """
 
-    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2 = args
+    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
     pout = 2 if printout else 0
 
     if not gradient:
@@ -580,6 +585,20 @@ def diff_ga(form, bounds, population, steps, args):
 
 def randomise_form(form):
 
+    """ Randomises the FormDiagram by shuffling the edges.
+
+    Parameters
+    ----------
+    form : obj
+        Original FormDiagram.
+
+    Returns
+    -------
+    obj
+        Suffled FormDiagram.
+
+    """
+
     edges = [(form.vertex_coordinates(i), form.vertex_coordinates(j)) for i, j in form.edges()]
     shuffle(edges)
     form_ = FormDiagram.from_lines(edges)
@@ -591,10 +610,10 @@ def randomise_form(form):
     return form_
 
 
-def worker(sequence):
+def _worker(sequence):
 
     i, form = sequence
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=50, steps=100000, printout=0)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=1000, printout=0)
     print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
 
     return (fopt, form)
@@ -602,21 +621,26 @@ def worker(sequence):
 
 def optimise_multi(form, trials=10):
 
-    unique_keys = []
-    forms = []
-    for i in range(trials):
-        print('Combination: {0}'.format(i))
-        form_ = randomise_form(form)
-        key = unique_key(form_)
-        if key not in unique_keys:
-            unique_keys.append(key)
-            forms.append(form_)
-    trials = len(forms)
-    print('Trials: {0}'.format(trials))
+    """ Finds the optimised loadpath for multiple generated FormDiagrams.
 
+    Parameters
+    ----------
+    form : obj
+        Original FormDiagram.
+    trials : int
+        Number of trials to perform.
+
+    Returns
+    -------
+    obj
+        Best FormDiagram of the trials.
+
+    """
+
+    forms = [randomise_form(form) for i in range(trials)]
     pool = Pool()
     sequence = zip(list(range(trials)), forms)
-    result = pool.map(worker, sequence)
+    result = pool.map(_worker, sequence)
     fopts = [i for i, _ in result]
     best = argmin(fopts)
     fopt = fopts[best]
@@ -628,6 +652,20 @@ def optimise_multi(form, trials=10):
 
 
 def unique_key(form):
+
+    """ Returns a unique key for the independent set of the FormDiagrams.
+
+    Parameters
+    ----------
+    form : obj
+        Original FormDiagram.
+
+    Returns
+    -------
+    str
+        Unique FormDiagram independent set key.
+
+    """
 
     k_i = form.key_index()
     i_uv = form.index_uv()
@@ -664,38 +702,46 @@ def unique_key(form):
 
 if __name__ == "__main__":
 
-    # fnm = '/al/compas_ags/data/loadpath/fan.json'
-    fnm = '/cluster/home/liewa/compas_ags/data/loadpath/fan.json'
+    fnm = '/al/compas_ags/data/loadpath/arches.json'
+    # fnm = '/cluster/home/liewa/compas_ags/data/loadpath/plus.json'
     form = FormDiagram.from_json(fnm)
 
-    # fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=100)
-    form = optimise_multi(form, trials=250)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=100)
+    # form = optimise_multi(form, trials=4)
 
     form.to_json(fnm)
 
-    # from compas.plotters import NetworkPlotter
+    from compas.plotters import NetworkPlotter
 
-    # lines = []
-    # qmax = max(form.q())
-    # for u, v in form.edges():
-    #     qi = form.edge[u][v].get('q', 1)
-    #     if form.edge[u][v]['is_ind']:
-    #         colour = 'ff0000'
-    #     elif qi <= 0.001:
-    #         colour = 'eeeeee'
-    #     else:
-    #         colour = 'ff8784' if qi > 0 else '0000ff'
-    #     lines.append({
-    #         'start': form.vertex_coordinates(u),
-    #         'end'  : form.vertex_coordinates(v),
-    #         'color': colour,
-    #         'width': (qi / qmax + 0.2) * 10,
-    #     })
+    lines = []
+    qmax = max(form.q())
+    for u, v in form.edges():
+        qi = form.edge[u][v].get('q', 1)
+        if form.edge[u][v].get('is_symmetry', False):
+            if form.edge[u][v]['is_ind']:
+                colour = '0000ff'
+            else:
+                colour = '8787ff'
+            qi = 2
+        elif form.edge[u][v]['is_ind']:
+            colour = 'ff0000'
+        elif qi <= 0.001:
+            colour = 'eeeeee'
+        else:
+            colour = 'ff8784' if qi > 0 else '0000ff'
+        lines.append({
+            'start': form.vertex_coordinates(u),
+            'end'  : form.vertex_coordinates(v),
+            'color': colour,
+            'width': (qi / qmax + 0.2) * 10,
+        })
+    # vlabel = []
+    vlabel = {key: '{0:.2f}'.format(form.vertex[key]['pz']) for key in form.vertices()}
 
-    # plotter = NetworkPlotter(form, figsize=(10, 7), fontsize=8)
-    # plotter.draw_vertices(facecolor={key: '#aaaaaa' for key in form.fixed()}, radius=0.1)
-    # plotter.draw_lines(lines)
-    # plotter.show()
+    plotter = NetworkPlotter(form, figsize=(10, 7), fontsize=8)
+    plotter.draw_vertices(facecolor={key: '#aaaaaa' for key in form.fixed()}, radius=0.2, text=vlabel)
+    plotter.draw_lines(lines)
+    plotter.show()
 
     # from compas.viewers import NetworkViewer
 

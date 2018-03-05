@@ -20,7 +20,9 @@ __email__     = 'liew@arch.ethz.ch'
 # Networks
 
 guids = rs.ObjectsByLayer('Lines')
+suids = rs.ObjectsByLayer('Symmetry')
 lines = [[rs.CurveStartPoint(guid), rs.CurveEndPoint(guid)] for guid in guids]
+lines.extend([[rs.CurveStartPoint(suid), rs.CurveEndPoint(suid)] for suid in suids if rs.IsCurve(suid)])
 network = Network.from_lines(lines)
 face_network = FaceNetwork.from_data(network.to_data())
 #network_find_faces(face_network, breakpoints=face_network.leaves())
@@ -46,12 +48,26 @@ for key in network.vertices():
     A = face_network.vertex_area(key=key)
     At += A
     network.vertex[key]['pz'] = A
-    rs.AddTextDot('{0:.1f}'.format(A), network.vertex_coordinates(key)) 
+    rs.AddTextDot('{0:.3f}'.format(A), network.vertex_coordinates(key)) 
 print('Total load: {0}'.format(At))
+
+# Symmetry
+
+for suid in rs.ObjectsByLayer('Symmetry'):
+    if rs.IsCurve(suid):
+        u = gkey_key[geometric_key(rs.CurveStartPoint(suid))]
+        v = gkey_key[geometric_key(rs.CurveEndPoint(suid))]
+        try:
+            network.edge[u][v]['is_symmetry'] = True
+        except:
+            network.edge[v][u]['is_symmetry'] = True
+    elif rs.IsPoint(suid):
+        pz = float(rs.ObjectName(suid))
+        network.vertex[gkey_key[geometric_key(rs.PointCoordinates(suid))]]['pz'] = pz
     
 rs.EnableRedraw(True)
 rs.CurrentLayer('Lines')
 
 # Save
 
-network.to_json('H:/data/loadpath/fan.json')
+network.to_json('H:/data/loadpath/arches.json')
