@@ -8,12 +8,12 @@ from numpy import argmin
 from numpy import array
 from numpy import dot
 from numpy import isnan
-#from numpy import matmul as mm
+# #from numpy import matmul as mm
 from numpy import newaxis
-from numpy import ones
-from numpy import sum
-#from numpy import sqrt
-#from numpy import tile
+# from numpy import ones
+# from numpy import sum
+# #from numpy import sqrt
+# #from numpy import tile
 from numpy import zeros
 from numpy.linalg import pinv
 
@@ -23,6 +23,8 @@ from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import spsolve
 
 from compas_ags.diagrams import FormDiagram
+
+from compas.plotters import NetworkPlotter
 
 from compas.numerical import connectivity_matrix
 from compas.numerical import devo_numpy
@@ -47,6 +49,7 @@ __email__     = 'liew@arch.ethz.ch'
 
 __all__ = [
     'compute_loadpath3',
+    'optimise_loadpath3',
 ]
 
 
@@ -72,7 +75,7 @@ def compute_loadpath3(form, force):
 def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin=1e-6, qmax=10, population=20,
                        steps=100, printout=True):
 
-    """ Finds the optimised loadpath for a FormDiagram with given loads.
+    """ Finds the optimised load-path for a FormDiagram with given loads.
 
     Parameters
     ----------
@@ -104,10 +107,6 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     """
 
-    if printout:
-        print('\n' + '-' * 50)
-        print('Load-path optimisation started')
-
     # Mapping
 
     k_i = form.key_index()
@@ -119,9 +118,10 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     n = form.number_of_vertices()
     m = form.number_of_edges()
-    fixed = [k_i[key] for key in form.vertices_where({'is_fixed': True})]
+    fixed = [k_i[key] for key in form.fixed()]
     free  = list(set(range(n)) - set(fixed))
     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    sym = [uv_i[uv] for uv in form.edges_where({'is_symmetry': True})]
 
     # Co-ordinates and loads
 
@@ -130,14 +130,14 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
     for key, vertex in form.vertex.items():
         i = k_i[key]
         xyz[i, :] = form.vertex_coordinates(key)
-        pz[i] = vertex.get('pz', 0)
+        pz[i] = vertex['pz']
     xy = xyz[:, :2]
     z  = xyz[:, 2]
     pz = pz[free]
 
     # C and E matrices
 
-    C = connectivity_matrix(edges, 'csr')
+    C   = connectivity_matrix(edges, 'csr')
     Ci  = C[:, free]
     Cit = Ci.transpose()
     E   = equilibrium_matrix(C, xy, free, 'csr').toarray()
@@ -146,16 +146,14 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
     dep = list(set(range(m)) - set(ind))
-    sym = []
     for u, v in form.edges():
-        if uv_i[(u, v)] in ind:
-            form.edge[u][v]['is_ind'] = True
-        else:
-            form.edge[u][v]['is_ind'] = False
-        if form.edge[u][v].get('is_symmetry', False):
-            sym.append(uv_i[(u, v)])
+        isind = True if uv_i[(u, v)] in ind else False
+        form.edge[u][v]['is_ind'] = isind
     k = len(ind)
+
     if printout:
+        print('\n' + '-' * 50)
+        print('Load-path optimisation started')
         print('Form diagram has {0} independent branches'.format(len(ind)))
 
     Adinv = pinv(E[:, dep])
@@ -167,7 +165,7 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     lh = normrow(C.dot(xy))
     lh2 = lh**2
-    q = ones((m, 1))
+    q = array(form.q())[:, newaxis]
     bounds = [[qmin, qmax]] * k
     args = (q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym)
 
@@ -184,15 +182,11 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
         fopt = fopt_
         qopt = qopt_
 
+    z, l2, q = z_from_qid(qopt, args)
+
     # Update FormDiagram
 
     form.attributes['loadpath'] = fopt
-
-    q[ind, 0] = qopt
-    q[dep] = _AdinvAid.dot(q[ind])
-    q[sym] *= 0
-    Q = diags(q[:, 0])
-    z[free] = spsolve(Cit.dot(Q).dot(Ci), pz)
 
     for i in range(n):
         form.vertex[i_k[i]]['z'] = z[i]
@@ -212,46 +206,36 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
     return fopt, qopt
 
 
-def z_from_form(form):
+def z_from_qid(qid, args):
 
-    # Mapping
+    """ Calculates the new z co-ordinates from a qid set.
 
-    i_k = form.index_key()
-    k_i = form.key_index()
+    Parameters
+    ----------
+    qid : list
+        Independent force densities.
+    args : tuple
+        Sequence of additional arguments.
 
-    # Vertices and edges
+    Returns
+    -------
+    array
+        Updated z.
+    array
+        New lengths squared.
+    array
+        Updated force densities.
 
-    n = form.number_of_vertices()
-    fixed = [k_i[key] for key in form.vertices_where({'is_fixed': True})]
-    free  = list(set(range(n)) - set(fixed))
-    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    """
 
-    # Connectivity and equillibrium matrices
-
-    C = connectivity_matrix(edges, 'csr')
-    Ci  = C[:, free]
-    Cit = Ci.transpose()
-
-    # Co-ordinates and loads
-
-    pz = zeros(n)
-    xyz = zeros((n, 3))
-    for key, vertex in form.vertex.items():
-        i = k_i[key]
-        xyz[i, :] = form.vertex_coordinates(key)
-        pz[i] = vertex.get('pz')
-    z = xyz[:, 2]
-    pzfree = pz[free]
-    q = array(form.q())
-
-    # Update z
-
-    Q = diags(q)
-    z[free] = spsolve(Cit.dot(Q).dot(Ci), pzfree)
-    for i in range(n):
-        form.vertex[i_k[i]]['z'] = z[i]
-
-    return form
+    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
+    q[ind, 0] = qid
+    q[dep] = _AdinvAid.dot(q[ind])
+    q[sym] *= 0
+    Q = diags(q[:, 0])
+    z[free] = spsolve(Cit.dot(Q).dot(Ci), pz)
+    l2 = lh2 + C.dot(z[:, newaxis])**2
+    return z, l2, q
 
 
 def fint(qid, *args):
@@ -272,19 +256,11 @@ def fint(qid, *args):
 
     """
 
-    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
-    q[ind, 0] = qid
-    q[dep] = _AdinvAid.dot(q[ind])
-    q[sym] *= 0
-    Q = diags(q[:, 0])
-    z[free] = spsolve(Cit.dot(Q).dot(Ci), pz)
-    l2 = lh2 + C.dot(z[:, newaxis])**2
-    f = dot(abs(q.transpose()), l2)
-    f_ = f + sum((q[q < 0] - 1.)**2)
-
-    if isnan(f_):
+    z, l2, q = z_from_qid(qid, args)
+    f = dot(abs(q.transpose()), l2) + sum((q[q < 0] - 1.)**2)
+    if isnan(f):
         return 10**20
-    return f_
+    return f
 
 
 def fint_(qid, *args):
@@ -305,21 +281,14 @@ def fint_(qid, *args):
 
     """
 
-    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
-    q[ind, 0] = qid
-    q[dep] = _AdinvAid.dot(q[ind])
-    q[sym] *= 0
-    Q = diags(q[:, 0])
-    z[free] = spsolve(Cit.dot(Q).dot(Ci), pz)
-    l2 = lh2 + C.dot(z[:, newaxis])**2
+    z, l2, q = z_from_qid(qid, args)
     f = dot(abs(q.transpose()), l2)
-
     return f
 
 
 def qpos(qid, *args):
 
-    """ Function for non-negativity of force densities q.
+    """ Function for non-negativity constraint of force densities q.
 
     Parameters
     ----------
@@ -336,13 +305,13 @@ def qpos(qid, *args):
     q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
     q[ind, 0] = qid
     q[dep] = _AdinvAid.dot(q[ind])
-
+    q[sym] *= 0
     return q.ravel() - 10.**(-3)
 
 
 def slsqp(form, qid0, bounds, gradient, printout, args):
 
-    """ Finds the optimised loadpath for a FormDiagram with given loads by SLSQP.
+    """ Finds the optimised load-path for a FormDiagram by SLSQP.
 
     Parameters
     ----------
@@ -422,10 +391,7 @@ def slsqp(form, qid0, bounds, gradient, printout, args):
 #                Cit_, Cbt_, pzt_, eipzt_, EiK_, zbt_, xbtCbteixtCtEiK_, ybtCbteiytCtEiK_)
 #        opt = fmin_slsqp(fext, qid0, args=args, disp=2, bounds=bounds, full_output=1, iter=iterations, f_ieqcons=qpositive, fprime=gext)
 
-    qopt = opt[0]
-    fopt = opt[1]
-
-    return fopt, qopt
+    return opt[1], opt[0]
 
 
 #def fext(qid, *args):
@@ -476,7 +442,7 @@ def slsqp(form, qid0, bounds, gradient, printout, args):
 
 def diff_evo(form, bounds, population, steps, printout, args):
 
-    """ Finds the optimised loadpath for a FormDiagram with given loads, by Differential Evolution.
+    """ Finds the optimised load-path for a FormDiagram by Differential Evolution.
 
     Parameters
     ----------
@@ -507,7 +473,7 @@ def diff_evo(form, bounds, population, steps, printout, args):
 
 def diff_ga(form, bounds, population, steps, args):
 
-    """ Finds the optimised loadpath for a FormDiagram with given loads, using a Genetic Algorithm.
+    """ Finds the optimised loadpath for a FormDiagram using a Genetic Algorithm.
 
     Parameters
     ----------
@@ -602,7 +568,14 @@ def randomise_form(form):
     edges = [(form.vertex_coordinates(i), form.vertex_coordinates(j)) for i, j in form.edges()]
     shuffle(edges)
     form_ = FormDiagram.from_lines(edges)
+    form_.update_default_edge_attributes({'is_symmetry': False})
     gkey_key = form_.gkey_key()
+
+    sym = [geometric_key(form.edge_midpoint(u, v)) for u, v in form.edges_where({'is_symmetry': True})]
+    for u, v in form_.edges():
+        if geometric_key(form_.edge_midpoint(u, v)) in sym:
+            form_.edge[u][v]['is_symmetry'] = True
+
     for key, vertex in form.vertex.items():
         gkey = geometric_key(form.vertex_coordinates(key))
         form_.vertex[gkey_key[gkey]] = vertex
@@ -613,15 +586,14 @@ def randomise_form(form):
 def _worker(sequence):
 
     i, form = sequence
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=1000, printout=0)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=2000, printout=0)
     print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
-
     return (fopt, form)
 
 
 def optimise_multi(form, trials=10):
 
-    """ Finds the optimised loadpath for multiple generated FormDiagrams.
+    """ Finds the optimised loadpath for multiple randomly generated FormDiagrams.
 
     Parameters
     ----------
@@ -645,55 +617,106 @@ def optimise_multi(form, trials=10):
     best = argmin(fopts)
     fopt = fopts[best]
     form = result[best][1]
-    form.attributes['loadpath'] = fopt
     print('Best: {0} - fopt {1:.1f}'.format(best, fopt))
-
     return form
 
 
-def unique_key(form):
+# def unique_key(form):
 
-    """ Returns a unique key for the independent set of the FormDiagrams.
+#     """ Returns a unique key for the independent set of the FormDiagrams.
+
+#     Parameters
+#     ----------
+#     form : obj
+#         Original FormDiagram.
+
+#     Returns
+#     -------
+#     str
+#         Unique FormDiagram independent set key.
+
+#     """
+
+#     k_i = form.key_index()
+#     i_uv = form.index_uv()
+
+#     n = form.number_of_vertices()
+#     fixed = [k_i[key] for key in form.vertices_where({'is_fixed': True})]
+#     free  = list(set(range(n)) - set(fixed))
+#     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+
+#     xyz = zeros((n, 3))
+#     for key, vertex in form.vertex.items():
+#         i = k_i[key]
+#         xyz[i, :] = form.vertex_coordinates(key)
+#     xy = xyz[:, :2]
+
+#     C = connectivity_matrix(edges, 'csr')
+#     E   = equilibrium_matrix(C, xy, free, 'csr').toarray()
+#     ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
+
+#     gkeys = []
+#     for i in ind:
+#         u, v = i_uv[i]
+#         gkey = geometric_key(form.edge_midpoint(u, v))
+#         gkeys.append(gkey)
+
+#     unique_key = '-'.join(sorted(gkeys))
+
+#     return unique_key
+
+
+def plot_form(form):
+
+    """ Extended load-path plotting for a FormDiagram
 
     Parameters
     ----------
     form : obj
-        Original FormDiagram.
+        FormDiagram to plot.
 
     Returns
     -------
-    str
-        Unique FormDiagram independent set key.
+    None
 
     """
 
-    k_i = form.key_index()
-    i_uv = form.index_uv()
+    qmax = max(form.q())
 
-    n = form.number_of_vertices()
-    fixed = [k_i[key] for key in form.vertices_where({'is_fixed': True})]
-    free  = list(set(range(n)) - set(fixed))
-    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    lines = []
+    for u, v in form.edges():
+        qi = form.edge[u][v]['q']
 
-    xyz = zeros((n, 3))
-    for key, vertex in form.vertex.items():
-        i = k_i[key]
-        xyz[i, :] = form.vertex_coordinates(key)
-    xy = xyz[:, :2]
+        if form.edge[u][v]['is_symmetry']:
+            if form.edge[u][v]['is_ind']:
+                colour = '0000ff'
+            else:
+                colour = '8787ff'
+            qi = 0.2 * qmax
 
-    C = connectivity_matrix(edges, 'csr')
-    E   = equilibrium_matrix(C, xy, free, 'csr').toarray()
-    ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
+        elif form.edge[u][v]['is_ind']:
+            colour = 'ff0000'
 
-    gkeys = []
-    for i in ind:
-        u, v = i_uv[i]
-        gkey = geometric_key(form.edge_midpoint(u, v))
-        gkeys.append(gkey)
+        elif qi <= 0.001:
+            colour = 'eeeeee'
+            qi = 0.1 * qmax
 
-    unique_key = '-'.join(sorted(gkeys))
+        else:
+            colour = 'ff8784' if qi > 0 else '0000ff'
 
-    return unique_key
+        lines.append({
+            'start': form.vertex_coordinates(u),
+            'end':   form.vertex_coordinates(v),
+            'color': colour,
+            'width': (qi / qmax) * 10,
+        })
+
+    # vlabel = {key: '{0:.2f}'.format(form.vertex[key]['pz']) for key in form.vertices()}
+
+    plotter = NetworkPlotter(form, figsize=(10, 7), fontsize=8)
+    plotter.draw_vertices(facecolor={key: '#aaaaaa' for key in form.fixed()}, radius=0.1, text=[])
+    plotter.draw_lines(lines)
+    plotter.show()
 
 
 # ==============================================================================
@@ -702,49 +725,21 @@ def unique_key(form):
 
 if __name__ == "__main__":
 
-    fnm = '/al/compas_ags/data/loadpath/star.json'
+    from compas_ags.diagrams import ForceDiagram
+
+    fnm = 'C:/compas_ags/data/loadpath/fan.json'
     # fnm = '/cluster/home/liewa/compas_ags/data/loadpath/plus.json'
     form = FormDiagram.from_json(fnm)
 
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=20, steps=100)
-    # form = optimise_multi(form, trials=4)
+    # fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=1000)
+    form = optimise_multi(form, trials=200)
 
     form.to_json(fnm)
 
-    from compas.plotters import NetworkPlotter
+    plot_form(form)
 
-    lines = []
-    qmax = max(form.q())
-    for u, v in form.edges():
-        qi = form.edge[u][v].get('q', 1)
-        if form.edge[u][v].get('is_symmetry', False):
-            if form.edge[u][v]['is_ind']:
-                colour = '0000ff'
-            else:
-                colour = '8787ff'
-            qi = 2
-        elif form.edge[u][v]['is_ind']:
-            colour = 'ff0000'
-        elif qi <= 0.001:
-            colour = 'eeeeee'
-        else:
-            colour = 'ff8784' if qi > 0 else '0000ff'
-        lines.append({
-            'start': form.vertex_coordinates(u),
-            'end'  : form.vertex_coordinates(v),
-            'color': colour,
-            'width': (qi / qmax + 0.2) * 10,
-        })
-    # vlabel = []
-    vlabel = {key: '{0:.2f}'.format(form.vertex[key]['pz']) for key in form.vertices()}
-
-    plotter = NetworkPlotter(form, figsize=(10, 7), fontsize=8)
-    plotter.draw_vertices(facecolor={key: '#aaaaaa' for key in form.fixed()}, radius=0.2, text=vlabel)
-    plotter.draw_lines(lines)
-    plotter.show()
-
-    # from compas.viewers import NetworkViewer
-
-    # viewer = NetworkViewer(form)
-    # viewer.setup()
-    # viewer.show()
+    # force = ForceDiagram.from_formdiagram(form)
+    # plotter = NetworkPlotter(force, figsize=(10, 7), fontsize=8)
+    # plotter.draw_vertices(radius=0.05, text=[])
+    # plotter.draw_edges()
+    # plotter.show()
