@@ -23,6 +23,7 @@ from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import spsolve
 
 from compas_ags.diagrams import FormDiagram
+from compas_ags.diagrams import ForceDiagram
 
 from compas.plotters import NetworkPlotter
 
@@ -73,7 +74,7 @@ def compute_loadpath3(form, force):
 
 
 def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin=1e-6, qmax=10, population=20,
-                       steps=100, printout=True):
+                       steps=100, printout=True, indset=None):
 
     """ Finds the optimised load-path for a FormDiagram with given loads.
 
@@ -97,6 +98,8 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
         Number of iteration steps for evolution solver.
     printout : bool
         Print output to screen.
+    indset : str
+        Key of the independent set to use.
 
     Returns
     -------
@@ -144,7 +147,14 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     # Independent and dependent branches
 
-    ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
+    if indset:
+        ind = []
+        for u, v in form.edges():
+            if geometric_key(form.edge_midpoint(u, v)[:2] + [0]) in indset.split('-'):
+                ind.append(uv_i[(u, v)])
+    else:
+        ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
+
     dep = list(set(range(m)) - set(ind))
     for u, v in form.edges():
         isind = True if uv_i[(u, v)] in ind else False
@@ -183,6 +193,14 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
         qopt = qopt_
 
     z, l2, q = z_from_qid(qopt, args)
+
+    # Unique key
+
+    gkeys = []
+    for i in ind:
+        u, v = i_uv[i]
+        gkeys.append(geometric_key(form.edge_midpoint(u, v)[:2] + [0]))
+    form.attributes['indset'] = '-'.join(sorted(gkeys))
 
     # Update FormDiagram
 
@@ -586,7 +604,7 @@ def randomise_form(form):
 def _worker(sequence):
 
     i, form = sequence
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=2000, printout=0)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=100, printout=0)
     print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
     return (fopt, form)
 
@@ -604,8 +622,12 @@ def optimise_multi(form, trials=10):
 
     Returns
     -------
-    obj
-        Best FormDiagram of the trials.
+    list
+        fopt for each trial.
+    list
+        Each final FormDiagram.
+    int
+        Index of the optimum.
 
     """
 
@@ -613,57 +635,12 @@ def optimise_multi(form, trials=10):
     pool = Pool()
     sequence = zip(list(range(trials)), forms)
     result = pool.map(_worker, sequence)
-    fopts = [i for i, _ in result]
+    fopts, forms = zip(*result)
     best = argmin(fopts)
     fopt = fopts[best]
-    form = result[best][1]
     print('Best: {0} - fopt {1:.1f}'.format(best, fopt))
-    return form
 
-
-# def unique_key(form):
-
-#     """ Returns a unique key for the independent set of the FormDiagrams.
-
-#     Parameters
-#     ----------
-#     form : obj
-#         Original FormDiagram.
-
-#     Returns
-#     -------
-#     str
-#         Unique FormDiagram independent set key.
-
-#     """
-
-#     k_i = form.key_index()
-#     i_uv = form.index_uv()
-
-#     n = form.number_of_vertices()
-#     fixed = [k_i[key] for key in form.vertices_where({'is_fixed': True})]
-#     free  = list(set(range(n)) - set(fixed))
-#     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
-
-#     xyz = zeros((n, 3))
-#     for key, vertex in form.vertex.items():
-#         i = k_i[key]
-#         xyz[i, :] = form.vertex_coordinates(key)
-#     xy = xyz[:, :2]
-
-#     C = connectivity_matrix(edges, 'csr')
-#     E   = equilibrium_matrix(C, xy, free, 'csr').toarray()
-#     ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
-
-#     gkeys = []
-#     for i in ind:
-#         u, v = i_uv[i]
-#         gkey = geometric_key(form.edge_midpoint(u, v))
-#         gkeys.append(gkey)
-
-#     unique_key = '-'.join(sorted(gkeys))
-
-#     return unique_key
+    return fopts, forms, best
 
 
 def plot_form(form):
@@ -677,7 +654,8 @@ def plot_form(form):
 
     Returns
     -------
-    None
+    obj
+        Plotter object.
 
     """
 
@@ -692,14 +670,12 @@ def plot_form(form):
                 colour = '0000ff'
             else:
                 colour = '8787ff'
-            qi = 0.2 * qmax
 
         elif form.edge[u][v]['is_ind']:
             colour = 'ff0000'
 
         elif qi <= 0.001:
-            colour = 'eeeeee'
-            qi = 0.1 * qmax
+            colour = 'bbbbbb'
 
         else:
             colour = 'ff8784' if qi > 0 else '0000ff'
@@ -708,15 +684,41 @@ def plot_form(form):
             'start': form.vertex_coordinates(u),
             'end':   form.vertex_coordinates(v),
             'color': colour,
-            'width': (qi / qmax) * 10,
+            'width': (qi / qmax + 0.1 * qmax) * 10,
         })
 
     # vlabel = {key: '{0:.2f}'.format(form.vertex[key]['pz']) for key in form.vertices()}
 
     plotter = NetworkPlotter(form, figsize=(10, 7), fontsize=8)
-    plotter.draw_vertices(facecolor={key: '#aaaaaa' for key in form.fixed()}, radius=0.1, text=[])
+    plotter.draw_vertices(facecolor={key: '#aaeeaa' for key in form.fixed()}, radius=0.1, text=[])
     plotter.draw_lines(lines)
-    plotter.show()
+
+    return plotter
+
+
+def plot_forms(fopts, forms, path):
+
+    """ Save multiple FormDiagram images to file.
+
+    Parameters
+    ----------
+    fopts : list
+        Optimum load-paths for each trial.
+    forms : list
+        Each FormDiagram to plot/save.
+    path : str
+        Folder to save images to.
+
+    Returns
+    -------
+    None
+
+    """
+
+    for c in range(len(forms)):
+        plotter = plot_form(forms[c])
+        plotter.save('{0}{1}-{2}.png'.format(path, c, fopts[c]))
+        del plotter
 
 
 # ==============================================================================
@@ -725,18 +727,17 @@ def plot_form(form):
 
 if __name__ == "__main__":
 
-    from compas_ags.diagrams import ForceDiagram
-
-    fnm = 'C:/compas_ags/data/loadpath/fan.json'
+    fnm = '/home/al/compas_ags/data/loadpath/arches.json'
     # fnm = '/cluster/home/liewa/compas_ags/data/loadpath/plus.json'
     form = FormDiagram.from_json(fnm)
 
-    # fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=1000)
-    form = optimise_multi(form, trials=200)
+    # fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=100)
+    # plot_form(form).show()
 
-    form.to_json(fnm)
+    fopts, forms, best = optimise_multi(form, trials=30)
+    plot_forms(fopts, forms, path='/home/al/temp/')
 
-    plot_form(form)
+    # form.to_json(fnm)
 
     # force = ForceDiagram.from_formdiagram(form)
     # plotter = NetworkPlotter(force, figsize=(10, 7), fontsize=8)
