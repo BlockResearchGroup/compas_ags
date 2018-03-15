@@ -44,8 +44,8 @@ for guid in rs.ObjectsByLayer('Pins'):
 
 # Loads
 
-#for key in network.vertices():
-#    network.vertex[key]['pz'] = face_network.vertex_area(key=key)
+for key in network.vertices():
+    network.vertex[key]['pz'] = face_network.vertex_area(key=key)
     
 # Symmetry
 
@@ -82,4 +82,4 @@ rs.LayerVisible('Dots', False)
 
 # Save
 
-network.to_json('F:/compas_ags/data/loadpath/base.json')
+network.to_json('C:/compas_ags/data/loadpath/base.json')

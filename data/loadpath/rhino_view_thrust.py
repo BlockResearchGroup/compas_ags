@@ -12,10 +12,10 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-fnm = 'F:/compas_ags/data/loadpath/base.json'
+fnm = 'C:/compas_ags/data/loadpath/base.json'
 form = FormDiagram.from_json(fnm)
 
-#print(form.attributes['loadpath'])
+print(form.attributes['loadpath'])
 
 artist = NetworkArtist(form, layer='Thrust')
 artist.clear_layer()

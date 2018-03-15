@@ -153,8 +153,9 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     if indset:
         ind = []
+        inds = indset.split('-')
         for u, v in form.edges():
-            if geometric_key(form.edge_midpoint(u, v)[:2] + [0]) in indset.split('-'):
+            if geometric_key(form.edge_midpoint(u, v)[:2] + [0]) in inds:
                 ind.append(uv_i[(u, v)])
     else:
         ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
@@ -187,7 +188,7 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
     elif solver == 'ga':
         fopt, qopt = diff_ga(form, bounds, population, steps, args)
 
-    z, l2, q = z_from_qid(qopt, args)
+    q = z_from_qid(qopt, args)[2]
 
     if printout:
         print('Compressive: {0}'.format(all(q.ravel() >= -0.001)))
@@ -198,7 +199,7 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
     if polish == 'slsqp':
         fopt_, qopt_ = slsqp(form, qopt, bounds, gradient, printout, args)
 
-    z, l2, q = z_from_qid(qopt_, args)
+    q = z_from_qid(qopt_, args)[2]
 
     if printout:
         print('fopt: {0:.3g}'.format(fopt_))
@@ -208,9 +209,9 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
         print('-' * 50 + '\n')
 
     if (fopt_ < fopt) and (min(q) > -0.001):
-            fopt = fopt_
-            qopt = qopt_
-            z, l2, q = z_from_qid(qopt, args)
+        fopt = fopt_
+        qopt = qopt_
+        z, _, q = z_from_qid(qopt, args)
 
     # Unique key
 
@@ -230,10 +231,6 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
     for c, qi in enumerate(list(q.ravel())):
         u, v = i_uv[c]
         form.edge[u][v]['q'] = qi
-
-    # Print summary
-
-
 
     return fopt, qopt
 
@@ -445,8 +442,8 @@ def slsqp(form, qid0, bounds, gradient, printout, args):
 #    pztDiinv = mm(transpose(pz), inv(Di).toarray())
 #    f = (mm(xt, CtQCb.dot(xb)) + mm(yt, CtQCb.dot(yb)) + mm(pztDiinv, pz) - mm(pztDiinv, Db.dot(zb)))
 #    return f[0][0]
-#
-#
+
+
 #def gext(qid, *args):
 #    """ Calculates the gradient of the external loadpath for a given qid set.
 #
@@ -593,7 +590,7 @@ def randomise_form(form):
     Returns
     -------
     obj
-        Suffled FormDiagram.
+        Shuffled FormDiagram.
 
     """
 
@@ -618,7 +615,7 @@ def randomise_form(form):
 def _worker(sequence):
 
     i, form = sequence
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=20, steps=1000, printout=0)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=30, steps=1000, printout=0)
     print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
     return (fopt, form)
 
@@ -773,25 +770,21 @@ def ground_form(points):
 
 if __name__ == "__main__":
 
-    fnm = '/home/al/compas_ags/data/loadpath/base.json'
+    fnm = 'C:/compas_ags/data/loadpath/base.json'
     # fnm = '/cluster/home/liewa/compas_ags/data/loadpath/plus.json'
     form = FormDiagram.from_json(fnm)
 
     form = randomise_form(form)
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=1000)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=30, steps=100000)
 
-    # fopts, forms, best = optimise_multi(form, trials=4)
+    # fopts, forms, best = optimise_multi(form, trials=50)
     # form = forms[best]
 
     plot_form(form, radius=0.001).show()
-    # form.to_json(fnm)
+    form.to_json(fnm)
 
     # force = ForceDiagram.from_formdiagram(form)
     # plotter = NetworkPlotter(force, figsize=(10, 7), fontsize=8)
     # plotter.draw_vertices(radius=0.05, text=[])
     # plotter.draw_edges()
     # plotter.show()
-
-    # form =  ground_form(points=[[xi, yi, 0] for xi in range(5) for yi in range(5)])
-    # fnm = '/home/al/compas_ags/data/loadpath/base.json'
-    # form.to_json(fnm)
