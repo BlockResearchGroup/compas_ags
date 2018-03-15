@@ -110,6 +110,10 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     """
 
+    if printout:
+        print('\n' + '-' * 50)
+        print('Load-path optimisation started')
+
     # Mapping
 
     k_i = form.key_index()
@@ -133,7 +137,7 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
     for key, vertex in form.vertex.items():
         i = k_i[key]
         xyz[i, :] = form.vertex_coordinates(key)
-        pz[i] = vertex['pz']
+        pz[i] = vertex.get('pz', 0)
     xy = xyz[:, :2]
     z  = xyz[:, 2]
     pz = pz[free]
@@ -162,8 +166,6 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
     k = len(ind)
 
     if printout:
-        print('\n' + '-' * 50)
-        print('Load-path optimisation started')
         print('Form diagram has {0} independent branches'.format(len(ind)))
 
     Adinv = pinv(E[:, dep])
@@ -185,14 +187,30 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
     elif solver == 'ga':
         fopt, qopt = diff_ga(form, bounds, population, steps, args)
 
+    z, l2, q = z_from_qid(qopt, args)
+
+    if printout:
+        print('Compressive: {0}'.format(all(q.ravel() >= -0.001)))
+        print('qid: {0:.3f} : {1:.3f}'.format(min(qopt), max(qopt)))
+        print('q: {0:.3f} : {1:.3f}'.format(float(min(q)), float(max(q))))
+        print('-' * 50 + '\n')
+
     if polish == 'slsqp':
         fopt_, qopt_ = slsqp(form, qopt, bounds, gradient, printout, args)
 
-    if fopt_ < fopt:
-        fopt = fopt_
-        qopt = qopt_
+    z, l2, q = z_from_qid(qopt_, args)
 
-    z, l2, q = z_from_qid(qopt, args)
+    if printout:
+        print('fopt: {0:.3g}'.format(fopt_))
+        print('Compressive: {0}'.format(all(q.ravel() >= -0.001)))
+        print('qid: {0:.3f} : {1:.3f}'.format(min(qopt_), max(qopt_)))
+        print('q: {0:.3f} : {1:.3f}'.format(float(min(q)), float(max(q))))
+        print('-' * 50 + '\n')
+
+    if (fopt_ < fopt) and (min(q) > -0.001):
+            fopt = fopt_
+            qopt = qopt_
+            z, l2, q = z_from_qid(qopt, args)
 
     # Unique key
 
@@ -215,11 +233,7 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
 
     # Print summary
 
-    if printout:
-        print('fopt: {0:.3g}'.format(fopt))
-        print('All branches compressive: {0}'.format(all(q.ravel() >= 0)))
-        print('Maximum qid: {0:.3g}'.format(max(qopt)))
-        print('-' * 50 + '\n')
+
 
     return fopt, qopt
 
@@ -275,9 +289,9 @@ def fint(qid, *args):
     """
 
     z, l2, q = z_from_qid(qid, args)
-    f = dot(abs(q.transpose()), l2) + sum((q[q < 0] - 1.)**2)
+    f = dot(abs(q.transpose()), l2) + sum((q[q < 0] - 5)**4)
     if isnan(f):
-        return 10**20
+        return 10**10
     return f
 
 
@@ -604,7 +618,7 @@ def randomise_form(form):
 def _worker(sequence):
 
     i, form = sequence
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=100, printout=0)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=20, steps=1000, printout=0)
     print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
     return (fopt, form)
 
@@ -643,7 +657,7 @@ def optimise_multi(form, trials=10):
     return fopts, forms, best
 
 
-def plot_form(form):
+def plot_form(form, radius=0.1):
 
     """ Extended load-path plotting for a FormDiagram
 
@@ -651,6 +665,8 @@ def plot_form(form):
     ----------
     form : obj
         FormDiagram to plot.
+    radius : float
+        Radius of vertex markers.
 
     Returns
     -------
@@ -690,7 +706,7 @@ def plot_form(form):
     # vlabel = {key: '{0:.2f}'.format(form.vertex[key]['pz']) for key in form.vertices()}
 
     plotter = NetworkPlotter(form, figsize=(10, 7), fontsize=8)
-    plotter.draw_vertices(facecolor={key: '#aaeeaa' for key in form.fixed()}, radius=0.1, text=[])
+    plotter.draw_vertices(facecolor={key: '#aaeeaa' for key in form.fixed()}, radius=radius, text=[])
     plotter.draw_lines(lines)
 
     return plotter
@@ -721,22 +737,53 @@ def plot_forms(fopts, forms, path):
         del plotter
 
 
+def ground_form(points):
+
+    """ Makes a ground structure from a set of points.
+
+    Parameters
+    ----------
+    points : list
+        Co-ordinates of each point to connect.
+
+    Returns
+    -------
+    obj
+        Connected edges in a FormDiagram object.
+
+    """
+
+    form = FormDiagram()
+
+    for point in points:
+        x, y, z = point
+        form.add_vertex(x=x, y=y, z=z)
+
+    for i in form.vertices():
+        for j in form.vertices():
+            if (i != j) and (not form.has_edge(u=i, v=j, directed=False)):
+                form.add_edge(u=i, v=j)
+
+    return form
+
+
 # ==============================================================================
 # Debugging
 # ==============================================================================
 
 if __name__ == "__main__":
 
-    fnm = '/home/al/compas_ags/data/loadpath/arches.json'
+    fnm = '/home/al/compas_ags/data/loadpath/base.json'
     # fnm = '/cluster/home/liewa/compas_ags/data/loadpath/plus.json'
     form = FormDiagram.from_json(fnm)
 
-    # fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=100)
-    # plot_form(form).show()
+    form = randomise_form(form)
+    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=1000)
 
-    fopts, forms, best = optimise_multi(form, trials=30)
-    plot_forms(fopts, forms, path='/home/al/temp/')
+    # fopts, forms, best = optimise_multi(form, trials=4)
+    # form = forms[best]
 
+    plot_form(form, radius=0.001).show()
     # form.to_json(fnm)
 
     # force = ForceDiagram.from_formdiagram(form)
@@ -744,3 +791,7 @@ if __name__ == "__main__":
     # plotter.draw_vertices(radius=0.05, text=[])
     # plotter.draw_edges()
     # plotter.show()
+
+    # form =  ground_form(points=[[xi, yi, 0] for xi in range(5) for yi in range(5)])
+    # fnm = '/home/al/compas_ags/data/loadpath/base.json'
+    # form.to_json(fnm)

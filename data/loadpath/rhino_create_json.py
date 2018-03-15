@@ -44,8 +44,8 @@ for guid in rs.ObjectsByLayer('Pins'):
 
 # Loads
 
-for key in network.vertices():
-    network.vertex[key]['pz'] = face_network.vertex_area(key=key)
+#for key in network.vertices():
+#    network.vertex[key]['pz'] = face_network.vertex_area(key=key)
     
 # Symmetry
 
@@ -70,9 +70,10 @@ rs.CurrentLayer('Dots')
 
 pzt = 0
 for key in network.vertices():
-    pz = network.vertex[key]['pz']
-    pzt += pz
-    rs.AddTextDot('{0:.3f}'.format(pz), network.vertex_coordinates(key))
+    pz = network.vertex[key].get('pz', None)
+    if pz:
+        pzt += pz
+        rs.AddTextDot('{0:.3f}'.format(pz), network.vertex_coordinates(key))
 print('Total load: {0}'.format(pzt))
 
 rs.EnableRedraw(True)
@@ -81,4 +82,4 @@ rs.LayerVisible('Dots', False)
 
 # Save
 
-network.to_json('C:/compas_ags/data/loadpath/fan.json')
+network.to_json('F:/compas_ags/data/loadpath/base.json')
