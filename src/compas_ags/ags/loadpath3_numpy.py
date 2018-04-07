@@ -3,8 +3,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from numpy import abs
-from numpy import argmin
+# from numpy import abs
+# from numpy import argmin
 from numpy import array
 from numpy import dot
 from numpy import isnan
@@ -17,7 +17,7 @@ from numpy import newaxis
 from numpy import zeros
 from numpy.linalg import pinv
 
-from scipy.optimize import fmin_slsqp
+# from scipy.optimize import fmin_slsqp
 from scipy.sparse import diags
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import spsolve
@@ -36,7 +36,8 @@ from compas.numerical import nonpivots
 
 from compas.utilities import geometric_key
 
-from multiprocessing import Pool
+# from multiprocessing import Pool
+
 from random import shuffle
 
 import sympy
@@ -50,7 +51,10 @@ __email__     = 'liew@arch.ethz.ch'
 
 __all__ = [
     'compute_loadpath3',
-    'optimise_loadpath3',
+    'optimise_single',
+    # 'optimise_multi',
+#     'plot_form',
+#     'randomise_form',
 ]
 
 
@@ -73,18 +77,18 @@ def compute_loadpath3(form, force):
     return l.T.dot(f)[0, 0]
 
 
-def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin=1e-6, qmax=10, population=20,
-                       steps=100, printout=True, indset=None):
+def optimise_single(form, solver='devo', polish='slsqp', gradient=False, qmin=1e-6, qmax=10, population=300,
+                    generations=500, printout=10, plot=False, frange=None, indset=None):
 
-    """ Finds the optimised load-path for a FormDiagram with given loads.
+    """ Finds the optimised load-path for a FormDiagram.
 
     Parameters
     ----------
     form : obj
         The FormDiagram.
     solver : str
-        'devo' or 'ga' solver to use.
-    polish : bool
+        'devo' or 'ga' evolutionary solver to use.
+    polish : str
         'slsqp' polish or None.
     gradient : bool
         Use analytical gradient (True) or approximation (False).
@@ -94,10 +98,14 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
         Maximum qid value.
     population : int
         Number of agents for evolution solver.
-    steps : int
-        Number of iteration steps for evolution solver.
-    printout : bool
-        Print output to screen.
+    generations : int
+        Number of iteration steps for the evolution solver.
+    printout : int
+        Frequency of print output to screen.
+    plot : bool
+        Plot progress of evolution.
+    frange : list
+        Minimum and maximum f value to plot.
     indset : str
         Key of the independent set to use.
 
@@ -159,59 +167,54 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
                 ind.append(uv_i[(u, v)])
     else:
         ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
-
-    dep = list(set(range(m)) - set(ind))
-    for u, v in form.edges():
-        isind = True if uv_i[(u, v)] in ind else False
-        form.edge[u][v]['is_ind'] = isind
     k = len(ind)
+    dep = list(set(range(m)) - set(ind))
+
+    for u, v in form.edges():
+        form.edge[u][v]['is_ind'] = True if uv_i[(u, v)] in ind else False
 
     if printout:
         print('Form diagram has {0} independent branches'.format(len(ind)))
 
-    Adinv = pinv(E[:, dep])
-    Aid = E[:, ind]
-    _AdinvAid = dot(-Adinv, Aid)
-    _AdinvAid = csr_matrix(_AdinvAid)
-
     # Set-up
 
-    lh = normrow(C.dot(xy))
-    lh2 = lh**2
+    _EdinvEi = csr_matrix(dot(-pinv(E[:, dep]), E[:, ind]))
+    lh2 = normrow(C.dot(xy))**2
     q = array(form.q())[:, newaxis]
     bounds = [[qmin, qmax]] * k
-    args = (q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym)
+    args = (q, ind, dep, _EdinvEi, C, Ci, Cit, pz, z, free, lh2, sym)
 
     if solver == 'devo':
-        fopt, qopt = diff_evo(form, bounds, population, steps, printout, args)
+        fopt, qopt = diff_evo(form, bounds, population, generations, printout, plot, frange, args)
 
     elif solver == 'ga':
-        fopt, qopt = diff_ga(form, bounds, population, steps, args)
+        fopt, qopt = diff_ga(form, bounds, population, generations, args)
 
-    q = z_from_qid(qopt, args)[2]
+    q = zlq_from_qid(qopt, args)[2]
+
+#     if polish == 'slsqp':
+#         fopt_, qopt_ = slsqp(form, qopt, bounds, gradient, printout, args)
+
+#         q = z_from_qid(qopt_, args)[2]
+
+#         if printout:
+#             print('fopt: {0:.3g}'.format(fopt_))
+#             print('Compressive: {0}'.format(all(q.ravel() >= -0.001)))
+#             print('qid: {0:.3f} : {1:.3f}'.format(min(qopt_), max(qopt_)))
+#             print('q: {0:.3f} : {1:.3f}'.format(float(min(q)), float(max(q))))
+#             print('-' * 50 + '\n')
+
+#         if (fopt_ < fopt) and (min(q) > -0.001):
+#             fopt = fopt_
+#             qopt = qopt_
+
+#     z, _, q = z_from_qid(qopt, args)
 
     if printout:
         print('Compressive: {0}'.format(all(q.ravel() >= -0.001)))
         print('qid: {0:.3f} : {1:.3f}'.format(min(qopt), max(qopt)))
         print('q: {0:.3f} : {1:.3f}'.format(float(min(q)), float(max(q))))
         print('-' * 50 + '\n')
-
-    if polish == 'slsqp':
-        fopt_, qopt_ = slsqp(form, qopt, bounds, gradient, printout, args)
-
-    q = z_from_qid(qopt_, args)[2]
-
-    if printout:
-        print('fopt: {0:.3g}'.format(fopt_))
-        print('Compressive: {0}'.format(all(q.ravel() >= -0.001)))
-        print('qid: {0:.3f} : {1:.3f}'.format(min(qopt_), max(qopt_)))
-        print('q: {0:.3f} : {1:.3f}'.format(float(min(q)), float(max(q))))
-        print('-' * 50 + '\n')
-
-    if (fopt_ < fopt) and (min(q) > -0.001):
-        fopt = fopt_
-        qopt = qopt_
-        z, _, q = z_from_qid(qopt, args)
 
     # Unique key
 
@@ -235,9 +238,9 @@ def optimise_loadpath3(form, solver='devo', polish='slsqp', gradient=False, qmin
     return fopt, qopt
 
 
-def z_from_qid(qid, args):
+def zlq_from_qid(qid, args):
 
-    """ Calculates the new z co-ordinates from a qid set.
+    """ Calculates the new z co-ordinates, lengths and force densities from a qid set.
 
     Parameters
     ----------
@@ -251,25 +254,24 @@ def z_from_qid(qid, args):
     array
         Updated z.
     array
-        New lengths squared.
+        Updated edge lengths squared.
     array
         Updated force densities.
 
     """
 
-    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
+    q, ind, dep, _EdinvEi, C, Ci, Cit, pz, z, free, lh2, sym = args
     q[ind, 0] = qid
-    q[dep] = _AdinvAid.dot(q[ind])
+    q[dep] = _EdinvEi.dot(q[ind])
     q[sym] *= 0
-    Q = diags(q[:, 0])
-    z[free] = spsolve(Cit.dot(Q).dot(Ci), pz)
+    z[free] = spsolve(Cit.dot(diags(q[:, 0])).dot(Ci), pz)
     l2 = lh2 + C.dot(z[:, newaxis])**2
     return z, l2, q
 
 
 def fint(qid, *args):
 
-    """ Calculates the internal loadpath for a given qid set (with penalty).
+    """ Calculates the internal load-path for a given qid set (with penalty).
 
     Parameters
     ----------
@@ -281,96 +283,96 @@ def fint(qid, *args):
     Returns
     -------
     float
-        Scalar loadpath value.
+        Scalar load-path value.
 
     """
 
-    z, l2, q = z_from_qid(qid, args)
+    z, l2, q = zlq_from_qid(qid, args)
     f = dot(abs(q.transpose()), l2) + sum((q[q < 0] - 5)**4)
     if isnan(f):
         return 10**10
     return f
 
 
-def fint_(qid, *args):
+# def fint_(qid, *args):
 
-    """ Calculates the internal loadpath for a given qid set.
+#     """ Calculates the internal load-path for a given qid set.
 
-    Parameters
-    ----------
-    qid : list
-        Independent force densities.
-    args : tuple
-        Sequence of additional arguments.
+#     Parameters
+#     ----------
+#     qid : list
+#         Independent force densities.
+#     args : tuple
+#         Sequence of additional arguments.
 
-    Returns
-    -------
-    float
-        Scalar loadpath value.
+#     Returns
+#     -------
+#     float
+#         Scalar load-path value.
 
-    """
+#     """
 
-    z, l2, q = z_from_qid(qid, args)
-    f = dot(abs(q.transpose()), l2)
-    return f
-
-
-def qpos(qid, *args):
-
-    """ Function for non-negativity constraint of force densities q.
-
-    Parameters
-    ----------
-    qid : list
-        Independent force densities.
-
-    Returns
-    -------
-    array
-        q values to be >= 0.
-
-    """
-
-    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
-    q[ind, 0] = qid
-    q[dep] = _AdinvAid.dot(q[ind])
-    q[sym] *= 0
-    return q.ravel() - 10.**(-3)
+#     z, l2, q = z_from_qid(qid, args)
+#     f = dot(abs(q.transpose()), l2)
+#     return f
 
 
-def slsqp(form, qid0, bounds, gradient, printout, args):
+# def qpos(qid, *args):
 
-    """ Finds the optimised load-path for a FormDiagram by SLSQP.
+#     """ Function for non-negativity constraint of force densities q.
 
-    Parameters
-    ----------
-    form : obj
-        FormDiagram.
-    qid0 : obj
-        Initial starting point qid0.
-    bounds : list
-        [qmin, qmax] values for each DoF.
-    gradient : bool
-        Use analytical gradient (True) or approximation (False).
-    printout : bool
-        Print output to screen.
-    args : tuple
-        Sequence of additional arguments.
+#     Parameters
+#     ----------
+#     qid : list
+#         Independent force densities.
 
-    Returns
-    -------
-    float
-        Optimum load-path value.
-    array
-        Optimum qids
+#     Returns
+#     -------
+#     array
+#         q values to be >= 0.
 
-    """
+#     """
 
-    q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
-    pout = 2 if printout else 0
+#     q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
+#     q[ind, 0] = qid
+#     q[dep] = _AdinvAid.dot(q[ind])
+#     q[sym] *= 0
+#     return q.ravel() - 10.**(-3)
 
-    if not gradient:
-        opt = fmin_slsqp(fint_, qid0, args=args, disp=pout, bounds=bounds, full_output=1, iter=300, f_ieqcons=qpos)
+
+# def slsqp(form, qid0, bounds, gradient, printout, args):
+
+#     """ Finds the optimised load-path for a FormDiagram by SLSQP.
+
+#     Parameters
+#     ----------
+#     form : obj
+#         FormDiagram.
+#     qid0 : obj
+#         Initial starting point qid0.
+#     bounds : list
+#         [qmin, qmax] values for each DoF.
+#     gradient : bool
+#         Use analytical gradient (True) or approximation (False).
+#     printout : bool
+#         Print output to screen.
+#     args : tuple
+#         Sequence of additional arguments.
+
+#     Returns
+#     -------
+#     float
+#         Optimum load-path value.
+#     array
+#         Optimum qids
+
+#     """
+
+#     q, ind, dep, _AdinvAid, C, Ci, Cit, pz, z, free, lh2, sym = args
+#     pout = 2 if printout else 0
+
+#     if not gradient:
+#         opt = fmin_slsqp(fint_, qid0, args=args, disp=pout, bounds=bounds, full_output=1, iter=300, f_ieqcons=qpos)
 
 #    else:
 #        keys = list(form.vertices())
@@ -420,7 +422,7 @@ def slsqp(form, qid0, bounds, gradient, printout, args):
 #                Cit_, Cbt_, pzt_, eipzt_, EiK_, zbt_, xbtCbteixtCtEiK_, ybtCbteiytCtEiK_)
 #        opt = fmin_slsqp(fext, qid0, args=args, disp=2, bounds=bounds, full_output=1, iter=iterations, f_ieqcons=qpositive, fprime=gext)
 
-    return opt[1], opt[0]
+#     return opt[1], opt[0]
 
 
 #def fext(qid, *args):
@@ -469,7 +471,7 @@ def slsqp(form, qid0, bounds, gradient, printout, args):
 #    return g
 
 
-def diff_evo(form, bounds, population, steps, printout, args):
+def diff_evo(form, bounds, population, generations, printout, plot, frange, args):
 
     """ Finds the optimised load-path for a FormDiagram by Differential Evolution.
 
@@ -478,15 +480,19 @@ def diff_evo(form, bounds, population, steps, printout, args):
     form : obj
         FormDiagram.
     bounds : list
-        [qmin, qmax] values for each DoF.
+        [qmin, qmax] values for each qid.
     population : int
         Number of agents.
-    steps : int
+    generations : int
         Number of iteration steps.
-    printout : bool
-        Print output to screen.
+    printout : int
+        Frequency of print output to screen.
+    plot : bool
+        Plot progress of evolution.
+    frange : list
+        Minimum and maximum f value to plot.
     args : tuple
-        Sequence of additional arguments.
+        Sequence of additional arguments for fn.
 
     Returns
     -------
@@ -497,22 +503,23 @@ def diff_evo(form, bounds, population, steps, printout, args):
 
     """
 
-    return devo_numpy(fn=fint, bounds=bounds, population=population, generations=steps, printout=printout, args=args)
+    return devo_numpy(fn=fint, bounds=bounds, population=population, generations=generations, printout=printout,
+                      plot=plot, frange=frange, args=args)
 
 
-def diff_ga(form, bounds, population, steps, args):
+def diff_ga(form, bounds, population, generations, args):
 
-    """ Finds the optimised loadpath for a FormDiagram using a Genetic Algorithm.
+    """ Finds the optimised load-path for a FormDiagram by Genetic Algorithm.
 
     Parameters
     ----------
     form : obj
         FormDiagram.
     bounds : list
-        [qmin, qmax] values for each DoF.
+        [qmin, qmax] values for each qid.
     population : int
         Number of agents.
-    steps : int
+    generations : int
         Number of iteration steps.
     args : tuple
         Sequence of additional arguments.
@@ -530,8 +537,8 @@ def diff_ga(form, bounds, population, steps, args):
     nbins  = [10] * k
     elites = int(0.2 * population)
 
-    ga_ = ga(fint, 'min', k, bounds, num_gen=steps, num_pop=population, num_elite=elites,
-             num_bin_dig=nbins, mutation_probability=0.03, fargs=args, print_refresh=10)
+    ga_ = ga(fint, 'min', k, bounds, num_gen=generations, num_pop=population, num_elite=elites, num_bin_dig=nbins,
+             mutation_probability=0.03, fargs=args, print_refresh=10)
 
     index = ga_.best_individual_index
     qopt = ga_.current_pop['scaled'][index]
@@ -540,42 +547,42 @@ def diff_ga(form, bounds, population, steps, args):
     return fopt, qopt
 
 
-#def global_scale(form):
-#    """ Applies the optimum global scale for a given form diagram.
-#
-#    Parameters:
-#        form (obj): FormDiagram with applied force densities.
-#
-#    Returns:
-#        float: Updated load path value.
-#        list: Updated force densities.
-#    """
-#    k_i = form.key_index()
-#    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
-#    C = connectivity_matrix(edges, 'csr')
-#    xy = array(form.xy())
-#    lh = normrow(C.dot(xy))
-#    q = array(form.q())
-#    qt = q.transpose()
-#    update_thrustdiagram(form, [])
-#    xyz0 = array(form.get_vertices_attributes(['x', 'y', 'z'], keys=list(form.vertices())))
-#    z0 = xyz0[:, 2][:, newaxis]
-#    w0 = C.dot(z0)
-#    rmin = sqrt(dot(qt, lh**2) / (dot(qt, w0**2)))
-#    z = z0 * rmin
-#    l2 = lh**2 + C.dot(z)**2
-#    q /= rmin
-#    fopt = dot(q.transpose(), l2)
-#    i_k = form.index_key()
-#    for i in range(len(z0)):
-#        form.vertex[i_k[i]]['z'] = float(z[i])
-#    f = q * lh.ravel()
-#    uv_i = form.uv_index()
-#    for u, v, attr in form.edges(True):
-#        i = uv_i[(u, v)]
-#        attr['q'] = float(q[i])
-#        attr['f'] = float(f[i])
-#    return fopt, list(q)
+# #def global_scale(form):
+# #    """ Applies the optimum global scale for a given form diagram.
+# #
+# #    Parameters:
+# #        form (obj): FormDiagram with applied force densities.
+# #
+# #    Returns:
+# #        float: Updated load path value.
+# #        list: Updated force densities.
+# #    """
+# #    k_i = form.key_index()
+# #    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+# #    C = connectivity_matrix(edges, 'csr')
+# #    xy = array(form.xy())
+# #    lh = normrow(C.dot(xy))
+# #    q = array(form.q())
+# #    qt = q.transpose()
+# #    update_thrustdiagram(form, [])
+# #    xyz0 = array(form.get_vertices_attributes(['x', 'y', 'z'], keys=list(form.vertices())))
+# #    z0 = xyz0[:, 2][:, newaxis]
+# #    w0 = C.dot(z0)
+# #    rmin = sqrt(dot(qt, lh**2) / (dot(qt, w0**2)))
+# #    z = z0 * rmin
+# #    l2 = lh**2 + C.dot(z)**2
+# #    q /= rmin
+# #    fopt = dot(q.transpose(), l2)
+# #    i_k = form.index_key()
+# #    for i in range(len(z0)):
+# #        form.vertex[i_k[i]]['z'] = float(z[i])
+# #    f = q * lh.ravel()
+# #    uv_i = form.uv_index()
+# #    for u, v, attr in form.edges(True):
+# #        i = uv_i[(u, v)]
+# #        attr['q'] = float(q[i])
+# #        attr['f'] = float(f[i])
+# #    return fopt, list(q)
 
 
 def randomise_form(form):
@@ -590,16 +597,16 @@ def randomise_form(form):
     Returns
     -------
     obj
-        Shuffled FormDiagram.
+        New shuffled FormDiagram.
 
     """
 
-    edges = [(form.vertex_coordinates(i), form.vertex_coordinates(j)) for i, j in form.edges()]
+    edges = [form.edge_coordinates(u, v) for u, v in form.edges()]
     shuffle(edges)
     form_ = FormDiagram.from_lines(edges)
     form_.update_default_edge_attributes({'is_symmetry': False})
-    gkey_key = form_.gkey_key()
 
+    gkey_key = form_.gkey_key()
     sym = [geometric_key(form.edge_midpoint(u, v)) for u, v in form.edges_where({'is_symmetry': True})]
     for u, v in form_.edges():
         if geometric_key(form_.edge_midpoint(u, v)) in sym:
@@ -612,46 +619,46 @@ def randomise_form(form):
     return form_
 
 
-def _worker(sequence):
+# def _worker(sequence):
 
-    i, form = sequence
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=30, steps=1000, printout=0)
-    print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
-    return (fopt, form)
+#     i, form = sequence
+#     fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=5, population=20, steps=10000, printout=0)
+#     print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
+#     return (fopt, form)
 
 
-def optimise_multi(form, trials=10):
+# def optimise_multi(form, trials=10):
 
-    """ Finds the optimised loadpath for multiple randomly generated FormDiagrams.
+#     """ Finds the optimised loadpath for multiple randomly generated FormDiagrams.
 
-    Parameters
-    ----------
-    form : obj
-        Original FormDiagram.
-    trials : int
-        Number of trials to perform.
+#     Parameters
+#     ----------
+#     form : obj
+#         Original FormDiagram.
+#     trials : int
+#         Number of trials to perform.
 
-    Returns
-    -------
-    list
-        fopt for each trial.
-    list
-        Each final FormDiagram.
-    int
-        Index of the optimum.
+#     Returns
+#     -------
+#     list
+#         fopt for each trial.
+#     list
+#         Each final FormDiagram.
+#     int
+#         Index of the optimum.
 
-    """
+#     """
 
-    forms = [randomise_form(form) for i in range(trials)]
-    pool = Pool()
-    sequence = zip(list(range(trials)), forms)
-    result = pool.map(_worker, sequence)
-    fopts, forms = zip(*result)
-    best = argmin(fopts)
-    fopt = fopts[best]
-    print('Best: {0} - fopt {1:.1f}'.format(best, fopt))
+#     forms = [randomise_form(form) for i in range(trials)]
+#     pool = Pool()
+#     sequence = zip(list(range(trials)), forms)
+#     result = pool.map(_worker, sequence)
+#     fopts, forms = zip(*result)
+#     best = argmin(fopts)
+#     fopt = fopts[best]
+#     print('Best: {0} - fopt {1:.1f}'.format(best, fopt))
 
-    return fopts, forms, best
+#     return fopts, forms, best
 
 
 def plot_form(form, radius=0.1):
@@ -673,18 +680,17 @@ def plot_form(form, radius=0.1):
     """
 
     qmax = max(form.q())
-
     lines = []
+
     for u, v in form.edges():
-        qi = form.edge[u][v]['q']
 
-        if form.edge[u][v]['is_symmetry']:
-            if form.edge[u][v]['is_ind']:
-                colour = '0000ff'
-            else:
-                colour = '8787ff'
+        edge = form.edge[u][v]
+        qi = edge['q']
 
-        elif form.edge[u][v]['is_ind']:
+        if edge['is_symmetry']:
+            colour = '0000ff'if edge['is_ind'] else '8787ff'
+
+        elif edge['is_ind']:
             colour = 'ff0000'
 
         elif qi <= 0.001:
@@ -709,59 +715,59 @@ def plot_form(form, radius=0.1):
     return plotter
 
 
-def plot_forms(fopts, forms, path):
+# def plot_forms(fopts, forms, path):
 
-    """ Save multiple FormDiagram images to file.
+#     """ Save multiple FormDiagram images to file.
 
-    Parameters
-    ----------
-    fopts : list
-        Optimum load-paths for each trial.
-    forms : list
-        Each FormDiagram to plot/save.
-    path : str
-        Folder to save images to.
+#     Parameters
+#     ----------
+#     fopts : list
+#         Optimum load-paths for each trial.
+#     forms : list
+#         Each FormDiagram to plot/save.
+#     path : str
+#         Folder to save images to.
 
-    Returns
-    -------
-    None
+#     Returns
+#     -------
+#     None
 
-    """
+#     """
 
-    for c in range(len(forms)):
-        plotter = plot_form(forms[c])
-        plotter.save('{0}{1}-{2}.png'.format(path, c, fopts[c]))
-        del plotter
+#     for c in range(len(forms)):
+#         plotter = plot_form(forms[c])
+#         plotter.save('{0}{1}-{2}.png'.format(path, c, fopts[c]))
+#         del plotter
 
 
-def ground_form(points):
+# def ground_form(points):
 
-    """ Makes a ground structure from a set of points.
+#     """ Makes a ground structure from a set of points.
 
-    Parameters
-    ----------
-    points : list
-        Co-ordinates of each point to connect.
+#     Parameters
+#     ----------
+#     points : list
+#         Co-ordinates of each point to connect.
 
-    Returns
-    -------
-    obj
-        Connected edges in a FormDiagram object.
+#     Returns
+#     -------
+#     obj
+#         Connected edges in a FormDiagram object.
 
-    """
+#     """
 
-    form = FormDiagram()
+#     form = FormDiagram()
 
-    for point in points:
-        x, y, z = point
-        form.add_vertex(x=x, y=y, z=z)
+#     for point in points:
+#         x, y, z = point
+#         form.add_vertex(x=x, y=y, z=z)
 
-    for i in form.vertices():
-        for j in form.vertices():
-            if (i != j) and (not form.has_edge(u=i, v=j, directed=False)):
-                form.add_edge(u=i, v=j)
+#     for i in form.vertices():
+#         for j in form.vertices():
+#             if (i != j) and (not form.has_edge(u=i, v=j, directed=False)):
+#                 form.add_edge(u=i, v=j)
 
-    return form
+#     return form
 
 
 # ==============================================================================
@@ -770,21 +776,59 @@ def ground_form(points):
 
 if __name__ == "__main__":
 
-    fnm = 'C:/compas_ags/data/loadpath/base.json'
-    # fnm = '/cluster/home/liewa/compas_ags/data/loadpath/plus.json'
+    # Load FormDiagram
+
+    fnm = '/home/al/compas_ags/data/loadpath/orthogonal.json'
     form = FormDiagram.from_json(fnm)
 
+    # Midpoint-index mapping
+
+    mp_i = {}
+    uv_i = form.uv_index()
+    for u, v in form.edges():
+        mp_i[geometric_key(form.edge_midpoint(u, v)[:2] + [0])] = uv_i[(u, v)]
+
+    # Single run
+
     form = randomise_form(form)
-    fopt, qopt = optimise_loadpath3(form, solver='devo', polish='slsqp', qmax=7, population=30, steps=100000)
+    fopt, qopt = optimise_single(form, solver='devo', polish=None, qmax=5, population=300, generations=500, plot=True,
+                                 frange=[110, None], printout=10)
 
-    # fopts, forms, best = optimise_multi(form, trials=50)
-    # form = forms[best]
-
-    plot_form(form, radius=0.001).show()
+    plot_form(form, radius=0.1).show()
     form.to_json(fnm)
 
-    # force = ForceDiagram.from_formdiagram(form)
-    # plotter = NetworkPlotter(force, figsize=(10, 7), fontsize=8)
-    # plotter.draw_vertices(radius=0.05, text=[])
-    # plotter.draw_edges()
-    # plotter.show()
+#     # Multiple runs
+
+#     # fopts, forms, best = optimise_multi(form, trials=1)
+#     # form = forms[best]
+
+#     # Make binary
+
+#     # path = '/home/al/downloads/tf_load-path/'
+#     # features = '{0}training_features.csv'.format(path)
+#     # labels = '{0}training_labels.csv'.format(path)
+#     # features = '{0}testing_features.csv'.format(path)
+#     # labels = '{0}testing_labels.csv'.format(path)
+
+#     # with open(features, 'a') as f:
+#     #     for form in forms:
+#     #         indi = [mp_i[mp] for mp in form.attributes['indset'].split('-')]
+#     #         binary = [0] * form.number_of_edges()
+#     #         for i in indi:
+#     #             binary[i] = 1
+#     #         f.write(','.join([str(i) for i in binary]) + '\n')
+
+#     # with open(labels, 'a') as f:
+#     #     for form in forms:
+#     #         fopt = form.attributes['loadpath']
+#     #         val = 0 if fopt > 200 else 1
+#     #         f.write('{0}\n'.format(val))
+
+#     # print('**** DONE *****')
+
+
+#     # force = ForceDiagram.from_formdiagram(form)
+#     # plotter = NetworkPlotter(force, figsize=(10, 7), fontsize=8)
+#     # plotter.draw_vertices(radius=0.05, text=[])
+#     # plotter.draw_edges()
+#     # plotter.show()
