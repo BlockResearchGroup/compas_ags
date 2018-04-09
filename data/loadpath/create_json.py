@@ -32,9 +32,9 @@ network.attributes['indset'] = ''
 # FaceNetwork
 
 face_network = FaceNetwork.from_data(network.to_data())
-network_find_faces(face_network, breakpoints=face_network.leaves())
-#network_find_faces(face_network)
-#face_network.delete_face(0)
+#network_find_faces(face_network, breakpoints=face_network.leaves())
+network_find_faces(face_network)
+face_network.delete_face(0)
 
 # Pins
 
@@ -81,4 +81,4 @@ rs.LayerVisible('Dots', False)
 
 # Save
 
-network.to_json('F:/compas_ags/data/loadpath/orthogonal.json')
+network.to_json('F:/compas_ags/data/loadpath/fan.json')
