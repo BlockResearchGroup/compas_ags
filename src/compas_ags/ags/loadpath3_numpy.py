@@ -715,7 +715,7 @@ if __name__ == "__main__":
 
     # Load FormDiagram
 
-    fnm = '/home/al/compas_ags/data/loadpath/fan.json'
+    fnm = 'C:/compas_ags/data/loadpath/fan.json'
     form = FormDiagram.from_json(fnm)
 
     # Midpoint-index mapping
@@ -729,23 +729,24 @@ if __name__ == "__main__":
 
     # form = randomise_form(form)
     # fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmax=5, population=300, generations=500,
-                                 # plot=True, frange=[110, None], printout=10)
+    #                              plot=True, frange=[110, None], printout=10)
     # form.to_json(fnm)
 
     # plot_form(form, radius=0.1).show()
 
     # Multiple runs
 
-    fopts, forms, best = optimise_multi(form, trials=4, save_figs='/home/al/temp/')
+    fopts, forms, best = optimise_multi(form, trials=4, save_figs='')
     form = forms[best]
     # form.to_json(fnm)
 
+    # ForceDiagram
 
-
-
-
-
-
+    # force = ForceDiagram.from_formdiagram(form)
+    # plotter = NetworkPlotter(force, figsize=(10, 7), fontsize=8)
+    # plotter.draw_vertices(radius=0.05, text=[])
+    # plotter.draw_edges()
+    # plotter.show()
 
     # Make binary
 
@@ -768,11 +769,3 @@ if __name__ == "__main__":
     #         fopt = form.attributes['loadpath']
     #         val = 0 if fopt > 200 else 1
     #         f.write('{0}\n'.format(val))
-
-    # print('**** DONE *****')
-
-    # force = ForceDiagram.from_formdiagram(form)
-    # plotter = NetworkPlotter(force, figsize=(10, 7), fontsize=8)
-    # plotter.draw_vertices(radius=0.05, text=[])
-    # plotter.draw_edges()
-    # plotter.show()
