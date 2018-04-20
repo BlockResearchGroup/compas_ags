@@ -180,6 +180,7 @@ def optimise_single(form, solver='devo', polish='slsqp', gradient=False, qmin=1e
     # Set-up
 
     _EdinvEi = csr_matrix(dot(-pinv(E[:, dep]), E[:, ind]))
+    # del E
     lh2 = normrow(C.dot(xy))**2
     q = array(form.q())[:, newaxis]
     bounds = [[qmin, qmax]] * k
@@ -617,8 +618,8 @@ def optimise_multi(form, trials=10, save_figs=''):
     if save_figs:
         c = 0
         for form, fopt in zip(forms, fopts):
-            plotter = plot_form(form)
-            plotter.save('{0}trial_{1}-fopt_{2:.1f}.png'.format(save_figs, c, fopt))
+            plotter = plot_form(form, radius=0)
+            plotter.save('{0}trial_{1}-fopt_{2:.6f}.png'.format(save_figs, c, fopt))
             c += 1
         del plotter
 
@@ -652,16 +653,11 @@ def plot_form(form, radius=0.1):
         qi = edge['q']
 
         if edge['is_symmetry']:
-            colour = '0000ff'if edge['is_ind'] else '8787ff'
-
-        elif edge['is_ind']:
-            colour = 'ff0000'
-
-        elif qi <= 0.001:
-            colour = 'bbbbbb'
-
+            colour = '00ffff' if edge['is_ind'] else '0000ff'
         else:
-            colour = 'ff8784' if qi > 0 else '0000ff'
+            colour = 'ffff00' if edge['is_ind'] else 'ff0000'
+        if qi < 0:
+            colour = '000000'
 
         lines.append({
             'start': form.vertex_coordinates(u),
@@ -670,8 +666,9 @@ def plot_form(form, radius=0.1):
             'width': (qi / qmax + 0.1 * qmax) * 10,
         })
 
-    plotter = NetworkPlotter(form, figsize=(10, 7), fontsize=8)
-    plotter.draw_vertices(facecolor={key: '#aaeeaa' for key in form.fixed()}, radius=radius, text=[])
+    plotter = NetworkPlotter(form, figsize=(10, 10))
+    if radius:
+        plotter.draw_vertices(facecolor='#000000', radius=radius)
     plotter.draw_lines(lines)
 
     return plotter
@@ -715,7 +712,7 @@ if __name__ == "__main__":
 
     # Load FormDiagram
 
-    fnm = 'C:/compas_ags/data/loadpath/fan.json'
+    fnm = '/home/al/compas_ags/data/loadpath/arches.json'
     form = FormDiagram.from_json(fnm)
 
     # Midpoint-index mapping
@@ -729,14 +726,13 @@ if __name__ == "__main__":
 
     # form = randomise_form(form)
     # fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmax=5, population=300, generations=500,
-    #                              plot=True, frange=[110, None], printout=10)
+                                 # plot=True, frange=[110, None], printout=10)
     # form.to_json(fnm)
-
     # plot_form(form, radius=0.1).show()
 
     # Multiple runs
 
-    fopts, forms, best = optimise_multi(form, trials=4, save_figs='')
+    fopts, forms, best = optimise_multi(form, trials=1000, save_figs='/home/al/files/tf/figs/')
     form = forms[best]
     # form.to_json(fnm)
 
