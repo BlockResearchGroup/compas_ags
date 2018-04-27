@@ -578,10 +578,20 @@ def randomise_form(form):
 
 def _worker(data):
 
-    i, form = data
-    fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmax=5, population=300, generations=500, printout=0)
-    print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
-    return (fopt, form)
+    try:
+        i, form, save_figs = data
+        fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmax=5, population=300, generations=500, printout=0)
+        print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
+
+        if save_figs:
+            plotter = plot_form(form, radius=0, fix_width=True)
+            plotter.save('{0}trial_{1}-fopt_{2:.6f}.png'.format(save_figs, i, fopt))
+            del plotter
+        return (fopt, form)
+
+    except:
+        print('Trial: {0} - FAILED'.format(i))
+        return (10**20, None)
 
 
 def optimise_multi(form, trials=10, save_figs=''):
@@ -608,25 +618,17 @@ def optimise_multi(form, trials=10, save_figs=''):
 
     """
 
-    data = [(i, randomise_form(form)) for i in range(trials)]
+    data = [(i, randomise_form(form), save_figs) for i in range(trials)]
     result = Pool().map(_worker, data)
     fopts, forms = zip(*result)
     best = argmin(fopts)
     fopt = fopts[best]
     print('Best: {0} - fopt {1:.1f}'.format(best, fopt))
 
-    if save_figs:
-        c = 0
-        for form, fopt in zip(forms, fopts):
-            plotter = plot_form(form, radius=0)
-            plotter.save('{0}trial_{1}-fopt_{2:.6f}.png'.format(save_figs, c, fopt))
-            c += 1
-        del plotter
-
     return fopts, forms, best
 
 
-def plot_form(form, radius=0.1):
+def plot_form(form, radius=0.1, fix_width=False):
 
     """ Extended load-path plotting for a FormDiagram
 
@@ -636,6 +638,8 @@ def plot_form(form, radius=0.1):
         FormDiagram to plot.
     radius : float
         Radius of vertex markers.
+    fix_width : bool
+        Fix the width of edges to be constant.
 
     Returns
     -------
@@ -652,18 +656,27 @@ def plot_form(form, radius=0.1):
         edge = form.edge[u][v]
         qi = edge['q']
 
-        if edge['is_symmetry']:
-            colour = '00ffff' if edge['is_ind'] else '0000ff'
+        colour = ['0', '0', 'f', 'f', 'f', 'f']
+        if qi < 0:  # red compression
+            colour[0] = 'f'
+            colour[1] = 'f'
+        if edge['is_symmetry']:  # green symmetry
+            colour[2] = '0'
+            colour[3] = '0'
+        if edge['is_ind']:  # blue independent
+            colour[4] = '0'
+            colour[5] = '0'
+
+        if fix_width:
+            width = 10
         else:
-            colour = 'ffff00' if edge['is_ind'] else 'ff0000'
-        if qi < 0:
-            colour = '000000'
+            (qi / qmax + 0.1 * qmax) * 10
 
         lines.append({
             'start': form.vertex_coordinates(u),
             'end':   form.vertex_coordinates(v),
-            'color': colour,
-            'width': (qi / qmax + 0.1 * qmax) * 10,
+            'color': ''.join(colour),
+            'width': width,
         })
 
     plotter = NetworkPlotter(form, figsize=(10, 10))
@@ -726,14 +739,14 @@ if __name__ == "__main__":
 
     # form = randomise_form(form)
     # fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmax=5, population=300, generations=500,
-                                 # plot=True, frange=[110, None], printout=10)
+    #                              plot=True, frange=[100, 300], printout=10)
     # form.to_json(fnm)
     # plot_form(form, radius=0.1).show()
 
     # Multiple runs
 
-    fopts, forms, best = optimise_multi(form, trials=1000, save_figs='/home/al/files/tf/figs/')
-    form = forms[best]
+    fopts, forms, best = optimise_multi(form, trials=1, save_figs='/home/al/files/tf/figs/')
+    # form = forms[best]
     # form.to_json(fnm)
 
     # ForceDiagram
