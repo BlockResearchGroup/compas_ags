@@ -1,7 +1,7 @@
 """"""
 
-import formdiagram
-import forcediagram
+from compas_ags.diagrams import formdiagram
+from compas_ags.diagrams import forcediagram
 
 from formdiagram import *
 from forcediagram import *
