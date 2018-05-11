@@ -1,3 +1,7 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+
 from math import fabs
 
 from compas.plotters.core import draw_xpoints_xy
@@ -11,6 +15,17 @@ from compas.utilities import is_color_light
 from compas.plotters.core import size_to_sizedict
 
 import matplotlib.pyplot as plt
+
+
+__author__    = ['Tom Van Mele', ]
+__copyright__ = 'Copyright 2014 - Block Research Group, ETH Zurich'
+__license__   = 'MIT License'
+__email__     = 'vanmelet@ethz.ch'
+
+
+__all__ = [
+    'Viewer'
+]
 
 
 class Viewer(object):
@@ -32,13 +47,13 @@ class Viewer(object):
         self.default_compressioncolor   = '#0000ff'
         self.default_tensioncolor       = '#ff0000'
         self.default_externalforcecolor = '#00ff00'
-        self.default_externalforcewidth = 4.0
+        self.default_externalforcewidth = 2.0
 
         self.default_textcolor = '#000000'
         self.default_fontsize  = 8
 
         self.default_pointsize  = 0.1
-        self.default_linewidth  = 2.0
+        self.default_linewidth  = 1.0
         self.default_pointcolor = '#ffffff'
         self.default_linecolor  = '#000000'
         self.default_linestyle  = '-'
@@ -85,6 +100,7 @@ class Viewer(object):
                   points=None):
         """"""
         # preprocess
+
         vertexlabel = vertexlabel or {}
         edgelabel   = edgelabel or {}
         facelabel   = facelabel or {}
@@ -92,19 +108,25 @@ class Viewer(object):
         vertexcolor = color_to_colordict(vertexcolor, self.form.vertices(), self.default_vertexcolor)
         edgecolor   = color_to_colordict(edgecolor, self.form.edges(), self.default_edgecolor)
         facecolor   = color_to_colordict(facecolor, self.form.faces(), self.default_facecolor)
+
         # scale and position
+
         x = self.form.get_vertices_attribute('x')
         y = self.form.get_vertices_attribute('y')
+
         if lines:
             x += [line['start'][0] for line in lines]
             x += [line['end'][0] for line in lines]
             y += [line['start'][1] for line in lines]
             y += [line['end'][1] for line in lines]
+
         xmin, ymin = min(x), min(y)
         xmax, ymax = max(x), max(y)
         dx, dy = -xmin, -ymin
         scale  = max(fabs(xmax - xmin) / 10.0, fabs(ymax - ymin) / 10.0)
+
         # vertices
+
         if vertices_on:
             _points = []
             for key, attr in self.form.vertices(True):
@@ -116,10 +138,13 @@ class Viewer(object):
                     'edgecolor' : self.default_edgecolor,
                     'linewidth' : self.default_edgewidth * 0.5,
                     'text'      : None if key not in vertexlabel else str(vertexlabel[key]),
-                    'textcolor' : '#000000' if is_color_light(bgcolor) else '#ffffff'
+                    'textcolor' : '#000000' if is_color_light(bgcolor) else '#ffffff',
+                    'fontsize'  : self.default_fontsize,
                 })
             draw_xpoints_xy(_points, self.ax1)
+
         # edges
+
         if edges_on:
             leaves  = set(self.form.leaves())
             _lines  = []
@@ -131,11 +156,12 @@ class Viewer(object):
                 if u in leaves or v in leaves:
                     text  = None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
                     _arrows.append({
-                        'start' : sp,
-                        'end'   : ep,
-                        'width' : self.default_externalforcewidth,
-                        'color' : self.default_externalforcecolor,
-                        'text'  : text,
+                        'start'    : sp,
+                        'end'      : ep,
+                        'width'    : self.default_externalforcewidth,
+                        'color'    : self.default_externalforcecolor,
+                        'text'     : text,
+                        'fontsize' : self.default_fontsize
                     })
                 else:
                     if forces_on:
@@ -143,11 +169,12 @@ class Viewer(object):
                         color = self.default_tensioncolor if attr['f'] > 0 else self.default_compressioncolor
                         text  = None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
                         _lines.append({
-                            'start' : sp,
-                            'end'   : ep,
-                            'width' : width,
-                            'color' : color,
-                            'text'  : text
+                            'start'    : sp,
+                            'end'      : ep,
+                            'width'    : width,
+                            'color'    : color,
+                            'text'     : text,
+                            'fontsize' : self.default_fontsize
                         })
                     _arrows.append({
                         'start' : sp,
@@ -158,8 +185,10 @@ class Viewer(object):
                 draw_xarrows_xy(_arrows, self.ax1)
             if _lines:
                 draw_xlines_xy(_lines, self.ax1, alpha=0.5)
+
         # faces
         # if faces_on:
+
         _labels = []
         for fkey in facelabel:
             x, y, _ = self.form.face_centroid(fkey)
@@ -172,7 +201,9 @@ class Viewer(object):
             })
         if _labels:
             draw_xlabels_xy(_labels, self.ax1)
+
         # points
+
         if points:
             _points = []
             for point in points:
@@ -184,9 +215,12 @@ class Viewer(object):
                     'textcolor' : point.get('textcolor', self.default_textcolor),
                     'facecolor' : point.get('facecolor', self.default_pointcolor),
                     'edgecolor' : point.get('edgecolor', self.default_linecolor),
+                    'fontsize'  : self.default_fontsize
                 })
             draw_xpoints_xy(_points, self.ax1)
+
         # lines
+
         if lines:
             _lines = {}
             style = lines[0].get('style', self.default_linestyle)
@@ -205,6 +239,7 @@ class Viewer(object):
                     'color'     : line.get('color', self.default_linecolor),
                     'text'      : line.get('text', ''),
                     'textcolor' : line.get('textcolor', self.default_textcolor),
+                    'fontsize'  : self.default_fontsize
                 })
             for style in _lines:
                 draw_xlines_xy(_lines[style], self.ax1, linestyle=style)
@@ -224,12 +259,15 @@ class Viewer(object):
                    points=None):
         """"""
         # preprocess
+
         vertexlabel = vertexlabel or {}
         edgelabel   = edgelabel or {}
         vertexsize  = size_to_sizedict(vertexsize, self.force.vertices(), self.default_vertexsize)
         vertexcolor = color_to_colordict(vertexcolor, self.force.vertices(), self.default_vertexcolor)
         edgecolor   = color_to_colordict(edgecolor, self.force.edges(), self.default_edgecolor)
+
         # scale and position
+
         x = self.force.get_vertices_attribute('x')
         y = self.force.get_vertices_attribute('y')
         if lines:
@@ -241,7 +279,9 @@ class Viewer(object):
         xmax, ymax = max(x), max(y)
         dx, dy = -xmin, -ymin
         scale  = max(fabs(xmax - xmin) / 10.0, fabs(ymax - ymin) / 10.0)
+
         # vertices
+
         if vertices_on:
             _points = []
             for key, attr in self.force.vertices(True):
@@ -253,10 +293,13 @@ class Viewer(object):
                     'edgecolor' : self.default_edgecolor,
                     'linewidth' : self.default_edgewidth * 0.5,
                     'text'      : None if key not in vertexlabel else str(vertexlabel[key]),
-                    'textcolor' : '#000000' if is_color_light(bgcolor) else '#ffffff'
+                    'textcolor' : '#000000' if is_color_light(bgcolor) else '#ffffff',
+                    'fontsize'  : self.default_fontsize
                 })
             draw_xpoints_xy(_points, self.ax2)
+
         # edges
+
         if edges_on:
             leaves = set(self.form.leaves())
             _arrows = []
@@ -280,7 +323,9 @@ class Viewer(object):
                         'width' : self.default_edgewidth,
                     })
             draw_xarrows_xy(_arrows, self.ax2)
+
         # lines
+
         if lines:
             _lines = {}
             style = lines[0].get('style', self.default_linestyle)
@@ -299,6 +344,7 @@ class Viewer(object):
                     'color'     : line.get('color', self.default_linecolor),
                     'text'      : line.get('text', ''),
                     'textcolor' : line.get('textcolor', self.default_textcolor),
+                    'fontsize'  : self.default_fontsize
                 })
             for style in _lines:
                 draw_xlines_xy(_lines[style], self.ax2, linestyle=style)
@@ -308,22 +354,24 @@ class Viewer(object):
 
 
 # ==============================================================================
-# Debugging
+# Main
 # ==============================================================================
 
 if __name__ == '__main__':
 
-    from compas_ags.ags.diagrams.formdiagram import FormDiagram
-    from compas_ags.ags.diagrams.forcediagram import ForceDiagram
+    import compas_ags
 
-    form = FormDiagram.from_obj('../_data/paper/grid_irregular.obj')
+    from compas_ags.diagrams import FormDiagram
+    from compas_ags.diagrams import ForceDiagram
+
+    form = FormDiagram.from_obj(compas_ags.get('paper/grid_irregular.obj'))
     form.identify_fixed()
 
     force = ForceDiagram.from_formdiagram(form)
 
     viewer = Viewer(form, force, delay_setup=False)
 
-    viewer.draw_form()
+    viewer.draw_form(edgelabel={(u, v): '{:.1f}'.format(form.edge_length(u, v)) for u, v in form.edges()})
     viewer.draw_force()
 
     viewer.show()

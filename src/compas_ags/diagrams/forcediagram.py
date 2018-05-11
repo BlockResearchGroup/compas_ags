@@ -125,6 +125,7 @@ if __name__ == '__main__':
 
     viewer = Viewer(form, force, delay_setup=False)
 
-    viewer.draw_form()
+    viewer.draw_form(forcescale=5.0)
     viewer.draw_force()
+
     viewer.show()

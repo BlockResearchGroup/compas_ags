@@ -335,27 +335,27 @@ def update_formdiagram(form, force, kmax=100):
     # form diagram
     # --------------------------------------------------------------------------
     k_i    = form.key_index()
-    i_j    = dict((i, [k_i[n] for n in form.neighbours(k)]) for i, k in form.vertices_enum())
+    i_j    = {i: [k_i[n] for n in form.vertex_neighbours(k)] for i, k in enumerate(form.vertices())}
     uv_e   = form.uv_index()
-    ij_e   = dict(((k_i[u], k_i[v]), uv_e[(u, v)]) for u, v in uv_e)
+    ij_e   = {(k_i[u], k_i[v]): uv_e[(u, v)] for u, v in uv_e}
     xy     = array(form.xy(), dtype=float64)
-    edges  = [(k_i[u], k_i[v]) for u, v in form.edges_iter()]
+    edges  = [(k_i[u], k_i[v]) for u, v in form.edges()]
     C      = connectivity_matrix(edges, 'csr')
     # add opposite edges for convenience...
-    ij_e.update(dict(((k_i[v], k_i[u]), uv_e[(u, v)]) for u, v in uv_e))
+    ij_e.update({(k_i[v], k_i[u]): uv_e[(u, v)] for u, v in uv_e})
     # --------------------------------------------------------------------------
     # constraints
     # --------------------------------------------------------------------------
     leaves = [k_i[key] for key in form.leaves()]
     fixed  = [k_i[key] for key in form.fixed()]
-    free   = list(set(range(len(form))) - set(fixed) - set(leaves))
+    free   = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
     # --------------------------------------------------------------------------
     # force diagram
     # --------------------------------------------------------------------------
-    _i_k   = dict((index, key) for index, key in force.vertices_enum())
+    _i_k   = {index: key for index, key in enumerate(force.vertices())}
     _xy    = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)
-    _uv_e  = dict(((_i_k[i], _i_k[j]), e) for e, (i, j) in enumerate(_edges))
+    _uv_e  = {(_i_k[i], _i_k[j]): e for e, (i, j) in enumerate(_edges)}
     _C     = connectivity_matrix(_edges, 'csr')
     # --------------------------------------------------------------------------
     # compute the coordinates of thet *free* vertices
@@ -375,11 +375,11 @@ def update_formdiagram(form, force, kmax=100):
     # --------------------------------------------------------------------------
     # update form diagram
     # --------------------------------------------------------------------------
-    for key, attr in form.vertices_iter(True):
+    for key, attr in form.vertices(True):
         index = k_i[key]
         attr['x'] = xy[index, 0]
         attr['y'] = xy[index, 1]
-    for u, v, attr in form.edges_iter(True):
+    for u, v, attr in form.edges(True):
         e = uv_e[(u, v)]
         attr['l'] = l[e, 0]
         attr['a'] = a[e]
@@ -392,7 +392,7 @@ def update_formdiagram(form, force, kmax=100):
     # --------------------------------------------------------------------------
     # update force diagram
     # --------------------------------------------------------------------------
-    for u, v, attr in force.edges_iter(True):
+    for u, v, attr in force.edges(True):
         e = _uv_e[(u, v)]
         attr['a'] = a[e]
         attr['l'] = _l[e, 0]

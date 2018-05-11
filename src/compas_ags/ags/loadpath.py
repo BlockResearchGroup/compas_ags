@@ -12,7 +12,7 @@ from compas.geometry import angle_vectors_xy
 from compas.numerical import connectivity_matrix
 from compas.numerical import normrow
 
-from .graphstatics import update_formdiagram
+from compas_ags.ags.graphstatics import _update_formdiagram
 
 
 __author__     = ['Tom Van Mele <van.mele@arch.ethz.ch>',
@@ -161,7 +161,7 @@ def compute_internal_work(form, force):
     _C     = connectivity_matrix(_edges, 'csr')
 
     leaves   = set(form.leaves())
-    internal = [i for i, u, v in enumerate(form.edges()) if u not in leaves and v not in leaves]
+    internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
 
     l   = normrow(C.dot(xy))
     _l  = normrow(_C.dot(_xy))
@@ -216,7 +216,7 @@ def compute_internal_work_tension(form, force):
     _C     = connectivity_matrix(_edges, 'csr')
 
     leaves   = set(form.leaves())
-    internal = [i for i, u, v in enumerate(form.edges()) if u not in leaves and v not in leaves]
+    internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
     tension  = [i for i in internal if q[i, 0] > 0]
 
     l   = normrow(C.dot(xy))
@@ -272,7 +272,7 @@ def compute_internal_work_compression(form, force):
     _C     = connectivity_matrix(_edges, 'csr')
 
     leaves      = set(form.leaves())
-    internal    = [i for i, u, v in enumerate(form.edges()) if u not in leaves and v not in leaves]
+    internal    = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
     compression = [i for i in internal if q[i, 0] < 0]
 
     l   = normrow(C.dot(xy))
@@ -332,8 +332,8 @@ def optimise_loadpath(form, force, algo='COBYLA'):
 
     leaves   = [k_i[key] for key in form.leaves()]
     fixed    = [k_i[key] for key in form.fixed()]
-    free     = list(set(range(len(form))) - set(fixed) - set(leaves))
-    internal = [i for i, u, v in enumerate(form.edges()) if k_i[u] not in leaves and k_i[v] not in leaves]
+    free     = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
+    internal = [i for i, (u, v) in enumerate(form.edges()) if k_i[u] not in leaves and k_i[v] not in leaves]
 
     _k_i   = dict((key, index) for index, key in enumerate(force.vertices()))
     _i_k   = dict((index, key) for index, key in enumerate(force.vertices()))

@@ -1,12 +1,21 @@
-import compas_rhino as rhino
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
 
-from compas_ags.ags.diagrams import FormDiagram
+import compas_rhino
+
+from compas_ags.diagrams import FormDiagram
 
 
 __author__    = ['Tom Van Mele', ]
 __copyright__ = 'Copyright 2016 - Block Research Group, ETH Zurich'
 __license__   = 'MIT License'
 __email__     = 'vanmelet@ethz.ch'
+
+
+__all__ = [
+    'FormDiagram',
+]
 
 
 class FormDiagram(FormDiagram):
@@ -22,7 +31,7 @@ class FormDiagram(FormDiagram):
             for key, attr in self.vertices_iter(True)
         )
         edgecolor = dict()
-        rhino.draw_network(
+        compas_rhino.draw_network(
             self,
             layer=self.attributes['layer'],
             vertexcolor=vertexcolor,
