@@ -2,8 +2,10 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import os
 from multiprocessing import Pool
 from random import shuffle
+
 import sympy
 
 from numpy import float64
@@ -672,11 +674,11 @@ def plot_form(form, radius=0.1, fix_width=False):
         if fix_width:
             width = 10
         else:
-            (qi / qmax + 0.1 * qmax) * 10
+            width = (qi / qmax + 0.1 * qmax) * 10
 
         lines.append({
             'start': form.vertex_coordinates(u),
-            'end':   form.vertex_coordinates(v),
+            'end'  : form.vertex_coordinates(v),
             'color': ''.join(colour),
             'width': width,
         })
@@ -725,9 +727,11 @@ def ground_form(points):
 
 if __name__ == "__main__":
 
+    file = os.path.join(compas_ags.DATA, 'loadpath/arches.json')
+
     # Load FormDiagram
 
-    form = FormDiagram.from_json(compas_ags.get('loadpath/arches.json'))
+    form = FormDiagram.from_json(file)
 
     # Midpoint-index mapping
 
@@ -738,15 +742,18 @@ if __name__ == "__main__":
 
     # Single run
 
-    # form = randomise_form(form)
-    # fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmax=5, population=300, generations=500,
-    #                              plot=True, frange=[100, 300], printout=10)
-    # form.to_json(fnm)
-    # plot_form(form, radius=0.1).show()
+    form = randomise_form(form)
+
+    fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmax=5, population=300, generations=500,
+                                 plot=True, frange=[100, 1000], printout=10)
+
+    form.to_json(file)
+
+    plot_form(form, radius=0.1).show()
 
     # Multiple runs
 
-    fopts, forms, best = optimise_multi(form, trials=1, save_figs=compas_ags.TEMP)
+    # fopts, forms, best = optimise_multi(form, trials=1, save_figs=compas_ags.TEMP)
     # form = forms[best]
     # form.to_json(fnm)
 
