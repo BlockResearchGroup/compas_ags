@@ -126,7 +126,7 @@ def identify_dof(form):
 
 
 def count_dof(form):
-    """Count the number of degrees of freedom of a form diagram.
+    r"""Count the number of degrees of freedom of a form diagram.
 
     Parameters
     ----------
@@ -303,7 +303,7 @@ def update_formdiagram_xfunc(form, force, kmax=100):
 
 
 def update_formdiagram(form, force, kmax=100):
-    """Update the form diagram after a modification of the force diagram.
+    r"""Update the form diagram after a modification of the force diagram.
 
     Compute the geometry of the form diagram from the geometry of the form diagram
     and some constraints (location of fixed points).

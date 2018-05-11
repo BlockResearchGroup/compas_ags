@@ -1,8 +1,12 @@
-
 from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from multiprocessing import Pool
+from random import shuffle
+import sympy
+
+from numpy import float64
 # from numpy import abs
 from numpy import argmin
 from numpy import array
@@ -15,6 +19,7 @@ from numpy import newaxis
 # from numpy import sqrt
 # from numpy import tile
 from numpy import zeros
+
 from numpy.linalg import pinv
 
 from scipy.optimize import fmin_slsqp
@@ -22,8 +27,8 @@ from scipy.sparse import diags
 from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import spsolve
 
-from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import ForceDiagram
+import compas
+import compas_ags
 
 from compas.plotters import NetworkPlotter
 
@@ -36,11 +41,8 @@ from compas.numerical import nonpivots
 
 from compas.utilities import geometric_key
 
-from multiprocessing import Pool
-
-from random import shuffle
-
-import sympy
+from compas_ags.diagrams import FormDiagram
+from compas_ags.diagrams import ForceDiagram
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -725,8 +727,7 @@ if __name__ == "__main__":
 
     # Load FormDiagram
 
-    fnm = '/home/al/compas_ags/data/loadpath/arches.json'
-    form = FormDiagram.from_json(fnm)
+    form = FormDiagram.from_json(compas_ags.get('loadpath/arches.json'))
 
     # Midpoint-index mapping
 
@@ -745,7 +746,7 @@ if __name__ == "__main__":
 
     # Multiple runs
 
-    fopts, forms, best = optimise_multi(form, trials=1, save_figs='/home/al/files/tf/figs/')
+    fopts, forms, best = optimise_multi(form, trials=1, save_figs=compas_ags.TEMP)
     # form = forms[best]
     # form.to_json(fnm)
 
