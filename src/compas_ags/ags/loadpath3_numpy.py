@@ -40,7 +40,9 @@ from multiprocessing import Pool
 
 from random import shuffle
 
+import compas_ags
 import sympy
+import os
 
 
 __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
@@ -288,7 +290,7 @@ def fint(qid, *args):
         f += sum((q[q < 0] - 5)**4)
     if isnan(f):
         return 10**10
-    return f
+    return f + sum(z[z < 0]**4)
 
 
 def fint_(qid, *args):
@@ -311,7 +313,7 @@ def fint_(qid, *args):
 
     z, l2, q = zlq_from_qid(qid, args)
     f = dot(abs(q.transpose()), l2)
-    return f
+    return f + sum(z[z < 0]**4)
 
 
 def qpos(qid, *args):
@@ -686,10 +688,10 @@ def plot_form(form, radius=0.1, fix_width=False):
         plotter.draw_vertices(facecolor={i: '#0000ff' for i in form.vertices_where({'is_fixed': True})}, radius=radius)
     plotter.draw_lines(lines)
 
-    forces = {}
-    for u, v in form.edges():
-        forces[(u, v)] = '{0}'.format(form.edge[u][v]['q'] * form.edge_length(u, v))
-    plotter.draw_edges(text=forces)
+    # forces = {}
+    # for u, v in form.edges():
+    #     forces[(u, v)] = '{0}'.format(form.edge[u][v]['q'] * form.edge_length(u, v))
+    # plotter.draw_edges(text=forces)
 
     return plotter
 
@@ -700,7 +702,7 @@ def plot_form(form, radius=0.1, fix_width=False):
 
 if __name__ == "__main__":
 
-    file = os.path.join(compas_ags.DATA, 'loadpath/arches.json')
+    file = os.path.join(compas_ags.DATA, 'loadpath/arches2.json')
 
     # Load FormDiagram
 
@@ -715,20 +717,20 @@ if __name__ == "__main__":
 
     # Single run
 
-    form = randomise_form(form)
+    # form = randomise_form(form)
+    # fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmax=5, population=300, generations=500,
+    #                              plot=0, frange=[None, None], printout=10)
 
-    fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmax=5, population=300, generations=500,
-                                 plot=True, frange=[100, 1000], printout=10)
-
-    form.to_json(file)
-
-    plot_form(form, radius=0.1).show()
 
     # Multiple runs
 
-    # fopts, forms, best = optimise_multi(form, trials=1, save_figs=compas_ags.TEMP)
-    # form = forms[best]
-    # form.to_json(fnm)
+    fopts, forms, best = optimise_multi(form, trials=1000, save_figs='/home/al/files/tf/figs/')
+    form = forms[best]
+
+    # Plot and save
+
+    form.to_json(file)
+    plot_form(form, radius=0.1).show()
 
     # ForceDiagram
 

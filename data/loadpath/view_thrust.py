@@ -12,7 +12,7 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-fnm = 'C:/compas_ags/data/loadpath/star.json'
+fnm = 'F:/compas_ags/data/loadpath/arches.json'
 form = FormDiagram.from_json(fnm)
 
 print(form.attributes['loadpath'])
