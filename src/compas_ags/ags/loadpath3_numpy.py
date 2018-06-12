@@ -189,6 +189,8 @@ def optimise_single(form, solver='devo', polish='slsqp', gradient=False, qmin=1e
     bounds = [[qmin, qmax]] * k
     args = (q, ind, dep, EdinvEi, C, Ci, Cit, pz, z, free, lh2, sym, tension)
 
+    # Solve
+
     if solver == 'devo':
         fopt, qopt = diff_evo(form, bounds, population, generations, printout, plot, frange, args)
 
@@ -636,7 +638,7 @@ def optimise_multi(form, trials=10, save_figs=''):
     return fopts, forms, best
 
 
-def plot_form(form, radius=0.1, fix_width=False):
+def plot_form(form, radius=0.1, fix_width=False, max_width=10, simple=True):
 
     """ Extended load-path plotting for a FormDiagram
 
@@ -648,6 +650,10 @@ def plot_form(form, radius=0.1, fix_width=False):
         Radius of vertex markers.
     fix_width : bool
         Fix the width of edges to be constant.
+    max_width : float
+        Maximum width of the edges.
+    simple : bool
+        Simple colour plotting.
 
     Returns
     -------
@@ -663,18 +669,30 @@ def plot_form(form, radius=0.1, fix_width=False):
         edge = form.edge[u][v]
         qi = edge['q']
 
-        colour = ['00', '00', '00']
-        if qi > 0:  # red if compression
-            colour[0] = 'ff'
-        if edge.get('is_symmetry', None):  # green if symmetry
-            colour[1] = 'ff'
-        if edge.get('is_ind', None):       # blue if independent
-            colour[2] = 'ff'
+        if simple:
 
-        if fix_width or (qmax == 0):
-            width = 10
+            if qi > 0:
+                colour = ['ff', '00', '00']
+            elif qi < 0:
+                colour = ['00', '00', 'ff']
+            else:
+                colour = ['aa', 'aa', 'aa']
+            width = (qi / qmax) * max_width
+
         else:
-            width = (qi / qmax + 0.1 * qmax) * 10
+
+            colour = ['00', '00', '00']
+            if qi > 0:  # red if compression
+                colour[0] = 'ff'
+            if edge.get('is_symmetry', None):  # green if symmetry
+                colour[1] = 'ff'
+            if edge.get('is_ind', None):       # blue if independent
+                colour[2] = 'ff'
+
+            if fix_width or (qmax == 0):
+                width = max_width
+            else:
+                width = (qi / qmax + 0.1 * qmax) * max_width
 
         lines.append({
             'start': form.vertex_coordinates(u),
