@@ -178,6 +178,9 @@ def optimise_single(form, solver='devo', polish='slsqp', gradient=False, qmin=1e
     Ci  = C[:, free]
     Cit = Ci.transpose()
     E   = equilibrium_matrix(C, xy, free, 'csr').toarray()
+    uvw = C.dot(xyz)
+    U   = uvw[:, 0]
+    V   = uvw[:, 1]
 
     # Independent and dependent branches
 
@@ -204,7 +207,7 @@ def optimise_single(form, solver='devo', polish='slsqp', gradient=False, qmin=1e
     lh2 = normrow(C.dot(xy))**2
     q = array(form.q())[:, newaxis]
     bounds = [[qmin, qmax]] * k
-    args = (q, ind, dep, EdinvEi, C, Ci, Cit, pz, z, free, lh2, sym, lb, ub, lb_ind, ub_ind, tension)
+    args = (q, ind, dep, EdinvEi, C, Ci, Cit, pz, z, free, lh2, sym, U, V, lb, ub, lb_ind, ub_ind, tension)
 
     # Solve
 
@@ -223,12 +226,13 @@ def optimise_single(form, solver='devo', polish='slsqp', gradient=False, qmin=1e
         #     if ((min(q_) > -0.001) and (not tension)) or tension:
         #         fopt, qopt, q = fopt_, qopt_, q_
 
-    z, _, q = zlq_from_qid(qopt, args)
+    z, _, q, checked = zlq_from_qid(qopt, args)
 
     if printout:
         print('\n' + '-' * 50)
         print('qid: {0:.3f} : {1:.3f}'.format(min(qopt), max(qopt)))
         print('q: {0:.3f} : {1:.3f}'.format(float(min(q)), float(max(q))))
+        print('Horizontal equillibrium: {0}'.format(checked))
         print('-' * 50 + '\n')
 
     # Unique key
@@ -272,18 +276,29 @@ def zlq_from_qid(qid, args):
         Updated squared edge lengths.
     array
         Updated force densities.
+    bool
+        Check for horizontal equillibrium.
 
     """
 
-    q, ind, dep, EdinvEi, C, Ci, Cit, pz, z, free, lh2, sym = args[:-5]
+    q, ind, dep, EdinvEi, C, Ci, Cit, pz, z, free, lh2, sym, U, V = args[:-5]
     q[ind, 0] = qid
     q[dep] = EdinvEi.dot(q[ind])
+
+    Rx = Cit.dot(U * q.ravel())
+    Ry = Cit.dot(V * q.ravel())
+    R  = max(sqrt(Rx**2 + Ry**2))
+    if R < 0.001:
+        checked = True
+    else:
+        checked = False
+
     q[sym] *= 0
 
     z[free] = spsolve(Cit.dot(diags(q[:, 0])).dot(Ci), pz)
     l2 = lh2 + C.dot(z[:, newaxis])**2
 
-    return z, l2, q
+    return z, l2, q, checked
 
 
 def fint(qid, *args):
@@ -306,10 +321,10 @@ def fint(qid, *args):
 
     lb, ub, lb_ind, ub_ind, tension = args[-5:]
 
-    z, l2, q = zlq_from_qid(qid, args)
+    z, l2, q, checked = zlq_from_qid(qid, args)
     f = dot(abs(q.transpose()), l2)
 
-    if isnan(f):
+    if isnan(f) or not checked:
         return 10**10
 
     else:
@@ -351,10 +366,10 @@ def fint_(qid, *args):
 
     """
 
-    z, l2, q = zlq_from_qid(qid, args)
+    z, l2, q, checked = zlq_from_qid(qid, args)
     f = dot(abs(q.transpose()), l2)
 
-    if isnan(f):
+    if isnan(f) or not checked:
         return 10**10
     return f
 
@@ -377,7 +392,7 @@ def qpos(qid, *args):
 
     """
 
-    q, ind, dep, EdinvEi, C, Ci, Cit, pz, z, free, lh2, sym = args[:-5]
+    q, ind, dep, EdinvEi, C, Ci, Cit, pz, z, free, lh2, sym, U, V = args[:-5]
     q[ind, 0] = qid
     q[dep] = EdinvEi.dot(q[ind])
     q[sym] *= 0
@@ -768,13 +783,13 @@ if __name__ == "__main__":
 
     # Single run
 
-    form = randomise_form(form)
-    fopt, qopt = optimise_single(form, qmax=5, population=300, generations=500, plot=0, frange=[100, 500], printout=10)
+    # form = randomise_form(form)
+    # fopt, qopt = optimise_single(form, qmax=5, population=300, generations=500, plot=0, frange=[100, 500], printout=10)
 
     # Multiple runs
 
-    # fopts, forms, best = optimise_multi(form, trials=4, save_figs='', qmax=5, population=300, generations=500)
-    # form = forms[best]
+    fopts, forms, best = optimise_multi(form, trials=8, save_figs='', qmax=5, population=300, generations=200)
+    form = forms[best]
 
     # Plot
 
@@ -782,7 +797,7 @@ if __name__ == "__main__":
 
     # Save
 
-    form.to_json(file)
+    # form.to_json(file)
 
 
 
