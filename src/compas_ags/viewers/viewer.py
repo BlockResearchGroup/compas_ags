@@ -88,6 +88,7 @@ class Viewer(object):
                   edges_on=True,
                   faces_on=False,
                   forces_on=True,
+                  arrows_on=True,
                   vertexcolor=None,
                   edgecolor=None,
                   facecolor=None,
@@ -182,7 +183,10 @@ class Viewer(object):
                         'width' : self.default_edgewidth
                     })
             if _arrows:
-                draw_xarrows_xy(_arrows, self.ax1)
+                if arrows_on:
+                    draw_xarrows_xy(_arrows, self.ax1)
+                else:
+                    draw_xlines_xy(_arrows, self.ax1)
             if _lines:
                 draw_xlines_xy(_lines, self.ax1, alpha=0.5)
 
@@ -249,6 +253,7 @@ class Viewer(object):
                    edges_on=True,
                    faces_on=False,
                    forces_on=True,
+                   arrows_on=True,
                    vertexcolor=None,
                    edgecolor=None,
                    facecolor=None,
@@ -322,7 +327,10 @@ class Viewer(object):
                         'color' : self.default_edgecolor,
                         'width' : self.default_edgewidth,
                     })
-            draw_xarrows_xy(_arrows, self.ax2)
+            if arrows_on:
+                draw_xarrows_xy(_arrows, self.ax2)
+            else:
+                draw_xlines_xy(_arrows, self.ax2)
 
         # lines
 

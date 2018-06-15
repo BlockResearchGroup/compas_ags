@@ -83,11 +83,13 @@ class ForceDiagram(Network):
             uv_index[(f1, f2)] = index
         return uv_index
 
-    def ordered_edges(self, form):
+    def ordered_edges(self, form, index=True):
         key_index = self.key_index()
         uv_index  = self.uv_index(form=form)
-        index_uv  = dict((index, uv) for uv, index in uv_index.items())
-        edges     = [index_uv[index] for index in range(self.number_of_edges())]
+        index_uv  = dict((i, uv) for uv, i in uv_index.items())
+        edges     = [index_uv[i] for i in range(self.number_of_edges())]
+        if not index:
+            return edges
         return [[key_index[u], key_index[v]] for u, v in edges]
 
     # --------------------------------------------------------------------------

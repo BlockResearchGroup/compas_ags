@@ -1,5 +1,3 @@
-""""""
-
 from compas_ags.diagrams import formdiagram
 from compas_ags.diagrams import forcediagram
 
