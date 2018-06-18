@@ -18,6 +18,7 @@ from numpy import zeros
 
 from numpy.linalg import pinv
 
+from scipy.linalg import svd
 from scipy.optimize import fmin_slsqp
 from scipy.sparse import diags
 from scipy.sparse import csr_matrix
@@ -203,7 +204,9 @@ def optimise_single(form, solver='devo', polish='slsqp', gradient=False, qmin=1e
         form.edge[u][v]['is_ind'] = True if uv_i[(u, v)] in ind else False
 
     if printout:
-        print('Form diagram has {0} independent branches'.format(len(ind)))
+        _, s, _ = svd(E)
+        print('Form diagram has {0} independent branches (RREF)'.format(len(ind)))
+        print('Form diagram has {0} independent branches (SVD)'.format(m - len(s)))
 
     # Set-up
 
@@ -783,24 +786,24 @@ if __name__ == "__main__":
 
     # Load FormDiagram
 
-    file = os.path.join(compas_ags.DATA, 'loadpath/diagonal.json')
+    file = os.path.join(compas_ags.DATA, 'loadpath/arches_flat.json')
     form = FormDiagram.from_json(file)
     form.set_vertices_attributes(form.vertices(), {'lb': 0, 'ub': 20})
 
     # Single run
 
-    # form = randomise_form(form)
-    # fopt, qopt = optimise_single(form, qmax=5, population=300, generations=500, plot=0, frange=[100, 500], printout=10)
+    form = randomise_form(form)
+    fopt, qopt = optimise_single(form, qmax=5, population=300, generations=500, plot=0, frange=[100, 500], printout=10)
 
     # Multiple runs
 
-    fopts, forms, best = optimise_multi(form, trials=30, save_figs='', qmax=5, population=300, generations=200)
-    form = forms[best]
+    # fopts, forms, best = optimise_multi(form, trials=30, save_figs='', qmax=5, population=300, generations=200)
+    # form = forms[best]
 
     # Plot
 
-    # plot_form(form, radius=0.1, simple=False).show()
+    plot_form(form, radius=0.1, simple=False).show()
 
     # Save
 
-    form.to_json(file)
+    # form.to_json(file)
