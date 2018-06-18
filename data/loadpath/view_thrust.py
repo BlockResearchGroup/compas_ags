@@ -9,7 +9,7 @@ __license__   = 'MIT License'
 __email__     = 'liew@arch.ethz.ch'
 
 
-form = FormDiagram.from_json('F:/compas_ags/data/loadpath/arches_flat.json')
+form = FormDiagram.from_json('F:/compas_ags/data/loadpath/diagonal.json')
 print(form.attributes['loadpath'])
 
 artist = NetworkArtist(form, layer='Thrust')

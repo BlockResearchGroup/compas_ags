@@ -114,6 +114,10 @@ def optimise_single(form, solver='devo', polish='slsqp', gradient=False, qmin=1e
     tension : bool
         Allow tension edge force densities (experimental).
 
+    Notes
+    -----
+    - SLSQP polish does not yet respect lower and upper bound constraints.
+
     Returns
     -------
     float
@@ -219,12 +223,12 @@ def optimise_single(form, solver='devo', polish='slsqp', gradient=False, qmin=1e
 
     q = zlq_from_qid(qopt, args)[2]
 
-    # if polish == 'slsqp':
-        # fopt_, qopt_ = slsqp(form, qopt, bounds, gradient, printout, args)
-        # q_ = zlq_from_qid(qopt_, args)[2]
-        # if (fopt_ < fopt):
-        #     if ((min(q_) > -0.001) and (not tension)) or tension:
-        #         fopt, qopt, q = fopt_, qopt_, q_
+    if polish == 'slsqp':
+        fopt_, qopt_ = slsqp(form, qopt, bounds, gradient, printout, args)
+        q_ = zlq_from_qid(qopt_, args)[2]
+        if fopt_ < fopt:
+            if (min(q_) > -0.001 and not tension) or tension:
+                fopt, qopt, q = fopt_, qopt_, q_
 
     z, _, q, checked = zlq_from_qid(qopt, args)
 
@@ -643,13 +647,13 @@ def randomise_form(form):
 def _worker(data):
 
     try:
-        i, form, save_figs, qmin, qmax, population, generations = data
+        i, form, save_figs, qmin, qmax, population, generations, simple = data
         fopt, qopt = optimise_single(form, qmin=qmin, qmax=qmax, population=population, generations=generations,
                                      printout=0, tension=0)
         print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
 
         if save_figs:
-            plotter = plot_form(form, radius=0, fix_width=True)
+            plotter = plot_form(form, radius=0, fix_width=True, simple=simple)
             plotter.save('{0}trial_{1}-fopt_{2:.6f}.png'.format(save_figs, i, fopt))
             del plotter
         return (fopt, form)
@@ -659,7 +663,7 @@ def _worker(data):
         return (10**10, None)
 
 
-def optimise_multi(form, trials=10, save_figs='', qmin=0.001, qmax=5, population=300, generations=500):
+def optimise_multi(form, trials=10, save_figs='', qmin=0.001, qmax=5, population=300, generations=500, simple=False):
 
     """ Finds the optimised load-path for multiple randomised FormDiagrams.
 
@@ -679,7 +683,8 @@ def optimise_multi(form, trials=10, save_figs='', qmin=0.001, qmax=5, population
         Number of agents for evolution solver.
     generations : int
         Number of generations for the evolution solver.
-
+    simple : bool
+        Simple plotting for figures.
     Returns
     -------
     list
@@ -691,7 +696,7 @@ def optimise_multi(form, trials=10, save_figs='', qmin=0.001, qmax=5, population
 
     """
 
-    data = [(i, randomise_form(form), save_figs, qmin, qmax, population, generations)
+    data = [(i, randomise_form(form), save_figs, qmin, qmax, population, generations, simple)
             for i in range(trials)]
     fopts, forms = zip(*Pool().map(_worker, data))
     best = argmin(fopts)
@@ -778,8 +783,9 @@ if __name__ == "__main__":
 
     # Load FormDiagram
 
-    file = os.path.join(compas_ags.DATA, 'loadpath/arches_flat.json')
+    file = os.path.join(compas_ags.DATA, 'loadpath/diagonal.json')
     form = FormDiagram.from_json(file)
+    form.set_vertices_attributes(form.vertices(), {'lb': 0, 'ub': 20})
 
     # Single run
 
@@ -788,7 +794,7 @@ if __name__ == "__main__":
 
     # Multiple runs
 
-    fopts, forms, best = optimise_multi(form, trials=8, save_figs='', qmax=5, population=300, generations=200)
+    fopts, forms, best = optimise_multi(form, trials=30, save_figs='', qmax=5, population=300, generations=200)
     form = forms[best]
 
     # Plot
@@ -797,54 +803,4 @@ if __name__ == "__main__":
 
     # Save
 
-    # form.to_json(file)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    # Midpoint-index mapping
-
-    # mp_i = {}
-    # uv_i = form.uv_index()
-    # for u, v in form.edges():
-    #     mp_i[geometric_key(form.edge_midpoint(u, v)[:2] + [0])] = uv_i[(u, v)]
-
-    # ForceDiagram
-
-    # force = ForceDiagram.from_formdiagram(form)
-    # plotter = NetworkPlotter(force, figsize=(10, 7), fontsize=8)
-    # plotter.draw_vertices(radius=0.05, text=[])
-    # plotter.draw_edges()
-    # plotter.show()
-
-    # Make binary
-
-    # path = '/home/al/downloads/tf_load-path/'
-    # features = '{0}training_features.csv'.format(path)
-    # labels = '{0}training_labels.csv'.format(path)
-    # features = '{0}testing_features.csv'.format(path)
-    # labels = '{0}testing_labels.csv'.format(path)
-
-    # with open(features, 'a') as f:
-    #     for form in forms:
-    #         indi = [mp_i[mp] for mp in form.attributes['indset'].split('-')]
-    #         binary = [0] * form.number_of_edges()
-    #         for i in indi:
-    #             binary[i] = 1
-    #         f.write(','.join([str(i) for i in binary]) + '\n')
-
-    # with open(labels, 'a') as f:
-    #     for form in forms:
-    #         fopt = form.attributes['loadpath']
-    #         val = 0 if fopt > 200 else 1
-    #         f.write('{0}\n'.format(val))
+    form.to_json(file)
