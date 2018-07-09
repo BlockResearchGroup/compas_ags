@@ -33,7 +33,7 @@ from compas.plotters import NetworkPlotter
 from compas.numerical import connectivity_matrix
 from compas.numerical import devo_numpy
 from compas.numerical import equilibrium_matrix
-# from compas.numerical import ga
+from compas.numerical import ga
 from compas.numerical import normrow
 from compas.numerical import nonpivots
 
@@ -135,8 +135,8 @@ def optimise_single(form, solver='devo', polish='slsqp', qmin=1e-6, qmax=5, popu
     # Mapping
 
     k_i  = form.key_index()
-#     i_k  = form.index_key()
-#     i_uv = form.index_uv()
+    i_k  = form.index_key()
+    i_uv = form.index_uv()
     uv_i = form.uv_index()
 
     # Vertices and edges
@@ -239,47 +239,44 @@ def optimise_single(form, solver='devo', polish='slsqp', qmin=1e-6, qmax=5, popu
         if solver == 'devo':
             fopt, qopt = _diff_evo(_fint, bounds, population, generations, printout, plot, frange, args)
 
-        #     elif solver == 'ga':
-        #         fopt, qopt = diff_ga(fint, form, bounds, population, generations, args)
+        elif solver == 'ga':
+            fopt, qopt = _diff_ga(_fint, bounds, population, generations, args)
 
-        #     q = zlq_from_qid(qopt, args)[2]
+        if polish == 'slsqp':
+            fopt_, qopt_ = _slsqp(_fint_, qopt, bounds, printout, qpos, args)
+            q_ = _zlq_from_qid(qopt_, args)[2]
+            if fopt_ < fopt:
+                if (min(q_) > -0.001 and not tension) or tension:
+                    fopt, qopt, q = fopt_, qopt_, q_
 
-            if polish == 'slsqp':
-                fopt_, qopt_ = _slsqp(_fint_, qopt, bounds, printout, qpos, args)
-                q_ = _zlq_from_qid(qopt_, args)[2]
-                if fopt_ < fopt:
-                    if (min(q_) > -0.001 and not tension) or tension:
-                        fopt, qopt, q = fopt_, qopt_, q_
+        z, _, q = _zlq_from_qid(qopt, args)
 
-            z, _, q = _zlq_from_qid(qopt, args)
+        if printout:
+            print('\n' + '-' * 50)
+            print('qid: {0:.3f} : {1:.3f}'.format(min(qopt), max(qopt)))
+            print('q: {0:.3f} : {1:.3f}'.format(float(min(q)), float(max(q))))
+            print('-' * 50 + '\n')
 
-        #     if printout:
-        #         print('\n' + '-' * 50)
-        #         print('qid: {0:.3f} : {1:.3f}'.format(min(qopt), max(qopt)))
-        #         print('q: {0:.3f} : {1:.3f}'.format(float(min(q)), float(max(q))))
-        #         print('Horizontal equillibrium: {0}'.format(checked))
-        #         print('-' * 50 + '\n')
+        # Unique key
 
-            # Unique key
+        gkeys = []
+        for i in ind:
+            u, v = i_uv[i]
+            gkeys.append(geometric_key(form.edge_midpoint(u, v)[:2] + [0]))
+        form.attributes['indset'] = '-'.join(sorted(gkeys))
 
-        #     gkeys = []
-        #     for i in ind:
-        #         u, v = i_uv[i]
-        #         gkeys.append(geometric_key(form.edge_midpoint(u, v)[:2] + [0]))
-        #     form.attributes['indset'] = '-'.join(sorted(gkeys))
+        # Update FormDiagram
 
-        #     # Update FormDiagram
+        form.attributes['loadpath'] = fopt
 
-        #     form.attributes['loadpath'] = fopt
+        for i in range(n):
+            form.vertex[i_k[i]]['z'] = z[i]
 
-        #     for i in range(n):
-        #         form.vertex[i_k[i]]['z'] = z[i]
+        for c, qi in enumerate(list(q.ravel())):
+            u, v = i_uv[c]
+            form.edge[u][v]['q'] = qi
 
-        #     for c, qi in enumerate(list(q.ravel())):
-        #         u, v = i_uv[c]
-        #         form.edge[u][v]['q'] = qi
-
-            return fopt, qopt
+        return fopt, qopt
 
     else:
 
@@ -359,98 +356,26 @@ def _slsqp(fn, qid0, bounds, printout, qpos, args):
     return opt[1], opt[0]
 
 
-# #def fext(qid, *args):
-# #    """ Calculates the external loadpath for a given qid set.
-# #
-# #    Parameters:
-# #        qid (list): Independent force densities.
-# #        args (tuple): Sequence of additional arguments.
-# #
-# #    Returns:
-# #        float: Scalar load-path value.
-# #    """
-# #    i_uv, ind, dep, E, form, C, Cb, Ci, Ct, Cit, xt, xb, yt, yb, zb, pz = args[:16]
-# #    q = update_q(form, E, dep, ind, qid)
-# #    Q = diags(q)
-# #    Db = Cit.dot(Q).dot(Cb)
-# #    Di = Cit.dot(Q).dot(Ci)
-# #    CtQCb = (Ct.dot(Q)).dot(Cb)
-# #    pztDiinv = mm(transpose(pz), inv(Di).toarray())
-# #    f = (mm(xt, CtQCb.dot(xb)) + mm(yt, CtQCb.dot(yb)) + mm(pztDiinv, pz) - mm(pztDiinv, Db.dot(zb)))
-# #    return f[0][0]
-
-
-# #def gext(qid, *args):
-# #    """ Calculates the gradient of the external loadpath for a given qid set.
-# #
-# #    Parameters:
-# #        qid (list): Independent force densities.
-# #        args (tuple): Sequence of additional arguments.
-# #
-# #    Returns:
-# #        array: Load-path gradient at given qid.
-# #    """
-# #    i_uv, ind, dep, E, form, C, Cb, Ci, Ct, Cit, xt, xb, yt, yb, zb, pz, \
-# #        Cit_, Cbt_, pzt_, eipzt_, EiK_, zbt_, xbtCbteixtCtEiK_, ybtCbteiytCtEiK_ = args
-# #    q = update_q(form, E, dep, ind, qid)
-# #    Q = diags(q)
-# #    Db = Cit.dot(Q).dot(Cb)
-# #    Di = Cit.dot(Q).dot(Ci)
-# #    st = (C.shape[0], 1, 1)
-# #    Dbt_ = tile((Db.transpose()).toarray(), st)
-# #    DiinvCit_ = mm(tile(inv(Di).toarray(), st), Cit_)
-# #    eipztDiinvCitEiK_ = mm(eipzt_, mm(DiinvCit_, EiK_))
-# #    g = sum(xbtCbteixtCtEiK_ + ybtCbteiytCtEiK_ - mm(mm(pzt_, DiinvCit_), eipztDiinvCitEiK_) +
-# #            mm(mm(zbt_, (mm(Dbt_, DiinvCit_) - Cbt_)), eipztDiinvCitEiK_), axis=0)[0]
-# #    return g
-
-
 def _diff_evo(fn, bounds, population, generations, printout, plot, frange, args):
 
     return devo_numpy(fn=fn, bounds=bounds, population=population, generations=generations, printout=printout,
                       plot=plot, frange=frange, args=args)
 
 
-# def diff_ga(fn, form, bounds, population, generations, args):
+def _diff_ga(fn, bounds, population, generations, args):
 
-#     """ Finds the optimised load-path for a FormDiagram by Genetic Algorithm.
+    k = len(bounds)
+    nbins  = [10] * k
+    elites = int(0.2 * population)
 
-#     Parameters
-#     ----------
-#     fn : obj
-#         Function to minimise.
-#     form : obj
-#         FormDiagram.
-#     bounds : list
-#         [qmin, qmax] values for each qid.
-#     population : int
-#         Number of agents for evolution solver.
-#     generations : int
-#         Number of generations for the evolution solver.
-#     args : tuple
-#         Sequence of additional arguments for fn.
+    ga_ = ga(fn, 'min', k, bounds, num_gen=generations, num_pop=population, num_elite=elites, num_bin_dig=nbins,
+             mutation_probability=0.03, fargs=args, print_refresh=10)
 
-#     Returns
-#     -------
-#     float
-#         Optimum load-path value.
-#     array
-#         Optimum qids
+    index = ga_.best_individual_index
+    qopt  = ga_.current_pop['scaled'][index]
+    fopt  = ga_.current_pop['fit_value'][index]
 
-#     """
-
-#     k = len(bounds)
-#     nbins  = [10] * k
-#     elites = int(0.2 * population)
-
-#     ga_ = ga(fint, 'min', k, bounds, num_gen=generations, num_pop=population, num_elite=elites, num_bin_dig=nbins,
-#              mutation_probability=0.03, fargs=args, print_refresh=10)
-
-#     index = ga_.best_individual_index
-#     qopt  = ga_.current_pop['scaled'][index]
-#     fopt  = ga_.current_pop['fit_value'][index]
-
-#     return fopt, qopt
+    return fopt, qopt
 
 
 def randomise_form(form):
