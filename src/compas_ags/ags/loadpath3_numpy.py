@@ -4,17 +4,13 @@ from __future__ import division
 from __future__ import print_function
 
 from numpy import abs
-# from numpy import argmin
+from numpy import argmin
 from numpy import array
 from numpy import dot
 from numpy import isnan
-# from numpy import matmul as mm
 from numpy import max
 from numpy import mean
 from numpy import newaxis
-# from numpy import ones
-# from numpy import sum
-# from numpy import tile
 from numpy import zeros
 from numpy.linalg import pinv
 from numpy.random import rand
@@ -26,7 +22,7 @@ from scipy.sparse import csr_matrix
 from scipy.sparse.linalg import spsolve
 
 from compas_ags.diagrams import FormDiagram
-# from compas_ags.diagrams import ForceDiagram
+from compas_ags.diagrams import ForceDiagram
 
 from compas.plotters import NetworkPlotter
 
@@ -39,7 +35,7 @@ from compas.numerical import nonpivots
 
 from compas.utilities import geometric_key
 
-# from multiprocessing import Pool
+from multiprocessing import Pool
 
 from random import shuffle
 
@@ -57,7 +53,7 @@ __email__     = 'liew@arch.ethz.ch'
 __all__ = [
 #     # 'compute_loadpath3',
     'optimise_single',
-#     'optimise_multi',
+    'optimise_multi',
     'plot_form',
     'randomise_form',
 ]
@@ -280,7 +276,8 @@ def optimise_single(form, solver='devo', polish='slsqp', qmin=1e-6, qmax=5, popu
 
     else:
 
-        print('***** Invalid independent set for horizontal equillibrium *****')
+        if printout:
+            print('***** Invalid independent set for horizontal equillibrium *****')
 
         return 10**10, None
 
@@ -412,65 +409,71 @@ def randomise_form(form):
     return form_
 
 
-# def _worker(data):
+def _worker(data):
 
-#     try:
-#         i, form, save_figs, qmin, qmax, population, generations, simple = data
-#         fopt, qopt = optimise_single(form, qmin=qmin, qmax=qmax, population=population, generations=generations,
-#                                      printout=0, tension=0)
-#         print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
+    try:
 
-#         if save_figs:
-#             plotter = plot_form(form, radius=0, fix_width=True, simple=simple)
-#             plotter.save('{0}trial_{1}-fopt_{2:.6f}.png'.format(save_figs, i, fopt))
-#             del plotter
-#         return (fopt, form)
+        i, form, save_figs, qmin, qmax, population, generations, simple = data
+        fopt, qopt = optimise_single(form, qmin=qmin, qmax=qmax, population=population, generations=generations,
+                                     printout=0, tension=0)
 
-#     except:
-#         print('Trial: {0} - FAILED'.format(i))
-#         return (10**10, None)
+        print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
+
+        if save_figs:
+            plotter = plot_form(form, radius=0, fix_width=True, simple=simple)
+            plotter.save('{0}trial_{1}-fopt_{2:.6f}.png'.format(save_figs, i, fopt))
+            del plotter
+
+        return (fopt, form)
+
+    except:
+
+        print('Trial: {0} - FAILED'.format(i))
+
+        return (10**10, None)
 
 
-# def optimise_multi(form, trials=10, save_figs='', qmin=0.001, qmax=5, population=300, generations=500, simple=False):
+def optimise_multi(form, trials=10, save_figs='', qmin=0.001, qmax=5, population=300, generations=500, simple=False):
 
-#     """ Finds the optimised load-path for multiple randomised FormDiagrams.
+    """ Finds the optimised load-path for multiple randomised FormDiagrams.
 
-#     Parameters
-#     ----------
-#     form : obj
-#         Original FormDiagram.
-#     trials : int
-#         Number of trials to perform.
-#     save_figs : str
-#         Directory to save FormDiagram plots.
-#     qmin : float
-#         Minimum qid value.
-#     qmax : float
-#         Maximum qid value.
-#     population : int
-#         Number of agents for evolution solver.
-#     generations : int
-#         Number of generations for the evolution solver.
-#     simple : bool
-#         Simple plotting for figures.
-#     Returns
-#     -------
-#     list
-#         Optimum load-path for each trial.
-#     list
-#         Each final FormDiagram.
-#     int
-#         Index of the optimum.
+    Parameters
+    ----------
+    form : obj
+        FormDiagram to analyse.
+    trials : int
+        Number of trials to perform.
+    save_figs : str
+        Directory to save FormDiagram plots.
+    qmin : float
+        Minimum qid value.
+    qmax : float
+        Maximum qid value.
+    population : int
+        Number of agents for evolution solver.
+    generations : int
+        Number of generations for the evolution solver.
+    simple : bool
+        Simple plotting for figures.
 
-#     """
+    Returns
+    -------
+    list
+        Optimum load-path for each trial.
+    list
+        Each final FormDiagram.
+    int
+        Index of the optimum.
 
-#     data = [(i, randomise_form(form), save_figs, qmin, qmax, population, generations, simple)
-#             for i in range(trials)]
-#     fopts, forms = zip(*Pool().map(_worker, data))
-#     best = argmin(fopts)
-#     print('Best: {0} - fopt {1:.1f}'.format(best, fopts[best]))
+    """
 
-#     return fopts, forms, best
+    data = [(i, randomise_form(form), save_figs, qmin, qmax, population, generations, simple)
+            for i in range(trials)]
+    fopts, forms = zip(*Pool().map(_worker, data))
+    best = argmin(fopts)
+    print('Best: {0} - fopt {1:.1f}'.format(best, fopts[best]))
+
+    return fopts, forms, best
 
 
 def plot_form(form, radius=0.1, fix_width=False, max_width=10, simple=True):
@@ -548,22 +551,22 @@ if __name__ == "__main__":
 
     # Load FormDiagram
 
-    file = os.path.join(compas_ags.DATA, 'loadpath/fan.json')
+    file = os.path.join(compas_ags.DATA, 'loadpath/arches_flat.json')
     form = FormDiagram.from_json(file)
 
     # Single run
 
-    form = randomise_form(form)
-    fopt, qopt = optimise_single(form, qmax=5, population=300, generations=500, printout=10)
+    # form = randomise_form(form)
+    # fopt, qopt = optimise_single(form, qmax=5, population=300, generations=500, printout=10)
 
-#     # Multiple runs
+    # Multiple runs
 
-#     fopts, forms, best = optimise_multi(form, trials=4, save_figs='/home/al/temp/flat/', qmax=5, population=300, generations=200)
-#     form = forms[best]
+    fopts, forms, best = optimise_multi(form, trials=50, save_figs='', qmax=5, population=200, generations=200)
+    form = forms[best]
 
     # Plot
 
-    # plot_form(form, radius=0.1, simple=False).show()
+    plot_form(form, radius=0.1, simple=False).show()
 
     # Save
 
