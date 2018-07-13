@@ -1,308 +1,272 @@
 
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+# from __future__ import absolute_import
+# from __future__ import division
+# from __future__ import print_function
 
-from numpy import array
-from numpy import argmin
-from numpy import dot
-from numpy import newaxis
-from numpy import vstack
-from numpy import zeros
-from numpy.linalg import pinv
-
-from scipy.sparse import csr_matrix
-from scipy.optimize import fmin_slsqp
-
-from compas_ags.diagrams import FormDiagram
-
-from compas.geometry import add_vectors
-from compas.geometry import scale_vector
-from compas.geometry import vector_from_points
-
-from compas.numerical import connectivity_matrix
-from compas.numerical import devo_numpy
-from compas.numerical import equilibrium_matrix
-from compas.numerical import nonpivots
-from compas.numerical import normrow
-
-from compas.utilities import geometric_key
-
-from multiprocessing import Pool
-
-import sympy
-
-
-__author__    = ['Andrew Liew <liew@arch.ethz.ch>']
-__copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'liew@arch.ethz.ch'
-
-
-__all__ = [
-]
-
-
-def ground_form(points):
-
-    """ Makes a ground structure FormDiagram from a set of points.
-
-    Parameters
-    ----------
-    points : list
-        Co-ordinates of each point to connect.
-
-    Returns
-    -------
-    obj
-        Connected edges in a FormDiagram object.
-
-    """
-
-    form = FormDiagram()
-
-    gkey_key = {}
-    for x, y, z in points:
-        key = form.add_vertex(x=x, y=y, z=z)
-        gkey_key[geometric_key([x, y, z])] = key
-
-    for i in form.vertices():
-        for j in form.vertices():
-            if (i != j) and (not form.has_edge(u=i, v=j, directed=False)):
-                sp = form.vertex_coordinates(i)
-                ep = form.vertex_coordinates(j)
-                vec = vector_from_points(sp, ep)
-                unique = True
-                for c in range(2, 10):
-                    for d in range(1, c):
-                        sc = d / c
-                        div = add_vectors(sp, scale_vector(vec, sc))
-                        if gkey_key.get(geometric_key(div), None):
-                            unique = False
-                            break
-                    if not unique:
-                        break
-                if unique:
-                    form.add_edge(u=i, v=j)
-
-    return form
-
-
-def optimise_single(form, solver='devo', polish='slsqp', qmin=1e-6, qmax=10, population=300,
-                    generations=500, printout=10, plot=False, frange=None):
-
-    """ Finds the optimised load-path for a FormDiagram.
-
-    Parameters
-    ----------
-    form : obj
-        The FormDiagram.
-    solver : str
-        'devo' evolutionary solver.
-    polish : str
-        'slsqp' polish or None.
-    qmin : float
-        Minimum qid value.
-    qmax : float
-        Maximum qid value.
-    population : int
-        Number of agents for evolution solver.
-    generations : int
-        Number of iteration steps for the evolution solver.
-    printout : int
-        Frequency of print output to screen.
-    plot : bool
-        Plot progress of evolution.
-    frange : list
-        Minimum and maximum f value to plot.
+# from numpy import abs
+# from numpy import argmin
+# from numpy import array
+# from numpy import dot
+# from numpy import isnan
+# from numpy import mean
+# from numpy import newaxis
+# from numpy import sqrt
+# from numpy import vstack
+# from numpy import zeros
+# from numpy.linalg import pinv
 
-    Returns
-    -------
-    float
-        Optimum load-path value.
-    list
-        Optimum qids
+# from scipy.linalg import svd
+# from scipy.optimize import fmin_slsqp
+# from scipy.sparse import csr_matrix
 
-    """
+# from compas_ags.diagrams import FormDiagram
 
-    if printout:
-        print('\n' + '-' * 50)
-        print('Load-path optimisation started')
+# from compas.geometry import add_vectors
+# from compas.geometry import scale_vector
+# from compas.geometry import vector_from_points
 
-    # Mapping
+# from compas.numerical import connectivity_matrix
+# from compas.numerical import equilibrium_matrix
+# from compas.numerical import nonpivots
+# from compas.numerical import normrow
 
-    k_i  = form.key_index()
-    i_uv = form.index_uv()
-    uv_i = form.uv_index()
+# from compas.utilities import geometric_key
 
-    # Vertices and edges
+# from multiprocessing import Pool
 
-    n     = form.number_of_vertices()
-    m     = form.number_of_edges()
-    fixed = [k_i[key] for key in form.fixed()]
-    free  = list(set(range(n)) - set(fixed))
-    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
-    # sym   = [uv_i[uv] for uv in form.edges_where({'is_symmetry': True})]
+# from compas_ags.ags.loadpath3_numpy import diff_evo
+# from compas_ags.ags.loadpath3_numpy import slsqp
 
-    # Co-ordinates and loads
+# import sympy
 
-    px  = zeros((n, 1))
-    py  = zeros((n, 1))
-    xyz = zeros((n, 3))
-    for key, vertex in form.vertex.items():
-        i = k_i[key]
-        xyz[i, :] = form.vertex_coordinates(key)
-        px[i] = vertex.get('px', 0)
-        py[i] = vertex.get('py', 0)
-    xy = xyz[:, :2]
 
-    # Matrices
+# __author__    = ['Andrew Liew <liew@arch.ethz.ch>']
+# __copyright__ = 'Copyright 2018, BLOCK Research Group - ETH Zurich'
+# __license__   = 'MIT License'
+# __email__     = 'liew@arch.ethz.ch'
 
-    C = connectivity_matrix(edges, 'csr')
-    E = equilibrium_matrix(C, xy, free, 'csr').toarray()
-    q = array(form.q())[:, newaxis]
 
-    # Independent and dependent branches
+# __all__ = [
+#     'ground_form',
+#     'optimise_single',
+# ]
 
-    ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
-    k   = len(ind)
-    dep = list(set(range(m)) - set(ind))
 
-    for u, v in form.edges():
-        form.edge[u][v]['is_ind'] = True if uv_i[(u, v)] in ind else False
+# def ground_form(points):
 
-    if printout:
-        print('Form diagram has {0} independent branches'.format(k))
-    print(m, k)
+#     """ Makes a ground structure FormDiagram from a set of points.
 
+#     Parameters
+#     ----------
+#     points : list
+#         Co-ordinates of each point to connect.
 
-    # Set-up
+#     Returns
+#     -------
+#     obj
+#         Connected edges in a FormDiagram object.
 
-    Edinv = -csr_matrix(pinv(E[:, dep]))
-    Ei = E[:, ind]
-    p = vstack([px[free], py[free]])
-    lh2 = normrow(C.dot(xy))**2
-    args = (q, ind, dep, Edinv, Ei, p, lh2)
+#     """
 
-    # Solve
+#     form = FormDiagram()
 
-    bounds = [[qmin, qmax]] * k
+#     gkey_key = {}
+#     for x, y, z in points:
+#         key = form.add_vertex(x=x, y=y, z=z)
+#         gkey_key[geometric_key([x, y, z])] = key
 
-    if solver == 'devo':
-        fopt, qopt = diff_evo(form, bounds, population, generations, printout, plot, frange, args)
+#     for i in form.vertices():
+#         for j in form.vertices():
+#             if (i != j) and (not form.has_edge(u=i, v=j, directed=False)):
+#                 sp = form.vertex_coordinates(i)
+#                 ep = form.vertex_coordinates(j)
+#                 vec = vector_from_points(sp, ep)
+#                 unique = True
+#                 for c in range(2, 10):
+#                     for d in range(1, c):
+#                         sc = d / c
+#                         div = add_vectors(sp, scale_vector(vec, sc))
+#                         if gkey_key.get(geometric_key(div), None):
+#                             unique = False
+#                             break
+#                     if not unique:
+#                         break
+#                 if unique:
+#                     form.add_edge(u=i, v=j)
 
-    if polish == 'slsqp':
-        fopt, qopt = slsqp(form, qopt, bounds, printout, args)
+#     return form
 
-    q[ind, 0] = qopt
-    q[dep] = -Edinv.dot(p - Ei.dot(q[ind]))
 
-    if printout:
-        print('\n' + '-' * 50)
-        print('fopt: {0:.3f}'.format(fopt))
-        print('qid: {0:.3f} : {1:.3f}'.format(min(qopt), max(qopt)))
-        print('q: {0:.3f} : {1:.3f}'.format(float(min(q)), float(max(q))))
-        print('-' * 50 + '\n')
 
-    # Update FormDiagram
 
-    form.attributes['loadpath'] = fopt
+#     # Mapping
 
-    for c, qi in enumerate(list(q.ravel())):
-        u, v = i_uv[c]
-        form.edge[u][v]['q'] = qi
+#     k_i  = form.key_index()
+#     i_uv = form.index_uv()
+#     uv_i = form.uv_index()
 
-    return fopt, qopt
+#     # Vertices and edges
 
+#     n     = form.number_of_vertices()
+#     m     = form.number_of_edges()
+#     fixed = [k_i[key] for key in form.fixed()]
+#     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+#     free  = list(set(range(n)) - set(fixed))
 
-def fint(qid, *args):
-    q, ind, dep, Edinv, Ei, p, lh2 = args
-    q[ind, 0] = qid
-    q[dep] = -Edinv.dot(p - Ei.dot(q[ind]))
-    f = dot(abs(q).transpose(), lh2)
-    return f
+#     # Co-ordinates and loads
 
 
-def diff_evo(form, bounds, population, generations, printout, plot, frange, args):
-    return devo_numpy(fn=fint, bounds=bounds, population=population, generations=generations, printout=printout,
-                      plot=plot, frange=frange, args=args)
 
+#     # C and E matrices
 
-def slsqp(form, qid0, bounds, printout, args):
-    pout = 2 if printout else 0
-    opt = fmin_slsqp(fint, qid0, args=args, disp=pout, bounds=bounds, full_output=1, iter=300)
-    return opt[1], opt[0]
+#     C   = connectivity_matrix(edges, 'csr')
+#     Ci  = C[:, free]
+#     Cit = Ci.transpose()
+#     E   = equilibrium_matrix(C, xy, free, 'csr').toarray()
+#     uvw = C.dot(xyz)
+#     U   = uvw[:, 0]
+#     V   = uvw[:, 1]
 
+#     # Independent and dependent branches
 
-def _worker(data):
-    i, form, save_figs = data
-    fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmin=-5, qmax=5, population=300,
-                                 generations=500, printout=0)
-    print('Trial: {0} - Optimum: {1:.1f}'.format(i, fopt))
+#     ind = nonpivots(sympy.Matrix(E).rref()[0].tolist())
+#     k   = len(ind)
+#     dep = list(set(range(m)) - set(ind))
 
-    if save_figs:
-        plotter = plot_form(form, radius=0, fix_width=True)
-        plotter.save('{0}trial_{1}-fopt_{2:.6f}.png'.format(save_figs, i, fopt))
-        del plotter
+#     for u, v in form.edges():
+#         form.edge[u][v]['is_ind'] = True if uv_i[(u, v)] in ind else False
 
-    return (fopt, form)
+#     if printout:
+#         _, s, _ = svd(E)
+#         print('\n')
+#         print('Form diagram has {0} independent branches (RREF)'.format(len(ind)))
+#         print('Form diagram has {0} independent branches (SVD)'.format(m - len(s)))
 
+#     # Set-up
 
-def optimise_multi(form, trials=10, save_figs=''):
-    data = [(i, randomise_form(form), save_figs) for i in range(trials)]
-    result = Pool().map(_worker, data)
-    fopts, forms = zip(*result)
-    best = argmin(fopts)
-    fopt = fopts[best]
-    print('Best: {0} - fopt {1:.1f}'.format(best, fopt))
+#     lh2    = normrow(C.dot(xy))**2
+#     Edinv  = -csr_matrix(pinv(E[:, dep]))
+#     q      = array(form.q())[:, newaxis]
+#     Ei     = E[:, ind]
+#     p      = vstack([px[free], py[free]])
+#     bounds = [[qmin, qmax]] * k
+#     args   = (q, ind, dep, Edinv, Ei, p, lh2, Cit, U, V, px, py, free, True)
 
-    return fopts, forms, best
+#     # Solve
 
+#     if solver == 'devo':
+#         fopt, qopt = diff_evo(fint, form, bounds, population, generations, printout, plot, frange, args)
 
-# ==============================================================================
-# Debugging
-# ==============================================================================
+#     # if polish == 'slsqp':
+#     #     fopt_, qopt_ = slsqp(fint_, form, qopt, bounds, False, printout, None, qequal, args)
+#     #     q_ = 1 * q
+#     #     q_[ind, 0] = qopt_
+#     #     q_[dep] = -Edinv.dot(p - Ei.dot(q_[ind]))
+#     #     if fopt_ < fopt:
+#     #         fopt, qopt, q = fopt_, qopt_, q_
 
-if __name__ == "__main__":
+#     q[ind, 0] = qopt
+#     q[dep] = -Edinv.dot(p - Ei.dot(q[ind]))
 
-    # from compas_ags.ags import plot_form
+#     R = residual(q, px, py, free, Cit, U, V)
+#     if R < 0.001:
+#         checked = True
+#     else:
+#         checked = False
 
-    # form = FormDiagram()
-    # form.add_vertex(key=0, x=0, y=1, z=0, is_fixed=True)
-    # form.add_vertex(key=1, x=1, y=1, z=0, is_fixed=False, py=-1)
-    # form.add_vertex(key=2, x=0, y=0, z=0, is_fixed=True)
-    # form.add_vertex(key=3, x=1, y=0, z=0, is_fixed=False)
-    # form.add_edge(u=0, v=1)
-    # form.add_edge(u=1, v=3)
-    # form.add_edge(u=2, v=3)
-    # form.add_edge(u=1, v=2)
-    # form.add_edge(u=0, v=3)
+#     if printout:
+#         print('\n' + '-' * 50)
+#         print('qid: {0:.3f} : {1:.3f}'.format(min(qopt), max(qopt)))
+#         print('q: {0:.3f} : {1:.3f}'.format(float(min(q)), float(max(q))))
+#         print('Horizontal equillibrium: {0}'.format(checked))
+#         print('-' * 50 + '\n')
 
-    # fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmin=-5, qmax=5, population=100,
-    #                              generations=500, plot=True, frange=[None, None], printout=10)
+#     # Unique key
 
-    # plot_form(form).show()
+#     gkeys = []
+#     for i in ind:
+#         u, v = i_uv[i]
+#         gkeys.append(geometric_key(form.edge_midpoint(u, v)[:2] + [0]))
+#     form.attributes['indset'] = '-'.join(sorted(gkeys))
 
-    # ==============================================================================
+#     # Update FormDiagram
 
-    from compas_ags.ags import plot_form
-    from compas_ags.ags import randomise_form
+#     form.attributes['loadpath'] = fopt
 
-    m = 10
-    n = 2
-    points = [[i, j, 0] for i in range(m) for j in range(n)]
+#     for c, qi in enumerate(list(q.ravel())):
+#         u, v = i_uv[c]
+#         form.edge[u][v]['q'] = qi
 
-    form = ground_form(points)
-    form = randomise_form(form)
-    left = list(form.vertices_where(conditions={'x': 0}))
-    top = list(form.vertices_where(conditions={'x': m - 1, 'y': n - 1}))
-    form.set_vertices_attributes(left, is_fixed=True)
-    form.set_vertices_attributes(top, py=-1)
+#     return fopt, qopt
 
-    # fopt, qopt = optimise_single(form, solver='devo', polish='slsqp', qmin=-5, qmax=5, population=100,
-    #                              generations=500, plot=0, frange=[None, None], printout=10)
 
-    fopts, forms, best = optimise_multi(form, trials=36, save_figs='/home/al/temp/figs/')
-    # form = forms[best]
+# def qequal(qid, *args):
 
-    # plot_form(form, max_width=20, simple=True, radius=0.05).show()
+#     q, ind, dep, Edinv, Ei, p, lh2, Cit, U, V, px, py, free, _ = args
+#     q[ind, 0] = qid
+#     q[dep] = -Edinv.dot(p - Ei.dot(q[ind]))
+
+#     R = residual(q, px, py, free, Cit, U, V)
+#     return [R]
+
+
+
+
+
+# def fint(qid, *args):
+
+#     q, ind, dep, Edinv, Ei, p, lh2, Cit, U, V, px, py, free, _ = args
+#     q[ind, 0] = qid
+#     q[dep] = -Edinv.dot(p - Ei.dot(q[ind]))
+
+#     R = residual(q, px, py, free, Cit, U, V)
+#     # f = dot(abs(q.transpose()), lh2)
+#     # if R > 0.001:
+#     #     f += (5 + R)**4
+
+#     # if isnan(f):
+#     #     return 10**10
+#     return R
+
+
+# def fint_(qid, *args):
+
+#     q, ind, dep, Edinv, Ei, p, lh2, Cit, U, V, px, py, free, _ = args
+#     q[ind, 0] = qid
+#     q[dep] = -Edinv.dot(p - Ei.dot(q[ind]))
+
+#     f = dot(abs(q.transpose()), lh2)
+
+#     if isnan(f):
+#         return 10**10
+#     return f
+
+
+
+# # ==============================================================================
+# # Main
+# # ==============================================================================
+
+# if __name__ == "__main__":
+
+#     from compas_ags.ags import plot_form
+#     from compas_ags.ags import randomise_form
+
+#     m = 4
+#     n = 4
+#     points = [[i, j, 0] for i in range(m) for j in range(n)]
+
+#     form = ground_form(points)
+#     form = randomise_form(form)
+
+#     pins = list(form.vertices_where(conditions={'x': 0}))
+#     load = list(form.vertices_where(conditions={'x': m - 1, 'y': n - 1}))
+#     form.set_vertices_attributes(pins, is_fixed=True)
+#     form.set_vertices_attributes(load, py=-1)
+
+#     # fopt, qopt = optimise_single(form, qmin=-5, qmax=5, population=300, generations=500, printout=10)
+
+#     fopts, forms, best = optimise_multi(form, trials=4, save_figs='/home/al/temp/figs/')
+#     form = forms[best]
+
+#     # plot_form(form, max_width=10, radius=0.05, simple=False).show()
