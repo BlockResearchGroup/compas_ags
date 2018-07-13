@@ -146,11 +146,6 @@ form.vertex[6]['is_fixed'] = True
 gs.update_formdiagram(form, force)
 
 
-with open(os.path.join(compas_ags.DATA, 'form_lpopt.json'), 'w+') as fp:
-    data = form.to_data()
-    json.dump({'form': data}, fp)
-
-
 lpopt.optimise_loadpath(form, force)
 
 
