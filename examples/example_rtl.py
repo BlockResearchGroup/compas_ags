@@ -29,7 +29,12 @@ force = ForceDiagram.from_formdiagram(form)
 
 # set the fixed points
 
-form.set_fixed([4, 5])
+left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
+right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
+
+fixed = [left, right]
+
+form.set_fixed(fixed)
 force.set_fixed([2])
 
 # set the magnitude of the applied load
@@ -94,15 +99,10 @@ viewer.draw_form(lines=form_lines,
                  forces_on=False,
                  vertexlabel={key: key for key in form.vertices()},
                  vertexsize=0.2,
-                 vertexcolor={key: '#000000' for key in [4, 5]})
+                 vertexcolor={key: '#000000' for key in fixed})
 
 viewer.draw_force(lines=force_lines,
                   vertexlabel={key: key for key in force.vertices()},
                   vertexsize=0.2)
-
-
-
-
-
 
 viewer.show()

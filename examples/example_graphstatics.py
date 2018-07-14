@@ -29,14 +29,21 @@ form.set_edge_force_by_index(1, -30.0)
 gs.update_forcedensity(form)
 gs.update_forcediagram(force, form)
 
+left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
+right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
+
 viewer = Viewer(form, force, delay_setup=False)
 
-viewer.draw_form(vertexsize=0.15,
-                 vertexcolor={key: '#000000' for key in (4, 5)},
-                 vertexlabel={key: key for key in form.vertices()},
-                 edgelabel={uv: index for index, uv in enumerate(form.edges())})
+viewer.draw_form(
+    vertexsize=0.15,
+    vertexcolor={key: '#000000' for key in (left, right)},
+    vertexlabel={key: key for key in form.vertices()},
+    edgelabel={uv: index for index, uv in enumerate(form.edges())}
+)
 
-viewer.draw_force(vertexsize=0.15,
-                  vertexlabel={key: key for key in force.vertices()})
+viewer.draw_force(
+    vertexsize=0.15,
+    vertexlabel={key: key for key in force.vertices()}
+)
 
 viewer.show()
