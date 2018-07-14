@@ -561,12 +561,12 @@ if __name__ == "__main__":
 
     # Multiple runs
 
-    fopts, forms, best = optimise_multi(form, trials=50, save_figs='', qmax=5, population=200, generations=200)
+    fopts, forms, best = optimise_multi(form, trials=5000, save_figs='/home/al/temp/figs/', qmax=5, population=200, generations=300)
     form = forms[best]
 
     # Plot
 
-    plot_form(form, radius=0.1, simple=False).show()
+    # plot_form(form, radius=0.1, simple=False).show()
 
     # Save
 
