@@ -88,6 +88,7 @@ class Viewer(object):
                   edges_on=True,
                   faces_on=False,
                   forces_on=True,
+                  external_on=True,
                   arrows_on=True,
                   vertexcolor=None,
                   edgecolor=None,
@@ -148,22 +149,44 @@ class Viewer(object):
 
         if edges_on:
             leaves  = set(self.form.leaves())
+
             _lines  = []
             _arrows = []
+
             for u, v, attr in self.form.edges(True):
                 sp, ep = self.form.edge_coordinates(u, v, 'xy')
                 sp = ((sp[0] + dx) / scale, (sp[1] + dy) / scale)
                 ep = ((ep[0] + dx) / scale, (ep[1] + dy) / scale)
-                if u in leaves or v in leaves:
-                    text  = None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
-                    _arrows.append({
-                        'start'    : sp,
-                        'end'      : ep,
-                        'width'    : self.default_externalforcewidth,
-                        'color'    : self.default_externalforcecolor,
-                        'text'     : text,
-                        'fontsize' : self.default_fontsize
-                    })
+
+                if external_on:
+                    if u in leaves or v in leaves:
+                        text  = None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
+                        _arrows.append({
+                            'start'    : sp,
+                            'end'      : ep,
+                            'width'    : self.default_externalforcewidth,
+                            'color'    : self.default_externalforcecolor,
+                            'text'     : text,
+                            'fontsize' : self.default_fontsize
+                        })
+                    else:
+                        if forces_on:
+                            width = forcescale * fabs(attr['f'])
+                            color = self.default_tensioncolor if attr['f'] > 0 else self.default_compressioncolor
+                            text  = None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
+                            _lines.append({
+                                'start'    : sp,
+                                'end'      : ep,
+                                'width'    : width,
+                                'color'    : color,
+                                'text'     : text,
+                                'fontsize' : self.default_fontsize
+                            })
+                        _arrows.append({
+                            'start' : sp,
+                            'end'   : ep,
+                            'width' : self.default_edgewidth
+                        })
                 else:
                     if forces_on:
                         width = forcescale * fabs(attr['f'])
@@ -180,8 +203,9 @@ class Viewer(object):
                     _arrows.append({
                         'start' : sp,
                         'end'   : ep,
-                        'width' : self.default_edgewidth
+                        'width' : self.default_edgewidth if not attr['is_ind'] else self.default_edgewidth * 3
                     })
+
             if _arrows:
                 if arrows_on:
                     draw_xarrows_xy(_arrows, self.ax1)

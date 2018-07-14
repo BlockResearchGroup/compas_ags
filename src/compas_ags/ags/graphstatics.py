@@ -23,7 +23,7 @@ from compas.numerical import spsolve_with_known
 from compas.numerical import normrow
 from compas.numerical import normalizerow
 from compas.numerical import dof
-from compas.numerical import rref
+from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
 
 

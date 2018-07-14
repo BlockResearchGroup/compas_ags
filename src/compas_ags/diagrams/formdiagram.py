@@ -6,9 +6,9 @@ from compas.datastructures import FaceNetwork
 from compas.utilities import geometric_key2
 
 from compas.topology import network_is_xy
-from compas.topology import network_is_planar
-from compas.topology import network_is_planar_embedding
-from compas.topology import network_embed_in_plane
+# from compas.topology import network_is_planar
+# from compas.topology import network_is_planar_embedding
+# from compas.topology import network_embed_in_plane
 
 
 __author__    = ['Tom Van Mele', ]
@@ -56,59 +56,6 @@ class FormDiagram(FaceNetwork):
 
     def breakpoints(self):
         return list(set(self.leaves() + self.fixed()))
-
-    # def add_face(self, vertices, fkey=None, attr_dict=None, **kwattr):
-    #     """Add a face and specify its attributes (optional).
-
-    #     Note:
-    #         * A dictionary key for the face will be generated automatically, based on
-    #           the keys of its vertices.
-    #         * All faces are closed. The closing link is implied and, therefore,
-    #           the last vertex in the list should be different from the first.
-    #         * Building a face_adjacency list is slow, if we can't rely on the fact
-    #           that all faces have the same cycle directions. Therefore, it is
-    #           worth considering to ensure unified cycle directions upon addition
-    #           of a new face.
-
-    #     Parameters:
-    #         vertices (list): A list of vertex keys.
-
-    #     Returns:
-    #         str: The key of the face.
-    #     """
-    #     attr = self.default_face_attributes.copy()
-    #     if attr_dict is None:
-    #         attr_dict = {}
-    #     attr_dict.update(kwattr)
-    #     attr.update(attr_dict)
-
-    #     if vertices[0] == vertices[-1]:
-    #         del vertices[-1]
-    #     if vertices[-2] == vertices[-1]:
-    #         del vertices[-1]
-    #     if len(vertices) < 3:
-    #         return
-
-    #     keys = []
-    #     for key in vertices:
-    #         if key not in self.vertex:
-    #             key = self.add_vertex(key)
-    #         keys.append(key)
-
-    #     fkey = self._get_facekey(fkey)
-
-    #     self.face[fkey] = keys
-    #     self.facedata[fkey] = attr
-
-    #     halfedges = keys + keys[0:1]
-
-    #     for u, v in pairwise(halfedges):
-    #         if self.has_edge(u, v, directed=False):
-    #             self.halfedge[u][v] = fkey
-    #             if u not in self.halfedge[v]:
-    #                 self.halfedge[v][u] = None
-
-    #     return fkey
 
     # --------------------------------------------------------------------------
     # Convenience functions for retrieving the attributes of the formdiagram.
@@ -191,23 +138,23 @@ class FormDiagram(FaceNetwork):
     def is_2d(self):
         return network_is_xy(self)
 
-    def is_planar(self):
-        return network_is_planar(self)
+    # def is_planar(self):
+    #     return network_is_planar(self)
 
-    def is_embedded(self):
-        return network_is_planar_embedding(self)
+    # def is_embedded(self):
+    #     return network_is_planar_embedding(self)
 
     # --------------------------------------------------------------------------
     # Geometric functionality
     # --------------------------------------------------------------------------
 
-    def embed(self, fix=None):
-        network_embed_in_plane(self, fix=fix)
+    # def embed(self, fix=None):
+    #     network_embed_in_plane(self, fix=fix)
 
-    def embedded(self):
-        network = self.copy()
-        network.embed()
-        return network
+    # def embedded(self):
+    #     network = self.copy()
+    #     network.embed()
+    #     return network
 
 
 # ==============================================================================
@@ -218,7 +165,6 @@ if __name__ == '__main__':
 
     import compas_ags
 
-    from compas_ags.ags import identify_dof
     from compas.plotters import NetworkPlotter
 
     form = FormDiagram.from_obj(compas_ags.get('paper/fink.obj'))
@@ -234,25 +180,14 @@ if __name__ == '__main__':
 
     form.identify_fixed()
 
-    form.embed(fix=[1, 12])
-
-    k, m, ind = identify_dof(form)
-
-    print(ind)
-    print(form.is_2d())
-    print(form.is_planar())
-    print(form.is_embedded())
-
     vcolor = {key: '#ff0000' for key in form.fixed()}
     vlabel = {key: key for key in form.vertices()}
-    ecolor = {(u, v): '#00ff00' for index, (u, v) in enumerate(form.edges()) if index in ind}
     elabel = {(u, v): str(index) for index, (u, v) in enumerate(form.edges())}
-    ewidth = {(u, v): 3.0 for index, (u, v) in enumerate(form.edges()) if index in ind}
 
     plotter = NetworkPlotter(form, figsize=(10.0, 7.0), fontsize=8)
 
     plotter.draw_lines(lines)
     plotter.draw_vertices(facecolor=vcolor, text=vlabel, radius=0.3)
-    plotter.draw_edges(color=ecolor, text=elabel, width=ewidth)
+    plotter.draw_edges(text=elabel)
 
     plotter.show()
