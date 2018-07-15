@@ -2,10 +2,16 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-from numpy import array
-from numpy import float64
+import sys
 
-from scipy.optimize import minimize
+try:
+    from numpy import array
+    from numpy import float64
+
+    from scipy.optimize import minimize
+except ImportError:
+    if 'ironpython' not in sys.version.lower():
+        raise
 
 from compas.geometry import angle_vectors_xy
 
