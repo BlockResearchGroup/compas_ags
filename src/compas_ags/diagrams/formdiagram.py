@@ -43,10 +43,11 @@ class FormDiagram(FaceNetwork):
             'q': 1.0,
             'f': 0.0,
             'l': 0.0,
-            'is_ind': False,
-            'is_element': False,
+            'is_ind'     : False,
+            'is_element' : False,
             'is_reaction': False,
-            'is_load': False,
+            'is_load'    : False,
+            'is_edge'    : True,
 
         })
 

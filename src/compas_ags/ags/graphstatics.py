@@ -117,7 +117,7 @@ def identify_dof(form):
     xy    = form.get_vertices_attributes('xy')
     fixed = [k_i[key] for key in form.fixed()]
     free  = list(set(range(len(form.vertex))) - set(fixed))
-    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges_where({'is_edge': True})]
     C     = connectivity_matrix(edges)
     E     = equilibrium_matrix(C, xy, free)
     k, m  = dof(E)
