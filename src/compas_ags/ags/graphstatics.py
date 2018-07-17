@@ -126,7 +126,13 @@ def identify_dof(form):
     E     = equilibrium_matrix(C, xy, free)
     k, m  = dof(E)
     ind   = nonpivots(rref(E))
-    return k, m, ind
+    return k, m, [edges[i] for i in ind]
+
+
+def identify_dof_xfunc(formdata):
+    from compas_tna.diagrams import FormDiagram
+    form = FormDiagram.from_data(formdata)
+    return identify_dof(form)
 
 
 def count_dof(form):

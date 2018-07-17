@@ -32,12 +32,8 @@ for key, attr in form.vertices_where({'vertex_degree': 1}, True):
 
 k, m, ind = gs.identify_dof(form)
 
-print(k, m, ind)
-
-for index, (u, v, attr) in enumerate(form.edges(True)):
-    if index in ind:
-        attr['is_ind'] = True
-        attr['q'] = random.choice(range(1, 20))
+for u, v in ind:
+    form.set_edge_attributes((u, v), ('is_ind', 'q'), (True, random.choice(range(2, 10))))
 
 gs.update_forcedensity(form)
 gs.update_forcediagram(force, form)
