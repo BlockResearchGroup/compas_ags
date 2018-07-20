@@ -31,6 +31,11 @@ from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
 
 
+# todo: split this module in two
+#       - top-level functions for dealing with GS diagrams
+#       - low-level functions for computing mathematical abstractions
+
+
 __author__     = ['Tom Van Mele', ]
 __copyright__  = 'Copyright 2014, BLOCK Research Group - ETH Zurich'
 __license__    = 'MIT license'
@@ -219,10 +224,10 @@ def count_dof(form):
 
     """
     k_i   = form.key_index()
-    xy    = form.xy()
+    xy    = form.get_vertices_attributes('xy')
     fixed = [k_i[key] for key in form.fixed()]
     free  = list(set(range(len(form.vertex))) - set(fixed))
-    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges_where({'is_edge': True})]
     C     = connectivity_matrix(edges)
     E     = equilibrium_matrix(C, xy, free)
     k, m  = dof(E)
@@ -282,6 +287,8 @@ def update_q_from_qind(E, q, dep, ind):
     q[dep] = qd
 
 
+# this is a wrapper for update_q_from_qind that takes a form diagram as parameter
+# rather then the more specific input of the low-level version
 def update_forcedensity(form):
     """Update the force densities of the dependent edges of a form diagram using
     the values of the independent ones.
