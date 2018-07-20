@@ -39,8 +39,11 @@ __email__      = 'vanmelet@ethz.ch'
 
 __all__ = [
     'identify_dof',
+    'identify_dof_xfunc',
     'count_dof',
+    'count_dof_xfunc',
     'update_q_from_qind',
+    'update_q_from_qind_xfunc',
     'update_forcedensity',
     'update_forcedensity_xfunc',
     'update_formdiagram',
@@ -55,6 +58,47 @@ __all__ = [
 
 
 EPS  = 1 / sys.float_info.epsilon
+
+
+def identify_dof_xfunc(formdata):
+    from compas_tna.diagrams import FormDiagram
+    form = FormDiagram.from_data(formdata)
+    return identify_dof(form)
+
+
+def count_dof_xfunc(formdata):
+    from compas_tna.diagrams import FormDiagram
+    form = FormDiagram.from_data(formdata)
+    return count_dof(form)
+
+
+def update_q_from_qind_xfunc(form):
+    pass
+
+
+def update_forcedensity_xfunc(form):
+    from compas_ags.diagrams import FormDiagram
+    form = FormDiagram.from_data(form)
+    update_forcedensity(form)
+    return form.to_data()
+
+
+def update_formdiagram_xfunc(form, force, kmax=100):
+    from compas_ags.diagrams import FormDiagram
+    from compas_ags.diagrams import ForceDiagram
+    form = FormDiagram.from_data(form)
+    force = ForceDiagram.from_data(force)
+    update_formdiagram(form, force, kmax=kmax)
+    return form.to_data()
+
+
+def update_forcediagram_xfunc(force, form):
+    from compas_ags.ags.diagrams.formdiagram import FormDiagram
+    from compas_ags.ags.diagrams.forcediagram import ForceDiagram
+    form = FormDiagram.from_data(form)
+    force = ForceDiagram.from_data(force)
+    update_forcediagram(force, form)
+    return force.to_data()
 
 
 def identify_dof(form):
@@ -127,12 +171,6 @@ def identify_dof(form):
     k, m  = dof(E)
     ind   = nonpivots(rref(E))
     return k, m, [edges[i] for i in ind]
-
-
-def identify_dof_xfunc(formdata):
-    from compas_tna.diagrams import FormDiagram
-    form = FormDiagram.from_data(formdata)
-    return identify_dof(form)
 
 
 def count_dof(form):
@@ -244,13 +282,6 @@ def update_q_from_qind(E, q, dep, ind):
     q[dep] = qd
 
 
-def update_forcedensity_xfunc(form):
-    from compas_ags.diagrams import FormDiagram
-    form = FormDiagram.from_data(form)
-    update_forcedensity(form)
-    return form.to_data()
-
-
 def update_forcedensity(form):
     """Update the force densities of the dependent edges of a form diagram using
     the values of the independent ones.
@@ -301,15 +332,6 @@ def update_forcedensity(form):
         attr['q'] = q[index, 0]
         attr['f'] = f[index, 0]
         attr['l'] = l[index, 0]
-
-
-def update_formdiagram_xfunc(form, force, kmax=100):
-    from compas_ags.diagrams import FormDiagram
-    from compas_ags.diagrams import ForceDiagram
-    form = FormDiagram.from_data(form)
-    force = ForceDiagram.from_data(force)
-    update_formdiagram(form, force, kmax=kmax)
-    return form.to_data()
 
 
 def update_formdiagram(form, force, kmax=100):
@@ -440,15 +462,6 @@ def _update_formdiagram(xy, _xy, free, leaves, i_j, ij_e, _C, kmax=100):
     for i in leaves:
         j     = i_j[i][0]
         xy[i] = xy[j] + xy0[i] - xy0[j]
-
-
-def update_forcediagram_xfunc(force, form):
-    from compas_ags.ags.diagrams.formdiagram import FormDiagram
-    from compas_ags.ags.diagrams.forcediagram import ForceDiagram
-    form = FormDiagram.from_data(form)
-    force = ForceDiagram.from_data(force)
-    update_forcediagram(force, form)
-    return force.to_data()
 
 
 def update_forcediagram(force, form):
