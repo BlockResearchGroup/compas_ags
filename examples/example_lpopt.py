@@ -10,8 +10,8 @@ from compas_ags.diagrams import ForceDiagram
 
 from compas_ags.viewers import Viewer
 
-import compas_ags.ags.graphstatics as gs
-import compas_ags.ags.loadpath as lpopt
+from compas_ags.ags import graphstatics
+from compas_ags.ags import loadpath
 
 
 __author__    = ['Tom Van Mele', ]
@@ -89,9 +89,8 @@ for index in ind:
     form.edge[u][v]['is_ind'] = True
     form.edge[u][v]['q'] = 1.
 
-gs.update_forcedensity(form)
-
-gs.update_forcediagram(force, form)
+graphstatics.form_update_q_from_qind(form)
+graphstatics.force_update_from_form(force, form)
 
 force.vertex[7]['x']  = 0
 force.vertex[7]['y']  = 0
@@ -141,10 +140,8 @@ form.vertex[4]['is_fixed'] = True
 form.vertex[5]['is_fixed'] = True
 form.vertex[6]['is_fixed'] = True
 
-gs.update_formdiagram(form, force)
-
-
-lpopt.optimise_loadpath(form, force)
+graphstatics.form_update_from_force(form, force)
+loadpath.optimise_loadpath(form, force)
 
 
 viewer = Viewer(form, force, delay_setup=False)

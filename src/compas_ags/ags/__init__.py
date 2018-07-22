@@ -1,7 +1,12 @@
-from compas_ags.ags import graphstatics
-from compas_ags.ags import loadpath
+from __future__ import absolute_import
 
+from .core import *
 from .graphstatics import *
 from .loadpath import *
 
-__all__ = graphstatics.__all__ + loadpath.__all__
+from . import core
+from . import graphstatics
+from . import loadpath
+
+
+__all__ = core.__all__ + graphstatics.__all__ + loadpath.__all__

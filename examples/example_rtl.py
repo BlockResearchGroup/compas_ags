@@ -9,7 +9,7 @@ from compas_ags.diagrams import ForceDiagram
 
 from compas_ags.viewers import Viewer
 
-import compas_ags.ags.graphstatics as gs
+from compas_ags.ags import graphstatics
 
 
 __author__    = ['Tom Van Mele', ]
@@ -43,8 +43,8 @@ form.set_edge_force_by_index(0, -10.0)
 
 # update the diagrams
 
-gs.update_forcedensity(form)
-gs.update_forcediagram(force, form)
+graphstatics.form_update_q_from_qind(form)
+graphstatics.force_update_from_form(force, form)
 
 # store the original vertex locations
 
@@ -78,7 +78,7 @@ force.vertex[1]['x'] -= 5.0
 
 # update the formdiagram
 
-gs.update_formdiagram(form, force, kmax=100)
+graphstatics.form_update_from_force(form, force, kmax=100)
 
 # add arrow to lines to indicate movement
 

@@ -12,7 +12,7 @@ from compas_ags.diagrams import ForceDiagram
 
 from compas_ags.viewers import Viewer
 
-from compas_ags.ags import graphstatics as gs
+from compas_ags.ags import graphstatics
 
 
 __author__    = ['Tom Van Mele', ]
@@ -30,13 +30,13 @@ force = ForceDiagram.from_formdiagram(form)
 for key, attr in form.vertices_where({'vertex_degree': 1}, True):
     attr['is_fixed'] = True
 
-k, m, ind = gs.identify_dof(form)
+k, m, ind = graphstatics.form_identify_dof(form)
 
 for u, v in ind:
     form.set_edge_attributes((u, v), ('is_ind', 'q'), (True, random.choice(range(2, 10))))
 
-gs.update_forcedensity(form)
-gs.update_forcediagram(force, form)
+graphstatics.form_update_q_from_qind(form)
+graphstatics.force_update_from_form(force, form)
 
 viewer = Viewer(form, force, delay_setup=False)
 

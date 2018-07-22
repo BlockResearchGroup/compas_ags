@@ -18,7 +18,7 @@ from compas.geometry import angle_vectors_xy
 from compas.numerical import connectivity_matrix
 from compas.numerical import normrow
 
-from compas_ags.ags.graphstatics import _update_formdiagram
+from compas_ags.ags import update_form_from_force
 
 
 __author__     = ['Tom Van Mele <van.mele@arch.ethz.ch>',
@@ -353,15 +353,17 @@ def optimise_loadpath(form, force, algo='COBYLA'):
 
     def objfunc(_x):
         _xy[_free, 0] = _x
-        _update_formdiagram(xy, _xy, free, leaves, i_j, ij_e, _C)
-        uv  = C.dot(xy)
-        _uv = _C.dot(_xy)
-        l   = normrow(uv)
-        _l  = normrow(_uv)
+
+        update_form_from_force(xy, _xy, free, leaves, i_j, ij_e, _C)
+
+        l   = normrow(C.dot(xy))
+        _l  = normrow(_C.dot(_xy))
         li  = l[internal]
         _li = _l[internal]
         lp  = li.T.dot(_li)[0, 0]
+
         print(lp)
+
         return(lp)
 
     x0     = _xy[_free, 0]

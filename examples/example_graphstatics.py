@@ -10,7 +10,7 @@ from compas_ags.diagrams import ForceDiagram
 
 from compas_ags.viewers import Viewer
 
-import compas_ags.ags.graphstatics as gs
+from compas_ags.ags import graphstatics
 
 
 __author__    = ['Tom Van Mele', ]
@@ -27,8 +27,8 @@ force = ForceDiagram.from_formdiagram(form)
 
 form.set_edge_force_by_index(1, -30.0)
 
-gs.update_forcedensity(form)
-gs.update_forcediagram(force, form)
+graphstatics.form_update_q_from_qind(form)
+graphstatics.force_update_from_form(force, form)
 
 left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]

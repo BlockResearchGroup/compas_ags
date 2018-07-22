@@ -30,10 +30,8 @@ from compas.numerical import dof
 from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
 
-
-# todo: split this module in two
-#       - top-level functions for dealing with GS diagrams
-#       - low-level functions for computing mathematical abstractions
+from compas_ags.ags import update_q_from_qind
+from compas_ags.ags import update_form_from_force
 
 
 __author__     = ['Tom Van Mele', ]
@@ -43,70 +41,71 @@ __email__      = 'vanmelet@ethz.ch'
 
 
 __all__ = [
-    'identify_dof',
-    'identify_dof_xfunc',
-    'count_dof',
-    'count_dof_xfunc',
-    'update_q_from_qind',
-    'update_q_from_qind_xfunc',
-    'update_forcedensity',
-    'update_forcedensity_xfunc',
-    'update_formdiagram',
-    'update_formdiagram_xfunc',
-    'update_forcediagram',
-    'update_forcediagram_xfunc',
-    'modify_formdiagram',
-    'modify_formdiagram_xfunc',
-    'modify_forcediagram',
-    'modify_forcediagram_xfunc',
+    'form_identify_dof',
+    'form_identify_dof_xfunc',
+    'form_count_dof',
+    'form_count_dof_xfunc',
+    'form_update_q_from_qind',
+    'form_update_q_from_qind_xfunc',
+    'form_update_from_force',
+    'form_update_from_force_xfunc',
+
+    'force_update_from_form',
+    'force_update_from_form_xfunc',
 ]
 
 
 EPS  = 1 / sys.float_info.epsilon
 
 
-def identify_dof_xfunc(formdata):
+# ==============================================================================
+# xfuncs
+# ==============================================================================
+
+
+def form_identify_dof_xfunc(formdata, *args, **kwargs):
     from compas_tna.diagrams import FormDiagram
     form = FormDiagram.from_data(formdata)
-    return identify_dof(form)
+    return form_identify_dof(form, *args, **kwargs)
 
 
-def count_dof_xfunc(formdata):
+def form_count_dof_xfunc(formdata, *args, **kwargs):
     from compas_tna.diagrams import FormDiagram
     form = FormDiagram.from_data(formdata)
-    return count_dof(form)
+    return form_count_dof(form, *args, **kwargs)
 
 
-def update_q_from_qind_xfunc(form):
-    pass
-
-
-def update_forcedensity_xfunc(form):
+def form_update_q_from_qind_xfunc(formdata, *args, **kwargs):
     from compas_ags.diagrams import FormDiagram
     form = FormDiagram.from_data(form)
-    update_forcedensity(form)
+    form_update_q_from_qind(form, *args, **kwargs)
     return form.to_data()
 
 
-def update_formdiagram_xfunc(form, force, kmax=100):
+def form_update_from_force_xfunc(form, force, *args, **kwargs):
     from compas_ags.diagrams import FormDiagram
     from compas_ags.diagrams import ForceDiagram
     form = FormDiagram.from_data(form)
     force = ForceDiagram.from_data(force)
-    update_formdiagram(form, force, kmax=kmax)
+    form_update_from_force(form, force, *args, **kwargs)
     return form.to_data()
 
 
-def update_forcediagram_xfunc(force, form):
-    from compas_ags.ags.diagrams.formdiagram import FormDiagram
-    from compas_ags.ags.diagrams.forcediagram import ForceDiagram
+def force_update_from_form_xfunc(force, form, *args, **kwargs):
+    from compas_ags.diagrams import FormDiagram
+    from compas_ags.diagrams import ForceDiagram
     form = FormDiagram.from_data(form)
     force = ForceDiagram.from_data(force)
-    update_forcediagram(force, form)
+    force_update_from_form(force, form, *args, **kwargs)
     return force.to_data()
 
 
-def identify_dof(form):
+# ==============================================================================
+# analysis form diagram
+# ==============================================================================
+
+
+def form_identify_dof(form):
     r"""Identify the DOF of a form diagram.
 
     Parameters
@@ -178,7 +177,7 @@ def identify_dof(form):
     return k, m, [edges[i] for i in ind]
 
 
-def count_dof(form):
+def form_count_dof(form):
     r"""Count the number of degrees of freedom of a form diagram.
 
     Parameters
@@ -235,61 +234,11 @@ def count_dof(form):
 
 
 # ==============================================================================
-# update
+# update form diagram
 # ==============================================================================
 
 
-def update_q_from_qind(E, q, dep, ind):
-    """Update the full set of force densities using the values of the independent edges.
-
-    Parameters
-    ----------
-    E : sparse csr matrix
-        The equilibrium matrix.
-    q : array
-        The force densities of the edges.
-    dep : list
-        The indices of the dependent edges.
-    ind : list
-        The indices of the independent edges.
-
-    Returns
-    -------
-    None
-
-    Notes
-    -----
-    The force densities are updated in-place.
-
-    Examples
-    --------
-    .. code-block:: python
-
-        #
-
-    """
-    m  = E.shape[0] - len(dep)
-    qi = q[ind]
-    Ei = E[:, ind]
-    Ed = E[:, dep]
-    if m > 0:
-        Edt = Ed.transpose()
-        A = Edt.dot(Ed).toarray()
-        b = Edt.dot(Ei).dot(qi)
-    else:
-        A = Ed.toarray()
-        b = Ei.dot(qi)
-    if cond(A) > EPS:
-        res = lstsq(-A, b)
-        qd = res[0]
-    else:
-        qd = solve(-A, b)
-    q[dep] = qd
-
-
-# this is a wrapper for update_q_from_qind that takes a form diagram as parameter
-# rather then the more specific input of the low-level version
-def update_forcedensity(form):
+def form_update_q_from_qind(form):
     """Update the force densities of the dependent edges of a form diagram using
     the values of the independent ones.
 
@@ -341,7 +290,7 @@ def update_forcedensity(form):
         attr['l'] = l[index, 0]
 
 
-def update_formdiagram(form, force, kmax=100):
+def form_update_from_force(form, force, kmax=100):
     r"""Update the form diagram after a modification of the force diagram.
 
     Compute the geometry of the form diagram from the geometry of the form diagram
@@ -401,7 +350,7 @@ def update_formdiagram(form, force, kmax=100):
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # re-add the leaves and leaf-edges
     # --------------------------------------------------------------------------
-    _update_formdiagram(xy, _xy, free, leaves, i_j, ij_e, _C, kmax=kmax)
+    update_form_from_force(xy, _xy, free, leaves, i_j, ij_e, _C, kmax=kmax)
     # --------------------------------------------------------------------------
     # update
     # --------------------------------------------------------------------------
@@ -437,41 +386,12 @@ def update_formdiagram(form, force, kmax=100):
         attr['l'] = _l[e, 0]
 
 
-def _update_formdiagram(xy, _xy, free, leaves, i_j, ij_e, _C, kmax=100):
-    _uv = _C.dot(_xy)
-    _t  = normalizerow(_uv)
-    I   = eye(2, dtype=float64)
-    xy0 = xy.copy()
-    A   = zeros((2 * len(free), 2 * len(free)), dtype=float64)
-    b   = zeros((2 * len(free), 1), dtype=float64)
-    # update the free vertices
-    for k in range(kmax):
-        row = 0
-        for i in free:
-            R = zeros((2, 2), dtype=float64)
-            q = zeros((2, 1), dtype=float64)
-            # add line constraints based on connected edges
-            for j in i_j[i]:
-                if j in leaves:
-                    continue
-                n  = _t[ij_e[(i, j)], None]
-                p  = xy[j, None]
-                r  = I - n.T.dot(n)
-                R += r
-                q += r.dot(p.T)
-            # add line constraints as specified
-            A[row: row + 2, row: row + 2] = R
-            b[row: row + 2] = q
-            row += 2
-        res      = solve(A.T.dot(A), A.T.dot(b))
-        xy[free] = res.reshape((-1, 2), order='C')
-    # reconnect leaves
-    for i in leaves:
-        j     = i_j[i][0]
-        xy[i] = xy[j] + xy0[i] - xy0[j]
+# ==============================================================================
+# update force diagram
+# ==============================================================================
 
 
-def update_forcediagram(force, form):
+def force_update_from_form(force, form):
     """Update the force diagram after modifying the (force densities of) the form diagram."""
     # --------------------------------------------------------------------------
     # form diagram
@@ -502,27 +422,6 @@ def update_forcediagram(force, form):
         i = _k_i[key]
         attr['x'] = _xy[i, 0]
         attr['y'] = _xy[i, 1]
-
-
-# ==============================================================================
-# modify
-# ==============================================================================
-
-
-def modify_formdiagram_xfunc():
-    pass
-
-
-def modify_formdiagram():
-    pass
-
-
-def modify_forcediagram():
-    pass
-
-
-def modify_forcediagram_xfunc():
-    pass
 
 
 # ==============================================================================
