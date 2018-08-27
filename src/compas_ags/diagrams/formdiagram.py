@@ -95,6 +95,10 @@ class FormDiagram(FaceNetwork):
         self.edge[u][v]['is_ind'] = True
         self.edge[u][v]['q'] = force / l
 
+    def set_edge_forcedensity(self, u, v, q):
+        self.edge[u][v]['is_ind'] = True
+        self.edge[u][v]['q'] = q
+
     def set_edge_force_by_index(self, index, force):
         for i, (u, v) in enumerate(self.edges()):
             if i == index:

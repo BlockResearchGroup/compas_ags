@@ -69,6 +69,10 @@ class ForceDiagram(Network):
         for key, attr in self.vertices(True):
             attr['is_fixed'] = key in keys
 
+    def set_anchor(self, keys):
+        for key, attr in self.vertices(True):
+            attr['is_fixed'] = key in keys
+
     # --------------------------------------------------------------------------
     # Helpers
     # --------------------------------------------------------------------------

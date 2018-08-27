@@ -323,7 +323,7 @@ def form_update_from_force(form, force, kmax=100):
     # form diagram
     # --------------------------------------------------------------------------
     k_i    = form.key_index()
-    i_j    = {i: [k_i[n] for n in form.vertex_neighbours(k)] for i, k in enumerate(form.vertices())}
+    #i_j    = {i: [k_i[n] for n in form.vertex_neighbours(k)] for i, k in enumerate(form.vertices())}
     uv_e   = form.uv_index()
     ij_e   = {(k_i[u], k_i[v]): uv_e[(u, v)] for u, v in uv_e}
     xy     = array(form.xy(), dtype=float64)
