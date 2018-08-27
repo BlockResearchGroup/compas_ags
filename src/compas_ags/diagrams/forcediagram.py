@@ -71,7 +71,31 @@ class ForceDiagram(Network):
 
     def set_anchor(self, keys):
         for key, attr in self.vertices(True):
-            attr['is_fixed'] = key in keys
+            attr['is_anchor'] = key in keys
+
+
+    # --------------------------------------------------------------------------
+    # Helpers
+    # --------------------------------------------------------------------------
+
+    def uv_index(self, form=None):
+        if not form:
+            return {(u, v): index for index, (u, v) in enumerate(self.edges())}
+        uv_index = dict()
+        for index, (u, v) in enumerate(form.edges()):
+            f1 = form.halfedge[u][v]
+            f2 = form.halfedge[v][u]
+            uv_index[(f1, f2)] = index
+        return uv_index
+
+    def ordered_edges(self, form, index=True):
+        key_index = self.key_index()
+        uv_index  = self.uv_index(form=form)
+        index_uv  = dict((i, uv) for uv, i in uv_index.items())
+        edges     = [index_uv[i] for i in range(self.number_of_edges())]
+        if not index:
+            return edges
+        return [[key_index[u], key_index[v]] for u, v in edges]
 
     def external_edges(self, form):
         leaves = set(form.leaves())
@@ -89,6 +113,14 @@ class ForceDiagram(Network):
                 e_v.append(u)
                 e_v.append(v)
         return list(set(e_v))
+
+    # --------------------------------------------------------------------------
+    # AGS functions
+    # --------------------------------------------------------------------------
+
+    def update(self, formdiagram):
+        from compas_ags.algorithms.graphstatics import update_forcediagram
+        update_forcediagram(self, formdiagram)
 
     def compute_constraints(self, form, M):
         from numpy import zeros, vstack
@@ -118,38 +150,6 @@ class ForceDiagram(Network):
             constraint_rows = vstack((constraint_rows, constraint_jac_row))
             residual = vstack((residual, attr['y']))
         return constraint_rows, residual
-
-    # --------------------------------------------------------------------------
-    # Helpers
-    # --------------------------------------------------------------------------
-
-    def uv_index(self, form=None):
-        if not form:
-            return {(u, v): index for index, (u, v) in enumerate(self.edges())}
-        uv_index = dict()
-        for index, (u, v) in enumerate(form.edges()):
-            f1 = form.halfedge[u][v]
-            f2 = form.halfedge[v][u]
-            uv_index[(f1, f2)] = index
-        return uv_index
-
-    def ordered_edges(self, form, index=True):
-        key_index = self.key_index()
-        uv_index  = self.uv_index(form=form)
-        index_uv  = dict((i, uv) for uv, i in uv_index.items())
-        edges     = [index_uv[i] for i in range(self.number_of_edges())]
-        if not index:
-            return edges
-        return [[key_index[u], key_index[v]] for u, v in edges]
-
-    # --------------------------------------------------------------------------
-    # AGS functions
-    # --------------------------------------------------------------------------
-
-    def update(self, formdiagram):
-        from compas_ags.algorithms.graphstatics import update_forcediagram
-        update_forcediagram(self, formdiagram)
-
 
 # ==============================================================================
 # Debugging

@@ -134,6 +134,7 @@ def compute_jacobian(form,force):
     Ed = E[:, dependent_edges_idx]
     Eid = E[:, independent_edges_idx]
     qid = q[independent_edges_idx]
+
     # --------------------------------------------------------------------------
     # force diagram
     # --------------------------------------------------------------------------
@@ -144,7 +145,6 @@ def compute_jacobian(form,force):
     _C = connectivity_matrix(_edges, 'array')
     _C = _C.transpose()
     _C = np.asmatrix(_C)
-
 
     # --------------------------------------------------------------------------
     # Jacobian

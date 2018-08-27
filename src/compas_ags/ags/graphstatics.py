@@ -32,6 +32,7 @@ from compas.numerical import nonpivots
 
 from compas_ags.ags import update_q_from_qind
 from compas_ags.ags import update_form_from_force
+from compas.numerical import laplacian_matrix
 
 
 __author__     = ['Tom Van Mele', ]
@@ -425,7 +426,7 @@ def force_update_from_form(force, form):
         attr['y'] = _xy[i, 1]
 
 
-from compas.numerical import laplacian_matrix
+
 def form_update_from_force_direct(form, force):
     # --------------------------------------------------------------------------
     # form diagram
