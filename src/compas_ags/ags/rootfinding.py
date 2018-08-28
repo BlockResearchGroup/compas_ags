@@ -23,6 +23,8 @@ from compas.numerical import connectivity_matrix
 from compas.numerical import equilibrium_matrix
 from compas.numerical import normrow
 from compas.numerical import laplacian_matrix
+from compas.numerical import spsolve_with_known
+from compas.numerical import solve_with_known
 
 import compas_ags.utilities.errorHandler as eh
 import compas_ags.utilities.helpers as hlp
@@ -141,10 +143,12 @@ def compute_jacobian(form,force):
     _vcount = force.number_of_vertices()
     _edges = force.ordered_edges(form)
     _L = laplacian_matrix(_edges, normalize=False, rtype='array')
-    _L = np.asmatrix(_L)
+    #_L = np.asmatrix(_L)
     _C = connectivity_matrix(_edges, 'array')
     _C = _C.transpose()
     _C = np.asmatrix(_C)
+    _k_i   = force.key_index()
+    _known = [_k_i[force.anchor()]]
 
     # --------------------------------------------------------------------------
     # Jacobian
@@ -171,20 +175,22 @@ def compute_jacobian(form,force):
             dqdxi[independent_edges_idx] = 0
             dQdxi = np.asmatrix(np.diag(dqdxi[:, 0]))
 
+            dXdiTop = np.zeros((_L.shape[0]))
+            dXdiBot = np.zeros((_L.shape[0]))
             if j == 0:
-                dXdiTop = hlp.solveq(_L, _C * (dQdxi * u + Q * dxdxi), np.asarray([_vcount]))
-                dXdiBot = hlp.solveq(_L, _C * (dQdxi * v), np.asarray([_vcount]))
+                dXdiTop = solve_with_known(_L, np.array(_C * (dQdxi * u + Q * dxdxi)).flatten(), dXdiTop, _known)
+                dXdiBot = solve_with_known(_L, np.array(_C * (dQdxi * v)).flatten(), dXdiBot, _known)
             elif j == 1:
-                dXdiTop = hlp.solveq(_L, _C * (dQdxi * u), np.asarray([_vcount]))
-                dXdiBot = hlp.solveq(_L, _C * (dQdxi * v + Q * dxdxi), np.asarray([_vcount]))
+                dXdiTop = solve_with_known(_L, np.array(_C * (dQdxi * u)).flatten(), dXdiTop, _known)
+                dXdiBot = solve_with_known(_L, np.array(_C * (dQdxi * v + Q * dxdxi)).flatten(), dXdiBot, _known)
 
-            dXdi = np.vstack((dXdiTop[0], dXdiBot[0]))
-            jacobian[:, i + j * vcount] = dXdi.A1
+            dXdi = np.hstack((dXdiTop, dXdiBot))
+            jacobian[:, i + j * vcount] = dXdi
     return jacobian
 
-def update_coordinates(daigram, xy):
-    k_i = daigram.key_index()
-    for key, attr in daigram.vertices(True):
+def update_coordinates(diagram, xy):
+    k_i = diagram.key_index()
+    for key, attr in diagram.vertices(True):
         index = k_i[key]
         attr['x'] = xy[index, 0]
         attr['y'] = xy[index, 1]

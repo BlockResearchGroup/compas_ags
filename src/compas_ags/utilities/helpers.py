@@ -3,8 +3,7 @@ import numpy as np
 __all__ = [
     'get_independent_stress',
     'check_solutions',
-    'rref',
-    'solveq'
+    'rref'
 ]
 
 from .errorHandler import SolutionError
@@ -81,49 +80,3 @@ def check_solutions(A, rhs, eps=1e-7):
         print("Rank of matrix: " + str(rank_j))
         print("Rank of augmented matrix: " + str(rank_aug))
         raise SolutionError('ERROR: No solutions!!!')
-
-def solveq(K, f, bcPrescr, bcVal=None):
-    """
-    Solve static FE-equations considering boundary conditions.
-    can also be used to solve other equation systems
-
-    Parameters:
-
-            K		   global stiffness matrix, dim(K)= nd x nd
-            f		   global load vector, dim(f)= nd x 1
-
-            bcPrescr	1-dim integer array containing prescribed dofs.
-            bcVal	   1-dim float array containing prescribed values.
-                                    If not given all prescribed dofs are assumed 0.
-
-    Returns:
-
-            a		   solution including boundary values
-            Q		   reaction force vector
-                                    dim(a)=dim(Q)= nd x 1, nd : number of dof's
-
-    """
-
-    nDofs = K.shape[0]
-    nPdofs = bcPrescr.shape[0]
-
-    if bcVal is None:
-        bcVal = np.zeros([nPdofs], 'd')
-
-    bc = np.ones(nDofs, 'bool')
-    bcDofs = np.arange(nDofs)
-
-    bc[np.ix_(bcPrescr - 1)] = False
-    bcDofs = bcDofs[bc]
-
-    fsys = f[bcDofs] - K[np.ix_((bcDofs), (bcPrescr - 1))] * \
-                       np.asmatrix(bcVal).reshape(nPdofs, 1)
-    asys = np.linalg.solve(K[np.ix_((bcDofs), (bcDofs))], fsys)
-
-    a = np.zeros([nDofs, 1])
-    a[np.ix_(bcPrescr - 1)] = np.asmatrix(bcVal).reshape(nPdofs, 1)
-    a[np.ix_(bcDofs)] = asys
-
-    Q = K * np.asmatrix(a) - f
-
-    return (np.asmatrix(a), Q)

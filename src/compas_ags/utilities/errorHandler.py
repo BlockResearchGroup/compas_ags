@@ -6,7 +6,7 @@ __all__ = [
 
 class SolutionError(Exception):
     """
-    Used to throw solution errors during form or force compotations.
+    Used to throw solution errors during form or force computations.
     """
 
     def __init__(self, value):
