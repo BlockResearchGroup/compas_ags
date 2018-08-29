@@ -6,7 +6,7 @@ __all__ = [
     'rref'
 ]
 
-from .errorHandler import SolutionError
+from .errorhandler import SolutionError
 
 def rref(A, tol=1e-7):
     pcolpos = []

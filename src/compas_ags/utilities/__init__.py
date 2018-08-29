@@ -1,4 +1,4 @@
-from .errorHandler import *
+from .errorhandler import *
 from .helpers import *
 
-__all__ = errorHandler.__all__ + helpers.__all__
+__all__ = errorhandler.__all__ + helpers.__all__
