@@ -470,7 +470,7 @@ def form_update_from_force_direct(form, force):
     _V = np.diag(_uv[:, 1])
 
     # Get reciprocal force densities
-    from compas_ags.utilities.errorHandler import SolutionError
+    from compas_ags.utilities.errorhandler import SolutionError
     if any(abs(q) < 1e-14):
         raise SolutionError('Found zero force density, direct solution not possible.')
     q = np.divide(1, q)
@@ -491,8 +491,9 @@ def form_update_from_force_direct(form, force):
 
     # Get independent variables
     from compas_ags.utilities.helpers import get_independent_stress, check_solutions
-    nr_free_edges_force, free_vars, dependent_vars = get_independent_stress(
-        M)
+    nr_free_vars, free_vars, dependent_vars = get_independent_stress(M)
+    #k, m  = dof(M)
+    #ind   = nonpivots(rref(M))
 
     # Partition system
     Mid = M[:, free_vars]

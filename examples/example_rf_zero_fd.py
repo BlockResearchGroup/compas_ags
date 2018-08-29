@@ -99,7 +99,7 @@ viewer.show()
 
 
 import compas_ags.ags.rootfinding as rf
-import compas_ags.utilities.errorHandler as eh
+import compas_ags.utilities.errorhandler as eh
 import numpy as np
 xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
 _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
@@ -116,14 +116,14 @@ for i in range(_xy.shape[0]):
 
 # modify the geometry of the force diagram and update form diagram
 try:
-    force.vertex[idx]['x'] += 1.0
+    force.vertex[idx+1]['x'] += 1.0
     graphstatics.form_update_from_force_direct(form, force)
 except (eh.SolutionError) as e:
     # Root finding solution for when direct solution fails
     force.vertex[idx]['x'] -= 1.0
     _xy[idx,0] += 1.0
-    Xs_goal = np.vstack(( np.asmatrix(_xy[:,0]).transpose(), np.asmatrix(_xy[:,1]).transpose()))
-    rf.compute_form_from_force_newton(form, force, Xs_goal)
+    _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
+    rf.compute_form_from_force_newton(form, force, _X_goal)
 
 # add arrow to lines to indicate movement
 force_lines.append({

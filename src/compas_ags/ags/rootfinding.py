@@ -1,5 +1,7 @@
 from compas_ags.ags.graphstatics import *
 
+import sys
+
 try:
     from numpy import array
     from numpy import eye
@@ -26,7 +28,7 @@ from compas.numerical import laplacian_matrix
 from compas.numerical import spsolve_with_known
 from compas.numerical import solve_with_known
 
-import compas_ags.utilities.errorHandler as eh
+import compas_ags.utilities.errorhandler as eh
 import compas_ags.utilities.helpers as hlp
 from compas_ags.ags.graphstatics import form_update_q_from_qind, force_update_from_form
 
@@ -40,17 +42,29 @@ __all__ = [
 
 import numpy as np
 
-def compute_form_from_force_newton(form, force, Xs_goal, tol=1e5):
+def compute_form_from_force_newton(form, force, _X_goal, tol=1e5):
     xy = array(form.xy(), dtype=float64).reshape((-1, 2))
-    X_start = np.vstack(( np.asmatrix(xy[:,0]).transpose(), np.asmatrix(xy[:,1]).transpose()))
-    X = X_start
+    X = np.vstack(( np.asmatrix(xy[:,0]).transpose(), np.asmatrix(xy[:,1]).transpose()))
 
-    diff = 100
-    n_iter = 1
+
     eps = np.spacing(1)
 
+    # Check if the anchored vertex of the force diagram should be moved
+    _vcount = force.number_of_vertices()
+    _k_i = force.key_index()
+    _known = _k_i[force.anchor()]
+    _bc = [_known, _vcount + _known]
+    _xy = array(force.xy(), dtype=float64)
+    _xy_goal = _X_goal.reshape((2, -1)).T
+    r = np.vstack(( np.asmatrix(_xy[:,0]).transpose(), np.asmatrix(_xy[:,1]).transpose())) - _X_goal
+    if np.linalg.norm(r[_bc]) > eps*1e2:
+        update_coordinates(force, _xy_goal) # Move the anchored vertex
+
+    # Begin Newton
+    diff = 100
+    n_iter = 1
     while diff > (eps * tol):
-        red_jacobian, red_r, zero_columns = get_red_residual_and_jacobian(form,force,Xs_goal)
+        red_jacobian, red_r, zero_columns = get_red_residual_and_jacobian(form, force, _X_goal)
 
         # Do the least squares solution
         dx = np.linalg.lstsq(red_jacobian, -red_r)[0]
@@ -61,10 +75,7 @@ def compute_form_from_force_newton(form, force, Xs_goal, tol=1e5):
 
         X = X + dx
 
-        nx = xy.shape[0]
-        ny = xy.shape[0]
-        xy[:, 0] = X[:nx].T
-        xy[:, 1] = X[nx:(nx + ny)].T
+        xy = X.reshape((2, -1)).T
         update_coordinates(form, xy)
 
         diff = np.linalg.norm(red_r)
@@ -76,23 +87,25 @@ def compute_form_from_force_newton(form, force, Xs_goal, tol=1e5):
 
     print('Converged in {0} iterations'.format(n_iter))
 
-def get_red_residual_and_jacobian(form,force,Xs_goal):
+def get_red_residual_and_jacobian(form, force, _X_goal):
 
     # TODO: Scramble vertices
 
     jacobian = compute_jacobian(form, force)
 
     _vcount = force.number_of_vertices()
-    bc = [_vcount - 1, _vcount * 2 - 1]
+    _k_i = force.key_index()
+    _known = _k_i[force.anchor()]
+    _bc = [_known, _vcount + _known]
     _xy = array(force.xy(), dtype=float64)
-    r = np.vstack(( np.asmatrix(_xy[:,0]).transpose(), np.asmatrix(_xy[:,1]).transpose())) - Xs_goal
+    r = np.vstack(( np.asmatrix(_xy[:,0]).transpose(), np.asmatrix(_xy[:,1]).transpose())) - _X_goal
 
     # TODO: Add constraints
 
     hlp.check_solutions(jacobian,r)
     # Remove rows due to fixed vertex in the force diagram
-    red_r = np.delete(r, bc, axis=0)
-    red_jacobian = np.delete(jacobian, bc, axis=0)
+    red_r = np.delete(r, _bc, axis=0)
+    red_jacobian = np.delete(jacobian, _bc, axis=0)
     # Remove zero columns from jacobian
     zero_columns = []
     for i, jacobian_column in enumerate(np.sum(np.abs(jacobian), axis=0)):
@@ -160,32 +173,32 @@ def compute_jacobian(form,force):
             dXdxi = np.diag(C[i, :])
             dxdxi = np.transpose(np.asmatrix(C[i, :]))
 
-            dAdxi = np.zeros((vicount * 2, ecount))
-            dAdxi[idx,:] = np.asmatrix(Ci) * np.asmatrix(dXdxi)  # Always half the matrix 0 depending on j (x/y)
+            dEdXi = np.zeros((vicount * 2, ecount))
+            dEdXi[idx,:] = np.asmatrix(Ci) * np.asmatrix(dXdxi)  # Always half the matrix 0 depending on j (x/y)
 
-            dAddxi = dAdxi[:, dependent_edges_idx]
-            dAiddxi = dAdxi[:, independent_edges_idx]
+            dEdXi_d = dEdXi[:, dependent_edges_idx]
+            dEdXi_id = dEdXi[:, independent_edges_idx]
 
-            AdInvPre = np.linalg.inv(np.asmatrix(Ed))
-            AdInv = - AdInvPre * (np.asmatrix(dAddxi) * AdInvPre)
+            EdInv = np.linalg.inv(np.asmatrix(Ed))
+            dEdXiInv = - EdInv * (np.asmatrix(dEdXi_d) * EdInv)
 
-            dqddxi = -AdInv * (Eid * np.asmatrix(qid)) - AdInvPre * (dAiddxi * np.asmatrix(qid))
-            dqdxi = np.zeros((ecount, 1))
-            dqdxi[dependent_edges_idx] = dqddxi
-            dqdxi[independent_edges_idx] = 0
-            dQdxi = np.asmatrix(np.diag(dqdxi[:, 0]))
+            dqdXi_d = -dEdXiInv * (Eid * np.asmatrix(qid)) - EdInv * (dEdXi_id * np.asmatrix(qid))
+            dqdXi = np.zeros((ecount, 1))
+            dqdXi[dependent_edges_idx] = dqdXi_d
+            dqdXi[independent_edges_idx] = 0
+            dQdXi = np.asmatrix(np.diag(dqdXi[:, 0]))
 
-            dXdiTop = np.zeros((_L.shape[0]))
-            dXdiBot = np.zeros((_L.shape[0]))
+            dXd_XiTop = np.zeros((_L.shape[0]))
+            dXd_XiBot = np.zeros((_L.shape[0]))
             if j == 0:
-                dXdiTop = solve_with_known(_L, np.array(_C * (dQdxi * u + Q * dxdxi)).flatten(), dXdiTop, _known)
-                dXdiBot = solve_with_known(_L, np.array(_C * (dQdxi * v)).flatten(), dXdiBot, _known)
+                dXd_XiTop = solve_with_known(_L, np.array(_C * (dQdXi * u + Q * dxdxi)).flatten(), dXd_XiTop, _known)
+                dXd_XiBot = solve_with_known(_L, np.array(_C * (dQdXi * v)).flatten(), dXd_XiBot, _known)
             elif j == 1:
-                dXdiTop = solve_with_known(_L, np.array(_C * (dQdxi * u)).flatten(), dXdiTop, _known)
-                dXdiBot = solve_with_known(_L, np.array(_C * (dQdxi * v + Q * dxdxi)).flatten(), dXdiBot, _known)
+                dXd_XiTop = solve_with_known(_L, np.array(_C * (dQdXi * u)).flatten(), dXd_XiTop, _known)
+                dXd_XiBot = solve_with_known(_L, np.array(_C * (dQdXi * v + Q * dxdxi)).flatten(), dXd_XiBot, _known)
 
-            dXdi = np.hstack((dXdiTop, dXdiBot))
-            jacobian[:, i + j * vcount] = dXdi
+            dXd_Xi = np.hstack((dXd_XiTop, dXd_XiBot))
+            jacobian[:, i + j * vcount] = dXd_Xi
     return jacobian
 
 def update_coordinates(diagram, xy):

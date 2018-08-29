@@ -69,30 +69,10 @@ for u, v in force.edges():
     })
 
 
-viewer = Viewer(form, force, delay_setup=False)
-viewer.draw_form(#lines=form_lines,
-                 forces_on=True,
-                 vertexlabel={key: key for key in form.vertices()},
-                 external_on=False,
-                 vertexsize=0.2,
-                 vertexcolor={key: '#000000' for key in fixed},
-                 edgelabel={uv: index for index, uv in enumerate(form.edges())}
-)
-
-viewer.draw_force(#lines=force_lines,
-                  vertexlabel={key: key for key in force.vertices()},
-
-                  vertexsize=0.2,
-                  edgelabel={uv: index for index, uv in enumerate(force.edges())}
-)
-
-viewer.show()
-
-
 direct = False
 if direct:
     # modify the geometry of the force diagram
-    force.vertex[1]['x'] -= 0.5
+    force.vertex[5]['x'] -= 0.5
     # update the form diagram
     graphstatics.form_update_from_force_direct(form, force)
 else:
@@ -100,9 +80,9 @@ else:
     import numpy as np
     xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
     _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-    _xy[0,0] -= 0.5
-    Xs_goal = np.vstack(( np.asmatrix(_xy[:,0]).transpose(), np.asmatrix(_xy[:,1]).transpose()))
-    rf.compute_form_from_force_newton(form, force, Xs_goal)
+    _xy[force.key_index()[5],0] -= 0.5
+    _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
+    rf.compute_form_from_force_newton(form, force, _X_goal)
 
 # add arrow to lines to indicate movement
 force_lines.append({
