@@ -68,20 +68,23 @@ for u, v in force.edges():
     })
 
 
-direct = False
-if direct:
-    # modify the geometry of the force diagram
-    force.vertex[5]['x'] -= 0.5
-    # update the form diagram
-    graphstatics.form_update_from_force_direct(form, force)
-else:
-    import compas_ags.ags.rootfinding as rf
-    import numpy as np
-    xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
-    _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-    _xy[force.key_index()[5],0] -= 0.5
-    _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
-    rf.compute_form_from_force_newton(form, force, _X_goal)
+
+from compas_ags.ags.constraints import ConstraintsCollection, HorizontalFix, VerticalFix
+
+C = ConstraintsCollection()
+C.add_constraint(HorizontalFix(form, left))
+C.add_constraint(VerticalFix(form, left))
+C.add_constraint(HorizontalFix(form, right))
+C.add_constraint(VerticalFix(form, right))
+#(j,r) = C.compute_constraints()
+
+import compas_ags.ags.rootfinding as rf
+import numpy as np
+xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
+_xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
+_xy[force.key_index()[3],0] -= 0.5
+_X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
+rf.compute_form_from_force_newton(form, force, _X_goal, constraints=C)
 
 # add arrow to lines to indicate movement
 force_lines.append({

@@ -11,10 +11,9 @@ from compas_ags.viewers import Viewer
 
 from compas_ags.ags import graphstatics
 
-__author__    = ['Tom Van Mele', ]
-__copyright__ = 'Copyright 2016 - Block Research Group, ETH Zurich'
+__author__    = ['Vedad Alic', ]
 __license__   = 'MIT License'
-__email__     = 'vanmelet@ethz.ch'
+__email__     = 'vedad.alic@construction.lth.se'
 
 
 __all__ = []
@@ -120,7 +119,7 @@ try:
     graphstatics.form_update_from_force_direct(form, force)
 except (eh.SolutionError) as e:
     # Root finding solution for when direct solution fails
-    force.vertex[idx]['x'] -= 1.0
+    force.vertex[idx+1]['x'] -= 1.0
     _xy[idx,0] += 1.0
     _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
     rf.compute_form_from_force_newton(form, force, _X_goal)

@@ -32,6 +32,10 @@ import compas_ags.utilities.errorhandler as eh
 import compas_ags.utilities.helpers as hlp
 from compas_ags.ags.graphstatics import form_update_q_from_qind, force_update_from_form
 
+__author__    = ['Vedad Alic', ]
+__license__   = 'MIT License'
+__email__     = 'vedad.alic@construction.lth.se'
+
 __all__ = [
     'compute_jacobian',
     'get_red_residual_and_jacobian',
@@ -42,7 +46,7 @@ __all__ = [
 
 import numpy as np
 
-def compute_form_from_force_newton(form, force, _X_goal, tol=1e5):
+def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints = None):
     xy = array(form.xy(), dtype=float64).reshape((-1, 2))
     X = np.vstack(( np.asmatrix(xy[:,0]).transpose(), np.asmatrix(xy[:,1]).transpose()))
 
@@ -64,7 +68,7 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5):
     diff = 100
     n_iter = 1
     while diff > (eps * tol):
-        red_jacobian, red_r, zero_columns = get_red_residual_and_jacobian(form, force, _X_goal)
+        red_jacobian, red_r, zero_columns = get_red_residual_and_jacobian(form, force, _X_goal, constraints)
 
         # Do the least squares solution
         dx = np.linalg.lstsq(red_jacobian, -red_r)[0]
@@ -87,7 +91,7 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5):
 
     print('Converged in {0} iterations'.format(n_iter))
 
-def get_red_residual_and_jacobian(form, force, _X_goal):
+def get_red_residual_and_jacobian(form, force, _X_goal, constraints = None):
 
     # TODO: Scramble vertices
 
@@ -100,7 +104,10 @@ def get_red_residual_and_jacobian(form, force, _X_goal):
     _xy = array(force.xy(), dtype=float64)
     r = np.vstack(( np.asmatrix(_xy[:,0]).transpose(), np.asmatrix(_xy[:,1]).transpose())) - _X_goal
 
-    # TODO: Add constraints
+    if constraints:
+        (cj, cr) = constraints.compute_constraints()
+        jacobian = np.vstack((jacobian,cj))
+        r = np.vstack((r,cr))
 
     hlp.check_solutions(jacobian,r)
     # Remove rows due to fixed vertex in the force diagram
@@ -188,17 +195,17 @@ def compute_jacobian(form,force):
             dqdXi[independent_edges_idx] = 0
             dQdXi = np.asmatrix(np.diag(dqdXi[:, 0]))
 
-            dXd_XiTop = np.zeros((_L.shape[0]))
-            dXd_XiBot = np.zeros((_L.shape[0]))
+            d_XdXiTop = np.zeros((_L.shape[0]))
+            d_XdXiBot = np.zeros((_L.shape[0]))
             if j == 0:
-                dXd_XiTop = solve_with_known(_L, np.array(_C * (dQdXi * u + Q * dxdxi)).flatten(), dXd_XiTop, _known)
-                dXd_XiBot = solve_with_known(_L, np.array(_C * (dQdXi * v)).flatten(), dXd_XiBot, _known)
+                d_XdXiTop = solve_with_known(_L, np.array(_C * (dQdXi * u + Q * dxdxi)).flatten(), d_XdXiTop, _known)
+                d_XdXiBot = solve_with_known(_L, np.array(_C * (dQdXi * v)).flatten(), d_XdXiBot, _known)
             elif j == 1:
-                dXd_XiTop = solve_with_known(_L, np.array(_C * (dQdXi * u)).flatten(), dXd_XiTop, _known)
-                dXd_XiBot = solve_with_known(_L, np.array(_C * (dQdXi * v + Q * dxdxi)).flatten(), dXd_XiBot, _known)
+                d_XdXiTop = solve_with_known(_L, np.array(_C * (dQdXi * u)).flatten(), d_XdXiTop, _known)
+                d_XdXiBot = solve_with_known(_L, np.array(_C * (dQdXi * v + Q * dxdxi)).flatten(), d_XdXiBot, _known)
 
-            dXd_Xi = np.hstack((dXd_XiTop, dXd_XiBot))
-            jacobian[:, i + j * vcount] = dXd_Xi
+            d_XdXi = np.hstack((d_XdXiTop, d_XdXiBot))
+            jacobian[:, i + j * vcount] = d_XdXi
     return jacobian
 
 def update_coordinates(diagram, xy):
