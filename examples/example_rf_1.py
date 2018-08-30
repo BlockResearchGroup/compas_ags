@@ -35,9 +35,9 @@ force.set_anchor([5])
 
 # set the magnitude of the applied load
 #form.set_edge_force_by_index(0, -10.0)
-e1 =  {'v':list(form.vertices_where({'x': 3.0, 'y': 3.0}))[0],
-     'u':list(form.vertices_where({'x': 3.669563106796117, 'y': 5.008689320388349}))[0]}
-form.set_edge_forcedensity(e1['v'],e1['u'], -1.0)
+e1 =  {'v': list(form.vertices_where({'x': 3.0, 'y': 3.0}))[0],
+       'u': list(form.vertices_where({'x': 3.669563106796117, 'y': 5.008689320388349}))[0]}
+form.set_edge_forcedensity(e1['v'], e1['u'], -1.0)
 
 # update the diagrams
 graphstatics.form_update_q_from_qind(form)
@@ -81,7 +81,7 @@ else:
     import numpy as np
     xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
     _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-    _xy[force.key_index()[5],0] -= 0.5
+    _xy[force.key_index()[5], 0] -= 0.5
     _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
     rf.compute_form_from_force_newton(form, force, _X_goal)
 # --------------------------------------------------------------------------
@@ -97,7 +97,7 @@ force_lines.append({
     'style': '-',
 })
 
-# display the orginal configuration
+# display the original configuration
 # and the configuration after modifying the force diagram
 viewer = Viewer(form, force, delay_setup=False)
 

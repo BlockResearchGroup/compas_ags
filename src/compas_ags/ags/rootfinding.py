@@ -46,12 +46,13 @@ __all__ = [
 
 import numpy as np
 
-def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints = None):
+
+def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=None):
     r"""Update the form diagram after a modification of the force diagram.
 
     Compute the geometry of the form diagram from the geometry of the force diagram
     and some constraints, including non-linear.
-    The form diagram is computed by formulating the root-finding approach presnted
+    The form diagram is computed by formulating the root-finding approach presented
     in bi-dir AGS. Newton's method is used to solve for the form diagram.
 
     The algorithm fails if it is over-constrained or if the initial guess is too far
@@ -70,8 +71,7 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints = 
                 A collection of form diagram constraints,
     """
     xy = array(form.xy(), dtype=float64).reshape((-1, 2))
-    X = np.vstack(( np.asmatrix(xy[:,0]).transpose(), np.asmatrix(xy[:,1]).transpose()))
-
+    X = np.vstack((np.asmatrix(xy[:, 0]).transpose(), np.asmatrix(xy[:, 1]).transpose()))
 
     eps = np.spacing(1)
 
@@ -82,9 +82,9 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints = 
     _bc = [_known, _vcount + _known]
     _xy = array(force.xy(), dtype=float64)
     _xy_goal = _X_goal.reshape((2, -1)).T
-    r = np.vstack(( np.asmatrix(_xy[:,0]).transpose(), np.asmatrix(_xy[:,1]).transpose())) - _X_goal
+    r = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose())) - _X_goal
     if np.linalg.norm(r[_bc]) > eps*1e2:
-        update_coordinates(force, _xy_goal) # Move the anchored vertex
+        update_coordinates(force, _xy_goal)  # Move the anchored vertex
 
     # Begin Newton
     diff = 100
@@ -113,7 +113,8 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints = 
 
     print('Converged in {0} iterations'.format(n_iter))
 
-def get_red_residual_and_jacobian(form, force, _X_goal, constraints = None):
+
+def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
     r"""Compute the Jacobian and residual.
 
     Computes the residual and the Jacobian d_X/dX
@@ -136,8 +137,9 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints = None):
     Returns
     -------
     red_jacobian : Jacobian with the rows corresponding the the anchor vertex removed
+                   and zero columns removed
     red_r : Residual with the rows corresponding the the anchor vertex removed
-    zero_columns : Indeces of removed rows
+    zero_columns : Indices of removed columns from Jacobian
     """
 
     # TODO: Scramble vertices
@@ -149,14 +151,14 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints = None):
     _known = _k_i[force.anchor()]
     _bc = [_known, _vcount + _known]
     _xy = array(force.xy(), dtype=float64)
-    r = np.vstack(( np.asmatrix(_xy[:,0]).transpose(), np.asmatrix(_xy[:,1]).transpose())) - _X_goal
+    r = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose())) - _X_goal
 
     if constraints:
         (cj, cr) = constraints.compute_constraints()
-        jacobian = np.vstack((jacobian,cj))
-        r = np.vstack((r,cr))
+        jacobian = np.vstack((jacobian, cj))
+        r = np.vstack((r, cr))
 
-    hlp.check_solutions(jacobian,r)
+    hlp.check_solutions(jacobian, r)
     # Remove rows due to fixed vertex in the force diagram
     red_r = np.delete(r, _bc, axis=0)
     red_jacobian = np.delete(jacobian, _bc, axis=0)
@@ -168,7 +170,8 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints = None):
     red_jacobian = np.delete(red_jacobian, zero_columns, axis=1)
     return red_jacobian, red_r, zero_columns
 
-def compute_jacobian(form,force):
+
+def compute_jacobian(form, force):
     r"""Compute the Jacobian matrix.
 
     The actual computation of the Jacobian d_X/dX
@@ -198,7 +201,7 @@ def compute_jacobian(form,force):
     vcount = form.number_of_vertices()
     k_i = form.key_index()
     leaves = [k_i[key] for key in form.leaves()]
-    free   = list(set(range(form.number_of_vertices()))  - set(leaves))
+    free   = list(set(range(form.number_of_vertices())) - set(leaves))
     vicount = len(free)
     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
     xy = array(form.xy(), dtype=float64).reshape((-1, 2))
@@ -206,8 +209,8 @@ def compute_jacobian(form,force):
     C = connectivity_matrix(edges, 'array')
     E = equilibrium_matrix(C, xy, free, 'array')
     uv = C.dot(xy)
-    u = np.asmatrix(uv[:,0]).transpose()
-    v = np.asmatrix(uv[:,1]).transpose()
+    u = np.asmatrix(uv[:, 0]).transpose()
+    v = np.asmatrix(uv[:, 1]).transpose()
     C = C.transpose()
     Ci = C[free, :]
 
@@ -229,7 +232,6 @@ def compute_jacobian(form,force):
     _vcount = force.number_of_vertices()
     _edges = force.ordered_edges(form)
     _L = laplacian_matrix(_edges, normalize=False, rtype='array')
-    #_L = np.asmatrix(_L)
     _C = connectivity_matrix(_edges, 'array')
     _C = _C.transpose()
     _C = np.asmatrix(_C)
@@ -247,7 +249,7 @@ def compute_jacobian(form,force):
             dxdxi = np.transpose(np.asmatrix(C[i, :]))
 
             dEdXi = np.zeros((vicount * 2, ecount))
-            dEdXi[idx,:] = np.asmatrix(Ci) * np.asmatrix(dXdxi)  # Always half the matrix 0 depending on j (x/y)
+            dEdXi[idx, :] = np.asmatrix(Ci) * np.asmatrix(dXdxi)  # Always half the matrix 0 depending on j (x/y)
 
             dEdXi_d = dEdXi[:, dependent_edges_idx]
             dEdXi_id = dEdXi[:, independent_edges_idx]
@@ -274,9 +276,9 @@ def compute_jacobian(form,force):
             jacobian[:, i + j * vcount] = d_XdXi
     return jacobian
 
+
 def update_coordinates(diagram, xy):
     r"""Update diagram coordinates
-
 
     Parameters
     ----------
@@ -294,16 +296,17 @@ def update_coordinates(diagram, xy):
         attr['x'] = xy[index, 0]
         attr['y'] = xy[index, 1]
 
+
 def _compute_jacobian_numerically(form, force):
     r"""Compute the Jacobian matrix.
 
-    The actual computation of the Jacobian d_X/dX
+    The actual computation of the Jacobían d_X/dX
     where X contains the form diagram coordinates in *Fortran* order
     (first all x-coordinates, then all y-coordinates) and _X contains the
     force diagram coordinates in *Fortran* order (first all _x-coordinates,
     then all _y-coordinates)
 
-    The Jacobain is computed numerically using forward differences.
+    The Jacobian is computed numerically using forward differences.
 
     Parameters
     ----------
@@ -337,7 +340,7 @@ def _compute_jacobian_numerically(form, force):
         du[i] = 1
         _Xi_pert = _comp_perturbed_force_coordinates_from_form(form, force, X + du * 1e-10)
         dX = np.divide(_Xi_pert - _X, 1e-10)
-        jacobian[:,i] = dX.A1
+        jacobian[:, i] = dX.A1
     return jacobian
 
 
@@ -376,7 +379,7 @@ def _comp_perturbed_force_coordinates_from_form(form, force, X):
     form_update_q_from_qind(form)
     force_update_from_form(force, form)
     _xy = array(force.xy(), dtype=float64)
-    _X = np.vstack((np.asmatrix(_xy[:,0]).transpose(), np.asmatrix(_xy[:,1]).transpose()))
+    _X = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
 
     # Revert to current coordinates
     update_coordinates(form, xyo)

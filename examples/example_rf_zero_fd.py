@@ -31,19 +31,19 @@ fixed = [left, right]
 
 form.set_fixed(fixed)
 
-e1 =  {'v':list(form.vertices_where({'x': 0.0, 'y': 6.0}))[0],
-     'u':list(form.vertices_where({'x': 0.0, 'y': 12.0}))[0]}
-e2 =  {'v':list(form.vertices_where({'x': 6.0, 'y': 6.0}))[0],
-     'u':list(form.vertices_where({'x': 6.0, 'y': 12.0}))[0]}
-e3 =  {'v':list(form.vertices_where({'x': 12.0, 'y': 6.0}))[0],
-     'u':list(form.vertices_where({'x': 12.0, 'y': 12.0}))[0]}
+e1 = {'v': list(form.vertices_where({'x': 0.0, 'y': 6.0}))[0],
+      'u': list(form.vertices_where({'x': 0.0, 'y': 12.0}))[0]}
+e2 = {'v': list(form.vertices_where({'x': 6.0, 'y': 6.0}))[0],
+      'u': list(form.vertices_where({'x': 6.0, 'y': 12.0}))[0]}
+e3 = {'v': list(form.vertices_where({'x': 12.0, 'y': 6.0}))[0],
+      'u': list(form.vertices_where({'x': 12.0, 'y': 12.0}))[0]}
 
 #force.set_fixed([2])
 
 # set the magnitude of the applied load
-form.set_edge_force(e1['u'],e1['v'], -10.0)
-form.set_edge_force(e2['u'],e2['v'], -10.0)
-form.set_edge_force(e3['u'],e3['v'], -10.0)
+form.set_edge_force(e1['u'], e1['v'], -10.0)
+form.set_edge_force(e2['u'], e2['v'], -10.0)
+form.set_edge_force(e3['u'], e3['v'], -10.0)
 
 
 # update the diagrams
@@ -101,11 +101,11 @@ xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
 _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
 
 # Select point nearest (1, -8) in the force diagram
-_vertex_pos = np.array([[1, -8],])
+_vertex_pos = np.array([[1, -8], ])
 idx = 0
 l = 1000
 for i in range(_xy.shape[0]):
-    L = np.sqrt( (_xy[i,0]-_vertex_pos[0,0])**2 + (_xy[i,1]-_vertex_pos[0,1])**2 )
+    L = np.sqrt((_xy[i, 0]-_vertex_pos[0, 0])**2 + (_xy[i, 1]-_vertex_pos[0, 1])**2)
     if L < l:
         idx = i
         l = L
@@ -114,10 +114,10 @@ for i in range(_xy.shape[0]):
 try:
     force.vertex[idx+1]['x'] += 1.0
     graphstatics.form_update_from_force_direct(form, force)
-except (eh.SolutionError) as e:
+except eh.SolutionError as e:
     # Root finding solution for when direct solution fails
     force.vertex[idx+1]['x'] -= 1.0
-    _xy[idx,0] += 1.0
+    _xy[idx, 0] += 1.0
     _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
     rf.compute_form_from_force_newton(form, force, _X_goal)
 # --------------------------------------------------------------------------
@@ -125,7 +125,7 @@ except (eh.SolutionError) as e:
 # --------------------------------------------------------------------------
 
 
-# display the orginal configuration
+# display the original configuration
 # and the configuration after modifying the force diagram
 viewer = Viewer(form, force, delay_setup=False)
 

@@ -426,7 +426,6 @@ def force_update_from_form(force, form):
         attr['y'] = _xy[i, 1]
 
 
-
 def form_update_from_force_direct(form, force):
     r"""Update the form diagram after a modification of the force diagram.
 
@@ -441,7 +440,7 @@ def form_update_from_force_direct(form, force):
 
         \mathbf{M}\mathbf{X} = \mathbf{r}
 
-    with :math:`\mathbf{M}` containing the coefficents of the system of equations
+    with :math:`\mathbf{M}` containing the coefficients of the system of equations
     including constraints, :math:`\mathbf{X}` the coordinates of the vertices of
     the form diagram and the reciprocal force densities, in *Fortran* order
     (first all x-coordinates, then all y-coordinates, then all reciprocal force

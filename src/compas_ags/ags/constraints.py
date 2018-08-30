@@ -21,7 +21,7 @@ class AbstractConstraint(ABC):
     must implement the compute_constraint method.
     """
     def __init__(self, form):
-        self.form = form # type: FormDiagram
+        self.form = form  # type: FormDiagram
         super().__init__()
 
     @abstractmethod
@@ -34,7 +34,7 @@ class AbstractConstraint(ABC):
         return 2 * vcount
 
 
-class ConstraintsCollection():
+class ConstraintsCollection:
     """
     Computes the Jacobian d_X/dX and residual r of the added constraints
     where X contains the form diagram coordinates in *Fortran* order
@@ -50,11 +50,11 @@ class ConstraintsCollection():
 
     def compute_constraints(self):
         jac = np.zeros((0, self.constraints[0].number_of_cols))
-        res = np.zeros((0,1))
+        res = np.zeros((0, 1))
         for constraint in self.constraints:
             (j, r) = constraint.compute_constraint()
-            jac = np.vstack((jac,j))
-            res = np.vstack((res,r))
+            jac = np.vstack((jac, j))
+            res = np.vstack((res, r))
         return jac, res
 
 
@@ -67,9 +67,9 @@ class HorizontalFix(AbstractConstraint):
 
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
-        idx =  self.form.key_index()[self.vertex]
+        idx = self.form.key_index()[self.vertex]
         constraint_jac_row[0, idx] = 1
-        return (constraint_jac_row, 0.0)
+        return constraint_jac_row, 0.0
 
 
 class VerticalFix(AbstractConstraint):
@@ -83,4 +83,5 @@ class VerticalFix(AbstractConstraint):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
         idx = self.form.key_index()[self.vertex] + self.form.number_of_vertices()
         constraint_jac_row[0, idx] = 1
-        return (constraint_jac_row, 0.0)
+        return constraint_jac_row, 0.0
+
