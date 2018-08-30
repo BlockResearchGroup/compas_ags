@@ -177,7 +177,7 @@ intersphinx_mapping = {'python': ('https://docs.python.org/', None)}
 
 # -- Options for HTML output ----------------------------------------------
 
-html_theme = 'compas'
+html_theme = 'compaspkg'
 html_theme_path = ['../../../sphinx_compas_theme']
 html_theme_options = {}
 html_context = {}
