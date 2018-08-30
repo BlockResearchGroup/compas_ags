@@ -7,7 +7,7 @@ compas_ags
 
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 3
 
     compas_ags.ags
     compas_ags.diagrams

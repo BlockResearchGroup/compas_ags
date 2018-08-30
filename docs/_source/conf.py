@@ -51,6 +51,12 @@ autodoc_default_flags = [
     'show-inheritance',
 ]
 
+autodoc_mock_imports = ['compas']
+
+autodoc_default_options = {
+    'special-members': ['__init__', '__call__']
+}
+
 autodoc_member_order = 'alphabetical'
 
 # autosummary options
