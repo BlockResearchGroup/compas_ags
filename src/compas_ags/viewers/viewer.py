@@ -23,9 +23,7 @@ __license__   = 'MIT License'
 __email__     = 'vanmelet@ethz.ch'
 
 
-__all__ = [
-    'Viewer'
-]
+__all__ = ['Viewer']
 
 
 class Viewer(object):

@@ -11,7 +11,6 @@ graphstatics
 
 .. autosummary::
     :toctree: generated/
-    :nosignatures:
 
     form_count_dof
     form_identify_dof
@@ -25,7 +24,6 @@ loadpath
 
 .. autosummary::
     :toctree: generated/
-    :nosignatures:
 
     compute_loadpath
     compute_external_work

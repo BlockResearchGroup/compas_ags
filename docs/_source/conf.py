@@ -12,7 +12,7 @@ import os
 
 # -- General configuration ------------------------------------------------
 
-project          = 'COMPAS AGS'
+project          = 'AGS'
 copyright        = '2017, Block Research Group - ETH Zurich'
 author           = 'Tom Van Mele'
 release          = '0.1.0'

@@ -13,9 +13,7 @@ __license__   = 'MIT License'
 __email__     = 'vanmelet@ethz.ch'
 
 
-__all__ = [
-    'ForceDiagram'
-]
+__all__ = ['ForceDiagram']
 
 
 class ForceDiagram(Network):

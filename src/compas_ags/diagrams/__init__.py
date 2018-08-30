@@ -8,7 +8,6 @@ diagrams
 
 .. autosummary::
     :toctree: generated/
-    :nosignatures:
 
     FormDiagram
     ForceDiagram
