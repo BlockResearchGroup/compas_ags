@@ -77,7 +77,7 @@
 <div class="viewcode-block" id="ForceDiagram"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.html#compas_ags.diagrams.ForceDiagram">[docs]</a><span class="k">class</span> <span class="nc">ForceDiagram</span><span class="p">(</span><span class="n">Network</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ForceDiagram.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.html#compas_ags.diagrams.ForceDiagram.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ForceDiagram.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.__init__.html#compas_ags.diagrams.ForceDiagram.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ForceDiagram</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
             <span class="s1">&#39;name&#39;</span>         <span class="p">:</span> <span class="s1">&#39;ForceDiagram&#39;</span><span class="p">,</span>
@@ -100,36 +100,36 @@
     <span class="c1"># Constructors</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-    <span class="nd">@classmethod</span>
+<div class="viewcode-block" id="ForceDiagram.from_formdiagram"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.from_formdiagram.html#compas_ags.diagrams.ForceDiagram.from_formdiagram">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_formdiagram</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">):</span>
         <span class="n">network_find_faces</span><span class="p">(</span><span class="n">formdiagram</span><span class="p">,</span> <span class="n">formdiagram</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">network_dual</span><span class="p">(</span><span class="n">formdiagram</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">network_dual</span><span class="p">(</span><span class="n">formdiagram</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Convenience functions for retrieving attributes of the force diagram.</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">xy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">()]</span>
+<div class="viewcode-block" id="ForceDiagram.xy"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.xy.html#compas_ags.diagrams.ForceDiagram.xy">[docs]</a>    <span class="k">def</span> <span class="nf">xy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">()]</span></div>
 
-    <span class="k">def</span> <span class="nf">fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]]</span>
+<div class="viewcode-block" id="ForceDiagram.fixed"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.fixed.html#compas_ags.diagrams.ForceDiagram.fixed">[docs]</a>    <span class="k">def</span> <span class="nf">fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]]</span></div>
 
-    <span class="k">def</span> <span class="nf">anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ForceDiagram.anchor"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.anchor.html#compas_ags.diagrams.ForceDiagram.anchor">[docs]</a>    <span class="k">def</span> <span class="nf">anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_anchor&#39;</span><span class="p">]:</span>
                 <span class="k">return</span> <span class="n">key</span>
-        <span class="k">return</span> <span class="n">key</span>
+        <span class="k">return</span> <span class="n">key</span></div>
 
-    <span class="k">def</span> <span class="nf">set_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+<div class="viewcode-block" id="ForceDiagram.set_fixed"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.set_fixed.html#compas_ags.diagrams.ForceDiagram.set_fixed">[docs]</a>    <span class="k">def</span> <span class="nf">set_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-            <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span>
+            <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Helpers</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">uv_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="ForceDiagram.uv_index"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.uv_index.html#compas_ags.diagrams.ForceDiagram.uv_index">[docs]</a>    <span class="k">def</span> <span class="nf">uv_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">form</span><span class="p">:</span>
             <span class="k">return</span> <span class="p">{(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span>
         <span class="n">uv_index</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
@@ -137,24 +137,24 @@
             <span class="n">f1</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">]</span>
             <span class="n">f2</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">u</span><span class="p">]</span>
             <span class="n">uv_index</span><span class="p">[(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">index</span>
-        <span class="k">return</span> <span class="n">uv_index</span>
+        <span class="k">return</span> <span class="n">uv_index</span></div>
 
-    <span class="k">def</span> <span class="nf">ordered_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="ForceDiagram.ordered_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.ordered_edges.html#compas_ags.diagrams.ForceDiagram.ordered_edges">[docs]</a>    <span class="k">def</span> <span class="nf">ordered_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">key_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
         <span class="n">uv_index</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uv_index</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span>
         <span class="n">index_uv</span>  <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">uv</span><span class="p">)</span> <span class="k">for</span> <span class="n">uv</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">uv_index</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
         <span class="n">edges</span>     <span class="o">=</span> <span class="p">[</span><span class="n">index_uv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">index</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">edges</span>
-        <span class="k">return</span> <span class="p">[[</span><span class="n">key_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">key_index</span><span class="p">[</span><span class="n">v</span><span class="p">]]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="n">key_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">key_index</span><span class="p">[</span><span class="n">v</span><span class="p">]]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">]</span></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># AGS functions</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">):</span>
+<div class="viewcode-block" id="ForceDiagram.update"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.update.html#compas_ags.diagrams.ForceDiagram.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">compas_ags.algorithms.graphstatics</span> <span class="k">import</span> <span class="n">update_forcediagram</span>
-        <span class="n">update_forcediagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">)</span></div>
+        <span class="n">update_forcediagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># ==============================================================================</span>

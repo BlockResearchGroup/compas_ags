@@ -1,17 +1,21 @@
-compas\_ags.diagrams.ForceDiagram
-=================================
+.. rst-class:: detail
+
+ForceDiagram
+================================
 
 .. currentmodule:: compas_ags.diagrams
+
+.. .. inheritance-diagram:: ForceDiagram
 
 .. autoclass:: ForceDiagram
 
    
-   .. automethod:: __init__
-
    
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
       ~ForceDiagram.__init__
       ~ForceDiagram.add_edge

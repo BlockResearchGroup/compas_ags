@@ -1,5 +1,7 @@
-compas\_ags.ags.form\_update\_from\_force
-=========================================
+.. rst-class:: detail
+
+form_update_from_force
+=====================================
 
 .. currentmodule:: compas_ags.ags
 
