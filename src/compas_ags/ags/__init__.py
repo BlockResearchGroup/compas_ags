@@ -13,6 +13,12 @@ graphstatics
     :toctree: generated/
     :nosignatures:
 
+    form_count_dof
+    form_identity_dof
+    form_update_q_from_qind
+    form_update_from_force
+    force_update_from_form
+
 
 loadpath
 ========
@@ -20,6 +26,13 @@ loadpath
 .. autosummary::
     :toctree: generated/
     :nosignatures:
+
+    compute_loadpath
+    compute_external_work
+    compute_internal_work
+    compute_internal_work_tension
+    compute_internal_work_compression
+    optimise_loadpath
 
 
 """
