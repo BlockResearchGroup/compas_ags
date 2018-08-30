@@ -327,7 +327,7 @@ def optimise_loadpath(form, force, algo='COBYLA'):
 
     """
     k_i    = form.key_index()
-    i_j    = dict((i, [k_i[n] for n in form.vertex_neighbours(k)]) for i, k in enumerate(form.vertices()))
+    i_j    = dict((i, [k_i[n] for n in form.vertex_neighbors(k)]) for i, k in enumerate(form.vertices()))
     uv_e   = form.uv_index()
     ij_e   = dict(((k_i[u], k_i[v]), uv_e[(u, v)]) for u, v in uv_e)
     xy     = array(form.xy(), dtype=float64)
