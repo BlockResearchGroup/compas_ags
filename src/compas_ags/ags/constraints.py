@@ -16,6 +16,10 @@ __all__ = [
 
 
 class AbstractConstraint(ABC):
+    """
+    Used to derive form diagram constraints. The derived constraints
+    must implement the compute_constraint method.
+    """
     def __init__(self, form):
         self.form = form # type: FormDiagram
         super().__init__()
@@ -31,6 +35,13 @@ class AbstractConstraint(ABC):
 
 
 class ConstraintsCollection():
+    """
+    Computes the Jacobian d_X/dX and residual r of the added constraints
+    where X contains the form diagram coordinates in *Fortran* order
+    (first all x-coordinates, then all y-coordinates) and _X contains the
+    force diagram coordinates in *Fortran* order (first all _x-coordinates,
+    then all _y-coordinates)
+    """
     def __init__(self):
         self.constraints = []
 
@@ -48,6 +59,7 @@ class ConstraintsCollection():
 
 
 class HorizontalFix(AbstractConstraint):
+    """Keeps the x-coordinate of the vertex fixed"""
     def __init__(self, form, vertex):
         super().__init__(form)
         self.form = form
@@ -61,6 +73,7 @@ class HorizontalFix(AbstractConstraint):
 
 
 class VerticalFix(AbstractConstraint):
+    """Keeps the y-coordinate of the vertex fixed"""
     def __init__(self, form, vertex):
         super().__init__(form)
         self.form = form

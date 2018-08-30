@@ -428,6 +428,39 @@ def force_update_from_form(force, form):
 
 
 def form_update_from_force_direct(form, force):
+    r"""Update the form diagram after a modification of the force diagram.
+
+    Compute the geometry of the form diagram from the geometry of the force diagram
+    and some constraints (location of fixed points).
+    The form diagram is computed by formulating the reciprocal relationships to
+    the approach in described in AGS. In order to include the constraints, the
+    reciprocal force densities and form diagram coordinates are solved for at
+    the same time, by formulating the equation system:
+
+    .. math::
+
+        \mathbf{M}\mathbf{X} = \mathbf{r}
+
+    with :math:`\mathbf{M}` containing the coefficents of the system of equations
+    including constraints, :math:`\mathbf{X}` the coordinates of the vertices of
+    the form diagram and the reciprocal force densities, in *Fortran* order
+    (first all x-coordinates, then all y-coordinates, then all reciprocal force
+    densities), and  :math:`\mathbf{r}` contains the residual (all zeroes except
+    for the constraint rows) ....
+
+    The addition of constraints reduces the number of independent edges, which
+    must be identified during the solving procedure. Additionally, the algorithm
+    fails if any force density is zero (corresponding to a zero-length edge in
+    the force diagram) or if it is over-constrained.
+
+    Parameters
+    ----------
+    form : compas_ags.formdiagram.FormDiagram
+        The form diagram to update.
+    force : compas_ags.forcediagram.ForceDiagram
+        The force diagram on which the update is based.
+
+    """
     # --------------------------------------------------------------------------
     # form diagram
     # --------------------------------------------------------------------------

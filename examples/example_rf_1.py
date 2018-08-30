@@ -67,7 +67,9 @@ for u, v in force.edges():
         'style': '--'
     })
 
-
+# --------------------------------------------------------------------------
+# Begin force diagram manipulation
+# --------------------------------------------------------------------------
 direct = False
 if direct:
     # modify the geometry of the force diagram
@@ -82,11 +84,14 @@ else:
     _xy[force.key_index()[5],0] -= 0.5
     _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
     rf.compute_form_from_force_newton(form, force, _X_goal)
+# --------------------------------------------------------------------------
+# End force diagram manipulation
+# --------------------------------------------------------------------------
 
 # add arrow to lines to indicate movement
 force_lines.append({
-    'start': force_key_xyz[1],
-    'end': force.vertex_coordinates(1),
+    'start': force_key_xyz[5],
+    'end': force.vertex_coordinates(5),
     'color': '#ff0000',
     'width': 10.0,
     'style': '-',

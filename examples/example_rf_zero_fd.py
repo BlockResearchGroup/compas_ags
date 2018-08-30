@@ -74,10 +74,9 @@ for u, v in force.edges():
         'style': '--'
     })
 
-
+#  Display the original configuration
 viewer = Viewer(form, force, delay_setup=False)
-viewer.draw_form(#lines=form_lines,
-                 forces_on=False,
+viewer.draw_form(forces_on=False,
                  vertexlabel={key: key for key in form.vertices()},
                  external_on=False,
                  vertexsize=0.2,
@@ -85,18 +84,16 @@ viewer.draw_form(#lines=form_lines,
                  edgelabel={uv: index for index, uv in enumerate(form.edges())}
 )
 
-viewer.draw_force(#lines=force_lines,
-                  vertexlabel={key: key for key in force.vertices()},
-
+viewer.draw_force(vertexlabel={key: key for key in force.vertices()},
                   vertexsize=0.2,
                   edgelabel={uv: index for index, uv in enumerate(force.edges())}
 )
 
 viewer.show()
 
-
-
-
+# --------------------------------------------------------------------------
+# Begin force diagram manipulation
+# --------------------------------------------------------------------------
 import compas_ags.ags.rootfinding as rf
 import compas_ags.utilities.errorhandler as eh
 import numpy as np
@@ -123,15 +120,10 @@ except (eh.SolutionError) as e:
     _xy[idx,0] += 1.0
     _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
     rf.compute_form_from_force_newton(form, force, _X_goal)
+# --------------------------------------------------------------------------
+# End force diagram manipulation
+# --------------------------------------------------------------------------
 
-# add arrow to lines to indicate movement
-force_lines.append({
-    'start': force_key_xyz[1],
-    'end': force.vertex_coordinates(1),
-    'color': '#ff0000',
-    'width': 10.0,
-    'style': '-',
-})
 
 # display the orginal configuration
 # and the configuration after modifying the force diagram

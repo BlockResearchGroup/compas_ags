@@ -68,9 +68,10 @@ for u, v in force.edges():
     })
 
 
-
+# --------------------------------------------------------------------------
+# Begin force diagram manipulation
+# --------------------------------------------------------------------------
 from compas_ags.ags.constraints import ConstraintsCollection, HorizontalFix, VerticalFix
-
 C = ConstraintsCollection()
 C.add_constraint(HorizontalFix(form, left))
 C.add_constraint(VerticalFix(form, left))
@@ -85,15 +86,20 @@ _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
 _xy[force.key_index()[3],0] -= 0.5
 _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
 rf.compute_form_from_force_newton(form, force, _X_goal, constraints=C)
+# --------------------------------------------------------------------------
+# End force diagram manipulation
+# --------------------------------------------------------------------------
+
 
 # add arrow to lines to indicate movement
 force_lines.append({
-    'start': force_key_xyz[1],
-    'end': force.vertex_coordinates(1),
+    'start': force_key_xyz[3],
+    'end': force.vertex_coordinates(3),
     'color': '#ff0000',
     'width': 10.0,
     'style': '-',
 })
+
 
 # display the orginal configuration
 # and the configuration after modifying the force diagram
