@@ -105,27 +105,4 @@ class ForceDiagram(Network):
 
 if __name__ == '__main__':
 
-    import compas_ags
-
-    from compas_ags.ags import update_forcediagram
-    from compas_ags.ags import update_forcedensity
-    from compas_ags.diagrams import FormDiagram
-    from compas_ags.viewers import Viewer
-
-    form = FormDiagram.from_obj(compas_ags.get('paper/gs_form_force.obj'))
-
-    form.identify_fixed()
-
-    force = ForceDiagram.from_formdiagram(form)
-
-    form.set_edge_force_by_index(0, 3)
-
-    update_forcedensity(form)
-    update_forcediagram(force, form)
-
-    viewer = Viewer(form, force, delay_setup=False)
-
-    viewer.draw_form(forcescale=5.0)
-    viewer.draw_force()
-
-    viewer.show()
+    pass

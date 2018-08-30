@@ -6,9 +6,6 @@ from compas.datastructures import FaceNetwork
 from compas.utilities import geometric_key2
 
 from compas.topology import network_is_xy
-# from compas.topology import network_is_planar
-# from compas.topology import network_is_planar_embedding
-# from compas.topology import network_embed_in_plane
 
 
 __author__    = ['Tom Van Mele', ]
@@ -136,24 +133,6 @@ class FormDiagram(FaceNetwork):
 
     def is_2d(self):
         return network_is_xy(self)
-
-    # def is_planar(self):
-    #     return network_is_planar(self)
-
-    # def is_embedded(self):
-    #     return network_is_planar_embedding(self)
-
-    # --------------------------------------------------------------------------
-    # Geometric functionality
-    # --------------------------------------------------------------------------
-
-    # def embed(self, fix=None):
-    #     network_embed_in_plane(self, fix=fix)
-
-    # def embedded(self):
-    #     network = self.copy()
-    #     network.embed()
-    #     return network
 
 
 # ==============================================================================

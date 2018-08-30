@@ -1,7 +1,5 @@
-.. rst-class:: detail
-
-form_identify_dof
-================================
+compas\_ags.ags.form\_identify\_dof
+===================================
 
 .. currentmodule:: compas_ags.ags
 

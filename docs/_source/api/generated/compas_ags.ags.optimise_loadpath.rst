@@ -1,7 +1,5 @@
-.. rst-class:: detail
-
-optimise_loadpath
-================================
+compas\_ags.ags.optimise\_loadpath
+==================================
 
 .. currentmodule:: compas_ags.ags
 
