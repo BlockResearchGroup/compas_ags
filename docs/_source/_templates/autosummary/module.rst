@@ -3,8 +3,6 @@
 {{ fullname }}
 {{ underline }}
 
-.. currentmodule:: {{ module }}
-
 .. automodule:: {{ fullname }}
 
    {% block functions %}

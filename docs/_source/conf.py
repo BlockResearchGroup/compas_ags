@@ -20,7 +20,7 @@ version          = '.'.join(release.split('.')[0:2])
 
 master_doc       = 'index'
 source_suffix    = ['.rst', ]
-templates_path   = []
+templates_path   = ['_templates', ]
 exclude_patterns = []
 
 pygments_style   = 'sphinx'
