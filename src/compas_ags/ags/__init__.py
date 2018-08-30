@@ -14,7 +14,7 @@ graphstatics
     :nosignatures:
 
     form_count_dof
-    form_identity_dof
+    form_identify_dof
     form_update_q_from_qind
     form_update_from_force
     force_update_from_form

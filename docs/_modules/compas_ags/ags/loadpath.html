@@ -1,0 +1,501 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>compas_ags.ags.loadpath &#8212; COMPAS AGS 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">COMPAS AGS 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for compas_ags.ags.loadpath</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">array</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">float64</span>
+
+    <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="k">import</span> <span class="n">minimize</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;ironpython&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+        <span class="k">raise</span>
+
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">angle_vectors_xy</span>
+
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="k">import</span> <span class="n">connectivity_matrix</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="k">import</span> <span class="n">normrow</span>
+
+<span class="kn">from</span> <span class="nn">compas_ags.ags</span> <span class="k">import</span> <span class="n">update_form_from_force</span>
+
+
+<span class="n">__author__</span>     <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tom Van Mele &lt;van.mele@arch.ethz.ch&gt;&#39;</span><span class="p">,</span>
+                  <span class="s1">&#39;Andrew Liew &lt;liew@arch.ethz.ch&gt;&#39;</span><span class="p">]</span>
+<span class="n">__copyright__</span>  <span class="o">=</span> <span class="s1">&#39;Copyright 2017, BLOCK Research Group - ETH Zurich&#39;</span>
+<span class="n">__license__</span>    <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>      <span class="o">=</span> <span class="s1">&#39;van.mele@arch.ethz.ch&#39;</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;compute_loadpath&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;compute_external_work&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;compute_internal_work&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;compute_internal_work_tension&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;compute_internal_work_compression&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;optimise_loadpath&#39;</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="compute_loadpath"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.compute_loadpath.html#compas_ags.ags.compute_loadpath">[docs]</a><span class="k">def</span> <span class="nf">compute_loadpath</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the internal work of a structure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form : FormDiagram</span>
+<span class="sd">        The form diagram.</span>
+<span class="sd">    force : ForceDiagram</span>
+<span class="sd">        The force diagram.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The internal work done by the structure.</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`compute_internal_work`</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">compute_internal_work</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="compute_external_work"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.compute_external_work.html#compas_ags.ags.compute_external_work">[docs]</a><span class="k">def</span> <span class="nf">compute_external_work</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the external work of a structure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form : FormDiagram</span>
+<span class="sd">        The form diagram.</span>
+<span class="sd">    force : ForceDiagram</span>
+<span class="sd">        The force diagram.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The external work done by the structure.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The external work done by a structure is equal to the work done by the external</span>
+<span class="sd">    forces. This is equal to the sum of the dot products of the force vectors and</span>
+<span class="sd">    the vectors defined by the force application point and a fixed arbitrary point.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`compute_internal_work`</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        #</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k_i</span>   <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">xy</span>    <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">q</span>     <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">q</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">leaves</span>   <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
+    <span class="n">external</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span> <span class="k">if</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">leaves</span> <span class="ow">or</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">]</span>
+    <span class="n">leaves</span>   <span class="o">=</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">]</span>
+
+    <span class="n">l</span> <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">))</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">q</span> <span class="o">*</span> <span class="n">l</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">external</span><span class="p">:</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="o">=</span> <span class="n">edges</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>
+            <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">e</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">ep</span> <span class="o">-</span> <span class="n">sp</span><span class="p">)</span> <span class="o">/</span> <span class="n">l</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+        <span class="n">w</span> <span class="o">+=</span> <span class="n">sp</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">w</span></div>
+
+
+<div class="viewcode-block" id="compute_internal_work"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.compute_internal_work.html#compas_ags.ags.compute_internal_work">[docs]</a><span class="k">def</span> <span class="nf">compute_internal_work</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the work done by the internal forces of a structure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form : FormDiagram</span>
+<span class="sd">        The form diagram.</span>
+<span class="sd">    force : ForceDiagram</span>
+<span class="sd">        The force diagram.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The internal work done by the structure.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`compute_external_work`</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        #</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k_i</span>   <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">xy</span>    <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+
+    <span class="n">_xy</span>    <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">xy</span><span class="p">()</span>
+    <span class="n">_edges</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+    <span class="n">_C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">_edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+
+    <span class="n">leaves</span>   <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
+    <span class="n">internal</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span> <span class="k">if</span> <span class="n">u</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leaves</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">]</span>
+
+    <span class="n">l</span>   <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">))</span>
+    <span class="n">_l</span>  <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">_C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_xy</span><span class="p">))</span>
+    <span class="n">li</span>  <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">internal</span><span class="p">]</span>
+    <span class="n">_li</span> <span class="o">=</span> <span class="n">_l</span><span class="p">[</span><span class="n">internal</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">li</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_li</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="compute_internal_work_tension"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.compute_internal_work_tension.html#compas_ags.ags.compute_internal_work_tension">[docs]</a><span class="k">def</span> <span class="nf">compute_internal_work_tension</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the work done by the internal tensile forces of a structure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form : FormDiagram</span>
+<span class="sd">        The form diagram.</span>
+<span class="sd">    force : ForceDiagram</span>
+<span class="sd">        The force diagram.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The internal work done by the tensile forces in a structure.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`compute_internal_work_compression`</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        #</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k_i</span>   <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">xy</span>    <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">q</span>     <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">q</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">_xy</span>    <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">xy</span><span class="p">()</span>
+    <span class="n">_edges</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+    <span class="n">_C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">_edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+
+    <span class="n">leaves</span>   <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
+    <span class="n">internal</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span> <span class="k">if</span> <span class="n">u</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leaves</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">]</span>
+    <span class="n">tension</span>  <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">internal</span> <span class="k">if</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">l</span>   <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">))</span>
+    <span class="n">_l</span>  <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">_C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_xy</span><span class="p">))</span>
+    <span class="n">li</span>  <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">tension</span><span class="p">]</span>
+    <span class="n">_li</span> <span class="o">=</span> <span class="n">_l</span><span class="p">[</span><span class="n">tension</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">li</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_li</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="compute_internal_work_compression"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.compute_internal_work_compression.html#compas_ags.ags.compute_internal_work_compression">[docs]</a><span class="k">def</span> <span class="nf">compute_internal_work_compression</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute the work done by the internal compressive forces of a structure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form : FormDiagram</span>
+<span class="sd">        The form diagram.</span>
+<span class="sd">    force : ForceDiagram</span>
+<span class="sd">        The force diagram.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        The internal work done by the compressive forces in a structure.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ...</span>
+
+<span class="sd">    See Also</span>
+<span class="sd">    --------</span>
+<span class="sd">    :func:`compute_internal_work_tension`</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        #</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k_i</span>   <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">xy</span>    <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">q</span>     <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">q</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="n">_xy</span>    <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">xy</span><span class="p">()</span>
+    <span class="n">_edges</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+    <span class="n">_C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">_edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+
+    <span class="n">leaves</span>      <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
+    <span class="n">internal</span>    <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span> <span class="k">if</span> <span class="n">u</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leaves</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">]</span>
+    <span class="n">compression</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">internal</span> <span class="k">if</span> <span class="n">q</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">l</span>   <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">))</span>
+    <span class="n">_l</span>  <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">_C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_xy</span><span class="p">))</span>
+    <span class="n">li</span>  <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">compression</span><span class="p">]</span>
+    <span class="n">_li</span> <span class="o">=</span> <span class="n">_l</span><span class="p">[</span><span class="n">compression</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">li</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_li</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="optimise_loadpath"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.optimise_loadpath.html#compas_ags.ags.optimise_loadpath">[docs]</a><span class="k">def</span> <span class="nf">optimise_loadpath</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">algo</span><span class="o">=</span><span class="s1">&#39;COBYLA&#39;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Optimise the loadpath using the parameters of the force domain. The parameters</span>
+<span class="sd">    of the force domain are the coordinates of the vertices of the force diagram.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form : FormDiagram</span>
+<span class="sd">        The form diagram.</span>
+<span class="sd">    force : ForceDiagram</span>
+<span class="sd">        The force diagram.</span>
+<span class="sd">    algo : {&#39;COBYLA&#39;, L-BFGS-B&#39;, &#39;SLSQ&#39;, &#39;MMA&#39;, &#39;GMMA&#39;}, optional</span>
+<span class="sd">        The optimisation algorithm.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    In many cases, the number of paramters of the force domain involved in generating</span>
+<span class="sd">    new solutions in the form domain is smaller than when using the elements of the</span>
+<span class="sd">    form diagram directly.</span>
+
+<span class="sd">    For example, the loadpath of a bridge with a compression arch can be optimised</span>
+<span class="sd">    using only the x-coordinates of the vertices of the force diagram corresponding</span>
+<span class="sd">    to internal spaces formed by the segments of the arch, the corresponding deck</span>
+<span class="sd">    elements, and the hangers connecting them. Any solution generated by these parameters</span>
+<span class="sd">    will be in equilibrium and automatically  have a horizontal bridge deck.</span>
+
+<span class="sd">    Although the *BRG* algorithm is the preferred choice, since it is (should be)</span>
+<span class="sd">    tailored to the problem of optimising loadpaths using the domain of the force</span>
+<span class="sd">    diagram, it does not have a stable and/or efficient implementation.</span>
+<span class="sd">    The main problem is the generation of the form diagram, based on a given force</span>
+<span class="sd">    diagram. For example, when edge forces flip from tension to compression, and</span>
+<span class="sd">    vice versa, parallelisation is no longer effective.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">k_i</span>    <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">i_j</span>    <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">k</span><span class="p">)])</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">()))</span>
+    <span class="n">uv_e</span>   <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">uv_index</span><span class="p">()</span>
+    <span class="n">ij_e</span>   <span class="o">=</span> <span class="nb">dict</span><span class="p">(((</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">]),</span> <span class="n">uv_e</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">uv_e</span><span class="p">)</span>
+    <span class="n">xy</span>     <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">edges</span>  <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">C</span>      <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="c1"># add opposite edges for convenience...</span>
+    <span class="n">ij_e</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(((</span><span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">]),</span> <span class="n">uv_e</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">uv_e</span><span class="p">))</span>
+
+    <span class="n">leaves</span>   <span class="o">=</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">leaves</span><span class="p">()]</span>
+    <span class="n">fixed</span>    <span class="o">=</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">fixed</span><span class="p">()]</span>
+    <span class="n">free</span>     <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">leaves</span><span class="p">))</span>
+    <span class="n">internal</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span> <span class="k">if</span> <span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leaves</span> <span class="ow">and</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">]</span>
+
+    <span class="n">_k_i</span>   <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">key</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">()))</span>
+    <span class="n">_i_k</span>   <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">index</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">()))</span>
+    <span class="n">_xy</span>    <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">_edges</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+    <span class="n">_C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">_edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">_uv_e</span>  <span class="o">=</span> <span class="nb">dict</span><span class="p">(((</span><span class="n">_i_k</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_i_k</span><span class="p">[</span><span class="n">j</span><span class="p">]),</span> <span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_edges</span><span class="p">))</span>
+
+    <span class="n">_free</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_param&#39;</span><span class="p">]]</span>
+    <span class="n">_free</span> <span class="o">=</span> <span class="p">[</span><span class="n">_k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">_free</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">objfunc</span><span class="p">(</span><span class="n">_x</span><span class="p">):</span>
+        <span class="n">_xy</span><span class="p">[</span><span class="n">_free</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_x</span>
+
+        <span class="n">update_form_from_force</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">_xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">leaves</span><span class="p">,</span> <span class="n">i_j</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">_C</span><span class="p">)</span>
+
+        <span class="n">l</span>   <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">))</span>
+        <span class="n">_l</span>  <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">_C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_xy</span><span class="p">))</span>
+        <span class="n">li</span>  <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">internal</span><span class="p">]</span>
+        <span class="n">_li</span> <span class="o">=</span> <span class="n">_l</span><span class="p">[</span><span class="n">internal</span><span class="p">]</span>
+        <span class="n">lp</span>  <span class="o">=</span> <span class="n">li</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_li</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">lp</span><span class="p">)</span>
+
+        <span class="k">return</span><span class="p">(</span><span class="n">lp</span><span class="p">)</span>
+
+    <span class="n">x0</span>     <span class="o">=</span> <span class="n">_xy</span><span class="p">[</span><span class="n">_free</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># bounds = [(None, 0) for i in range(len(_free))]</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span>
+        <span class="n">objfunc</span><span class="p">,</span>
+        <span class="n">x0</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="n">algo</span><span class="p">,</span>
+        <span class="n">tol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">,</span>
+        <span class="c1"># bounds=bounds,</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;maxiter&#39;</span><span class="p">:</span> <span class="mi">1000</span><span class="p">}</span>
+    <span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">res</span><span class="p">)</span>
+
+    <span class="n">uv</span>  <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+    <span class="n">_uv</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_xy</span><span class="p">)</span>
+    <span class="n">a</span>   <span class="o">=</span> <span class="p">[</span><span class="n">angle_vectors_xy</span><span class="p">(</span><span class="n">uv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_uv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">))]</span>
+    <span class="n">l</span>   <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">uv</span><span class="p">)</span>
+    <span class="n">_l</span>  <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">_uv</span><span class="p">)</span>
+    <span class="n">q</span>   <span class="o">=</span> <span class="n">_l</span> <span class="o">/</span> <span class="n">l</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">uv_e</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span>
+        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;l&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">e</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">90</span><span class="p">:</span>
+            <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;f&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_l</span><span class="p">[</span><span class="n">e</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">e</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;f&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">_l</span><span class="p">[</span><span class="n">e</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+            <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span> <span class="n">q</span><span class="p">[</span><span class="n">e</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">_k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_xy</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_xy</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">_uv_e</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span>
+        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;l&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_l</span><span class="p">[</span><span class="n">e</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># Main</span>
+<span class="c1"># ==============================================================================</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">pass</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">COMPAS AGS 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Block Research Group - ETH Zurich.
+      Last updated on Aug 30, 2018.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.7.
+    </div>
+  </body>
+</html>

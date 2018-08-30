@@ -217,7 +217,7 @@ def form_count_dof(form):
 
     Examples
     --------
-    .. code_block:: python
+    .. code-block:: python
 
         #
 
