@@ -1,5 +1,7 @@
-compas\_ags.ags.compute\_loadpath
-=================================
+.. rst-class:: detail
+
+compute_loadpath
+===============================
 
 .. currentmodule:: compas_ags.ags
 

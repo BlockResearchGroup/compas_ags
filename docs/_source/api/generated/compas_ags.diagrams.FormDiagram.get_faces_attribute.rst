@@ -1,0 +1,8 @@
+.. rst-class:: detail
+
+FormDiagram.get_faces_attribute
+===================================================
+
+.. currentmodule:: compas_ags.diagrams
+
+.. automethod:: FormDiagram.get_faces_attribute

@@ -1,5 +1,7 @@
-compas\_ags.ags.compute\_internal\_work
-=======================================
+.. rst-class:: detail
+
+compute_internal_work
+====================================
 
 .. currentmodule:: compas_ags.ags
 

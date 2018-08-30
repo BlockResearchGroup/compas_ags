@@ -1,17 +1,21 @@
-compas\_ags.diagrams.FormDiagram
-================================
+.. rst-class:: detail
+
+FormDiagram
+===============================
 
 .. currentmodule:: compas_ags.diagrams
+
+.. .. inheritance-diagram:: FormDiagram
 
 .. autoclass:: FormDiagram
 
    
-   .. automethod:: __init__
-
    
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
       ~FormDiagram.__init__
       ~FormDiagram.add_edge

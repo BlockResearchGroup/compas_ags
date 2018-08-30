@@ -13,9 +13,10 @@ diagrams
     ForceDiagram
 
 """
+from __future__ import absolute_import
 
-from compas_ags.diagrams import formdiagram
-from compas_ags.diagrams import forcediagram
+from . import formdiagram
+from . import forcediagram
 
 from .formdiagram import *
 from .forcediagram import *

@@ -7,9 +7,6 @@
 import sys
 import os
 
-# sys.path.append(os.path.abspath('../../sphinx_compas_theme/sphinxext'))
-# sys.path.append(os.path.abspath('../temp/sphinx_compas_theme/sphinxext'))
-
 # -- General configuration ------------------------------------------------
 
 project          = 'AGS'
@@ -20,7 +17,7 @@ version          = '.'.join(release.split('.')[0:2])
 
 master_doc       = 'index'
 source_suffix    = ['.rst', ]
-templates_path   = ['_templates', ]
+templates_path   = ['_templates/autosummary']
 exclude_patterns = []
 
 pygments_style   = 'sphinx'
@@ -51,11 +48,11 @@ autodoc_default_flags = [
     'show-inheritance',
 ]
 
-autodoc_mock_imports = ['compas']
+# autodoc_mock_imports = ['compas']
 
-autodoc_default_options = {
-    'special-members': ['__init__', '__call__']
-}
+# autodoc_default_options = {
+#     'special-members': ['__init__', '__call__']
+# }
 
 autodoc_member_order = 'alphabetical'
 
@@ -86,92 +83,7 @@ napoleon_use_rtype = False
 # plot_rcparams
 # plot_apply_rcparams
 # plot_working_directory
-
-# {% has_class = false -%}
-# {% for option in options -%}
-# {% if option.startswith(':class:') %}
-# {% has_class = true %}
-# {% endif %}
-# {% endfor %}
-
-
-plot_template = """
-{{ source_code }}
-
-{{ only_html }}
-
-   {% if source_link or (html_show_formats and not multi_image) %}
-   (
-   {%- if source_link -%}
-   `Source code <{{ source_link }}>`__
-   {%- endif -%}
-   {%- if html_show_formats and not multi_image -%}
-     {%- for img in images -%}
-       {%- for fmt in img.formats -%}
-         {%- if source_link or not loop.first -%}, {% endif -%}
-         `{{ fmt }} <{{ dest_dir }}/{{ img.basename }}.{{ fmt }}>`__
-       {%- endfor -%}
-     {%- endfor -%}
-   {%- endif -%}
-   )
-   {% endif %}
-
-   {% for img in images %}
-   {% set has_class = false %}
-
-   .. figure:: {{ build_dir }}/{{ img.basename }}.{{ default_fmt }}
-      {% for option in options -%}
-      {%- if option.startswith(':class:') -%}
-      {%- set has_class = true -%}
-      {%- if 'img-fluid' not in option -%}
-      {%- set option = option + ' img-fluid' -%}
-      {%- endif -%}
-      {%- if 'figure-img' not in option -%}
-      {%- set option = option + ' figure-img' -%}
-      {%- endif -%}
-      {%- endif -%}
-      {{ option }}
-      {% endfor %}
-      {%- if not has_class -%}
-      :class: figure-img img-fluid
-      {%- endif %}
-
-      {% if html_show_formats and multi_image -%}
-        (
-        {%- for fmt in img.formats -%}
-        {%- if not loop.first -%}, {% endif -%}
-        `{{ fmt }} <{{ dest_dir }}/{{ img.basename }}.{{ fmt }}>`__
-        {%- endfor -%}
-        )
-      {%- endif -%}
-
-      {{ caption }}
-   {% endfor %}
-
-{{ only_latex }}
-
-   {% for img in images %}
-   {% if 'pdf' in img.formats -%}
-   .. figure:: {{ build_dir }}/{{ img.basename }}.pdf
-      {% for option in options -%}
-      {{ option }}
-      {% endfor %}
-
-      {{ caption }}
-   {% endif -%}
-   {% endfor %}
-
-{{ only_texinfo }}
-
-   {% for img in images %}
-   .. image:: {{ build_dir }}/{{ img.basename }}.png
-      {% for option in options -%}
-      {{ option }}
-      {% endfor %}
-
-   {% endfor %}
-
-"""
+# plot_template
 
 plot_html_show_source_link = False
 plot_html_show_formats = False

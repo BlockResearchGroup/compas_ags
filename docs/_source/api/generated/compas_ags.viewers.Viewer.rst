@@ -1,17 +1,21 @@
-compas\_ags.viewers.Viewer
-==========================
+.. rst-class:: detail
+
+Viewer
+=========================
 
 .. currentmodule:: compas_ags.viewers
+
+.. .. inheritance-diagram:: Viewer
 
 .. autoclass:: Viewer
 
    
-   .. automethod:: __init__
-
    
    .. rubric:: Methods
 
    .. autosummary::
+      :toctree:
+
    
       ~Viewer.__init__
       ~Viewer.draw_force

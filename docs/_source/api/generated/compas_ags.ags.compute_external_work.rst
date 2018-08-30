@@ -1,5 +1,7 @@
-compas\_ags.ags.compute\_external\_work
-=======================================
+.. rst-class:: detail
+
+compute_external_work
+====================================
 
 .. currentmodule:: compas_ags.ags
 

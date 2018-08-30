@@ -1,5 +1,7 @@
-compas\_ags.ags.compute\_internal\_work\_tension
-================================================
+.. rst-class:: detail
+
+compute_internal_work_tension
+============================================
 
 .. currentmodule:: compas_ags.ags
 
