@@ -177,11 +177,9 @@ intersphinx_mapping = {'python': ('https://docs.python.org/', None)}
 
 # -- Options for HTML output ----------------------------------------------
 
-html_theme = 'classic'
-html_theme_path = []
-html_theme_options = {
-    'sidebarwidth': 240
-}
+html_theme = 'compas'
+html_theme_path = ['../../../sphinx_compas_theme']
+html_theme_options = {}
 html_context = {}
 html_static_path = []
 html_extra_path = ['.nojekyll']
