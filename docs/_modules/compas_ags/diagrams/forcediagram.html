@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>compas_ags.diagrams.forcediagram &#8212; COMPAS AGS 0.1.0 documentation</title>
+    <link rel="stylesheet" href="../../../_static/nature.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+  </head><body>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">COMPAS AGS 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" accesskey="U">Module code</a> &#187;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for compas_ags.diagrams.forcediagram</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="k">import</span> <span class="n">Network</span>
+<span class="kn">from</span> <span class="nn">compas.topology</span> <span class="k">import</span> <span class="n">network_find_faces</span>
+<span class="kn">from</span> <span class="nn">compas.topology</span> <span class="k">import</span> <span class="n">network_dual</span>
+
+
+<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tom Van Mele&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2014 - Block Research Group, ETH Zurich&#39;</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;vanmelet@ethz.ch&#39;</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;ForceDiagram&#39;</span>
+<span class="p">]</span>
+
+
+<div class="viewcode-block" id="ForceDiagram"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.html#compas_ags.diagrams.ForceDiagram">[docs]</a><span class="k">class</span> <span class="nc">ForceDiagram</span><span class="p">(</span><span class="n">Network</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="ForceDiagram.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.html#compas_ags.diagrams.ForceDiagram.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ForceDiagram</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;name&#39;</span>         <span class="p">:</span> <span class="s1">&#39;ForceDiagram&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;color.vertex&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+            <span class="s1">&#39;color.edge&#39;</span>   <span class="p">:</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
+            <span class="s1">&#39;color.face&#39;</span>   <span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+        <span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_default_vertex_attributes</span><span class="p">({</span>
+            <span class="s1">&#39;is_fixed&#39;</span>  <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;is_anchor&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;is_param&#39;</span>  <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_default_edge_attributes</span><span class="p">({</span>
+            <span class="s1">&#39;l&#39;</span>   <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s1">&#39;lmin&#39;</span><span class="p">:</span> <span class="mf">1e-7</span><span class="p">,</span>
+            <span class="s1">&#39;lmax&#39;</span><span class="p">:</span> <span class="mf">1e+7</span><span class="p">,</span>
+        <span class="p">})</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># Constructors</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_formdiagram</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">):</span>
+        <span class="n">network_find_faces</span><span class="p">(</span><span class="n">formdiagram</span><span class="p">,</span> <span class="n">formdiagram</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
+        <span class="k">return</span> <span class="n">network_dual</span><span class="p">(</span><span class="n">formdiagram</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># Convenience functions for retrieving attributes of the force diagram.</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">xy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">()]</span>
+
+    <span class="k">def</span> <span class="nf">fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]]</span>
+
+    <span class="k">def</span> <span class="nf">anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_anchor&#39;</span><span class="p">]:</span>
+                <span class="k">return</span> <span class="n">key</span>
+        <span class="k">return</span> <span class="n">key</span>
+
+    <span class="k">def</span> <span class="nf">set_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># Helpers</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">uv_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">form</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">{(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span>
+        <span class="n">uv_index</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()):</span>
+            <span class="n">f1</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">]</span>
+            <span class="n">f2</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">u</span><span class="p">]</span>
+            <span class="n">uv_index</span><span class="p">[(</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">)]</span> <span class="o">=</span> <span class="n">index</span>
+        <span class="k">return</span> <span class="n">uv_index</span>
+
+    <span class="k">def</span> <span class="nf">ordered_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">key_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+        <span class="n">uv_index</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uv_index</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span>
+        <span class="n">index_uv</span>  <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">uv</span><span class="p">)</span> <span class="k">for</span> <span class="n">uv</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">uv_index</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">edges</span>     <span class="o">=</span> <span class="p">[</span><span class="n">index_uv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">index</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">edges</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="n">key_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">key_index</span><span class="p">[</span><span class="n">v</span><span class="p">]]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">]</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># AGS functions</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">compas_ags.algorithms.graphstatics</span> <span class="k">import</span> <span class="n">update_forcediagram</span>
+        <span class="n">update_forcediagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">)</span></div>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># Debugging</span>
+<span class="c1"># ==============================================================================</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="kn">import</span> <span class="nn">compas_ags</span>
+
+    <span class="kn">from</span> <span class="nn">compas_ags.ags</span> <span class="k">import</span> <span class="n">update_forcediagram</span>
+    <span class="kn">from</span> <span class="nn">compas_ags.ags</span> <span class="k">import</span> <span class="n">update_forcedensity</span>
+    <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="k">import</span> <span class="n">FormDiagram</span>
+    <span class="kn">from</span> <span class="nn">compas_ags.viewers</span> <span class="k">import</span> <span class="n">Viewer</span>
+
+    <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">compas_ags</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paper/gs_form_force.obj&#39;</span><span class="p">))</span>
+
+    <span class="n">form</span><span class="o">.</span><span class="n">identify_fixed</span><span class="p">()</span>
+
+    <span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_formdiagram</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+
+    <span class="n">form</span><span class="o">.</span><span class="n">set_edge_force_by_index</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+    <span class="n">update_forcedensity</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+    <span class="n">update_forcediagram</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">)</span>
+
+    <span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">delay_setup</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="n">viewer</span><span class="o">.</span><span class="n">draw_form</span><span class="p">(</span><span class="n">forcescale</span><span class="o">=</span><span class="mf">5.0</span><span class="p">)</span>
+    <span class="n">viewer</span><span class="o">.</span><span class="n">draw_force</span><span class="p">()</span>
+
+    <span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="nav-item nav-item-0"><a href="../../../index.html">COMPAS AGS 0.1.0 documentation</a> &#187;</li>
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2017, Block Research Group - ETH Zurich.
+      Last updated on Aug 30, 2018.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.7.
+    </div>
+  </body>
+</html>

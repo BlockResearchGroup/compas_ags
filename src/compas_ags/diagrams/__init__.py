@@ -1,3 +1,20 @@
+"""
+********************************************************************************
+diagrams
+********************************************************************************
+
+.. currentmodule:: compas_ags.diagrams
+
+
+.. autosummary::
+    :toctree: generated/
+    :nosignatures:
+
+    FormDiagram
+    ForceDiagram
+
+"""
+
 from compas_ags.diagrams import formdiagram
 from compas_ags.diagrams import forcediagram
 
