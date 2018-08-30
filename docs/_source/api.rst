@@ -3,6 +3,6 @@ API Reference
 ********************************************************************************
 
 .. toctree::
-    :maxdepth: 1
+    :maxdepth: 3
 
     api/compas_ags

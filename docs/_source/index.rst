@@ -3,7 +3,7 @@ Algebraic Graph Statics
 ********************************************************************************
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth: 3
    :titlesonly:
 
    intro
