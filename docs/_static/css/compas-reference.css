@@ -146,6 +146,13 @@ table {
 .compas-content .section {
   position: relative; }
 
+.staticmethod > dt > .reference.internal,
+.classmethod > dt > .reference.internal,
+.method > dt > .reference.internal,
+.function > dt > .reference.internal,
+.class > dt > .reference.internal {
+  float: right; }
+
 .field-list {
   margin-top: 1rem;
   margin-bottom: 3rem; }

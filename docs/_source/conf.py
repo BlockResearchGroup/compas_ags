@@ -98,7 +98,9 @@ intersphinx_mapping = {'python': ('https://docs.python.org/', None)}
 html_theme = 'compaspkg'
 html_theme_path = ['../../../sphinx_compas_theme']
 html_theme_options = {
-    "package_name" : "compas_ags"
+    "package_name"    : "compas_ags",
+    "package_title"   : project,
+    "package_version" : release,
 }
 html_context = {}
 html_static_path = []
