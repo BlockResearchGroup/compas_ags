@@ -152,7 +152,8 @@ table {
 .class > dt {
 	padding: 0.5rem 0;
 	margin-bottom: 0.5rem;
-	border-bottom: 4px solid #eee;
+	border-bottom: 0px solid #eee;
+	background-color: #eee;
 }
 
 .staticmethod > dt em,
@@ -160,6 +161,14 @@ table {
 .method > dt em,
 .function > dt em,
 .class > dt em {
+}
+
+.staticmethod > dt > code,
+.classmethod > dt > code,
+.method > dt > code,
+.function > dt > code,
+.class > dt > code {
+	background-color: none;
 }
 
 .class .property {}
