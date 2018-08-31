@@ -97,7 +97,9 @@ intersphinx_mapping = {'python': ('https://docs.python.org/', None)}
 
 html_theme = 'compaspkg'
 html_theme_path = ['../../../sphinx_compas_theme']
-html_theme_options = {}
+html_theme_options = {
+    "package_name" : "compas_ags"
+}
 html_context = {}
 html_static_path = []
 html_extra_path = ['.nojekyll']
