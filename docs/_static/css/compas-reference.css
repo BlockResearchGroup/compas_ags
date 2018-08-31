@@ -125,6 +125,8 @@ table {
 .class > dt {
   padding: 0.5rem;
   margin-bottom: 0.5rem;
+  margin-left: -0.5rem;
+  margin-right: -0.5rem;
   border-bottom: 0px solid #eee;
   background-color: #eee; }
 
