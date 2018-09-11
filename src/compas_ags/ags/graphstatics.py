@@ -356,7 +356,7 @@ def form_update_from_force(form, force, kmax=100):
     # --------------------------------------------------------------------------
     uv  = C.dot(xy)
     _uv = _C.dot(_xy)
-    a   = [angle_vectors_xy(uv[i], _uv[i]) for i in range(len(edges))]
+    a   = [angle_vectors_xy(uv[i], _uv[i], deg=True) for i in range(len(edges))]
     l   = normrow(uv)
     _l  = normrow(_uv)
     q   = _l / l

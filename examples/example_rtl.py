@@ -74,7 +74,8 @@ for u, v in force.edges():
 
 # modify the geometry of the force diagram
 
-force.vertex[1]['x'] -= 5.0
+# force.vertex[1]['x'] -= 5.0
+force.vertex[1]['x'] += 10.0
 
 # update the formdiagram
 
