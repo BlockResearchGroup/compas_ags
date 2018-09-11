@@ -44,7 +44,7 @@ class ForceDiagram(Network):
 
     @classmethod
     def from_formdiagram(cls, formdiagram):
-        network_find_faces(formdiagram, formdiagram.leaves())
+        network_find_faces(formdiagram, formdiagram.breakpoints())
         return network_dual(formdiagram, cls)
 
     # --------------------------------------------------------------------------
