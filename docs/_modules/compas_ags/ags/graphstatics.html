@@ -6,15 +6,16 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     
-        <meta name="author" content="Tom Van Mele" />
-        <meta name="description" content="compas is a computational framework for research in architecture and structures." />
+        <meta name="author" content="" />
+        <meta name="description" content="" />
 
-        <link rel="shortcut icon" href="/_static/images/compas.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="../../../_static/images/compas.ico" type="image/x-icon">
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/github.css" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="/compas_ags/_static/css/compas-reference.css" />
+
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/prism.css" />
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/compas-reference.css" />
 
         
         
@@ -27,15 +28,15 @@
 
         <header class="navbar navbar-expand compas-navbar justify-content-between">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/compas_ags">
+                <a class="navbar-brand" href="../../../index.html">
                     AGS 0.1.0
                 </a>
             </div>
 
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">
-                        <img src="/_static/images/compas_icon.png" width="36px" height="36px" alt="compas" />
+                    <a class="nav-link" href="https://compas-dev.github.io">
+                        <img src="../../../_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
                     </a>
                 </li>
             </ul>
@@ -52,12 +53,13 @@
 
                         
 
-                        <h1>Source code for compas_ags.ags.graphstatics</h1><div class="highlight"><pre><code class="language-python border rounded">
+                        <h1>Source code for compas_ags.ags.graphstatics</h1><div class="highlight"><pre><code>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">compas</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">array</span>
@@ -70,9 +72,10 @@
     <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="k">import</span> <span class="n">lstsq</span>
 
     <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="k">import</span> <span class="n">diags</span>
+
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="k">if</span> <span class="s1">&#39;ironpython&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
-        <span class="k">raise</span>    
+    <span class="n">compas</span><span class="o">.</span><span class="n">raise_if_not_ironpython</span><span class="p">()</span>    
+
 
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">angle_vectors_xy</span>
 
@@ -205,14 +208,6 @@
 <span class="sd">    vector space if they are linearly independent vectors and every vector of the</span>
 <span class="sd">    space is a linear combination of this set.</span>
 
-<span class="sd">    References</span>
-<span class="sd">    ----------</span>
-<span class="sd">    ...</span>
-
-<span class="sd">    See Also</span>
-<span class="sd">    --------</span>
-<span class="sd">    :func:`count_dof`</span>
-
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    .. code-block:: python</span>
@@ -266,10 +261,6 @@
 <span class="sd">    ----------</span>
 <span class="sd">    ...</span>
 
-<span class="sd">    See Also</span>
-<span class="sd">    --------</span>
-<span class="sd">    :func:`identify_dof`</span>
-
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    .. code-block:: python</span>
@@ -305,10 +296,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    The force densities are stored as attributes of the edges.</span>
+<span class="sd">        The updated force densities are stored as attributes of the edges of the form diagram.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -348,6 +336,20 @@
 <div class="viewcode-block" id="form_update_from_force"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.form_update_from_force.html#compas_ags.ags.form_update_from_force">[docs]</a><span class="k">def</span> <span class="nf">form_update_from_force</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the form diagram after a modification of the force diagram.</span>
 
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form : FormDiagram</span>
+<span class="sd">        The form diagram to update.</span>
+<span class="sd">    force : ForceDiagram</span>
+<span class="sd">        The force diagram on which the update is based.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        The form and force diagram are updated in-place.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
 <span class="sd">    Compute the geometry of the form diagram from the geometry of the form diagram</span>
 <span class="sd">    and some constraints (location of fixed points).</span>
 <span class="sd">    Since both diagrams are reciprocal, the coordinates of each vertex of the form</span>
@@ -365,13 +367,10 @@
 <span class="sd">    in *Fortran* order (first all x-coordinates, then all y-coordinates),</span>
 <span class="sd">    and  :math:`\mathbf{b}` ....</span>
 
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. code-block:: python</span>
 
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    form : compas_ags.formdiagram.FormDiagram</span>
-<span class="sd">        The form diagram to update.</span>
-<span class="sd">    force : compas_ags.forcediagram.ForceDiagram</span>
-<span class="sd">        The force diagram on which the update is based.</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
@@ -411,7 +410,7 @@
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="n">uv</span>  <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
     <span class="n">_uv</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_xy</span><span class="p">)</span>
-    <span class="n">a</span>   <span class="o">=</span> <span class="p">[</span><span class="n">angle_vectors_xy</span><span class="p">(</span><span class="n">uv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_uv</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">))]</span>
+    <span class="n">a</span>   <span class="o">=</span> <span class="p">[</span><span class="n">angle_vectors_xy</span><span class="p">(</span><span class="n">uv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_uv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">deg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">))]</span>
     <span class="n">l</span>   <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">uv</span><span class="p">)</span>
     <span class="n">_l</span>  <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">_uv</span><span class="p">)</span>
     <span class="n">q</span>   <span class="o">=</span> <span class="n">_l</span> <span class="o">/</span> <span class="n">l</span>
@@ -447,7 +446,21 @@
 
 
 <div class="viewcode-block" id="force_update_from_form"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.force_update_from_form.html#compas_ags.ags.force_update_from_form">[docs]</a><span class="k">def</span> <span class="nf">force_update_from_form</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Update the force diagram after modifying the (force densities of) the form diagram.&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Update the force diagram after modifying the (force densities of) the form diagram.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    force : ForceDiagram</span>
+<span class="sd">        The force diagram on which the update is based.</span>
+<span class="sd">    form : FormDiagram</span>
+<span class="sd">        The form diagram to update.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        The form and force diagram are updated in-place.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># form diagram</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
@@ -518,11 +531,9 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../tutorial.html">Tutorial</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../../../notes.html">Notes</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../api.html">API Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../contributions.html">Contributions</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../devguide.html">Developer Guide</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../../../citing.html">Citing</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../license.html">License</a></li>
 </ul>
 
@@ -556,7 +567,7 @@
             
 
             
-                Last updated on Aug 31, 2018.
+                Last updated on Sep 13, 2018.
             
 
             
@@ -582,17 +593,51 @@ var DOCUMENTATION_OPTIONS = {
 
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
             
-            <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 
-            <script src="/_static/underscore.js"></script>
-            <script src="/_static/doctools.js"></script>
-            <script src="/_static/js/searchtools_.js"></script>
+            <script src="../../../_static/underscore.js"></script>
+            <script src="../../../_static/doctools.js"></script>
+            <script src="../../../_static/js/searchtools_.js"></script>
+            <script src="../../../_static/js/prism.js"></script>
 
             <script>
-hljs.initHighlightingOnLoad();
-anchors.add();
+$(document).ready(function() {
+
+    // $(".language-default pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-bash pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-python pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-c pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-cpp pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-fortran pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-markdown pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-rest pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    anchors.add();
+});
             </script>
 
         

@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import sys
+import compas
 
 try:
     from numpy import array
@@ -15,9 +16,10 @@ try:
     from scipy.linalg import lstsq
 
     from scipy.sparse import diags
+
 except ImportError:
-    if 'ironpython' not in sys.version.lower():
-        raise    
+    compas.raise_if_not_ironpython()    
+
 
 from compas.geometry import angle_vectors_xy
 
@@ -150,14 +152,6 @@ def form_identify_dof(form):
     vector space if they are linearly independent vectors and every vector of the
     space is a linear combination of this set.
 
-    References
-    ----------
-    ...
-
-    See Also
-    --------
-    :func:`count_dof`
-
     Examples
     --------
     .. code-block:: python
@@ -211,10 +205,6 @@ def form_count_dof(form):
     ----------
     ...
 
-    See Also
-    --------
-    :func:`identify_dof`
-
     Examples
     --------
     .. code-block:: python
@@ -250,10 +240,7 @@ def form_update_q_from_qind(form):
     Returns
     -------
     None
-
-    Notes
-    -----
-    The force densities are stored as attributes of the edges.
+        The updated force densities are stored as attributes of the edges of the form diagram.
 
     Examples
     --------
@@ -293,6 +280,20 @@ def form_update_q_from_qind(form):
 def form_update_from_force(form, force, kmax=100):
     r"""Update the form diagram after a modification of the force diagram.
 
+    Parameters
+    ----------
+    form : FormDiagram
+        The form diagram to update.
+    force : ForceDiagram
+        The force diagram on which the update is based.
+
+    Returns
+    -------
+    None
+        The form and force diagram are updated in-place.
+
+    Notes
+    -----
     Compute the geometry of the form diagram from the geometry of the form diagram
     and some constraints (location of fixed points).
     Since both diagrams are reciprocal, the coordinates of each vertex of the form
@@ -310,13 +311,10 @@ def form_update_from_force(form, force, kmax=100):
     in *Fortran* order (first all x-coordinates, then all y-coordinates),
     and  :math:`\mathbf{b}` ....
 
+    Examples
+    --------
+    .. code-block:: python
 
-    Parameters
-    ----------
-    form : compas_ags.formdiagram.FormDiagram
-        The form diagram to update.
-    force : compas_ags.forcediagram.ForceDiagram
-        The force diagram on which the update is based.
 
     """
     # --------------------------------------------------------------------------
@@ -392,7 +390,21 @@ def form_update_from_force(form, force, kmax=100):
 
 
 def force_update_from_form(force, form):
-    """Update the force diagram after modifying the (force densities of) the form diagram."""
+    """Update the force diagram after modifying the (force densities of) the form diagram.
+
+    Parameters
+    ----------
+    force : ForceDiagram
+        The force diagram on which the update is based.
+    form : FormDiagram
+        The form diagram to update.
+
+    Returns
+    -------
+    None
+        The form and force diagram are updated in-place.
+
+    """
     # --------------------------------------------------------------------------
     # form diagram
     # --------------------------------------------------------------------------

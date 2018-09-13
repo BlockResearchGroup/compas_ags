@@ -33,6 +33,8 @@ FormDiagram
       ~FormDiagram.delete_edge
       ~FormDiagram.delete_face
       ~FormDiagram.delete_vertex
+      ~FormDiagram.dump
+      ~FormDiagram.dumps
       ~FormDiagram.edge_connected_edges
       ~FormDiagram.edge_coordinates
       ~FormDiagram.edge_direction
@@ -68,7 +70,6 @@ FormDiagram
       ~FormDiagram.faces_on_boundary
       ~FormDiagram.fixed
       ~FormDiagram.from_data
-      ~FormDiagram.from_grid
       ~FormDiagram.from_json
       ~FormDiagram.from_lines
       ~FormDiagram.from_obj
@@ -100,20 +101,20 @@ FormDiagram
       ~FormDiagram.ind
       ~FormDiagram.index_key
       ~FormDiagram.index_uv
-      ~FormDiagram.indexed_edges
       ~FormDiagram.indexed_face_vertices
       ~FormDiagram.is_2d
       ~FormDiagram.is_edge_naked
       ~FormDiagram.is_vertex_connected
       ~FormDiagram.is_vertex_leaf
-      ~FormDiagram.is_vertex_orphan
       ~FormDiagram.key_gkey
       ~FormDiagram.key_index
       ~FormDiagram.leaves
+      ~FormDiagram.load
+      ~FormDiagram.loads
       ~FormDiagram.number_of_edges
       ~FormDiagram.number_of_faces
-      ~FormDiagram.number_of_halfedges
       ~FormDiagram.number_of_vertices
+      ~FormDiagram.plot
       ~FormDiagram.q
       ~FormDiagram.set_edge_attribute
       ~FormDiagram.set_edge_attributes
@@ -137,7 +138,6 @@ FormDiagram
       ~FormDiagram.to_lines
       ~FormDiagram.to_obj
       ~FormDiagram.to_points
-      ~FormDiagram.to_points_and_lines
       ~FormDiagram.to_vertices_and_edges
       ~FormDiagram.update_default_edge_attributes
       ~FormDiagram.update_default_face_attributes

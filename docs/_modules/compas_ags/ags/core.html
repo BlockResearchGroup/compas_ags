@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>compas_ags</title>
+
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    
+        <meta name="author" content="" />
+        <meta name="description" content="" />
+
+        <link rel="shortcut icon" href="../../../_static/images/compas.ico" type="image/x-icon">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/prism.css" />
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="../../../_static/css/compas-reference.css" />
+
+        
+        
+        
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </head>
+    <body data-spy="scroll" data-target="#compas-localnav">
+
+        <header class="navbar navbar-expand compas-navbar justify-content-between">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="../../../index.html">
+                    AGS 0.1.0
+                </a>
+            </div>
+
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="https://compas-dev.github.io">
+                        <img src="../../../_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
+                    </a>
+                </li>
+            </ul>
+        </header>
+        
+        <div class="container-fluid compas-container">
+            <div class="row flex-xl-nowrap">
+
+                <!-- main content -->
+
+                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+
+                    
+
+                        
+
+                        <h1>Source code for compas_ags.ags.core</h1><div class="highlight"><pre><code>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">compas</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">array</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">eye</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">zeros</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">float64</span>
+    <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="k">import</span> <span class="n">cond</span>
+
+    <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="k">import</span> <span class="n">solve</span>
+    <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="k">import</span> <span class="n">lstsq</span>
+
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="n">compas</span><span class="o">.</span><span class="n">raise_if_not_ironpython</span><span class="p">()</span>
+
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="k">import</span> <span class="n">normalizerow</span>
+
+
+<span class="n">__author__</span>    <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tom Van Mele&#39;</span><span class="p">,</span> <span class="p">]</span>
+<span class="n">__copyright__</span> <span class="o">=</span> <span class="s1">&#39;Copyright 2016 - Block Research Group, ETH Zurich&#39;</span>
+<span class="n">__license__</span>   <span class="o">=</span> <span class="s1">&#39;MIT License&#39;</span>
+<span class="n">__email__</span>     <span class="o">=</span> <span class="s1">&#39;vanmelet@ethz.ch&#39;</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s1">&#39;update_q_from_qind&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;update_form_from_force&#39;</span>
+<span class="p">]</span>
+
+
+<span class="n">EPS</span>  <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">epsilon</span>
+
+
+<div class="viewcode-block" id="update_q_from_qind"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.update_q_from_qind.html#compas_ags.ags.update_q_from_qind">[docs]</a><span class="k">def</span> <span class="nf">update_q_from_qind</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">dep</span><span class="p">,</span> <span class="n">ind</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Update the full set of force densities using the values of the independent edges.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    E : sparse csr matrix</span>
+<span class="sd">        The equilibrium matrix.</span>
+<span class="sd">    q : array</span>
+<span class="sd">        The force densities of the edges.</span>
+<span class="sd">    dep : list</span>
+<span class="sd">        The indices of the dependent edges.</span>
+<span class="sd">    ind : list</span>
+<span class="sd">        The indices of the independent edges.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        The force densities are modified in-place.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        #</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">m</span>  <span class="o">=</span> <span class="n">E</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">dep</span><span class="p">)</span>
+    <span class="n">qi</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">ind</span><span class="p">]</span>
+    <span class="n">Ei</span> <span class="o">=</span> <span class="n">E</span><span class="p">[:,</span> <span class="n">ind</span><span class="p">]</span>
+    <span class="n">Ed</span> <span class="o">=</span> <span class="n">E</span><span class="p">[:,</span> <span class="n">dep</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">m</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">Edt</span> <span class="o">=</span> <span class="n">Ed</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">Edt</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Ed</span><span class="p">)</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">Edt</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Ei</span><span class="p">)</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">qi</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">Ed</span><span class="o">.</span><span class="n">toarray</span><span class="p">()</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">Ei</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">qi</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">cond</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">EPS</span><span class="p">:</span>
+        <span class="n">res</span> <span class="o">=</span> <span class="n">lstsq</span><span class="p">(</span><span class="o">-</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+        <span class="n">qd</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">qd</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="o">-</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">q</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span> <span class="o">=</span> <span class="n">qd</span></div>
+
+
+<div class="viewcode-block" id="update_form_from_force"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.update_form_from_force.html#compas_ags.ags.update_form_from_force">[docs]</a><span class="k">def</span> <span class="nf">update_form_from_force</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">_xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">leaves</span><span class="p">,</span> <span class="n">i_nbrs</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">_C</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the coordinates of a form diagram using the coordinates of the corresponding force diagram.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    xy : array-like</span>
+<span class="sd">        XY coordinates of the vertices of the form diagram.</span>
+<span class="sd">    _xy : array-like</span>
+<span class="sd">        XY coordinates of the vertices of the force diagram.</span>
+<span class="sd">    free : list</span>
+<span class="sd">        The free vertices of the form diagram.</span>
+<span class="sd">    leaves : list</span>
+<span class="sd">        The leaves of the form diagram.</span>
+<span class="sd">    i_nbrs : list of list of int</span>
+<span class="sd">        Vertex neighbours per vertex.</span>
+<span class="sd">    ij_e : dict</span>
+<span class="sd">        Edge index for every vertex pair.</span>
+<span class="sd">    _C : sparse matrix in csr format</span>
+<span class="sd">        The connectivity matrix of the force diagram.</span>
+<span class="sd">    kmax : int, optional</span>
+<span class="sd">        Maximum number of iterations.</span>
+<span class="sd">        Default is ``100``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        The vertex coordinates are modified in-place.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This function should be used to update the form diagram after modifying the</span>
+<span class="sd">    geometry of the force diagram. The objective is to compute new locations</span>
+<span class="sd">    for the vertices of the form diagram such that the corrsponding lines of the</span>
+<span class="sd">    form and force diagram are parallel while any geometric constraints imposed on</span>
+<span class="sd">    the form diagram are satisfied.</span>
+
+<span class="sd">    The location of each vertex of the form diagram is computed as the intersection</span>
+<span class="sd">    of the lines connected to it. Each of the connected lines is based at the connected</span>
+<span class="sd">    neighbouring vertex and taken parallel to the corresponding line in the force</span>
+<span class="sd">    diagram.</span>
+
+<span class="sd">    For a point :math:`\mathbf{p}`, which is the least-squares intersection of *K*</span>
+<span class="sd">    lines, with every line *j* defined by a point :math:`\mathbf{a}_{j}` on the line</span>
+<span class="sd">    and a direction vector :math:`\mathbf{n}_{j}`, we can write</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \mathbf{R} \mathbf{p} = \mathbf{q} </span>
+
+<span class="sd">    with</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \mathbf{R} = \displaystyle\sum_{j=1}^{K}(\mathbf{I} - \mathbf{n}_{j}\mathbf{n}_{j}^{T})</span>
+<span class="sd">        </span>
+<span class="sd">        \quad,\quad</span>
+<span class="sd">        </span>
+<span class="sd">        \mathbf{q} = \displaystyle\sum_{j=1}^{K}(\mathbf{I} - \mathbf{n}_{j}\mathbf{n}_{j}^{T})\mathbf{a}_{j}</span>
+
+<span class="sd">    This system of linear equations can be solved using the normal equations</span>
+
+<span class="sd">    .. math::</span>
+
+<span class="sd">        \mathbf{p} = (\mathbf{R}^{T}\mathbf{R})^{-1}\mathbf{R}^{T}\mathbf{q}</span>
+
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    .. code-block:: python</span>
+
+<span class="sd">        #</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">_uv</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_xy</span><span class="p">)</span>
+    <span class="n">_t</span>  <span class="o">=</span> <span class="n">normalizerow</span><span class="p">(</span><span class="n">_uv</span><span class="p">)</span>
+    <span class="n">I</span>   <span class="o">=</span> <span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">xy0</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">A</span>   <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">),</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">b</span>   <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+
+    <span class="c1"># update the free vertices</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">kmax</span><span class="p">):</span>
+        <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># in order for the two diagrams to have parallel corresponding edges,</span>
+        <span class="c1"># each free vertex location of the form diagram is computed as the intersection</span>
+        <span class="c1"># of the connected line. each of these lines is based at the corresponding</span>
+        <span class="c1"># connected neighbouring vertex and takne parallel to the corresponding</span>
+        <span class="c1"># edge in the force diagram.</span>
+        <span class="c1"># the intersection is the point that minimises the distance to all connected</span>
+        <span class="c1"># lines.</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">free</span><span class="p">:</span>
+            <span class="n">R</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+            <span class="n">q</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+
+            <span class="c1"># add line constraints based on connected edges</span>
+            <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">i_nbrs</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="k">if</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
+                <span class="n">n</span>  <span class="o">=</span> <span class="n">_t</span><span class="p">[</span><span class="n">ij_e</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)],</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># the direction of the line (the line parallel to the corresponding line in the force diagram)</span>
+                <span class="n">a</span>  <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>             <span class="c1"># a point on the line (the neighbour of the vertex)</span>
+                <span class="n">r</span>  <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="n">n</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>          <span class="c1"># projection into the orthogonal space of the direction vector</span>
+                <span class="n">R</span> <span class="o">+=</span> <span class="n">r</span>           
+                <span class="n">q</span> <span class="o">+=</span> <span class="n">r</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+            <span class="n">A</span><span class="p">[</span><span class="n">row</span><span class="p">:</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span>
+            <span class="n">b</span><span class="p">[</span><span class="n">row</span><span class="p">:</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span>
+            <span class="n">row</span> <span class="o">+=</span> <span class="mi">2</span>
+
+        <span class="n">res</span>      <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">A</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">),</span> <span class="n">A</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">b</span><span class="p">))</span>
+        <span class="n">xy</span><span class="p">[</span><span class="n">free</span><span class="p">]</span> <span class="o">=</span> <span class="n">res</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
+
+    <span class="c1"># reconnect leaves</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>
+        <span class="n">j</span>     <span class="o">=</span> <span class="n">i_j</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">xy0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">xy0</span><span class="p">[</span><span class="n">j</span><span class="p">]</span></div>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># Main</span>
+<span class="c1"># ==============================================================================</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="k">pass</span>
+</code></pre></div>
+                        
+                    
+
+                </main>
+
+                <!-- site navigation sidebar -->
+
+                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                    <div class="navbar-light">
+
+                        <form id="" class="d-flex compas-searchbox" action="../../../search.html" method="get">
+                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                            <input type="hidden" name="check_keywords" value="yes" />
+                            <input type="hidden" name="area" value="default" />
+
+                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                                <span class="navbar-toggler-icon"></span>
+                            </button>
+                        </form>
+
+                        
+                        
+
+                            <div class="navbar-expand-md">
+                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
+
+                                <ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="../../../intro.html">Introduction</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../gettingstarted.html">Getting Started</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../examples.html">Examples</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../tutorial.html">Tutorial</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../api.html">API Reference</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../contributions.html">Contributions</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../devguide.html">Developer Guide</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../license.html">License</a></li>
+</ul>
+
+
+                                </div>
+                            </div>
+
+                        
+
+                    </div>
+                </div>
+
+                <!-- table of contents of main content -->
+                
+                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                    
+
+                    
+
+                </div>
+
+            </div>
+        </div>
+
+        <footer class="compas-footer">
+            
+                
+                    &#169; Copyright 2017, Block Research Group - ETH Zurich.
+                
+            
+
+            
+                Last updated on Sep 13, 2018.
+            
+
+            
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.7.
+            
+        </footer>
+
+        
+
+            <script type="text/javascript">
+var DOCUMENTATION_OPTIONS = {
+    URL_ROOT          : '',
+    VERSION           : '0.1.0',
+    COLLAPSE_INDEX    : false,
+    FILE_SUFFIX       : '.html',
+    HAS_SOURCE        : 'false',
+    SOURCELINK_SUFFIX : '.txt'
+};
+            </script>
+
+            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+            
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+
+            <script src="../../../_static/underscore.js"></script>
+            <script src="../../../_static/doctools.js"></script>
+            <script src="../../../_static/js/searchtools_.js"></script>
+            <script src="../../../_static/js/prism.js"></script>
+
+            <script>
+$(document).ready(function() {
+
+    // $(".language-default pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-bash pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-python pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-c pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-cpp pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-fortran pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-markdown pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-rest pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    anchors.add();
+});
+            </script>
+
+        
+    </body>
+</html>

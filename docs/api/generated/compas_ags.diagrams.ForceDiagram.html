@@ -6,15 +6,16 @@
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     
-        <meta name="author" content="Tom Van Mele" />
-        <meta name="description" content="compas is a computational framework for research in architecture and structures." />
+        <meta name="author" content="" />
+        <meta name="description" content="" />
 
-        <link rel="shortcut icon" href="/_static/images/compas.ico" type="image/x-icon">
+        <link rel="shortcut icon" href="../../_static/images/compas.ico" type="image/x-icon">
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/github.css" />
-        <link rel="stylesheet" type="text/css" href="/_static/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="/compas_ags/_static/css/compas-reference.css" />
+
+        <link rel="stylesheet" type="text/css" href="../../_static/css/prism.css" />
+        <link rel="stylesheet" type="text/css" href="../../_static/css/compas.css" />
+        <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
         
             <link rel="next" title="ForceDiagram.__init__" href="compas_ags.diagrams.ForceDiagram.__init__.html" />
@@ -31,15 +32,15 @@
 
         <header class="navbar navbar-expand compas-navbar justify-content-between">
             <div class="navbar-header">
-                <a class="navbar-brand" href="/compas_ags">
+                <a class="navbar-brand" href="../../index.html">
                     AGS 0.1.0
                 </a>
             </div>
 
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">
-                        <img src="/_static/images/compas_icon.png" width="36px" height="36px" alt="compas" />
+                    <a class="nav-link" href="https://compas-dev.github.io">
+                        <img src="../../_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
                     </a>
                 </li>
             </ul>
@@ -73,7 +74,7 @@
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.add_edge.html#compas_ags.diagrams.ForceDiagram.add_edge" title="compas_ags.diagrams.ForceDiagram.add_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_edge</span></code></a>(u, v[, attr_dict])</p></td>
-<td><p>Add an edge and specify its attributes (optional).</p></td>
+<td><p>Add an edge and specify its attributes.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.add_vertex.html#compas_ags.diagrams.ForceDiagram.add_vertex" title="compas_ags.diagrams.ForceDiagram.add_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_vertex</span></code></a>([key, attr_dict])</p></td>
 <td><p>Add a vertex and specify its attributes (optional).</p></td>
@@ -82,28 +83,34 @@
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.clear.html#compas_ags.diagrams.ForceDiagram.clear" title="compas_ags.diagrams.ForceDiagram.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Clear all the network data.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.clear_edgedict.html#compas_ags.diagrams.ForceDiagram.clear_edgedict" title="compas_ags.diagrams.ForceDiagram.clear_edgedict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_edgedict</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Clear only the edges.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.clear_halfedgedict.html#compas_ags.diagrams.ForceDiagram.clear_halfedgedict" title="compas_ags.diagrams.ForceDiagram.clear_halfedgedict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_halfedgedict</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Clear only the half-edges.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.clear_vertexdict.html#compas_ags.diagrams.ForceDiagram.clear_vertexdict" title="compas_ags.diagrams.ForceDiagram.clear_vertexdict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_vertexdict</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Clear only the vertices.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.copy.html#compas_ags.diagrams.ForceDiagram.copy" title="compas_ags.diagrams.ForceDiagram.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Make an independent copy of the network object.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.delete_edge.html#compas_ags.diagrams.ForceDiagram.delete_edge" title="compas_ags.diagrams.ForceDiagram.delete_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_edge</span></code></a>(u, v)</p></td>
-<td><p></p></td>
+<td><p>Delete an edge from the network.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.delete_vertex.html#compas_ags.diagrams.ForceDiagram.delete_vertex" title="compas_ags.diagrams.ForceDiagram.delete_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_vertex</span></code></a>(key)</p></td>
-<td><p></p></td>
+<td><p>Delete a vertex from the network.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.dump.html#compas_ags.diagrams.ForceDiagram.dump" title="compas_ags.diagrams.ForceDiagram.dump"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dump</span></code></a>(filepath)</p></td>
+<td><p>Dump the data representing the network to a file using Python’s built-in object serialisation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.dumps.html#compas_ags.diagrams.ForceDiagram.dumps" title="compas_ags.diagrams.ForceDiagram.dumps"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dumps</span></code></a>()</p></td>
+<td><p>Dump the data representing the network to a string using Python’s built-in object serialisation.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_connected_edges.html#compas_ags.diagrams.ForceDiagram.edge_connected_edges" title="compas_ags.diagrams.ForceDiagram.edge_connected_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_connected_edges</span></code></a>(u, v)</p></td>
-<td><p></p></td>
+<td><p>Return the edges connected to an edge.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_coordinates.html#compas_ags.diagrams.ForceDiagram.edge_coordinates" title="compas_ags.diagrams.ForceDiagram.edge_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_coordinates</span></code></a>(u, v[, axes])</p></td>
 <td><p>Return the coordinates of the start and end point of an edge.</p></td>
@@ -130,7 +137,7 @@
 <td><p>Return the vector of an edge.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edges.html#compas_ags.diagrams.ForceDiagram.edges" title="compas_ags.diagrams.ForceDiagram.edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges</span></code></a>([data])</p></td>
-<td><p>Return an iterator for the edges and their attributes (optional).</p></td>
+<td><p>Iterate over the edges of the network.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edges_where.html#compas_ags.diagrams.ForceDiagram.edges_where" title="compas_ags.diagrams.ForceDiagram.edges_where"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges_where</span></code></a>(conditions[, data])</p></td>
 <td><p>Get edges for which a certain condition or set of conditions is true.</p></td>
@@ -144,155 +151,149 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_formdiagram.html#compas_ags.diagrams.ForceDiagram.from_formdiagram" title="compas_ags.diagrams.ForceDiagram.from_formdiagram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_formdiagram</span></code></a>(formdiagram)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_grid.html#compas_ags.diagrams.ForceDiagram.from_grid" title="compas_ags.diagrams.ForceDiagram.from_grid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_grid</span></code></a>(xlim, ylim)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_json.html#compas_ags.diagrams.ForceDiagram.from_json" title="compas_ags.diagrams.ForceDiagram.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(filepath)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_json.html#compas_ags.diagrams.ForceDiagram.from_json" title="compas_ags.diagrams.ForceDiagram.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a>(filepath)</p></td>
 <td><p>Construct a datastructure from structured data contained in a json file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_lines.html#compas_ags.diagrams.ForceDiagram.from_lines" title="compas_ags.diagrams.ForceDiagram.from_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_lines</span></code></a>(lines[, precision])</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_lines.html#compas_ags.diagrams.ForceDiagram.from_lines" title="compas_ags.diagrams.ForceDiagram.from_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_lines</span></code></a>(lines[, precision])</p></td>
+<td><p>Construct a network from a set of lines represented by their start and end point coordinates.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_obj.html#compas_ags.diagrams.ForceDiagram.from_obj" title="compas_ags.diagrams.ForceDiagram.from_obj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_obj</span></code></a>(filepath[, precision])</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_obj.html#compas_ags.diagrams.ForceDiagram.from_obj" title="compas_ags.diagrams.ForceDiagram.from_obj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_obj</span></code></a>(filepath[, precision])</p></td>
+<td><p>Construct a network from the data contained in an OBJ file.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_vertices_and_edges.html#compas_ags.diagrams.ForceDiagram.from_vertices_and_edges" title="compas_ags.diagrams.ForceDiagram.from_vertices_and_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_vertices_and_edges</span></code></a>(vertices, edges)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_vertices_and_edges.html#compas_ags.diagrams.ForceDiagram.from_vertices_and_edges" title="compas_ags.diagrams.ForceDiagram.from_vertices_and_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_vertices_and_edges</span></code></a>(vertices, edges)</p></td>
+<td><p>Construct a network from vertices and edges.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_any_edge.html#compas_ags.diagrams.ForceDiagram.get_any_edge" title="compas_ags.diagrams.ForceDiagram.get_any_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_any_edge</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_any_edge.html#compas_ags.diagrams.ForceDiagram.get_any_edge" title="compas_ags.diagrams.ForceDiagram.get_any_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_any_edge</span></code></a>()</p></td>
 <td><p>Get the identifier of a random edge.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_any_vertex.html#compas_ags.diagrams.ForceDiagram.get_any_vertex" title="compas_ags.diagrams.ForceDiagram.get_any_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_any_vertex</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_any_vertex.html#compas_ags.diagrams.ForceDiagram.get_any_vertex" title="compas_ags.diagrams.ForceDiagram.get_any_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_any_vertex</span></code></a>()</p></td>
 <td><p>Get the identifier of a random vertex.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_any_vertices.html#compas_ags.diagrams.ForceDiagram.get_any_vertices" title="compas_ags.diagrams.ForceDiagram.get_any_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_any_vertices</span></code></a>(n[, exclude_leaves])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_any_vertices.html#compas_ags.diagrams.ForceDiagram.get_any_vertices" title="compas_ags.diagrams.ForceDiagram.get_any_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_any_vertices</span></code></a>(n[, exclude_leaves])</p></td>
 <td><p>Get a list of identifiers of a random set of n vertices.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_edge_attribute.html#compas_ags.diagrams.ForceDiagram.get_edge_attribute" title="compas_ags.diagrams.ForceDiagram.get_edge_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edge_attribute</span></code></a>(key, name[, value])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_edge_attribute.html#compas_ags.diagrams.ForceDiagram.get_edge_attribute" title="compas_ags.diagrams.ForceDiagram.get_edge_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edge_attribute</span></code></a>(key, name[, value])</p></td>
 <td><p>Get the value of a named attribute of one edge.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_edge_attributes.html#compas_ags.diagrams.ForceDiagram.get_edge_attributes" title="compas_ags.diagrams.ForceDiagram.get_edge_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edge_attributes</span></code></a>(key, names[, values])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_edge_attributes.html#compas_ags.diagrams.ForceDiagram.get_edge_attributes" title="compas_ags.diagrams.ForceDiagram.get_edge_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edge_attributes</span></code></a>(key, names[, values])</p></td>
 <td><p>Get the value of a named attribute of one edge.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_edges_attribute.html#compas_ags.diagrams.ForceDiagram.get_edges_attribute" title="compas_ags.diagrams.ForceDiagram.get_edges_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edges_attribute</span></code></a>(name[, value, keys])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_edges_attribute.html#compas_ags.diagrams.ForceDiagram.get_edges_attribute" title="compas_ags.diagrams.ForceDiagram.get_edges_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edges_attribute</span></code></a>(name[, value, keys])</p></td>
 <td><p>Get the value of a named attribute of multiple edges.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_edges_attributes.html#compas_ags.diagrams.ForceDiagram.get_edges_attributes" title="compas_ags.diagrams.ForceDiagram.get_edges_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edges_attributes</span></code></a>(names[, values, keys])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_edges_attributes.html#compas_ags.diagrams.ForceDiagram.get_edges_attributes" title="compas_ags.diagrams.ForceDiagram.get_edges_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_edges_attributes</span></code></a>(names[, values, keys])</p></td>
 <td><p>Get the values of multiple named attribute of multiple edges.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_vertex_attribute.html#compas_ags.diagrams.ForceDiagram.get_vertex_attribute" title="compas_ags.diagrams.ForceDiagram.get_vertex_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vertex_attribute</span></code></a>(key, name[, value])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_vertex_attribute.html#compas_ags.diagrams.ForceDiagram.get_vertex_attribute" title="compas_ags.diagrams.ForceDiagram.get_vertex_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vertex_attribute</span></code></a>(key, name[, value])</p></td>
 <td><p>Get the value of a named attribute of one vertex.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_vertex_attributes.html#compas_ags.diagrams.ForceDiagram.get_vertex_attributes" title="compas_ags.diagrams.ForceDiagram.get_vertex_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vertex_attributes</span></code></a>(key, names[, values])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_vertex_attributes.html#compas_ags.diagrams.ForceDiagram.get_vertex_attributes" title="compas_ags.diagrams.ForceDiagram.get_vertex_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vertex_attributes</span></code></a>(key, names[, values])</p></td>
 <td><p>Get the value of a named attribute of one vertex.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_vertices_attribute.html#compas_ags.diagrams.ForceDiagram.get_vertices_attribute" title="compas_ags.diagrams.ForceDiagram.get_vertices_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vertices_attribute</span></code></a>(name[, value, keys])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_vertices_attribute.html#compas_ags.diagrams.ForceDiagram.get_vertices_attribute" title="compas_ags.diagrams.ForceDiagram.get_vertices_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vertices_attribute</span></code></a>(name[, value, keys])</p></td>
 <td><p>Get the value of a named attribute of multiple vertices.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_vertices_attributes.html#compas_ags.diagrams.ForceDiagram.get_vertices_attributes" title="compas_ags.diagrams.ForceDiagram.get_vertices_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vertices_attributes</span></code></a>(names[, values, keys])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.get_vertices_attributes.html#compas_ags.diagrams.ForceDiagram.get_vertices_attributes" title="compas_ags.diagrams.ForceDiagram.get_vertices_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_vertices_attributes</span></code></a>(names[, values, keys])</p></td>
 <td><p>Get the values of multiple named attribute of multiple vertices.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.gkey_key.html#compas_ags.diagrams.ForceDiagram.gkey_key" title="compas_ags.diagrams.ForceDiagram.gkey_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gkey_key</span></code></a>([precision])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.gkey_key.html#compas_ags.diagrams.ForceDiagram.gkey_key" title="compas_ags.diagrams.ForceDiagram.gkey_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gkey_key</span></code></a>([precision])</p></td>
 <td><p>Returns a dictionary that maps <em>geometric keys</em> of a certain precision to the keys of the corresponding vertices.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.has_edge.html#compas_ags.diagrams.ForceDiagram.has_edge" title="compas_ags.diagrams.ForceDiagram.has_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_edge</span></code></a>(u, v[, directed])</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.has_edge.html#compas_ags.diagrams.ForceDiagram.has_edge" title="compas_ags.diagrams.ForceDiagram.has_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_edge</span></code></a>(u, v[, directed])</p></td>
+<td><p>Verify if the network contains a specific edge.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.has_vertex.html#compas_ags.diagrams.ForceDiagram.has_vertex" title="compas_ags.diagrams.ForceDiagram.has_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_vertex</span></code></a>(key)</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.has_vertex.html#compas_ags.diagrams.ForceDiagram.has_vertex" title="compas_ags.diagrams.ForceDiagram.has_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_vertex</span></code></a>(key)</p></td>
+<td><p>Verify if a specific vertex is present in the network.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.index_key.html#compas_ags.diagrams.ForceDiagram.index_key" title="compas_ags.diagrams.ForceDiagram.index_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index_key</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.index_key.html#compas_ags.diagrams.ForceDiagram.index_key" title="compas_ags.diagrams.ForceDiagram.index_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index_key</span></code></a>()</p></td>
 <td><p>Returns a dictionary that maps the indices of a vertex list to keys in a vertex dictionary.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.index_uv.html#compas_ags.diagrams.ForceDiagram.index_uv" title="compas_ags.diagrams.ForceDiagram.index_uv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index_uv</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.index_uv.html#compas_ags.diagrams.ForceDiagram.index_uv" title="compas_ags.diagrams.ForceDiagram.index_uv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index_uv</span></code></a>()</p></td>
 <td><p>Returns a dictionary that maps edges in a list to the corresponding vertex key pairs.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.indexed_edges.html#compas_ags.diagrams.ForceDiagram.indexed_edges" title="compas_ags.diagrams.ForceDiagram.indexed_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">indexed_edges</span></code></a>()</p></td>
-<td><p></p></td>
-</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_vertex_connected.html#compas_ags.diagrams.ForceDiagram.is_vertex_connected" title="compas_ags.diagrams.ForceDiagram.is_vertex_connected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_vertex_connected</span></code></a>(key)</p></td>
-<td><p></p></td>
+<td><p>Verify if a specific vertex is connected.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_vertex_leaf.html#compas_ags.diagrams.ForceDiagram.is_vertex_leaf" title="compas_ags.diagrams.ForceDiagram.is_vertex_leaf"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_vertex_leaf</span></code></a>(key)</p></td>
-<td><p></p></td>
+<td><p>Verify if a vertex is a leaf.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_vertex_orphan.html#compas_ags.diagrams.ForceDiagram.is_vertex_orphan" title="compas_ags.diagrams.ForceDiagram.is_vertex_orphan"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_vertex_orphan</span></code></a>(key)</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.key_gkey.html#compas_ags.diagrams.ForceDiagram.key_gkey" title="compas_ags.diagrams.ForceDiagram.key_gkey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">key_gkey</span></code></a>([precision])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.key_gkey.html#compas_ags.diagrams.ForceDiagram.key_gkey" title="compas_ags.diagrams.ForceDiagram.key_gkey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">key_gkey</span></code></a>([precision])</p></td>
 <td><p>Returns a dictionary that maps vertex dictionary keys to the corresponding <em>geometric key</em> up to a certain precision.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.key_index.html#compas_ags.diagrams.ForceDiagram.key_index" title="compas_ags.diagrams.ForceDiagram.key_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">key_index</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.key_index.html#compas_ags.diagrams.ForceDiagram.key_index" title="compas_ags.diagrams.ForceDiagram.key_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">key_index</span></code></a>()</p></td>
 <td><p>Returns a dictionary that maps vertex dictionary keys to the corresponding index in a vertex list or array.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.leaves.html#compas_ags.diagrams.ForceDiagram.leaves" title="compas_ags.diagrams.ForceDiagram.leaves"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leaves</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.leaves.html#compas_ags.diagrams.ForceDiagram.leaves" title="compas_ags.diagrams.ForceDiagram.leaves"><code class="xref py py-obj docutils literal notranslate"><span class="pre">leaves</span></code></a>()</p></td>
+<td><p>Return all leaves of the network.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.number_of_edges.html#compas_ags.diagrams.ForceDiagram.number_of_edges" title="compas_ags.diagrams.ForceDiagram.number_of_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_edges</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.load.html#compas_ags.diagrams.ForceDiagram.load" title="compas_ags.diagrams.ForceDiagram.load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">load</span></code></a>(filepath)</p></td>
+<td><p>Load serialised network data from a pickle file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.number_of_halfedges.html#compas_ags.diagrams.ForceDiagram.number_of_halfedges" title="compas_ags.diagrams.ForceDiagram.number_of_halfedges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_halfedges</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.loads.html#compas_ags.diagrams.ForceDiagram.loads" title="compas_ags.diagrams.ForceDiagram.loads"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loads</span></code></a>(s)</p></td>
+<td><p>Load serialised network data from a pickle string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.number_of_edges.html#compas_ags.diagrams.ForceDiagram.number_of_edges" title="compas_ags.diagrams.ForceDiagram.number_of_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_edges</span></code></a>()</p></td>
+<td><p>Compute the number of edges of the network.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.number_of_vertices.html#compas_ags.diagrams.ForceDiagram.number_of_vertices" title="compas_ags.diagrams.ForceDiagram.number_of_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_vertices</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Compute the number of vertices of the network.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.ordered_edges.html#compas_ags.diagrams.ForceDiagram.ordered_edges" title="compas_ags.diagrams.ForceDiagram.ordered_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ordered_edges</span></code></a>(form[, index])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_edge_attribute.html#compas_ags.diagrams.ForceDiagram.set_edge_attribute" title="compas_ags.diagrams.ForceDiagram.set_edge_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_edge_attribute</span></code></a>(key, name, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.plot.html#compas_ags.diagrams.ForceDiagram.plot" title="compas_ags.diagrams.ForceDiagram.plot"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot</span></code></a>([vertexcolor, edgecolor, vertexsize, …])</p></td>
+<td><p>Plot a 2D representation of the network.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_edge_attribute.html#compas_ags.diagrams.ForceDiagram.set_edge_attribute" title="compas_ags.diagrams.ForceDiagram.set_edge_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_edge_attribute</span></code></a>(key, name, value)</p></td>
 <td><p>Set one attribute of one edge.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_edge_attributes.html#compas_ags.diagrams.ForceDiagram.set_edge_attributes" title="compas_ags.diagrams.ForceDiagram.set_edge_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_edge_attributes</span></code></a>(key, names, values)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_edge_attributes.html#compas_ags.diagrams.ForceDiagram.set_edge_attributes" title="compas_ags.diagrams.ForceDiagram.set_edge_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_edge_attributes</span></code></a>(key, names, values)</p></td>
 <td><p>Set multiple attributes of one edge.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_edges_attribute.html#compas_ags.diagrams.ForceDiagram.set_edges_attribute" title="compas_ags.diagrams.ForceDiagram.set_edges_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_edges_attribute</span></code></a>(name, value[, keys])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_edges_attribute.html#compas_ags.diagrams.ForceDiagram.set_edges_attribute" title="compas_ags.diagrams.ForceDiagram.set_edges_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_edges_attribute</span></code></a>(name, value[, keys])</p></td>
 <td><p>Set one attribute of multiple edges.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_edges_attributes.html#compas_ags.diagrams.ForceDiagram.set_edges_attributes" title="compas_ags.diagrams.ForceDiagram.set_edges_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_edges_attributes</span></code></a>(names, values[, keys])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_edges_attributes.html#compas_ags.diagrams.ForceDiagram.set_edges_attributes" title="compas_ags.diagrams.ForceDiagram.set_edges_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_edges_attributes</span></code></a>(names, values[, keys])</p></td>
 <td><p>Set multiple attributes of multiple edges.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_fixed.html#compas_ags.diagrams.ForceDiagram.set_fixed" title="compas_ags.diagrams.ForceDiagram.set_fixed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_fixed</span></code></a>(keys)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_fixed.html#compas_ags.diagrams.ForceDiagram.set_fixed" title="compas_ags.diagrams.ForceDiagram.set_fixed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_fixed</span></code></a>(keys)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_vertex_attribute.html#compas_ags.diagrams.ForceDiagram.set_vertex_attribute" title="compas_ags.diagrams.ForceDiagram.set_vertex_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vertex_attribute</span></code></a>(key, name, value)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_vertex_attribute.html#compas_ags.diagrams.ForceDiagram.set_vertex_attribute" title="compas_ags.diagrams.ForceDiagram.set_vertex_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vertex_attribute</span></code></a>(key, name, value)</p></td>
 <td><p>Set one attribute of one vertex.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_vertex_attributes.html#compas_ags.diagrams.ForceDiagram.set_vertex_attributes" title="compas_ags.diagrams.ForceDiagram.set_vertex_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vertex_attributes</span></code></a>(key, names, values)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_vertex_attributes.html#compas_ags.diagrams.ForceDiagram.set_vertex_attributes" title="compas_ags.diagrams.ForceDiagram.set_vertex_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vertex_attributes</span></code></a>(key, names, values)</p></td>
 <td><p>Set multiple attributes of one vertex.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_vertices_attribute.html#compas_ags.diagrams.ForceDiagram.set_vertices_attribute" title="compas_ags.diagrams.ForceDiagram.set_vertices_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vertices_attribute</span></code></a>(name, value[, keys])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_vertices_attribute.html#compas_ags.diagrams.ForceDiagram.set_vertices_attribute" title="compas_ags.diagrams.ForceDiagram.set_vertices_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vertices_attribute</span></code></a>(name, value[, keys])</p></td>
 <td><p>Set one attribute of multiple vertices.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_vertices_attributes.html#compas_ags.diagrams.ForceDiagram.set_vertices_attributes" title="compas_ags.diagrams.ForceDiagram.set_vertices_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vertices_attributes</span></code></a>(names, values[, keys])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_vertices_attributes.html#compas_ags.diagrams.ForceDiagram.set_vertices_attributes" title="compas_ags.diagrams.ForceDiagram.set_vertices_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vertices_attributes</span></code></a>(names, values[, keys])</p></td>
 <td><p>Set multiple attributes of multiple vertices.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.split_edge.html#compas_ags.diagrams.ForceDiagram.split_edge" title="compas_ags.diagrams.ForceDiagram.split_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_edge</span></code></a>(u, v[, t])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.split_edge.html#compas_ags.diagrams.ForceDiagram.split_edge" title="compas_ags.diagrams.ForceDiagram.split_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_edge</span></code></a>(u, v[, t])</p></td>
 <td><p>Split and edge by inserting a vertex along its length.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.summary.html#compas_ags.diagrams.ForceDiagram.summary" title="compas_ags.diagrams.ForceDiagram.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.summary.html#compas_ags.diagrams.ForceDiagram.summary" title="compas_ags.diagrams.ForceDiagram.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a>()</p></td>
 <td><p>Print a summary of the mesh.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_data.html#compas_ags.diagrams.ForceDiagram.to_data" title="compas_ags.diagrams.ForceDiagram.to_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_data</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_data.html#compas_ags.diagrams.ForceDiagram.to_data" title="compas_ags.diagrams.ForceDiagram.to_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_data</span></code></a>()</p></td>
 <td><p>Returns a dictionary of structured data representing the data structure.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_json.html#compas_ags.diagrams.ForceDiagram.to_json" title="compas_ags.diagrams.ForceDiagram.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>(filepath)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_json.html#compas_ags.diagrams.ForceDiagram.to_json" title="compas_ags.diagrams.ForceDiagram.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>(filepath)</p></td>
 <td><p>Serialise the structured data representing the data structure to json.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_lines.html#compas_ags.diagrams.ForceDiagram.to_lines" title="compas_ags.diagrams.ForceDiagram.to_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_lines</span></code></a>([axes])</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_lines.html#compas_ags.diagrams.ForceDiagram.to_lines" title="compas_ags.diagrams.ForceDiagram.to_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_lines</span></code></a>([axes])</p></td>
+<td><p>Return the lines of the network as pairs of start and end point coordinates.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_obj.html#compas_ags.diagrams.ForceDiagram.to_obj" title="compas_ags.diagrams.ForceDiagram.to_obj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_obj</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_obj.html#compas_ags.diagrams.ForceDiagram.to_obj" title="compas_ags.diagrams.ForceDiagram.to_obj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_obj</span></code></a>()</p></td>
+<td><p>Write the network to an OBJ file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_points.html#compas_ags.diagrams.ForceDiagram.to_points" title="compas_ags.diagrams.ForceDiagram.to_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_points</span></code></a>([axes])</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_points_and_lines.html#compas_ags.diagrams.ForceDiagram.to_points_and_lines" title="compas_ags.diagrams.ForceDiagram.to_points_and_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_points_and_lines</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_points.html#compas_ags.diagrams.ForceDiagram.to_points" title="compas_ags.diagrams.ForceDiagram.to_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_points</span></code></a>([axes])</p></td>
+<td><p>Return the coordinates of the network.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_vertices_and_edges.html#compas_ags.diagrams.ForceDiagram.to_vertices_and_edges" title="compas_ags.diagrams.ForceDiagram.to_vertices_and_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_vertices_and_edges</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Return the vertices and edges of a network.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.update.html#compas_ags.diagrams.ForceDiagram.update" title="compas_ags.diagrams.ForceDiagram.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>(formdiagram)</p></td>
 <td><p></p></td>
@@ -334,7 +335,7 @@
 <td><p>Return the vertices in the neighborhood of a vertex.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_neighborhood_centroid.html#compas_ags.diagrams.ForceDiagram.vertex_neighborhood_centroid" title="compas_ags.diagrams.ForceDiagram.vertex_neighborhood_centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_neighborhood_centroid</span></code></a>(key)</p></td>
-<td><p></p></td>
+<td><p>Compute the centroid of the neighboring vertices.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_neighbors.html#compas_ags.diagrams.ForceDiagram.vertex_neighbors" title="compas_ags.diagrams.ForceDiagram.vertex_neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_neighbors</span></code></a>(key)</p></td>
 <td><p>Return the neighbors of a vertex.</p></td>
@@ -346,7 +347,7 @@
 <td><p>Return the outgoing neighbors of a vertex.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertices.html#compas_ags.diagrams.ForceDiagram.vertices" title="compas_ags.diagrams.ForceDiagram.vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices</span></code></a>([data])</p></td>
-<td><p>Return an iterator for the vertices and their attributes (optional).</p></td>
+<td><p>Iterate over the vertices of the network.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertices_where.html#compas_ags.diagrams.ForceDiagram.vertices_where" title="compas_ags.diagrams.ForceDiagram.vertices_where"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_where</span></code></a>(conditions[, data])</p></td>
 <td><p>Get vertices for which a certain condition or set of conditions is true.</p></td>
@@ -370,7 +371,7 @@
 <td><p>Return a data dict of this data structure for serialisation.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
-<td><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.7)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">str</span></code></a> – The name of the data structure.</p></td>
+<td><p><em>str</em> – The name of the data structure.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">x</span></code></p></td>
 <td><p><em>list</em> – The X coordinates of the vertices.</p></td>
@@ -421,7 +422,6 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../tutorial.html">Tutorial</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../../notes.html">Notes</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -433,7 +433,6 @@
 </li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../contributions.html">Contributions</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../devguide.html">Developer Guide</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../../citing.html">Citing</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../license.html">License</a></li>
 </ul>
 
@@ -470,7 +469,7 @@
             
 
             
-                Last updated on Aug 31, 2018.
+                Last updated on Sep 13, 2018.
             
 
             
@@ -496,17 +495,51 @@ var DOCUMENTATION_OPTIONS = {
 
             <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
             
-            <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
 
-            <script src="/_static/underscore.js"></script>
-            <script src="/_static/doctools.js"></script>
-            <script src="/_static/js/searchtools_.js"></script>
+            <script src="../../_static/underscore.js"></script>
+            <script src="../../_static/doctools.js"></script>
+            <script src="../../_static/js/searchtools_.js"></script>
+            <script src="../../_static/js/prism.js"></script>
 
             <script>
-hljs.initHighlightingOnLoad();
-anchors.add();
+$(document).ready(function() {
+
+    // $(".language-default pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-bash pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-python pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-c pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-cpp pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-fortran pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-markdown pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    // $(".language-rest pre").each(function(i, element) {
+    //     Prism.highlightElement(element);
+    // });
+
+    anchors.add();
+});
             </script>
 
         

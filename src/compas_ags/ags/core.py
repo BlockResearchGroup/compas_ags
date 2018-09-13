@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import sys
+import compas
 
 try:
     from numpy import array
@@ -15,8 +16,7 @@ try:
     from scipy.linalg import lstsq
 
 except ImportError:
-    if 'ironpython' not in sys.version.lower():
-        raise
+    compas.raise_if_not_ironpython()
 
 from compas.numerical import normalizerow
 
@@ -53,10 +53,7 @@ def update_q_from_qind(E, q, dep, ind):
     Returns
     -------
     None
-
-    Notes
-    -----
-    The force densities are updated in-place.
+        The force densities are modified in-place.
 
     Examples
     --------
@@ -84,7 +81,79 @@ def update_q_from_qind(E, q, dep, ind):
     q[dep] = qd
 
 
-def update_form_from_force(xy, _xy, free, leaves, i_j, ij_e, _C, kmax=100):
+def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
+    r"""Update the coordinates of a form diagram using the coordinates of the corresponding force diagram.
+
+    Parameters
+    ----------
+    xy : array-like
+        XY coordinates of the vertices of the form diagram.
+    _xy : array-like
+        XY coordinates of the vertices of the force diagram.
+    free : list
+        The free vertices of the form diagram.
+    leaves : list
+        The leaves of the form diagram.
+    i_nbrs : list of list of int
+        Vertex neighbours per vertex.
+    ij_e : dict
+        Edge index for every vertex pair.
+    _C : sparse matrix in csr format
+        The connectivity matrix of the force diagram.
+    kmax : int, optional
+        Maximum number of iterations.
+        Default is ``100``.
+
+    Returns
+    -------
+    None
+        The vertex coordinates are modified in-place.
+
+    Notes
+    -----
+    This function should be used to update the form diagram after modifying the
+    geometry of the force diagram. The objective is to compute new locations
+    for the vertices of the form diagram such that the corrsponding lines of the
+    form and force diagram are parallel while any geometric constraints imposed on
+    the form diagram are satisfied.
+
+    The location of each vertex of the form diagram is computed as the intersection
+    of the lines connected to it. Each of the connected lines is based at the connected
+    neighbouring vertex and taken parallel to the corresponding line in the force
+    diagram.
+
+    For a point :math:`\mathbf{p}`, which is the least-squares intersection of *K*
+    lines, with every line *j* defined by a point :math:`\mathbf{a}_{j}` on the line
+    and a direction vector :math:`\mathbf{n}_{j}`, we can write
+
+    .. math::
+
+        \mathbf{R} \mathbf{p} = \mathbf{q} 
+
+    with
+
+    .. math::
+
+        \mathbf{R} = \displaystyle\sum_{j=1}^{K}(\mathbf{I} - \mathbf{n}_{j}\mathbf{n}_{j}^{T})
+        
+        \quad,\quad
+        
+        \mathbf{q} = \displaystyle\sum_{j=1}^{K}(\mathbf{I} - \mathbf{n}_{j}\mathbf{n}_{j}^{T})\mathbf{a}_{j}
+
+    This system of linear equations can be solved using the normal equations
+
+    .. math::
+
+        \mathbf{p} = (\mathbf{R}^{T}\mathbf{R})^{-1}\mathbf{R}^{T}\mathbf{q}
+
+
+    Examples
+    --------
+    .. code-block:: python
+
+        #
+
+    """
     _uv = _C.dot(_xy)
     _t  = normalizerow(_uv)
     I   = eye(2, dtype=float64)
@@ -96,21 +165,28 @@ def update_form_from_force(xy, _xy, free, leaves, i_j, ij_e, _C, kmax=100):
     for k in range(kmax):
         row = 0
 
+        # in order for the two diagrams to have parallel corresponding edges,
+        # each free vertex location of the form diagram is computed as the intersection
+        # of the connected line. each of these lines is based at the corresponding
+        # connected neighbouring vertex and takne parallel to the corresponding
+        # edge in the force diagram.
+        # the intersection is the point that minimises the distance to all connected
+        # lines.
         for i in free:
             R = zeros((2, 2), dtype=float64)
             q = zeros((2, 1), dtype=float64)
 
             # add line constraints based on connected edges
-            for j in i_j[i]:
+            for j in i_nbrs[i]:
                 if j in leaves:
                     continue
-                n  = _t[ij_e[(i, j)], None]
-                p  = xy[j, None]
-                r  = I - n.T.dot(n)
-                R += r
-                q += r.dot(p.T)
 
-            # add line constraints as specified
+                n  = _t[ij_e[(i, j)], None]  # the direction of the line (the line parallel to the corresponding line in the force diagram)
+                a  = xy[j, None]             # a point on the line (the neighbour of the vertex)
+                r  = I - n.T.dot(n)          # projection into the orthogonal space of the direction vector
+                R += r           
+                q += r.dot(a.T)
+
             A[row: row + 2, row: row + 2] = R
             b[row: row + 2] = q
             row += 2

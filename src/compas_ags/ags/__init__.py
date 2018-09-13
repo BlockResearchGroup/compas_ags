@@ -6,6 +6,16 @@ compas_ags.ags
 .. currentmodule:: compas_ags.ags
 
 
+core
+====
+
+.. autosummary::
+    :toctree: generated/
+
+    update_q_from_qind
+    update_form_from_force
+
+
 graphstatics
 ============
 

@@ -10,9 +10,7 @@ Algebraic Graph Statics
    gettingstarted
    examples
    tutorial
-   notes
    api
    contributions
    devguide
-   citing
    license

@@ -28,6 +28,8 @@ ForceDiagram
       ~ForceDiagram.copy
       ~ForceDiagram.delete_edge
       ~ForceDiagram.delete_vertex
+      ~ForceDiagram.dump
+      ~ForceDiagram.dumps
       ~ForceDiagram.edge_connected_edges
       ~ForceDiagram.edge_coordinates
       ~ForceDiagram.edge_direction
@@ -42,7 +44,6 @@ ForceDiagram
       ~ForceDiagram.fixed
       ~ForceDiagram.from_data
       ~ForceDiagram.from_formdiagram
-      ~ForceDiagram.from_grid
       ~ForceDiagram.from_json
       ~ForceDiagram.from_lines
       ~ForceDiagram.from_obj
@@ -63,17 +64,17 @@ ForceDiagram
       ~ForceDiagram.has_vertex
       ~ForceDiagram.index_key
       ~ForceDiagram.index_uv
-      ~ForceDiagram.indexed_edges
       ~ForceDiagram.is_vertex_connected
       ~ForceDiagram.is_vertex_leaf
-      ~ForceDiagram.is_vertex_orphan
       ~ForceDiagram.key_gkey
       ~ForceDiagram.key_index
       ~ForceDiagram.leaves
+      ~ForceDiagram.load
+      ~ForceDiagram.loads
       ~ForceDiagram.number_of_edges
-      ~ForceDiagram.number_of_halfedges
       ~ForceDiagram.number_of_vertices
       ~ForceDiagram.ordered_edges
+      ~ForceDiagram.plot
       ~ForceDiagram.set_edge_attribute
       ~ForceDiagram.set_edge_attributes
       ~ForceDiagram.set_edges_attribute
@@ -90,7 +91,6 @@ ForceDiagram
       ~ForceDiagram.to_lines
       ~ForceDiagram.to_obj
       ~ForceDiagram.to_points
-      ~ForceDiagram.to_points_and_lines
       ~ForceDiagram.to_vertices_and_edges
       ~ForceDiagram.update
       ~ForceDiagram.update_default_edge_attributes
