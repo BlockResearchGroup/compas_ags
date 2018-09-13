@@ -26,6 +26,8 @@ class AbstractConstraint(ABC):
 
     @abstractmethod
     def compute_constraint(self):
+        """Computes the residual and Jacobian matrix of the constraint.
+        """
         pass
 
     @property
@@ -45,8 +47,8 @@ class ConstraintsCollection:
     def __init__(self):
         self.constraints = []
 
-    def add_constraint(self, other):
-        self.constraints.append(other)
+    def add_constraint(self, constraint):
+        self.constraints.append(constraint)
 
     def compute_constraints(self):
         jac = np.zeros((0, self.constraints[0].number_of_cols))

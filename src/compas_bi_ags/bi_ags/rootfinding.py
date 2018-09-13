@@ -39,7 +39,6 @@ __email__     = 'vedad.alic@construction.lth.se'
 __all__ = [
     'compute_jacobian',
     'get_red_residual_and_jacobian',
-    'form_update_from_force',
     'update_coordinates',
     'compute_form_from_force_newton'
 ]
@@ -62,13 +61,13 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=No
     ----------
     form : compas_ags.formdiagram.FormDiagram
         The form diagram to update.
-    force : compas_ags.forcediagram.ForceDiagram
+    force : compas_bi_ags.diagrams.forcediagram.ForceDiagram
         The force diagram on which the update is based.
-    _X_goal : contains the target force diagram coordinates in *Fortran* order
-              (first all _x-coordinates, then all _y-coordinates).
-    tol :
-    constraints : compas_ags.ags.constraints.ConstraintsCollection
-                A collection of form diagram constraints,
+    _X_goal
+        Contains the target force diagram coordinates in *Fortran* order (first all _x-coordinates, then all _y-coordinates).
+    tol
+    constraints : compas_bi_ags.bi_ags.constraints.ConstraintsCollection
+        A collection of form diagram constraints,
     """
     xy = array(form.xy(), dtype=float64).reshape((-1, 2))
     X = np.vstack((np.asmatrix(xy[:, 0]).transpose(), np.asmatrix(xy[:, 1]).transpose()))
@@ -117,11 +116,11 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=No
 def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
     r"""Compute the Jacobian and residual.
 
-    Computes the residual and the Jacobian d_X/dX
-    where X contains the form diagram coordinates in *Fortran* order
-    (first all x-coordinates, then all y-coordinates) and _X contains the
-    force diagram coordinates in *Fortran* order (first all _x-coordinates,
-    then all _y-coordinates)
+    Computes the residual and the Jacobian :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`
+    where :math:`\mathbf{X}` contains the form diagram coordinates in *Fortran* order
+    (first all :math:`\mathbf{x}`-coordinates, then all :math:`\mathbf{y}`-coordinates) and :math:`\mathbf{X}^*` contains the
+    force diagram coordinates in *Fortran* order (first all :math:`\mathbf{x}^*`-coordinates,
+    then all :math:`\mathbf{y}^*`-coordinates).
 
     Parameters
     ----------
@@ -129,17 +128,19 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
         The form diagram to update.
     force : compas_ags.forcediagram.ForceDiagram
         The force diagram on which the update is based.
-    _X_goal : contains the target force diagram coordinates in *Fortran* order
-              (first all _x-coordinates, then all _y-coordinates).
+    _X_goal
+        contains the target force diagram coordinates in *Fortran* order (first all _x-coordinates, then all _y-coordinates).
     constraints : compas_ags.ags.constraints.ConstraintsCollection
-                A collection of form diagram constraints,
+        A collection of form diagram constraints,
 
     Returns
     -------
-    red_jacobian : Jacobian with the rows corresponding the the anchor vertex removed
-                   and zero columns removed
-    red_r : Residual with the rows corresponding the the anchor vertex removed
-    zero_columns : Indices of removed columns from Jacobian
+    red_jacobian
+        Jacobian with the rows corresponding the the anchor vertex remove and zero columns removed
+    red_r
+        Residual with the rows corresponding the the anchor vertex removed
+    zero_columns
+        Indices of removed columns from Jacobian
     """
 
     # TODO: Scramble vertices
@@ -174,22 +175,23 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
 def compute_jacobian(form, force):
     r"""Compute the Jacobian matrix.
 
-    The actual computation of the Jacobian d_X/dX
-    where X contains the form diagram coordinates in *Fortran* order
-    (first all x-coordinates, then all y-coordinates) and _X contains the
-    force diagram coordinates in *Fortran* order (first all _x-coordinates,
-    then all _y-coordinates)
+    The actual computation of the Jacobian :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`
+    where :math:`\mathbf{X}` contains the form diagram coordinates in *Fortran* order
+    (first all :math:`\mathbf{x}`-coordinates, then all :math:`\mathbf{y}`-coordinates) and :math:`\mathbf{X}^*` contains the
+    force diagram coordinates in *Fortran* order (first all :math:`\mathbf{x}^*`-coordinates,
+    then all :math:`\mathbf{y}^*`-coordinates).
 
     Parameters
     ----------
-    form : compas_ags.formdiagram.FormDiagram
+    form : compas_ags.diagrams.formdiagram.FormDiagram
         The form diagram.
-    force : compas_ags.forcediagram.ForceDiagram
+    force : compas_bi_ags.diagrams.forcediagram.ForceDiagram
         The force diagram.
 
     Returns
     -------
-    jacobian : Jacobian ( 2 * _vcount, 2 * vcount) matrix
+    jacobian
+        Jacobian matrix ( 2 * _vcount, 2 * vcount)
     """
     # Update force diagram based on form
     form_update_q_from_qind(form)
@@ -278,13 +280,14 @@ def compute_jacobian(form, force):
 
 
 def update_coordinates(diagram, xy):
-    r"""Update diagram coordinates
+    r"""Update diagram coordinates.
 
     Parameters
     ----------
-    diagram : compas_ags.diagrams.formdiagram.FormDiagram or compas_ags.diagrams.forcediagram.ForceDiagram
+    diagram : compas_ags.diagrams.formdiagram.FormDiagram or compas_bi_ags.diagrams.forcediagram.ForceDiagram
         The form or force diagram.
-    xy : form or force coordinates array, size (nvertices x 2)
+    xy
+        form or force coordinates array, size (nvertices x 2)
 
     Returns
     -------
@@ -310,14 +313,15 @@ def _compute_jacobian_numerically(form, force):
 
     Parameters
     ----------
-    form : compas_ags.formdiagram.FormDiagram
+    form : compas_ags.diagrams.formdiagram.FormDiagram
         The form diagram.
-    force : compas_ags.forcediagram.ForceDiagram
+    force : compas_bi_ags.diagrams.forcediagram.ForceDiagram
         The force diagram.
 
     Returns
     -------
-    jacobian : Jacobian ( 2 * _vcount, 2 * vcount) matrix
+    jacobian
+        Jacobian matrix ( 2 * _vcount, 2 * vcount)
     """
     # Update force diagram
     form_update_q_from_qind(form)
@@ -357,13 +361,13 @@ def _comp_perturbed_force_coordinates_from_form(form, force, X):
         The form diagram.
     force : compas_ags.forcediagram.ForceDiagram
         The force diagram.
-    X : Perturbed form diagram coordinates in *Fortran* order
-        (first all x-coordinates, then all y-coordinates).
+    X
+        Perturbed form diagram coordinates in *Fortran* order (first all x-coordinates, then all y-coordinates).
 
     Returns
     -------
-    _X : Perturbed force diagram coordinates in *Fortran* order
-        (first all _x-coordinates, then all _y-coordinates).
+    _X
+        Perturbed force diagram coordinates in *Fortran* order (first all _x-coordinates, then all _y-coordinates).
     """
     # Save current coordinates
     xyo = array(form.xy(), dtype=float64).reshape((-1, 2))

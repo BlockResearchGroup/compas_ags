@@ -59,9 +59,9 @@ def form_update_from_force_direct(form, force):
     with :math:`\mathbf{M}` containing the coefficients of the system of equations
     including constraints, :math:`\mathbf{X}` the coordinates of the vertices of
     the form diagram and the reciprocal force densities, in *Fortran* order
-    (first all x-coordinates, then all y-coordinates, then all reciprocal force
-    densities), and  :math:`\mathbf{r}` contains the residual (all zeroes except
-    for the constraint rows) ....
+    (first all :math:`\mathbf{x}`-coordinates, then all :math:`\mathbf{y}`-coordinates, then all reciprocal force
+    densities, :math:`\mathbf{q}^{-1}`), and  :math:`\mathbf{r}` contains the residual (all zeroes except
+    for the constraint rows).
 
     The addition of constraints reduces the number of independent edges, which
     must be identified during the solving procedure. Additionally, the algorithm
@@ -70,9 +70,9 @@ def form_update_from_force_direct(form, force):
 
     Parameters
     ----------
-    form : compas_ags.formdiagram.FormDiagram
+    form : compas_ags.diagrams.formdiagram.FormDiagram
         The form diagram to update.
-    force : compas_ags.forcediagram.ForceDiagram
+    force : compas_bi_ags.diagrams.forcediagram.ForceDiagram
         The force diagram on which the update is based.
 
     """
