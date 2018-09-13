@@ -1,3 +1,11 @@
+"""Compute the equilibrium of a simple statically determined system and
+visualise the result using a form and force diagram.
+
+author: Tom Van Mele
+email: vanmelet@ethz.ch
+
+"""
+
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
@@ -7,19 +15,8 @@ import compas_ags
 
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
-
 from compas_ags.viewers import Viewer
-
 from compas_ags.ags import graphstatics
-
-
-__author__    = ['Tom Van Mele', ]
-__copyright__ = 'Copyright 2016 - Block Research Group, ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'vanmelet@ethz.ch'
-
-
-__all__ = []
 
 
 form = FormDiagram.from_obj(compas_ags.get('paper/gs_form_force.obj'))
@@ -47,4 +44,5 @@ viewer.draw_force(
     vertexlabel={key: key for key in force.vertices()}
 )
 
+# viewer.save('../docs/_source/_images/example_graphstatics.png')
 viewer.show()

@@ -60,7 +60,7 @@ class Viewer(object):
             self.setup()
 
     def setup(self):
-        self.fig = plt.figure(figsize=(14.4, 9), tight_layout=True)
+        self.fig = plt.figure(figsize=(16, 9), tight_layout=True, dpi=150)
         self.ax1 = self.fig.add_subplot('121')
         self.ax2 = self.fig.add_subplot('122')
         self.ax1.set_aspect('equal')
@@ -381,6 +381,25 @@ class Viewer(object):
 
     def show(self):
         plt.show()
+
+    def save(self, filepath, **kwargs):
+        """Saves the plot to a file.
+
+        Parameters
+        ----------
+        filepath : str
+            Full path of the file.
+
+        Notes
+        -----
+        For an overview of all configuration options, see [1]_.
+
+        References
+        ----------
+        .. [1] https://matplotlib.org/2.0.2/api/pyplot_api.html#matplotlib.pyplot.savefig
+
+        """
+        plt.savefig(filepath, **kwargs)
 
 
 # ==============================================================================

@@ -1,3 +1,16 @@
+"""Update a form diagram after modifying the force diagram.
+
+- Make a form diagram
+- Construct the reciprocal force diagram
+- Compute equilibrium
+- Modify the geometry of the force diagram
+- Update the geometry of the form diagram accordingly
+
+author: Tom Van Mele
+email: vanmelet@ethz.ch
+
+"""
+
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
@@ -10,15 +23,6 @@ from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
 
 from compas_ags.ags import graphstatics
-
-
-__author__    = ['Tom Van Mele', ]
-__copyright__ = 'Copyright 2016 - Block Research Group, ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'vanmelet@ethz.ch'
-
-
-__all__ = []
 
 
 # make form diagram from obj
@@ -74,8 +78,7 @@ for u, v in force.edges():
 
 # modify the geometry of the force diagram
 
-# force.vertex[1]['x'] -= 5.0
-force.vertex[1]['x'] += 10.0
+force.vertex[1]['x'] -= 5.0
 
 # update the formdiagram
 
@@ -106,4 +109,4 @@ viewer.draw_force(lines=force_lines,
                   vertexlabel={key: key for key in force.vertices()},
                   vertexsize=0.2)
 
-viewer.show()
+viewer.save('../docs/_source/_images/example_rtl.png')

@@ -196,7 +196,7 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
 
     # reconnect leaves
     for i in leaves:
-        j     = i_j[i][0]
+        j     = i_nbrs[i][0]
         xy[i] = xy[j] + xy0[i] - xy0[j]
 
 
