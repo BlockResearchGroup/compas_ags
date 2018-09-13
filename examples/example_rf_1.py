@@ -5,11 +5,11 @@ from __future__ import division
 import compas_ags
 
 from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import ForceDiagram
+from compas_bi_ags.diagrams import ForceDiagram
 
 from compas_ags.viewers import Viewer
 
-from compas_ags.ags import graphstatics
+from compas_bi_ags.bi_ags import graphstatics
 
 
 __author__    = ['Vedad Alic', ]
@@ -77,7 +77,7 @@ if direct:
     # update the form diagram
     graphstatics.form_update_from_force_direct(form, force)
 else:
-    import compas_ags.ags.rootfinding as rf
+    import compas_bi_ags.bi_ags.rootfinding as rf
     import numpy as np
     xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
     _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
