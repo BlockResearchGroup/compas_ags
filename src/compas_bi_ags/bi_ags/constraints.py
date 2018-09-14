@@ -21,8 +21,15 @@ class AbstractConstraint(ABC):
     must implement the compute_constraint method.
     """
     def __init__(self, form):
-        self.form = form  # type: FormDiagram
         super().__init__()
+        self.form = form  # type: FormDiagram
+
+        # --------------------------------------------------------------------------
+        # Drawing properties
+        # --------------------------------------------------------------------------
+        self._color = '#1524c6'
+        self._width = 1.0
+        self._style = '--'
 
     @abstractmethod
     def compute_constraint(self):
@@ -34,6 +41,10 @@ class AbstractConstraint(ABC):
     def number_of_cols(self):
         vcount = self.form.number_of_vertices()
         return 2 * vcount
+
+    def get_lines(self):
+        """Get lines to draw in viewer."""
+        pass
 
 
 class ConstraintsCollection:
@@ -59,12 +70,20 @@ class ConstraintsCollection:
             res = np.vstack((res, r))
         return jac, res
 
+    def get_lines(self):
+        """Get lines to draw in viewer."""
+        lines = []
+        for constraint in self.constraints:
+            line = constraint.get_lines()
+            if line:
+                lines = lines + line
+        return lines
+
 
 class HorizontalFix(AbstractConstraint):
     """Keeps the x-coordinate of the vertex fixed"""
     def __init__(self, form, vertex):
         super().__init__(form)
-        self.form = form
         self.vertex = vertex
 
     def compute_constraint(self):
@@ -73,12 +92,26 @@ class HorizontalFix(AbstractConstraint):
         constraint_jac_row[0, idx] = 1
         return constraint_jac_row, 0.0
 
+    def get_lines(self):
+        constraint_lines = []
+        s = self.form.vertex_coordinates(self.vertex, 'xy')
+        e = self.form.vertex_coordinates(self.vertex, 'xy')
+        s[1] += 1
+        e[1] -= 1
+        constraint_lines.append({
+            'start': s,
+            'end': e,
+            'width': self._width,
+            'color': self._color,
+            'style': self._style,
+        })
+        return constraint_lines
+
 
 class VerticalFix(AbstractConstraint):
     """Keeps the y-coordinate of the vertex fixed"""
     def __init__(self, form, vertex):
         super().__init__(form)
-        self.form = form
         self.vertex = vertex
 
     def compute_constraint(self):
@@ -86,4 +119,19 @@ class VerticalFix(AbstractConstraint):
         idx = self.form.key_index()[self.vertex] + self.form.number_of_vertices()
         constraint_jac_row[0, idx] = 1
         return constraint_jac_row, 0.0
+
+    def get_lines(self):
+        constraint_lines = []
+        s = self.form.vertex_coordinates(self.vertex, 'xy')
+        e = self.form.vertex_coordinates(self.vertex, 'xy')
+        s[0] += 1
+        e[0] -= 1
+        constraint_lines.append({
+            'start': s,
+            'end': e,
+            'width': self._width,
+            'color': self._color,
+            'style': self._style,
+        })
+        return constraint_lines
 

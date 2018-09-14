@@ -85,6 +85,8 @@ _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
 _xy[force.key_index()[3], 0] -= 0.5
 _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
 rf.compute_form_from_force_newton(form, force, _X_goal, constraints=C)
+
+constraint_lines = C.get_lines()
 # --------------------------------------------------------------------------
 # End force diagram manipulation
 # --------------------------------------------------------------------------
@@ -98,6 +100,8 @@ force_lines.append({
     'width': 10.0,
     'style': '-',
 })
+
+form_lines = form_lines + constraint_lines
 
 
 # display the original configuration
