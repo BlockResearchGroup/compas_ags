@@ -6,12 +6,11 @@ compas_ags
    :maxdepth: 3
    :titlesonly:
 
-   intro
+   Introduction<intro>
    gettingstarted
-   examples
-   tutorial
-   api
    publications
+   examples
+   api
    contributions
    devguide
    license

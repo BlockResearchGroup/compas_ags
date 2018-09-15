@@ -111,7 +111,7 @@ def docs(ctx, doctest=False, rebuild=True, check_links=False):
     if doctest:
         ctx.run('sphinx-build -b doctest docsource docs')
 
-    ctx.run('sphinx-build -b html docsource docs')
+    ctx.run('sphinx-build -E docsource docs')
 
     if check_links:
         ctx.run('sphinx-build -b linkcheck docsource docs')
