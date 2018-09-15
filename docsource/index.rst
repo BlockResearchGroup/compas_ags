@@ -11,6 +11,7 @@ compas_ags
    examples
    tutorial
    api
+   publications
    contributions
    devguide
    license

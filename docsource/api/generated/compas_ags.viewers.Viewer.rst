@@ -20,6 +20,7 @@ Viewer
       ~Viewer.__init__
       ~Viewer.draw_force
       ~Viewer.draw_form
+      ~Viewer.save
       ~Viewer.setup
       ~Viewer.show
    
