@@ -101,7 +101,6 @@ ENV/
 .mypy_cache/
 
 # COMPAS AGS
-
 temp/**
 !temp/PLACEHOLDER
 

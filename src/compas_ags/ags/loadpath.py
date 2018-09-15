@@ -21,11 +21,8 @@ from compas.numerical import normrow
 from compas_ags.ags import update_form_from_force
 
 
-__author__     = ['Tom Van Mele <van.mele@arch.ethz.ch>',
-                  'Andrew Liew <liew@arch.ethz.ch>']
-__copyright__  = 'Copyright 2017, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT License'
-__email__      = 'van.mele@arch.ethz.ch'
+__author__ = ['Tom Van Mele', 'Andrew Liew>']
+__email__  = 'vanmelet@ethz.ch'
 
 
 __all__ = [

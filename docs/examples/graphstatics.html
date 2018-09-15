@@ -33,7 +33,7 @@
         <header class="navbar navbar-expand compas-navbar justify-content-between">
             <div class="navbar-header">
                 <a class="navbar-brand" href="../index.html">
-                    AGS 0.1.0
+                    COMPAS AGS 0.1.0
                 </a>
             </div>
 
@@ -61,56 +61,6 @@
 <h1>Graph Statics</h1>
 <div class="figure">
 <img alt="../_images/example_graphstatics.png" class="figure-img img-fluid" src="../_images/example_graphstatics.png" />
-</div>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="sd">&quot;&quot;&quot;Compute the equilibrium of a simple statically determined system and</span>
-<span class="sd">visualise the result using a form and force diagram.</span>
-
-<span class="sd">author: Tom Van Mele</span>
-<span class="sd">email: vanmelet@ethz.ch</span>
-
-<span class="sd">&quot;&quot;&quot;</span>
-
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
-
-<span class="kn">import</span> <span class="nn">compas</span>
-<span class="kn">import</span> <span class="nn">compas_ags</span>
-
-<span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">FormDiagram</span>
-<span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">ForceDiagram</span>
-<span class="kn">from</span> <span class="nn">compas_ags.viewers</span> <span class="kn">import</span> <span class="n">Viewer</span>
-<span class="kn">from</span> <span class="nn">compas_ags.ags</span> <span class="kn">import</span> <span class="n">graphstatics</span>
-
-
-<span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">compas_ags</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paper/gs_form_force.obj&#39;</span><span class="p">))</span>
-<span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_formdiagram</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
-
-<span class="n">form</span><span class="o">.</span><span class="n">set_edge_force_by_index</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">30.0</span><span class="p">)</span>
-
-<span class="n">graphstatics</span><span class="o">.</span><span class="n">form_update_q_from_qind</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
-<span class="n">graphstatics</span><span class="o">.</span><span class="n">force_update_from_form</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">)</span>
-
-<span class="n">left</span>  <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}))[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">right</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}))[</span><span class="mi">0</span><span class="p">]</span>
-
-<span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">delay_setup</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
-
-<span class="n">viewer</span><span class="o">.</span><span class="n">draw_form</span><span class="p">(</span>
-    <span class="n">vertexsize</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
-    <span class="n">vertexcolor</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="s1">&#39;#000000&#39;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">)},</span>
-    <span class="n">vertexlabel</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">()},</span>
-    <span class="n">edgelabel</span><span class="o">=</span><span class="p">{</span><span class="n">uv</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">uv</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span>
-<span class="p">)</span>
-
-<span class="n">viewer</span><span class="o">.</span><span class="n">draw_force</span><span class="p">(</span>
-    <span class="n">vertexsize</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span>
-    <span class="n">vertexlabel</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">()}</span>
-<span class="p">)</span>
-
-<span class="c1"># viewer.save(&#39;../docs/_source/_images/example_graphstatics.png&#39;)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</code></pre></div>
 </div>
 <div class="section" id="downloads">
 <h2>Downloads</h2>
@@ -195,7 +145,7 @@
             
 
             
-                Last updated on Sep 13, 2018.
+                Last updated on Sep 15, 2018.
             
 
             

@@ -36,10 +36,8 @@ from compas_ags.ags import update_q_from_qind
 from compas_ags.ags import update_form_from_force
 
 
-__author__     = ['Tom Van Mele', ]
-__copyright__  = 'Copyright 2014, BLOCK Research Group - ETH Zurich'
-__license__    = 'MIT license'
-__email__      = 'vanmelet@ethz.ch'
+__author__ = ['Tom Van Mele']
+__email__  = 'vanmelet@ethz.ch'
 
 
 __all__ = [
