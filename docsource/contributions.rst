@@ -2,11 +2,8 @@
 Contributions
 ********************************************************************************
 
-.. language:: bash
+.. highlight:: bash
 
-
-Code contributions
-==================
 
 We accept code contributions through pull requests.
 In short, this is how that works.
@@ -35,24 +32,3 @@ command line to ease recurring operations:
 * ``invoke docs``: Generate documentation.
 * ``invoke``: Show available tasks.
 
-
-Bug reports
-===========
-
-When `reporting a bug <https://github.com/compas-dev/compas/issues>`_
-please include:
-
-    * Operating system name and version.
-    * Any details about your local setup that might be helpful in troubleshooting.
-    * Detailed steps to reproduce the bug.
-
-
-Feature requests and feedback
-=============================
-
-The best way to send feedback is to file an issue on
-`Github <https://github.com/compas-dev/compas/issues>`_.
-If you are proposing a feature:
-
-* Explain in detail how it would work.
-* Keep the scope as narrow as possible, to make it easier to implement.
