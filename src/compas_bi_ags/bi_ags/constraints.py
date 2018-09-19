@@ -55,8 +55,9 @@ class ConstraintsCollection:
     force diagram coordinates in *Fortran* order (first all _x-coordinates,
     then all _y-coordinates)
     """
-    def __init__(self):
+    def __init__(self, form):
         self.constraints = []
+        self.form = form
 
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
@@ -78,6 +79,17 @@ class ConstraintsCollection:
             if line:
                 lines = lines + line
         return lines
+
+    def constrain_free_leaf_edges_lengths(self):
+        leaves = self.form.leaves()
+        edges = self.form.edges(True)
+        dependent_leaf_edges = []
+        for i, (u, v, attr) in enumerate(edges):
+            if u in leaves or v in leaves:
+                if not attr['is_ind']:
+                    dependent_leaf_edges.append(i)
+        for e in dependent_leaf_edges:
+            self.add_constraint(LengthFix(self.form, e))
 
 
 class HorizontalFix(AbstractConstraint):
@@ -135,3 +147,45 @@ class VerticalFix(AbstractConstraint):
         })
         return constraint_lines
 
+
+class LengthFix(AbstractConstraint):
+    """Keeps the edge length fixed"""
+    def __init__(self, form, edge):
+        super().__init__(form)
+        self.edge = edge
+
+        u, v = list(self.form.edges())[self.edge]
+
+        s = self.form.vertex_coordinates(u, 'xy')
+        e = self.form.vertex_coordinates(v, 'xy')
+
+        dx = s[0] - e[0]
+        dy = s[1] - e[1]
+        self.L = np.sqrt(dx ** 2 + dy ** 2) # Initial length
+
+    def compute_constraint(self):
+        constraint_jac_row = np.zeros((1, self.number_of_cols))
+        u, v = list(self.form.edges())[self.edge]
+
+        s = self.form.vertex_coordinates(u, 'xy')
+        e = self.form.vertex_coordinates(v, 'xy')
+
+        dx = s[0] - e[0]
+        dy = s[1] - e[1]
+        l = np.sqrt(dx ** 2 + dy ** 2) # Current length
+
+        constraint_jac_row[0, u] = dx / l  # x0
+        constraint_jac_row[0, v] = -dx / l  # x1
+        constraint_jac_row[0, u + self.form.number_of_vertices()] = dy / l  # y0
+        constraint_jac_row[0, v + self.form.number_of_vertices()] = -dy / l  # y1
+
+        r = l - self.L
+
+        return constraint_jac_row, r
+
+
+class SetLength(LengthFix):
+    """Sets the edge length to L"""
+    def __init__(self, form, edge, L):
+        super().__init__(form, edge)
+        self.L = L

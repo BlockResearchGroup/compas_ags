@@ -1,4 +1,5 @@
 from compas_ags.ags.graphstatics import *
+from compas.numerical import nullspace
 
 import sys
 
@@ -276,6 +277,28 @@ def compute_jacobian(form, force):
             d_XdXi = np.hstack((d_XdXiTop, d_XdXiBot))
             jacobian[:, i + j * vcount] = d_XdXi
     return jacobian
+
+
+def compute_nullspace(form, force, constraints=None):
+    jacobian = compute_jacobian(form, force)
+    if constraints:
+        (cj, cr) = constraints.compute_constraints()
+        jacobian = np.vstack((jacobian, cj))
+
+    _vcount = force.number_of_vertices()
+    _k_i = force.key_index()
+    _known = _k_i[force.anchor()]
+    _bc = [_known, _vcount + _known]
+
+    red_jacobian = np.delete(jacobian, _bc, axis=0)
+
+    A = nullspace(red_jacobian).T
+
+    null_space = []
+    for a in A:
+        xy = a.reshape((2, -1)).T
+        null_space.append(xy)
+    return null_space
 
 
 def _update_coordinates(diagram, xy):
