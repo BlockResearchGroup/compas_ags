@@ -18,7 +18,7 @@ __all__ = [
 class AbstractConstraint(ABC):
     """
     Used to derive form diagram constraints. The derived constraints
-    must implement the compute_constraint method.
+    must implement the compute_constraint and update_constraint_goal methods.
     """
     def __init__(self, form):
         super().__init__()
@@ -33,8 +33,12 @@ class AbstractConstraint(ABC):
 
     @abstractmethod
     def compute_constraint(self):
-        """Computes the residual and Jacobian matrix of the constraint.
-        """
+        """Computes the residual and Jacobian matrix of the constraint."""
+        pass
+
+    @abstractmethod
+    def update_constraint_goal(self):
+        """Update constraint values based on current form diagram"""
         pass
 
     @property
@@ -56,8 +60,8 @@ class ConstraintsCollection:
     then all _y-coordinates)
     """
     def __init__(self, form):
-        self.constraints = []
-        self.form = form
+        self.constraints = []  # type: list[AbstractConstraint]
+        self.form = form   # type: FormDiagram
 
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
@@ -71,6 +75,10 @@ class ConstraintsCollection:
             res = np.vstack((res, r))
         return jac, res
 
+    def update_constraints(self):
+        for constraint in self.constraints:
+            constraint.update_constraint_goal()
+
     def get_lines(self):
         """Get lines to draw in viewer."""
         lines = []
@@ -80,7 +88,7 @@ class ConstraintsCollection:
                 lines = lines + line
         return lines
 
-    def constrain_free_leaf_edges_lengths(self):
+    def constrain_dependent_leaf_edges_lengths(self):
         leaves = self.form.leaves()
         edges = self.form.edges(True)
         dependent_leaf_edges = []
@@ -97,12 +105,20 @@ class HorizontalFix(AbstractConstraint):
     def __init__(self, form, vertex):
         super().__init__(form)
         self.vertex = vertex
+        self.set_initial_position()
+
+    def set_initial_position(self):
+        self.P = self.form.vertex_coordinates(self.vertex, 'xy')[0]
 
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
         idx = self.form.key_index()[self.vertex]
         constraint_jac_row[0, idx] = 1
-        return constraint_jac_row, 0.0
+        r = self.form.vertex_coordinates(self.vertex, 'xy')[0] - self.P
+        return constraint_jac_row, r
+
+    def update_constraint_goal(self):
+        self.set_initial_position()
 
     def get_lines(self):
         constraint_lines = []
@@ -125,12 +141,20 @@ class VerticalFix(AbstractConstraint):
     def __init__(self, form, vertex):
         super().__init__(form)
         self.vertex = vertex
+        self.set_initial_position()
+
+    def set_initial_position(self):
+        self.P = self.form.vertex_coordinates(self.vertex, 'xy')[1]
 
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
         idx = self.form.key_index()[self.vertex] + self.form.number_of_vertices()
         constraint_jac_row[0, idx] = 1
-        return constraint_jac_row, 0.0
+        r = self.form.vertex_coordinates(self.vertex, 'xy')[1] - self.P
+        return constraint_jac_row, r
+
+    def update_constraint_goal(self):
+        self.set_initial_position()
 
     def get_lines(self):
         constraint_lines = []
@@ -153,23 +177,25 @@ class LengthFix(AbstractConstraint):
     def __init__(self, form, edge):
         super().__init__(form)
         self.edge = edge
+        self.set_initial_length()
 
+    def update_constraint_goal(self):
+        self.set_initial_length()
+
+    def set_initial_length(self):
         u, v = list(self.form.edges())[self.edge]
-
         s = self.form.vertex_coordinates(u, 'xy')
         e = self.form.vertex_coordinates(v, 'xy')
-
         dx = s[0] - e[0]
         dy = s[1] - e[1]
-        self.L = np.sqrt(dx ** 2 + dy ** 2) # Initial length
+        self.L = np.sqrt(dx ** 2 + dy ** 2)  # Initial length
 
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
-        u, v = list(self.form.edges())[self.edge]
 
+        u, v = list(self.form.edges())[self.edge]
         s = self.form.vertex_coordinates(u, 'xy')
         e = self.form.vertex_coordinates(v, 'xy')
-
         dx = s[0] - e[0]
         dy = s[1] - e[1]
         l = np.sqrt(dx ** 2 + dy ** 2) # Current length
@@ -178,7 +204,6 @@ class LengthFix(AbstractConstraint):
         constraint_jac_row[0, v] = -dx / l  # x1
         constraint_jac_row[0, u + self.form.number_of_vertices()] = dy / l  # y0
         constraint_jac_row[0, v + self.form.number_of_vertices()] = -dy / l  # y1
-
         r = l - self.L
 
         return constraint_jac_row, r
@@ -189,3 +214,6 @@ class SetLength(LengthFix):
     def __init__(self, form, edge, L):
         super().__init__(form, edge)
         self.L = L
+
+    def update_constraint_goal(self):
+        pass

@@ -77,6 +77,7 @@ C.add_constraint(HorizontalFix(form, left))
 C.add_constraint(VerticalFix(form, left))
 C.add_constraint(HorizontalFix(form, right))
 C.add_constraint(VerticalFix(form, right))
+C.constrain_dependent_leaf_edges_lengths()
 
 import compas_bi_ags.bi_ags.rootfinding as rf
 import numpy as np

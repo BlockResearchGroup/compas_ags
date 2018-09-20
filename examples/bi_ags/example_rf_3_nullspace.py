@@ -47,27 +47,22 @@ graphstatics.force_update_from_form(force, form)
 force_key_xyz = {key: force.vertex_coordinates(key) for key in force.vertices()}
 
 
-
-
 # --------------------------------------------------------------------------
 # Begin force diagram manipulation
 # --------------------------------------------------------------------------
-from compas_bi_ags.bi_ags.constraints import ConstraintsCollection, HorizontalFix, VerticalFix, LengthFix
+from compas_bi_ags.bi_ags.constraints import ConstraintsCollection, HorizontalFix
 C = ConstraintsCollection(form)
 C.add_constraint(HorizontalFix(form, left))
 C.add_constraint(HorizontalFix(form, right))
-C.constrain_free_leaf_edges_lengths()
+C.constrain_dependent_leaf_edges_lengths()
+constraint_lines = C.get_lines()
 
 import compas_bi_ags.bi_ags.rootfinding as rf
-import numpy as np
-
 ns = rf.compute_nullspace(form, force, C)
-
-constraint_lines = C.get_lines()
+print("Dimension of nullspace: " + str(len(ns)))
 # --------------------------------------------------------------------------
 # End force diagram manipulation
 # --------------------------------------------------------------------------
-
 
 
 # --------------------------------------------------------------------------

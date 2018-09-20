@@ -1,9 +1,9 @@
-from compas_ags.ags.graphstatics import *
 from compas.numerical import nullspace
 
 import sys
 
 try:
+    import numpy as np
     from numpy import array
     from numpy import eye
     from numpy import zeros
@@ -19,18 +19,13 @@ except ImportError:
     if 'ironpython' not in sys.version.lower():
         raise
 
-
-from compas.geometry import angle_vectors_xy
-
 from compas.numerical import connectivity_matrix
 from compas.numerical import equilibrium_matrix
-from compas.numerical import normrow
 from compas.numerical import laplacian_matrix
-from compas.numerical import spsolve_with_known
 from compas.numerical import solve_with_known
 
-import compas_bi_ags.utilities.errorhandler as eh
-import compas_bi_ags.utilities.helpers as hlp
+from compas_bi_ags.utilities.errorhandler import SolutionError
+from compas_bi_ags.utilities.helpers import check_solutions
 from compas_ags.ags.graphstatics import form_update_q_from_qind, force_update_from_form
 
 __author__    = ['Vedad Alic', ]
@@ -42,8 +37,6 @@ __all__ = [
     'get_red_residual_and_jacobian',
     'compute_form_from_force_newton'
 ]
-
-import numpy as np
 
 
 def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=None):
@@ -85,6 +78,9 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=No
     if np.linalg.norm(r[_bc]) > eps*1e2:
         _update_coordinates(force, _xy_goal)  # Move the anchored vertex
 
+    if constraints:
+        constraints.update_constraints()
+
     # Begin Newton
     diff = 100
     n_iter = 1
@@ -105,7 +101,7 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=No
 
         diff = np.linalg.norm(red_r)
         if n_iter > 20:
-            raise eh.SolutionError('Did not converge')
+            raise SolutionError('Did not converge')
 
         print('i: {0:0} diff: {1:.2e}'.format(n_iter, float(diff)))
         n_iter += 1
@@ -159,7 +155,7 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
         jacobian = np.vstack((jacobian, cj))
         r = np.vstack((r, cr))
 
-    hlp.check_solutions(jacobian, r)
+    check_solutions(jacobian, r)
     # Remove rows due to fixed vertex in the force diagram
     red_r = np.delete(r, _bc, axis=0)
     red_jacobian = np.delete(jacobian, _bc, axis=0)
