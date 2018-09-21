@@ -67,16 +67,9 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=No
 
     eps = np.spacing(1)
 
-    # Check if the anchored vertex of the force diagram should be moved
-    _vcount = force.number_of_vertices()
-    _k_i = force.key_index()
-    _known = _k_i[force.anchor()]
-    _bc = [_known, _vcount + _known]
-    _xy = array(force.xy(), dtype=float64)
+    # Move the anchored vertex by modifying the initial force diagram coordinates
     _xy_goal = _X_goal.reshape((2, -1)).T
-    r = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose())) - _X_goal
-    if np.linalg.norm(r[_bc]) > eps*1e2:
-        _update_coordinates(force, _xy_goal)  # Move the anchored vertex
+    _update_coordinates(force, _xy_goal)
 
     if constraints:
         constraints.update_constraints()
@@ -85,17 +78,12 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=No
     diff = 100
     n_iter = 1
     while diff > (eps * tol):
-        red_jacobian, red_r, zero_columns = get_red_residual_and_jacobian(form, force, _X_goal, constraints)
+        red_jacobian, red_r = get_red_residual_and_jacobian(form, force, _X_goal, constraints)
 
         # Do the least squares solution
         dx = np.linalg.lstsq(red_jacobian, -red_r)[0]
 
-        # Add back zeros for zero columns
-        for zero_column in zero_columns:
-            dx = np.insert(dx, zero_column, 0.0, axis=0)
-
         X = X + dx
-
         xy = X.reshape((2, -1)).T
         _update_coordinates(form, xy)
 
@@ -159,13 +147,8 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
     # Remove rows due to fixed vertex in the force diagram
     red_r = np.delete(r, _bc, axis=0)
     red_jacobian = np.delete(jacobian, _bc, axis=0)
-    # Remove zero columns from jacobian
-    zero_columns = []
-    for i, jacobian_column in enumerate(np.sum(np.abs(jacobian), axis=0)):
-        if jacobian_column < 1e-5:
-            zero_columns.append(i)
-    red_jacobian = np.delete(red_jacobian, zero_columns, axis=1)
-    return red_jacobian, red_r, zero_columns
+
+    return red_jacobian, red_r
 
 
 def compute_jacobian(form, force):
