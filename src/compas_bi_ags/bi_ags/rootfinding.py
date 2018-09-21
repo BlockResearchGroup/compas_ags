@@ -120,11 +120,9 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
     Returns
     -------
     red_jacobian
-        Jacobian with the rows corresponding the the anchor vertex remove and zero columns removed
+        Jacobian with the rows corresponding the the anchor vertex removed.
     red_r
-        Residual with the rows corresponding the the anchor vertex removed
-    zero_columns
-        Indices of removed columns from Jacobian
+        Residual with the rows corresponding the the anchor vertex removed.
     """
 
     # TODO: Scramble vertices
@@ -144,6 +142,7 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
         r = np.vstack((r, cr))
 
     check_solutions(jacobian, r)
+
     # Remove rows due to fixed vertex in the force diagram
     red_r = np.delete(r, _bc, axis=0)
     red_jacobian = np.delete(jacobian, _bc, axis=0)
@@ -170,7 +169,7 @@ def compute_jacobian(form, force):
     Returns
     -------
     jacobian
-        Jacobian matrix ( 2 * _vcount, 2 * vcount)
+        Jacobian matrix (2 * _vcount, 2 * vcount)
     """
     # Update force diagram based on form
     form_update_q_from_qind(form)
@@ -288,7 +287,7 @@ def _update_coordinates(diagram, xy):
     diagram : compas_ags.diagrams.formdiagram.FormDiagram or compas_bi_ags.diagrams.forcediagram.ForceDiagram
         The form or force diagram.
     xy
-        form or force coordinates array, size (nvertices x 2)
+        Form or force coordinates array, size (nvertices x 2).
 
     Returns
     -------
