@@ -1,24 +1,21 @@
+"""Simple example to compute the form diagram after modifying the
+force diagram without constraints. Both a direct solution
+and root finding with Newton's method are supported.
+
+author: Vedad Alic
+email: vedad.alic@construction.lth.se
+
+"""
+
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
 import compas_ags
-
 from compas_ags.diagrams import FormDiagram
 from compas_bi_ags.diagrams import ForceDiagram
-
 from compas_ags.viewers import Viewer
-
 from compas_bi_ags.bi_ags import graphstatics
-
-
-__author__    = ['Vedad Alic', ]
-__license__   = 'MIT License'
-__email__     = 'vedad.alic@construction.lth.se'
-
-
-__all__ = []
-
 
 # make form diagram from obj
 # make force diagram from form
