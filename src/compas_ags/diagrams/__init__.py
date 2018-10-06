@@ -27,10 +27,13 @@ ForceDiagram
 """
 from __future__ import absolute_import
 
+from .diagram import *
+from .formdiagram import *
+from .forcediagram import *
+
+from . import diagram
 from . import formdiagram
 from . import forcediagram
 
-from .formdiagram import *
-from .forcediagram import *
 
 __all__ = formdiagram.__all__ + forcediagram.__all__

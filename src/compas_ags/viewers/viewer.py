@@ -58,7 +58,7 @@ class Viewer(object):
             self.setup()
 
     def setup(self):
-        self.fig = plt.figure(figsize=(16, 9), tight_layout=True, dpi=150)
+        self.fig = plt.figure(figsize=(16, 9), tight_layout=True, dpi=96)
         self.ax1 = self.fig.add_subplot('121')
         self.ax2 = self.fig.add_subplot('122')
         self.ax1.set_aspect('equal')
