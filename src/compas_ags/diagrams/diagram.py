@@ -13,7 +13,7 @@ from compas.utilities import window
 
 from compas.geometry import normalize_vector
 from compas.geometry import centroid_points
-from compas.geometry import center_of_mass_polygon
+from compas.geometry import centroid_polygon
 from compas.geometry import cross_vectors
 from compas.geometry import length_vector
 from compas.geometry import subtract_vectors
@@ -675,7 +675,7 @@ class Diagram(FaceHelpers,
 
     def face_center(self, fkey):
         """Return the location of the center of mass of a face."""
-        return center_of_mass_polygon(self.face_coordinates(fkey))
+        return centroid_polygon(self.face_coordinates(fkey))
 
     def face_area(self, fkey):
         """Return the area of a face."""

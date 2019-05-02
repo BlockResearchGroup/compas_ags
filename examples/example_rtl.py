@@ -109,4 +109,4 @@ viewer.draw_force(lines=force_lines,
                   vertexlabel={key: key for key in force.vertices()},
                   vertexsize=0.2)
 
-viewer.save('../docs/_source/_images/example_rtl.png')
+viewer.show()

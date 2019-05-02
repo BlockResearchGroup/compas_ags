@@ -49,4 +49,4 @@ viewer.draw_force(
     vertexsize=0.15,
 )
 
-viewer.save('/Users/vanmelet/Desktop/_ortho_02b.png')
+viewer.show()

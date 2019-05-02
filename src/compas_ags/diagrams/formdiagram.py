@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 from compas.utilities import geometric_key2
-from compas.topology import network_is_xy
+from compas.datastructures import network_is_xy
 
 from compas_ags.diagrams import Diagram
 
