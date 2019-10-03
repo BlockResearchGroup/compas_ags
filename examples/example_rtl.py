@@ -10,11 +10,6 @@ author: Tom Van Mele
 email: vanmelet@ethz.ch
 
 """
-
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import compas_ags
 
 from compas_ags.diagrams import FormDiagram

@@ -1,7 +1,3 @@
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import compas
 import compas_ags
 
@@ -12,15 +8,6 @@ from compas_ags.viewers import Viewer
 
 from compas_ags.ags import graphstatics
 from compas_ags.ags import loadpath
-
-
-__author__    = ['Tom Van Mele', ]
-__copyright__ = 'Copyright 2016 - Block Research Group, ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'vanmelet@ethz.ch'
-
-
-__all__ = []
 
 
 vertices = [
@@ -142,7 +129,6 @@ form.vertex[6]['is_fixed'] = True
 
 graphstatics.form_update_from_force(form, force)
 loadpath.optimise_loadpath(form, force)
-
 
 viewer = Viewer(form, force, delay_setup=False)
 

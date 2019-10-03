@@ -5,11 +5,6 @@ author: Tom Van Mele
 email: vanmelet@ethz.ch
 
 """
-
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import compas
 import compas_ags
 
@@ -44,5 +39,4 @@ viewer.draw_force(
     vertexlabel={key: key for key in force.vertices()}
 )
 
-# viewer.save('../docs/_source/_images/example_graphstatics.png')
 viewer.show()

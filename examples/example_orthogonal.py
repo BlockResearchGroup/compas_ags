@@ -1,7 +1,3 @@
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import random
 
 import compas
@@ -13,15 +9,6 @@ from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
 
 from compas_ags.ags import graphstatics
-
-
-__author__    = ['Tom Van Mele', ]
-__copyright__ = 'Copyright 2016 - Block Research Group, ETH Zurich'
-__license__   = 'MIT License'
-__email__     = 'vanmelet@ethz.ch'
-
-
-__all__ = []
 
 
 form = FormDiagram.from_obj(compas.get('lines.obj'))
