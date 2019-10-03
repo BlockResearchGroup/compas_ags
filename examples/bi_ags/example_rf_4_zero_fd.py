@@ -1,23 +1,22 @@
+"""An example where the direct solution fails since some edges
+in the force diagram are zero length. However, the root finding
+approach still works since then the primary unknowns are in
+the form diagram.
+
+author: Vedad Alic
+email: vedad.alic@construction.lth.se
+
+"""
+
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
 import compas_ags
-
 from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import ForceDiagram
-
+from compas_bi_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
-
-from compas_ags.ags import graphstatics
-
-__author__    = ['Vedad Alic', ]
-__license__   = 'MIT License'
-__email__     = 'vedad.alic@construction.lth.se'
-
-
-__all__ = []
-
+from compas_bi_ags.bi_ags import graphstatics
 
 # make form diagram from obj
 # make force diagram from form
@@ -94,8 +93,8 @@ viewer.show()
 # --------------------------------------------------------------------------
 # Begin force diagram manipulation
 # --------------------------------------------------------------------------
-import compas_ags.ags.rootfinding as rf
-import compas_ags.utilities.errorhandler as eh
+import compas_bi_ags.bi_ags.rootfinding as rf
+import compas_bi_ags.utilities.errorhandler as eh
 import numpy as np
 xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
 _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
