@@ -108,3 +108,4 @@ ENV/
 temp/**
 !temp/PLACEHOLDER
 
+settings.json
