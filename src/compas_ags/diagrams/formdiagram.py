@@ -141,7 +141,7 @@ if __name__ == '__main__':
 
     import compas_ags
 
-    from compas.plotters import NetworkPlotter
+    from compas_plotters import NetworkPlotter
 
     form = FormDiagram.from_obj(compas_ags.get('paper/fink.obj'))
 

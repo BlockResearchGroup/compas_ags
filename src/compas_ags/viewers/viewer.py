@@ -4,15 +4,15 @@ from __future__ import division
 
 from math import fabs
 
-from compas.plotters.core import draw_xpoints_xy
-from compas.plotters.core import draw_xlines_xy
-from compas.plotters.core import draw_xarrows_xy
-from compas.plotters.core import draw_xlabels_xy
+from compas_plotters.core import draw_xpoints_xy
+from compas_plotters.core import draw_xlines_xy
+from compas_plotters.core import draw_xarrows_xy
+from compas_plotters.core import draw_xlabels_xy
 
 from compas.utilities import color_to_colordict
 from compas.utilities import is_color_light
 
-from compas.plotters.core import size_to_sizedict
+from compas_plotters.core import size_to_sizedict
 
 import matplotlib.pyplot as plt
 
