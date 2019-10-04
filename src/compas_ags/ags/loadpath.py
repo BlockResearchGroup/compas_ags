@@ -395,7 +395,7 @@ def optimise_loadpath(form, force, algo='COBYLA'):
         e = uv_e[(u, v)]
         attr['l'] = l[e, 0]
         attr['a'] = a[e]
-        if (a[e] - 3.14159) ** 2 < 1e-1:
+        if (a[e] - 3.14159) ** 2 < 0.25 * 3.14159:
             attr['f'] = - _l[e, 0]
             attr['q'] = - q[e, 0]
         else:
