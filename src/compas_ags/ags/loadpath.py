@@ -379,6 +379,9 @@ def optimise_loadpath(form, force, algo='COBYLA'):
     uv  = C.dot(xy)
     _uv = _C.dot(_xy)
     a   = [angle_vectors_xy(uv[i], _uv[i]) for i in range(len(edges))]
+
+    print(a)
+
     l   = normrow(uv)
     _l  = normrow(_uv)
     q   = _l / l
@@ -392,12 +395,12 @@ def optimise_loadpath(form, force, algo='COBYLA'):
         e = uv_e[(u, v)]
         attr['l'] = l[e, 0]
         attr['a'] = a[e]
-        if a[e] < 90:
-            attr['f'] = _l[e, 0]
-            attr['q'] = q[e, 0]
-        else:
+        if (a[e] - 3.14159) ** 2 < 1e-1:
             attr['f'] = - _l[e, 0]
             attr['q'] = - q[e, 0]
+        else:
+            attr['f'] = _l[e, 0]
+            attr['q'] = q[e, 0]
 
     for key, attr in force.vertices(True):
         index = _k_i[key]
