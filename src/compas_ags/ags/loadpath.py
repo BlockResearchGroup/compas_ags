@@ -374,14 +374,9 @@ def optimise_loadpath(form, force, algo='COBYLA'):
         options={'maxiter': 1000}
     )
 
-    print(res)
-
     uv  = C.dot(xy)
     _uv = _C.dot(_xy)
     a   = [angle_vectors_xy(uv[i], _uv[i]) for i in range(len(edges))]
-
-    print(a)
-
     l   = normrow(uv)
     _l  = normrow(_uv)
     q   = _l / l
