@@ -135,4 +135,5 @@ viewer = Viewer(form, force, delay_setup=False)
 viewer.draw_form(forcescale=5, vertexlabel={key: key for key in form.vertices()}, vertexsize=0.2)
 viewer.draw_force(vertexlabel={key: key for key in force.vertices()}, vertexsize=0.2)
 
+# viewer.save('C:\\Users\\tomvm\\Code\\__temp\\lpopt.png', dpi=300)
 viewer.show()

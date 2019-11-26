@@ -27,7 +27,7 @@ __all__ = ['Viewer']
 class Viewer(object):
     """"""
 
-    def __init__(self, form, force, delay_setup=True):
+    def __init__(self, form, force, delay_setup=True, figsize=(16, 9)):
         self.form  = form
         self.force = force
         self.fig   = None
@@ -54,11 +54,13 @@ class Viewer(object):
         self.default_linecolor  = '#000000'
         self.default_linestyle  = '-'
 
+        self.figsize = figsize
+
         if not delay_setup:
             self.setup()
 
     def setup(self):
-        self.fig = plt.figure(figsize=(16, 9), tight_layout=True, dpi=96)
+        self.fig = plt.figure(figsize=self.figsize, tight_layout=True, dpi=96)
         self.ax1 = self.fig.add_subplot('121')
         self.ax2 = self.fig.add_subplot('122')
         self.ax1.set_aspect('equal')
