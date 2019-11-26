@@ -48,6 +48,7 @@ FormDiagram
       ~FormDiagram.edges
       ~FormDiagram.edges_on_boundary
       ~FormDiagram.edges_where
+      ~FormDiagram.edges_where_predicate
       ~FormDiagram.face_adjacency
       ~FormDiagram.face_adjacency_edge
       ~FormDiagram.face_area
@@ -86,8 +87,10 @@ FormDiagram
       ~FormDiagram.get_edges_attributes
       ~FormDiagram.get_face_attribute
       ~FormDiagram.get_face_attributes
+      ~FormDiagram.get_face_attributes_all
       ~FormDiagram.get_faces_attribute
       ~FormDiagram.get_faces_attributes
+      ~FormDiagram.get_faces_attributes_all
       ~FormDiagram.get_vertex_attribute
       ~FormDiagram.get_vertex_attributes
       ~FormDiagram.get_vertices_attribute
@@ -152,6 +155,8 @@ FormDiagram
       ~FormDiagram.vertex_faces
       ~FormDiagram.vertex_label_name
       ~FormDiagram.vertex_laplacian
+      ~FormDiagram.vertex_max_degree
+      ~FormDiagram.vertex_min_degree
       ~FormDiagram.vertex_name
       ~FormDiagram.vertex_neighborhood
       ~FormDiagram.vertex_neighborhood_centroid
@@ -162,6 +167,7 @@ FormDiagram
       ~FormDiagram.vertices
       ~FormDiagram.vertices_on_boundary
       ~FormDiagram.vertices_where
+      ~FormDiagram.vertices_where_predicate
       ~FormDiagram.wireframe
       ~FormDiagram.xy
    
@@ -176,9 +182,5 @@ FormDiagram
       ~FormDiagram.adjacency
       ~FormDiagram.data
       ~FormDiagram.name
-      ~FormDiagram.x
-      ~FormDiagram.xyz
-      ~FormDiagram.y
-      ~FormDiagram.z
    
    

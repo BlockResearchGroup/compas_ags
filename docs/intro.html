@@ -1,100 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>compas_ags</title>
+<head>
+    <title>compas_ags</title>
 
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <meta name="author" content="" />
+    <meta name="description" content="" />
+
+    <link rel="shortcut icon" href="_static/images/compas.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/styles/default.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="_static/css/prism.css" /> -->
+    <link rel="stylesheet" type="text/css" href="_static/css/compas.css" />
+    <link rel="stylesheet" type="text/css" href="_static/css/compas-reference.css" />
+
     
-        <meta name="author" content="" />
-        <meta name="description" content="" />
+        <link rel="next" title="Getting Started" href="gettingstarted.html" />
+    
+    
+    
+        <link rel="prev" title="compas_ags" href="index.html" />
+    
 
-        <link rel="shortcut icon" href="_static/images/compas.ico" type="image/x-icon">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+</head>
 
-        <link rel="stylesheet" type="text/css" href="_static/css/prism.css" />
-        <link rel="stylesheet" type="text/css" href="_static/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="_static/css/compas-reference.css" />
+<body data-spy="scroll" data-target="#compas-localnav">
 
-        
-            <link rel="next" title="Getting Started" href="gettingstarted.html" />
-        
-        
-        
-            <link rel="prev" title="compas_ags" href="index.html" />
-        
+    <nav class="navbar navbar-expand compas-navbar">
+        <a class="navbar-brand" href="/">
+            <img src="_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
+        </a>
 
-        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="index.html">COMPAS AGS</a></li>
+        </ul>
 
-    </head>
-    <body data-spy="scroll" data-target="#compas-localnav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" target="_blank" href="">Github</a></li>
+            <li class="nav-item"><a class="nav-link" target="_blank" href="https://compas-dev.github.io">COMPAS framework</a></li>
+        </ul>
+    </nav>    
 
-        <header class="navbar navbar-expand compas-navbar justify-content-between">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="index.html">
-                    COMPAS AGS 0.1.0
-                </a>
-            </div>
+    <div class="container-fluid">
+        <div class="row flex-xl-nowrap">
 
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="https://compas-dev.github.io">
-                        <img src="_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
-                    </a>
-                </li>
-            </ul>
-        </header>
-        
-        <div class="container-fluid compas-container">
-            <div class="row flex-xl-nowrap">
-
-                <!-- main content -->
-
-                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+            <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+                <div class="container">
+                
 
                     
 
-                        
-
-                        <div class="section" id="computational-graphic-statics">
+                    <div class="section" id="computational-graphic-statics">
 <h1>Computational Graphic Statics</h1>
-<p><strong>compas_ags</strong> is a package for Computational Graphic Statics.
-It combines implementations of the following papers:</p>
+<p><strong>compas_ags</strong> is a package for “Computational Graphic Statics”.
+It …</p>
+<div class="section" id="graphic-statics">
+<h2>Graphic Statics</h2>
+<p>Graphic statics is a well-known method for analysis and design of two-dimensional
+structures based on Cremona’s extensions of
+Maxwell’stheoryofreciprocalfigures[1,2].Ingraphicstatics,the
+relation between form and forces of a structural system is con-
+tained in the reciprocal relation between two diagrams. A form
+diagramdescribesthegeometricalconfigurationofthe(axial)in-
+ternalandexternalforcesofatwo-dimensionalstructuralsystem,
+and a force diagram represents their equilibrium. The combina-
+tion of these two diagrams allows for an intuitive evaluation of
+structural behaviour, performance and efficiency at a glance. The
+graphicalnatureofthemethodfurthermoreallowsforavisualver-
+ificationofboththeevaluationprocessandresults[3,4],makingit
+moretransparentthanarithmeticornumericalmethods.</p>
+</div>
+<div class="section" id="dynamic-drawings">
+<h2>Dynamic drawings</h2>
 <ul class="simple">
-<li><p>Algebraic Graph Statics</p></li>
-<li><p>Bi-directional Algebraic Graph Statics</p></li>
-<li><p>Load-path optimisation of funcicular networks</p></li>
+<li><p>Dynamic drawing environments</p></li>
+<li><p>GeoGebra drawing</p></li>
+<li><p>eQUILIBRIUM</p></li>
+<li><p>…</p></li>
 </ul>
 </div>
+<div class="section" id="geometry-based-structural-design">
+<h2>Geometry-based structural design</h2>
+<p>…</p>
+</div>
+<div class="section" id="extensions">
+<h2>Extensions</h2>
+<div class="section" id="thrust-network-analysis">
+<h3>Thrust Network Analysis</h3>
+</div>
+<div class="section" id="best-fit-tna">
+<h3>Best-fit TNA</h3>
+</div>
+<div class="section" id="d-graphic-statics">
+<h3>3D Graphic Statics</h3>
+</div>
+</div>
+<div class="section" id="implementations">
+<h2>Implementations</h2>
+<ul class="simple">
+<li><p>Algebraic Graph Statics</p></li>
+<li><p>Bi-directional algebraic graph statics</p></li>
+<li><p>Load-path optimisation of funicular networks</p></li>
+</ul>
+</div>
+</div>
 
-                        
+                    
+                
+                </div>
+            </main>
+
+            <!-- site navigation sidebar -->
+
+            <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                <div class="navbar-light">
+
+                    <form id="" class="d-flex compas-searchbox" action="search.html" method="get">
+                        <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                        <input type="hidden" name="check_keywords" value="yes" />
+                        <input type="hidden" name="area" value="default" />
+
+                        <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </form>
+
+                    
                     
 
-                </main>
+                        <div class="navbar-expand-md">
+                            <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
 
-                <!-- site navigation sidebar -->
-
-                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
-                    <div class="navbar-light">
-
-                        <form id="" class="d-flex compas-searchbox" action="search.html" method="get">
-                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-
-                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </form>
-
-                        
-                        
-
-                            <div class="navbar-expand-md">
-                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
-
-                                <ul class="nav flex-column active">
+                            <ul class="nav flex-column active">
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="publications.html">Publications</a></li>
@@ -105,105 +148,91 @@ It combines implementations of the following papers:</p>
 </ul>
 
 
-                                </div>
                             </div>
-
-                        
-
-                    </div>
-                </div>
-
-                <!-- table of contents of main content -->
-                
-                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+                        </div>
 
                     
 
-                    <ul class="nav flex-column" id="compas-localnav">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Computational Graphic Statics</a></li>
+                </div>
+            </div>
+
+            <!-- table of contents of main content -->
+            
+            <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
+                
+
+                <ul class="nav flex-column" id="compas-localnav">
+<li class="nav-item"><a class="nav-link reference internal" href="#">Computational Graphic Statics</a><ul class="nav">
+<li class="nav-item"><a class="nav-link reference internal" href="#graphic-statics">Graphic Statics</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#dynamic-drawings">Dynamic drawings</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#geometry-based-structural-design">Geometry-based structural design</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#extensions">Extensions</a><ul class="nav">
+<li class="nav-item"><a class="nav-link reference internal" href="#thrust-network-analysis">Thrust Network Analysis</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#best-fit-tna">Best-fit TNA</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#d-graphic-statics">3D Graphic Statics</a></li>
+</ul>
+</li>
+<li class="nav-item"><a class="nav-link reference internal" href="#implementations">Implementations</a></li>
+</ul>
+</li>
 </ul>
 
 
-                </div>
-
             </div>
+
         </div>
+    </div>
 
-        <footer class="compas-footer">
+    <footer class="bg-dark pb-5">
+        <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Sep 16, 2018.
+                Last updated on Nov 26, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.7.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
             
-        </footer>
+        </div>
+    </footer>
 
-        
+    
+        <script type="text/javascript">
+            var DOCUMENTATION_OPTIONS = {
+            URL_ROOT          : '',
+            VERSION           : '0.1.0',
+            COLLAPSE_INDEX    : false,
+            FILE_SUFFIX       : '.html',
+            HAS_SOURCE        : 'false',
+            SOURCELINK_SUFFIX : '.txt'
+            };
+        </script>
 
-            <script type="text/javascript">
-var DOCUMENTATION_OPTIONS = {
-    URL_ROOT          : '',
-    VERSION           : '0.1.0',
-    COLLAPSE_INDEX    : false,
-    FILE_SUFFIX       : '.html',
-    HAS_SOURCE        : 'false',
-    SOURCELINK_SUFFIX : '.txt'
-};
-            </script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/highlight.min.js"></script>
 
-            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/js/searchtools_.js"></script>
+        <!-- <script src="_static/js/prism.js"></script> -->
 
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-            
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+        <script>
+        $(document).ready(function() {
+        $(".language-default code").addClass("python");
+        $(".language-python code").addClass("python");
+        $(".language-bash code").addClass("bash");
+        $(".language-cpp code").addClass("cpp");
+        $(".language-json code").addClass("json");
+        $(".language-none code").addClass("plaintext");
 
-            <script src="_static/underscore.js"></script>
-            <script src="_static/doctools.js"></script>
-            <script src="_static/js/searchtools_.js"></script>
-            <script src="_static/js/prism.js"></script>
-
-            <script>
-$(document).ready(function() {
-
-    // $(".language-default pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-bash pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-python pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-c pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-cpp pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-fortran pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-markdown pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-rest pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    anchors.add();
-});
-            </script>
-
-        
-    </body>
+        hljs.initHighlighting();
+        anchors.add();
+        });
+        </script>
+    
+</body>
 </html>

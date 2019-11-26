@@ -9,48 +9,26 @@ It combines implementations of the following papers:
 
 See "[Publications](https://compas-dev.github.io/compas_ags/publications.html)" for more info.
 
-
 ## Getting Started
 
-The recommended way to install **compas_ags** is to use `pip`:
-
-    $ pip install compas_ags
-
-To verify your setup, start Python from the command line and run the following:
-
-```python
-
->>> import compas
->>> import compas_ags
-
-```
-
-Alternatively, you can also install from source. Check the [documentation for more details](https://compas-dev.github.io/compas_ags/devguide.html).
-
+Have a look at the "Getting Started" instructions in the docs: <https://compas-dev.github.io/compas_ags/gettingstarted.html>.
 
 ## First Steps
 
-* https://compas-dev.github.io/main/examples.html
-* https://compas-dev.github.io/main/tutorial.html
-* https://compas-dev.github.io/main/api.html
-
+A good place to start exploring AGS through `compas_ags` are the [tutorial](https://compas-dev.github.io/compas_ags/tutorial.html), and the [examples](https://compas-dev.github.io/compas_ags/examples.html).
 
 ## Questions and feedback
 
-The **COMPAS** framework has a forum (https://forum.compas-framework.org/) with a topic category dedicated to **compas_ags**
-for questions and discussions: https://forum.compas-framework.org/c/compas-ags.
-
+For questions and feedback, read through or post something in the [compas_ags category](https://forum.compas-framework.org/c/compas-ags) of the COMPAS forum.
 
 ## Issue tracker
 
 If you find a bug, please help us solve it by [filing a report](https://github.com/compas-dev/compas_ags/issues).
 
-
 ## Contributing
 
 If you want to contribute, check out our [developer guidelines](https://compas-dev.github.io/compas_ags/devguide.html).
 
-
 ## License
 
-**compas_ags** is [released under the MIT license](https://compas-dev.github.io/compas_ags/license.html).
+`compas_ags` is licensed under the MIT License. See [LICENSE](https://github.com/compas-dev/compas_ags/blob/master/LICENSE), for more information.

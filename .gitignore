@@ -100,8 +100,16 @@ ENV/
 # mypy
 .mypy_cache/
 
-# COMPAS AGS
+# COMPAS
+
+*.3dmbak
+*.rhl
+*.rui_bak
+
 temp/**
 !temp/PLACEHOLDER
 
-settings.json
+docsource/api/generated
+.DS_Store
+
+.vscode/

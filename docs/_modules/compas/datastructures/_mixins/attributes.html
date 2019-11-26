@@ -1,59 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>compas_ags</title>
+<head>
+    <title>compas_ags</title>
 
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    <meta name="author" content="" />
+    <meta name="description" content="" />
+
+    <link rel="shortcut icon" href="../../../../_static/images/compas.ico" type="image/x-icon">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/styles/default.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="../../../../_static/css/prism.css" /> -->
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/compas.css" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/css/compas-reference.css" />
+
     
-        <meta name="author" content="" />
-        <meta name="description" content="" />
+    
+    
 
-        <link rel="shortcut icon" href="../../../../_static/images/compas.ico" type="image/x-icon">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
+</head>
 
-        <link rel="stylesheet" type="text/css" href="../../../../_static/css/prism.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../_static/css/compas.css" />
-        <link rel="stylesheet" type="text/css" href="../../../../_static/css/compas-reference.css" />
+<body data-spy="scroll" data-target="#compas-localnav">
 
-        
-        
-        
+    <nav class="navbar navbar-expand compas-navbar">
+        <a class="navbar-brand" href="/">
+            <img src="../../../../_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
+        </a>
 
-        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+        <ul class="navbar-nav">
+            <li class="nav-item"><a class="nav-link" href="../../../../index.html">COMPAS AGS</a></li>
+        </ul>
 
-    </head>
-    <body data-spy="scroll" data-target="#compas-localnav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item"><a class="nav-link" target="_blank" href="">Github</a></li>
+            <li class="nav-item"><a class="nav-link" target="_blank" href="https://compas-dev.github.io">COMPAS framework</a></li>
+        </ul>
+    </nav>    
 
-        <header class="navbar navbar-expand compas-navbar justify-content-between">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="../../../../index.html">
-                    COMPAS AGS 0.1.0
-                </a>
-            </div>
+    <div class="container-fluid">
+        <div class="row flex-xl-nowrap">
 
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="https://compas-dev.github.io">
-                        <img src="../../../../_static/images/compas_icon_white.png" width="36px" height="36px" alt="compas" />
-                    </a>
-                </li>
-            </ul>
-        </header>
-        
-        <div class="container-fluid compas-container">
-            <div class="row flex-xl-nowrap">
-
-                <!-- main content -->
-
-                <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+            <main class="col-12 col-md-9 col-xl-8 compas-content" role="main">
+                <div class="container">
+                
 
                     
 
-                        
-
-                        <h1>Source code for compas.datastructures._mixins.attributes</h1><div class="highlight"><pre><code>
+                    <h1>Source code for compas.datastructures._mixins.attributes</h1><div class="highlight"><pre><code>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
@@ -70,6 +69,8 @@
 
 <span class="k">class</span> <span class="nc">VertexAttributesManagement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Mix-in methods for working getting, setting, and updating vertex attributes.&quot;&quot;&quot;</span>
+
+    <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">&#39;compas.datastructures._mixins&#39;</span>
 
     <span class="k">def</span> <span class="nf">update_default_vertex_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwattr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the default vertex attributes (this also affects already existing vertices).</span>
@@ -110,12 +111,6 @@
 <span class="sd">        value : object</span>
 <span class="sd">            The value of the attribute.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_vertex_attributes`</span>
-<span class="sd">        * :meth:`set_vertices_attribute`</span>
-<span class="sd">        * :meth:`set_vertices_attributes`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">vertex</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
@@ -130,12 +125,6 @@
 <span class="sd">            A list of attribute names.</span>
 <span class="sd">        values : list</span>
 <span class="sd">            A list of attribute values.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_vertex_attribute`</span>
-<span class="sd">        * :meth:`set_vertices_attribute`</span>
-<span class="sd">        * :meth:`set_vertices_attributes`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
@@ -152,12 +141,6 @@
 <span class="sd">            The value of the attribute.</span>
 <span class="sd">        keys : list of hashable, optional</span>
 <span class="sd">            Defaults to all vertices.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_vertex_attribute`</span>
-<span class="sd">        * :meth:`set_vertex_attributes`</span>
-<span class="sd">        * :meth:`set_vertices_attributes`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">keys</span><span class="p">:</span>
@@ -177,12 +160,6 @@
 <span class="sd">        keys : list of hashable, optional</span>
 <span class="sd">            A list of vertex identifiers.</span>
 <span class="sd">            Defaults to all vertices.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_vertex_attribute`</span>
-<span class="sd">        * :meth:`set_vertex_attributes`</span>
-<span class="sd">        * :meth:`set_vertices_attribute`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
@@ -205,12 +182,6 @@
 <span class="sd">        value</span>
 <span class="sd">            The value of the attribute,</span>
 <span class="sd">            or the default value if the attribute does not exist.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_vertex_attributes`</span>
-<span class="sd">        * :meth:`get_vertices_attribute`</span>
-<span class="sd">        * :meth:`get_vertices_attributes`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -235,12 +206,6 @@
 <span class="sd">            Every attribute that does not exist is replaced by the corresponding</span>
 <span class="sd">            default value.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_vertex_attribute`</span>
-<span class="sd">        * :meth:`get_vertices_attribute`</span>
-<span class="sd">        * :meth:`get_vertices_attributes`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
@@ -264,12 +229,6 @@
 <span class="sd">        -------</span>
 <span class="sd">        values : list</span>
 <span class="sd">            A list of values of the named attribute of the specified vertices.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_vertex_attribute`</span>
-<span class="sd">        * :meth:`get_vertex_attributes`</span>
-<span class="sd">        * :meth:`get_vertices_attributes`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">keys</span><span class="p">:</span>
@@ -297,12 +256,6 @@
 <span class="sd">            If an attribute does not exist for a specific vertex, it is replaced</span>
 <span class="sd">            by the default value.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_vertex_attribute`</span>
-<span class="sd">        * :meth:`get_vertex_attributes`</span>
-<span class="sd">        * :meth:`get_vertices_attribute`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
@@ -314,6 +267,8 @@
 
 <span class="k">class</span> <span class="nc">EdgeAttributesManagement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Mix-in methods for setting, getting, and updating edge attributes.&quot;&quot;&quot;</span>
+
+    <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">&#39;compas.datastructures._mixins&#39;</span>
 
     <span class="k">def</span> <span class="nf">update_default_edge_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwattr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the default edge attributes (this also affects already existing edges).</span>
@@ -359,12 +314,6 @@
 <span class="sd">        Exception</span>
 <span class="sd">            If the edge does not exist in the data structure.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_edge_attributes`</span>
-<span class="sd">        * :meth:`set_edges_attribute`</span>
-<span class="sd">        * :meth:`set_edges_attributes`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">key</span>
         <span class="k">if</span> <span class="n">u</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge</span> <span class="ow">and</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="p">[</span><span class="n">u</span><span class="p">]:</span>
@@ -386,12 +335,6 @@
 <span class="sd">        values : list of object</span>
 <span class="sd">            The new values of the attributes.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_edge_attribute`</span>
-<span class="sd">        * :meth:`set_edges_attribute`</span>
-<span class="sd">        * :meth:`set_edges_attributes`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_edge_attribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -409,12 +352,6 @@
 <span class="sd">            A list of edge identifiers.</span>
 <span class="sd">            Each edge identifier is a pair of vertex identifiers.</span>
 <span class="sd">            Defaults to ``None``, in which case all edges will be modified.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_edge_attribute`</span>
-<span class="sd">        * :meth:`set_edge_attributes`</span>
-<span class="sd">        * :meth:`set_edges_attributes`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">keys</span><span class="p">:</span>
@@ -435,12 +372,6 @@
 <span class="sd">            A list of edge identifiers.</span>
 <span class="sd">            Each edge identifier is a pair of vertex identifiers.</span>
 <span class="sd">            Defaults to ``None``, in which case all edges will be modified.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_edge_attribute`</span>
-<span class="sd">        * :meth:`set_edge_attributes`</span>
-<span class="sd">        * :meth:`set_edges_attribute`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
@@ -464,12 +395,6 @@
 <span class="sd">        value</span>
 <span class="sd">            The value of the attribute,</span>
 <span class="sd">            or the default value if the attribute does not exist.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_edge_attributes`</span>
-<span class="sd">        * :meth:`get_edges_attribute`</span>
-<span class="sd">        * :meth:`get_edges_attributes`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">key</span>
@@ -497,12 +422,6 @@
 <span class="sd">            Every attribute that does not exist is replaced by the corresponding</span>
 <span class="sd">            default value.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_edge_attribute`</span>
-<span class="sd">        * :meth:`get_edges_attribute`</span>
-<span class="sd">        * :meth:`get_edges_attributes`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
@@ -528,12 +447,6 @@
 <span class="sd">        -------</span>
 <span class="sd">        values : list</span>
 <span class="sd">            A list of values of the named attribute of the specified edges.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_edge_attribute`</span>
-<span class="sd">        * :meth:`get_edge_attributes`</span>
-<span class="sd">        * :meth:`get_edges_attributes`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">keys</span><span class="p">:</span>
@@ -563,12 +476,6 @@
 <span class="sd">            If an attribute does not exist for a specific edge, it is replaced</span>
 <span class="sd">            by the default value.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_edge_attribute`</span>
-<span class="sd">        * :meth:`get_edge_attributes`</span>
-<span class="sd">        * :meth:`get_edges_attribute`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
@@ -580,6 +487,8 @@
 
 <span class="k">class</span> <span class="nc">FaceAttributesManagement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Mix-in methods for setting, getting, and updating face attributes.&quot;&quot;&quot;</span>
+
+    <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">&#39;compas.datastructures._mixins&#39;</span>
 
     <span class="k">def</span> <span class="nf">update_default_face_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwattr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the default face attributes (this also affects already existing faces).</span>
@@ -619,12 +528,6 @@
 <span class="sd">        value : object</span>
 <span class="sd">            The value of the attribute.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_face_attributes`</span>
-<span class="sd">        * :meth:`set_faces_attribute`</span>
-<span class="sd">        * :meth:`set_faces_attributes`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">facedata</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">facedata</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_face_attributes</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -642,12 +545,6 @@
 <span class="sd">        values : list of object</span>
 <span class="sd">            The new values of the attributes.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_face_attribute`</span>
-<span class="sd">        * :meth:`set_faces_attribute`</span>
-<span class="sd">        * :meth:`set_faces_attributes`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_face_attribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -664,12 +561,6 @@
 <span class="sd">        value : object</span>
 <span class="sd">            The value of the attribute.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_face_attribute`</span>
-<span class="sd">        * :meth:`set_face_attributes`</span>
-<span class="sd">        * :meth:`set_faces_attributes`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_face_attribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
@@ -685,12 +576,6 @@
 <span class="sd">            A list of attribute names,</span>
 <span class="sd">        values : list of object</span>
 <span class="sd">            The new values of the attributes.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`set_face_attribute`</span>
-<span class="sd">        * :meth:`set_face_attributes`</span>
-<span class="sd">        * :meth:`set_faces_attribute`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
@@ -714,12 +599,6 @@
 <span class="sd">        value</span>
 <span class="sd">            The value of the attribute,</span>
 <span class="sd">            or the default value if the attribute does not exist.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_face_attributes`</span>
-<span class="sd">        * :meth:`get_faces_attribute`</span>
-<span class="sd">        * :meth:`get_faces_attributes`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">facedata</span><span class="p">:</span>
@@ -748,12 +627,6 @@
 <span class="sd">            Every attribute that does not exist is replaced by the corresponding</span>
 <span class="sd">            default value.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_face_attribute`</span>
-<span class="sd">        * :meth:`get_faces_attribute`</span>
-<span class="sd">        * :meth:`get_faces_attributes`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
@@ -776,12 +649,6 @@
 <span class="sd">        -------</span>
 <span class="sd">        values : list</span>
 <span class="sd">            A list of values of the named attribute of the specified faces.</span>
-
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_face_attribute`</span>
-<span class="sd">        * :meth:`get_face_attributes`</span>
-<span class="sd">        * :meth:`get_faces_attributes`</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_face_attribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
@@ -806,17 +673,56 @@
 <span class="sd">            If an attribute does not exist for a specific face, it is replaced</span>
 <span class="sd">            by the default value.</span>
 
-<span class="sd">        See Also</span>
-<span class="sd">        --------</span>
-<span class="sd">        * :meth:`get_face_attribute`</span>
-<span class="sd">        * :meth:`get_face_attributes`</span>
-<span class="sd">        * :meth:`get_faces_attribute`</span>
-
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span>
         <span class="k">return</span> <span class="p">[[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_face_attribute</span><span class="p">(</span><span class="n">fkey</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">]</span> <span class="k">for</span> <span class="n">fkey</span> <span class="ow">in</span> <span class="n">fkeys</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">get_face_attributes_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all attributes of one face.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        key : hashable</span>
+<span class="sd">            The identifier of the face.</span>
+<span class="sd">        data : bool, optional</span>
+<span class="sd">            Returns the attributes and their values.</span>
+<span class="sd">            Default is ``True``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------</span>
+<span class="sd">        dict</span>
+<span class="sd">            A copy of the dictionary containing all attributes and their values, if ``data=True``.</span>
+<span class="sd">        list</span>
+<span class="sd">            A list of all attribute keys, if ``data=False``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">facedata</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">facedata</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+
+    <span class="k">def</span> <span class="nf">get_faces_attributes_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all attributes of multiple faces.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        keys : list of hashable</span>
+<span class="sd">            A list of face identifiers.</span>
+<span class="sd">        data : bool, optional</span>
+<span class="sd">            Returns the attributes and their values.</span>
+<span class="sd">            Default is ``True``.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------</span>
+<span class="sd">        list of dict</span>
+<span class="sd">            A list of dictionaries containing all attributes and their values, if ``data=True``.</span>
+<span class="sd">        list of list</span>
+<span class="sd">            A list of all attribute keys for each specified face key, if ``data=False``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_face_all_attributes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -826,33 +732,33 @@
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="k">pass</span>
 </code></pre></div>
-                        
+                    
+                
+                </div>
+            </main>
+
+            <!-- site navigation sidebar -->
+
+            <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
+                <div class="navbar-light">
+
+                    <form id="" class="d-flex compas-searchbox" action="../../../../search.html" method="get">
+                        <input class="form-control" type="text" name="q" placeholder="Search docs" />
+                        <input type="hidden" name="check_keywords" value="yes" />
+                        <input type="hidden" name="area" value="default" />
+
+                        <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
+                            <span class="navbar-toggler-icon"></span>
+                        </button>
+                    </form>
+
+                    
                     
 
-                </main>
+                        <div class="navbar-expand-md">
+                            <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
 
-                <!-- site navigation sidebar -->
-
-                <div class="col-12 col-md-3 col-xl-2 compas-sidebar" role="navigation"> 
-                    <div class="navbar-light">
-
-                        <form id="" class="d-flex compas-searchbox" action="../../../../search.html" method="get">
-                            <input class="form-control" type="text" name="q" placeholder="Search docs" />
-                            <input type="hidden" name="check_keywords" value="yes" />
-                            <input type="hidden" name="area" value="default" />
-
-                            <button class="navbar-toggler d-md-none compas-navigation-toggler" type="button" data-toggle="collapse" data-target="#compas-navigation" aria-controls="compas-navigation" aria-expanded="false" aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                        </form>
-
-                        
-                        
-
-                            <div class="navbar-expand-md">
-                                <div id="compas-navigation" class="collapse navbar-collapse compas-navigation">
-
-                                <ul class="nav flex-column">
+                            <ul class="nav flex-column">
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../publications.html">Publications</a></li>
@@ -863,102 +769,76 @@
 </ul>
 
 
-                                </div>
                             </div>
+                        </div>
 
-                        
+                    
 
-                    </div>
                 </div>
+            </div>
 
-                <!-- table of contents of main content -->
+            <!-- table of contents of main content -->
+            
+            <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
+
                 
-                <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
 
-                    
-
-                    
-
-                </div>
+                
 
             </div>
+
         </div>
+    </div>
 
-        <footer class="compas-footer">
+    <footer class="bg-dark pb-5">
+        <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Sep 16, 2018.
+                Last updated on Nov 26, 2019.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.7.7.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
             
-        </footer>
+        </div>
+    </footer>
 
-        
+    
+        <script type="text/javascript">
+            var DOCUMENTATION_OPTIONS = {
+            URL_ROOT          : '',
+            VERSION           : '0.1.0',
+            COLLAPSE_INDEX    : false,
+            FILE_SUFFIX       : '.html',
+            HAS_SOURCE        : 'false',
+            SOURCELINK_SUFFIX : '.txt'
+            };
+        </script>
 
-            <script type="text/javascript">
-var DOCUMENTATION_OPTIONS = {
-    URL_ROOT          : '',
-    VERSION           : '0.1.0',
-    COLLAPSE_INDEX    : false,
-    FILE_SUFFIX       : '.html',
-    HAS_SOURCE        : 'false',
-    SOURCELINK_SUFFIX : '.txt'
-};
-            </script>
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.9/highlight.min.js"></script>
 
-            <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+        <script src="../../../../_static/js/searchtools_.js"></script>
+        <!-- <script src="../../../../_static/js/prism.js"></script> -->
 
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
-            
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/4.0.0/anchor.js"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js"></script>
+        <script>
+        $(document).ready(function() {
+        $(".language-default code").addClass("python");
+        $(".language-python code").addClass("python");
+        $(".language-bash code").addClass("bash");
+        $(".language-cpp code").addClass("cpp");
+        $(".language-json code").addClass("json");
+        $(".language-none code").addClass("plaintext");
 
-            <script src="../../../../_static/underscore.js"></script>
-            <script src="../../../../_static/doctools.js"></script>
-            <script src="../../../../_static/js/searchtools_.js"></script>
-            <script src="../../../../_static/js/prism.js"></script>
-
-            <script>
-$(document).ready(function() {
-
-    // $(".language-default pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-bash pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-python pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-c pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-cpp pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-fortran pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-markdown pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    // $(".language-rest pre").each(function(i, element) {
-    //     Prism.highlightElement(element);
-    // });
-
-    anchors.add();
-});
-            </script>
-
-        
-    </body>
+        hljs.initHighlighting();
+        anchors.add();
+        });
+        </script>
+    
+</body>
 </html>
