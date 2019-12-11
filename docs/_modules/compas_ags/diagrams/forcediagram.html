@@ -63,8 +63,8 @@
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="k">import</span> <span class="n">Diagram</span>
 
 
-<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tom Van Mele&#39;</span><span class="p">]</span>
-<span class="n">__email__</span>  <span class="o">=</span> <span class="s1">&#39;vanmelet@ethz.ch&#39;</span>
+<span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tom Van Mele&#39;</span><span class="p">,</span> <span class="s1">&#39;Vedad Alic&#39;</span><span class="p">]</span>
+<span class="n">__email__</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&lt;vanmelet@ethz.ch&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;vedad.alic@construction.lth.se&gt;&#39;</span><span class="p">]</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ForceDiagram&#39;</span><span class="p">]</span>
@@ -121,6 +121,17 @@
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
             <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span></div>
 
+<div class="viewcode-block" id="ForceDiagram.set_anchor"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.set_anchor.html#compas_ags.diagrams.ForceDiagram.set_anchor">[docs]</a>    <span class="k">def</span> <span class="nf">set_anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the anchored vertex in the force diagram</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        keys : list[int]</span>
+<span class="sd">            Contains the index of the vertex to anchor.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+            <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_anchor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span></div>
+
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Helpers</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
@@ -143,6 +154,85 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">index</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">edges</span>
         <span class="k">return</span> <span class="p">[[</span><span class="n">key_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">key_index</span><span class="p">[</span><span class="n">v</span><span class="p">]]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="ForceDiagram.external_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.external_edges.html#compas_ags.diagrams.ForceDiagram.external_edges">[docs]</a>    <span class="k">def</span> <span class="nf">external_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns the edges incident to leaf vertices</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        form : compas_ags.diagrams.formdiagram.FormDiagram</span>
+<span class="sd">            The form diagram to update.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        e_e : list[int]</span>
+<span class="sd">            The edges incident to leaf vertices</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">leaves</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
+        <span class="n">e_e</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">leaves</span> <span class="ow">or</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>
+                <span class="n">e_e</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">e_e</span></div>
+
+<div class="viewcode-block" id="ForceDiagram.external_vertices"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.external_vertices.html#compas_ags.diagrams.ForceDiagram.external_vertices">[docs]</a>    <span class="k">def</span> <span class="nf">external_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Returns indices of the vertices on the external face of the force diagram</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        form : compas_ags.diagrams.formdiagram.FormDiagram</span>
+<span class="sd">            The form diagram to update.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ----------</span>
+<span class="sd">        e_v : list[int]</span>
+<span class="sd">            Indices of the vertices on the external face of the force diagram</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">external_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">external_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+        <span class="n">e_v</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">external_edges</span><span class="p">:</span>
+                <span class="n">e_v</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">u</span><span class="p">)</span>
+                <span class="n">e_v</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">e_v</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="ForceDiagram.compute_constraints"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.compute_constraints.html#compas_ags.diagrams.ForceDiagram.compute_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">compute_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Computes the form diagram constraints used</span>
+<span class="sd">        in compas_bi_ags.bi_ags.graphstatics.form_update_from_force_direct</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        form : compas_ags.diagrams.formdiagram.FormDiagram</span>
+<span class="sd">            The form diagram to update.</span>
+<span class="sd">        M</span>
+<span class="sd">            The matrix described in compas_bi_ags.bi_ags.graphstatics.form_update_from_force_direct</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">nr_col_jac</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">constraint_rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">residual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">vcount</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()</span>
+
+        <span class="c1"># Currently this computes two constraints per fixed vertex in the form diagram.</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">)):</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]:</span>
+                <span class="k">continue</span>
+
+            <span class="c1"># Handle x</span>
+            <span class="n">constraint_jac_row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nr_col_jac</span><span class="p">))</span>  <span class="c1"># Added row for jacobian</span>
+            <span class="c1"># Lock horizontal position</span>
+            <span class="n">constraint_jac_row</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">constraint_rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">constraint_rows</span><span class="p">,</span> <span class="n">constraint_jac_row</span><span class="p">))</span>
+            <span class="n">residual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">residual</span><span class="p">,</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]))</span>
+
+            <span class="c1"># Handle y</span>
+            <span class="n">constraint_jac_row</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+                <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">nr_col_jac</span><span class="p">))</span>  <span class="c1"># Added row for jacobian</span>
+            <span class="c1"># Lock horizontal position</span>
+            <span class="n">constraint_jac_row</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">i</span><span class="o">+</span><span class="n">vcount</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">constraint_rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">constraint_rows</span><span class="p">,</span> <span class="n">constraint_jac_row</span><span class="p">))</span>
+            <span class="n">residual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">vstack</span><span class="p">((</span><span class="n">residual</span><span class="p">,</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]))</span>
+        <span class="k">return</span> <span class="n">constraint_rows</span><span class="p">,</span> <span class="n">residual</span></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># AGS functions</span>
@@ -222,7 +312,7 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Nov 26, 2019.
+                Last updated on Dec 11, 2019.
             
 
             

@@ -27,6 +27,7 @@ ForceDiagram
       ~ForceDiagram.clear_facedict
       ~ForceDiagram.clear_halfedgedict
       ~ForceDiagram.clear_vertexdict
+      ~ForceDiagram.compute_constraints
       ~ForceDiagram.copy
       ~ForceDiagram.delete_edge
       ~ForceDiagram.delete_face
@@ -47,6 +48,8 @@ ForceDiagram
       ~ForceDiagram.edges_on_boundary
       ~ForceDiagram.edges_where
       ~ForceDiagram.edges_where_predicate
+      ~ForceDiagram.external_edges
+      ~ForceDiagram.external_vertices
       ~ForceDiagram.face_adjacency
       ~ForceDiagram.face_adjacency_edge
       ~ForceDiagram.face_area
@@ -114,6 +117,7 @@ ForceDiagram
       ~ForceDiagram.number_of_vertices
       ~ForceDiagram.ordered_edges
       ~ForceDiagram.plot
+      ~ForceDiagram.set_anchor
       ~ForceDiagram.set_edge_attribute
       ~ForceDiagram.set_edge_attributes
       ~ForceDiagram.set_edges_attribute

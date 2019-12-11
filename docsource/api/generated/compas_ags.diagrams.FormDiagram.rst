@@ -123,6 +123,7 @@ FormDiagram
       ~FormDiagram.set_edge_attributes
       ~FormDiagram.set_edge_force
       ~FormDiagram.set_edge_force_by_index
+      ~FormDiagram.set_edge_forcedensity
       ~FormDiagram.set_edges_attribute
       ~FormDiagram.set_edges_attributes
       ~FormDiagram.set_face_attribute

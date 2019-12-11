@@ -70,7 +70,7 @@
 <span class="k">class</span> <span class="nc">VertexAttributesManagement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Mix-in methods for working getting, setting, and updating vertex attributes.&quot;&quot;&quot;</span>
 
-    <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">&#39;compas.datastructures._mixins&#39;</span>
+    <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">&#39;compas.datastructures&#39;</span>
 
     <span class="k">def</span> <span class="nf">update_default_vertex_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwattr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the default vertex attributes (this also affects already existing vertices).</span>
@@ -268,7 +268,7 @@
 <span class="k">class</span> <span class="nc">EdgeAttributesManagement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Mix-in methods for setting, getting, and updating edge attributes.&quot;&quot;&quot;</span>
 
-    <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">&#39;compas.datastructures._mixins&#39;</span>
+    <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">&#39;compas.datastructures&#39;</span>
 
     <span class="k">def</span> <span class="nf">update_default_edge_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwattr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the default edge attributes (this also affects already existing edges).</span>
@@ -488,7 +488,7 @@
 <span class="k">class</span> <span class="nc">FaceAttributesManagement</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Mix-in methods for setting, getting, and updating face attributes.&quot;&quot;&quot;</span>
 
-    <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">&#39;compas.datastructures._mixins&#39;</span>
+    <span class="vm">__module__</span> <span class="o">=</span> <span class="s1">&#39;compas.datastructures&#39;</span>
 
     <span class="k">def</span> <span class="nf">update_default_face_attributes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">attr_dict</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwattr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Update the default face attributes (this also affects already existing faces).</span>
@@ -677,7 +677,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">values</span><span class="p">:</span>
             <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">values</span><span class="p">))</span>
-        <span class="k">return</span> <span class="p">[[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_face_attribute</span><span class="p">(</span><span class="n">fkey</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">]</span> <span class="k">for</span> <span class="n">fkey</span> <span class="ow">in</span> <span class="n">fkeys</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">[[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_face_attribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">get_face_attributes_all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get all attributes of one face.</span>
@@ -793,7 +793,7 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Nov 26, 2019.
+                Last updated on Dec 11, 2019.
             
 
             

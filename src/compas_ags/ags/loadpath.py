@@ -21,7 +21,7 @@ from compas.numerical import normrow
 from compas_ags.ags import update_form_from_force
 
 
-__author__ = ['Tom Van Mele', 'Andrew Liew>']
+__author__ = ['Tom Van Mele', 'Andrew Liew']
 __email__  = 'vanmelet@ethz.ch'
 
 

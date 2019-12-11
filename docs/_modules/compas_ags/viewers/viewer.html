@@ -82,7 +82,7 @@
 <div class="viewcode-block" id="Viewer"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.html#compas_ags.viewers.Viewer">[docs]</a><span class="k">class</span> <span class="nc">Viewer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Viewer.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.__init__.html#compas_ags.viewers.Viewer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">delay_setup</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<div class="viewcode-block" id="Viewer.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.__init__.html#compas_ags.viewers.Viewer.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">delay_setup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">)):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">form</span>  <span class="o">=</span> <span class="n">form</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="n">force</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fig</span>   <span class="o">=</span> <span class="kc">None</span>
@@ -109,11 +109,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">default_linecolor</span>  <span class="o">=</span> <span class="s1">&#39;#000000&#39;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">default_linestyle</span>  <span class="o">=</span> <span class="s1">&#39;-&#39;</span>
 
+        <span class="bp">self</span><span class="o">.</span><span class="n">figsize</span> <span class="o">=</span> <span class="n">figsize</span>
+
         <span class="k">if</span> <span class="ow">not</span> <span class="n">delay_setup</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Viewer.setup"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.setup.html#compas_ags.viewers.Viewer.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">96</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figsize</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">96</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="s1">&#39;121&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="s1">&#39;122&#39;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s1">&#39;equal&#39;</span><span class="p">)</span>
@@ -539,7 +541,7 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Nov 26, 2019.
+                Last updated on Dec 11, 2019.
             
 
             
