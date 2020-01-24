@@ -53,18 +53,19 @@
                     
 
                     <h1>Source code for compas_ags.diagrams.forcediagram</h1><div class="highlight"><pre><code>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
-<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="k">import</span> <span class="n">network_find_faces</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="k">import</span> <span class="n">network_dual</span>
+<span class="c1"># from compas.datastructures import network_find_faces</span>
+<span class="c1"># from compas.datastructures import network_dual</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">mesh_dual</span>
 
-<span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="k">import</span> <span class="n">Diagram</span>
+<span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">Diagram</span>
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tom Van Mele&#39;</span><span class="p">,</span> <span class="s1">&#39;Vedad Alic&#39;</span><span class="p">]</span>
-<span class="n">__email__</span>  <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&lt;vanmelet@ethz.ch&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;vedad.alic@construction.lth.se&gt;&#39;</span><span class="p">]</span>
+<span class="n">__email__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;&lt;vanmelet@ethz.ch&gt;&#39;</span><span class="p">,</span> <span class="s1">&#39;&lt;vedad.alic@construction.lth.se&gt;&#39;</span><span class="p">]</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ForceDiagram&#39;</span><span class="p">]</span>
@@ -73,21 +74,21 @@
 <div class="viewcode-block" id="ForceDiagram"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.html#compas_ags.diagrams.ForceDiagram">[docs]</a><span class="k">class</span> <span class="nc">ForceDiagram</span><span class="p">(</span><span class="n">Diagram</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ForceDiagram.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.__init__.html#compas_ags.diagrams.ForceDiagram.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ForceDiagram.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.__init__.html#compas_ags.diagrams.ForceDiagram.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ForceDiagram</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-            <span class="s1">&#39;name&#39;</span>         <span class="p">:</span> <span class="s1">&#39;ForceDiagram&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;color.vertex&#39;</span> <span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
-            <span class="s1">&#39;color.edge&#39;</span>   <span class="p">:</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
-            <span class="s1">&#39;color.face&#39;</span>   <span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;ForceDiagram&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;color.vertex&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+            <span class="s1">&#39;color.edge&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mi">200</span><span class="p">),</span>
+            <span class="s1">&#39;color.face&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
         <span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_default_vertex_attributes</span><span class="p">({</span>
-            <span class="s1">&#39;is_fixed&#39;</span>  <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;is_anchor&#39;</span> <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;is_param&#39;</span>  <span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;is_anchor&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;is_param&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_default_edge_attributes</span><span class="p">({</span>
-            <span class="s1">&#39;l&#39;</span>   <span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
+            <span class="s1">&#39;l&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
             <span class="s1">&#39;lmin&#39;</span><span class="p">:</span> <span class="mf">1e-7</span><span class="p">,</span>
             <span class="s1">&#39;lmax&#39;</span><span class="p">:</span> <span class="mf">1e+7</span><span class="p">,</span>
         <span class="p">})</span></div>
@@ -98,8 +99,7 @@
 
 <div class="viewcode-block" id="ForceDiagram.from_formdiagram"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.from_formdiagram.html#compas_ags.diagrams.ForceDiagram.from_formdiagram">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_formdiagram</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">):</span>
-        <span class="n">network_find_faces</span><span class="p">(</span><span class="n">formdiagram</span><span class="p">,</span> <span class="n">formdiagram</span><span class="o">.</span><span class="n">breakpoints</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">network_dual</span><span class="p">(</span><span class="n">formdiagram</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">mesh_dual</span><span class="p">(</span><span class="n">formdiagram</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Convenience functions for retrieving attributes of the force diagram.</span>
@@ -148,9 +148,9 @@
 
 <div class="viewcode-block" id="ForceDiagram.ordered_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.ordered_edges.html#compas_ags.diagrams.ForceDiagram.ordered_edges">[docs]</a>    <span class="k">def</span> <span class="nf">ordered_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="n">key_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
-        <span class="n">uv_index</span>  <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uv_index</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span>
-        <span class="n">index_uv</span>  <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">uv</span><span class="p">)</span> <span class="k">for</span> <span class="n">uv</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">uv_index</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
-        <span class="n">edges</span>     <span class="o">=</span> <span class="p">[</span><span class="n">index_uv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())]</span>
+        <span class="n">uv_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">uv_index</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span>
+        <span class="n">index_uv</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">((</span><span class="n">i</span><span class="p">,</span> <span class="n">uv</span><span class="p">)</span> <span class="k">for</span> <span class="n">uv</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">uv_index</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">index_uv</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">index</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">edges</span>
         <span class="k">return</span> <span class="p">[[</span><span class="n">key_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">key_index</span><span class="p">[</span><span class="n">v</span><span class="p">]]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">]</span></div>
@@ -239,7 +239,7 @@
     <span class="c1"># --------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="ForceDiagram.update"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.update.html#compas_ags.diagrams.ForceDiagram.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">):</span>
-        <span class="kn">from</span> <span class="nn">compas_ags.algorithms.graphstatics</span> <span class="k">import</span> <span class="n">update_forcediagram</span>
+        <span class="kn">from</span> <span class="nn">compas_ags.algorithms.graphstatics</span> <span class="kn">import</span> <span class="n">update_forcediagram</span>
         <span class="n">update_forcediagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">)</span></div></div>
 
 
@@ -281,6 +281,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../api.html">API Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../contributions.html">Contributions</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../devguide.html">Developer Guide</a></li>
@@ -312,11 +313,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

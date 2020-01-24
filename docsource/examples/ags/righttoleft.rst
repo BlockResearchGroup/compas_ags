@@ -10,8 +10,3 @@ Graph Statics "from right to left"
 .. literalinclude:: ../../../examples/example_rtl.py
     :language: python
 
-
-Downloads
-=========
-
-None

@@ -9,6 +9,7 @@ compas_ags
    Introduction<intro>
    gettingstarted
    publications
+   examples
    api
    contributions
    devguide

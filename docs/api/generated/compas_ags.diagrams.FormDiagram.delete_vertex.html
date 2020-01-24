@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
     
-        <link rel="next" title="FormDiagram.dump" href="compas_ags.diagrams.FormDiagram.dump.html" />
+        <link rel="next" title="FormDiagram.dual" href="compas_ags.diagrams.FormDiagram.dual.html" />
     
     
     
@@ -61,16 +61,19 @@
 <dl class="method">
 <dt id="compas_ags.diagrams.FormDiagram.delete_vertex">
 <code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">delete_vertex</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span></dt>
-<dd><p>Delete a vertex from the network.</p>
+<dd><p>Delete a vertex from the mesh and everything that is attached to it.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>key</strong> (<em>hashable</em>) – The identifier of the vertex.</p>
+<dd class="field-odd"><p><strong>key</strong> (<em>int</em>) – The identifier of the vertex.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="k">pass</span>
+<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="go">&gt;&gt;&gt;</span>
 </code></pre></div>
 </div>
+<p>In some cases, disconnected vertices can remain after application of this
+method. To remove these vertices as well, combine this method with vertex
+culling (<a class="reference internal" href="compas_ags.diagrams.FormDiagram.cull_vertices.html#compas_ags.diagrams.FormDiagram.cull_vertices" title="compas_ags.diagrams.FormDiagram.cull_vertices"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cull_vertices()</span></code></a>).</p>
 </dd></dl>
 
 </div>
@@ -105,6 +108,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -147,11 +151,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

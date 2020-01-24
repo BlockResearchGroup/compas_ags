@@ -23,7 +23,7 @@
     
     
     
-        <link rel="prev" title="FormDiagram.set_vertices_attributes" href="compas_ags.diagrams.FormDiagram.set_vertices_attributes.html" />
+        <link rel="prev" title="FormDiagram.smooth_centroid" href="compas_ags.diagrams.FormDiagram.smooth_centroid.html" />
     
 
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -60,64 +60,26 @@
 <h1>FormDiagram.split_edge</h1>
 <dl class="method">
 <dt id="compas_ags.diagrams.FormDiagram.split_edge">
-<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">split_edge</code><span class="sig-paren">(</span><em class="sig-param">u</em>, <em class="sig-param">v</em>, <em class="sig-param">t=0.5</em><span class="sig-paren">)</span></dt>
+<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">split_edge</code><span class="sig-paren">(</span><em class="sig-param">u</em>, <em class="sig-param">v</em>, <em class="sig-param">t=0.5</em>, <em class="sig-param">allow_boundary=False</em><span class="sig-paren">)</span></dt>
 <dd><p>Split and edge by inserting a vertex along its length.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>compas.datastructures.Mesh</em>) – Instance of a mesh.</p></li>
 <li><p><strong>u</strong> (<em>str</em>) – The key of the first vertex of the edge.</p></li>
 <li><p><strong>v</strong> (<em>str</em>) – The key of the second vertex of the edge.</p></li>
-<li><p><strong>t</strong> (<em>float</em>) – The position of the inserted vertex.</p></li>
+<li><p><strong>t</strong> (<em>float (0.5)</em>) – The position of the inserted vertex.
+The value should be between 0.0 and 1.0</p></li>
+<li><p><strong>allow_boundary</strong> (<em>bool (False)</em>) – Split edges on the boundary.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>str</em> – The key of the inserted vertex.</p>
+<dd class="field-even"><p><em>int</em> – The key of the inserted vertex.</p>
 </dd>
 <dt class="field-odd">Raises</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If <cite>t</cite> is not <cite>0 &lt;= t &lt;= 1</cite>.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.8)"><strong>Exception</strong></a> – If <cite>u</cite> and <cite>v</cite> are not neighbors.</p></li>
-</ul>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.8)"><strong>ValueError</strong></a> – If u and v are not neighbors.</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">import</span> <span class="nn">compas</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Network</span>
-<span class="kn">from</span> <span class="nn">compas_plotters</span> <span class="kn">import</span> <span class="n">NetworkPlotter</span>
-
-<span class="n">network</span> <span class="o">=</span> <span class="n">Network</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">compas</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lines.obj&#39;</span><span class="p">))</span>
-
-<span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">get_any_edge</span><span class="p">()</span>
-
-<span class="n">a</span> <span class="o">=</span> <span class="n">network</span><span class="o">.</span><span class="n">split_edge</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-
-<span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
-    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-        <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">network</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;end&#39;</span>  <span class="p">:</span> <span class="n">network</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;arrow&#39;</span><span class="p">:</span> <span class="s1">&#39;end&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mf">4.0</span><span class="p">,</span>
-        <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;#00ff00&#39;</span>
-    <span class="p">})</span>
-
-<span class="n">plotter</span> <span class="o">=</span> <span class="n">NetworkPlotter</span><span class="p">(</span><span class="n">network</span><span class="p">)</span>
-
-<span class="n">plotter</span><span class="o">.</span><span class="n">draw_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
-
-<span class="n">plotter</span><span class="o">.</span><span class="n">draw_vertices</span><span class="p">(</span>
-    <span class="n">radius</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-    <span class="n">text</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">network</span><span class="o">.</span><span class="n">vertices</span><span class="p">()},</span>
-    <span class="n">facecolor</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="s1">&#39;#ff0000&#39;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">(</span><span class="n">a</span><span class="p">,)}</span>
-<span class="p">)</span>
-<span class="n">plotter</span><span class="o">.</span><span class="n">draw_edges</span><span class="p">()</span>
-
-<span class="n">plotter</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
-</code></pre></div>
-</div>
-<div class="figure align-default">
-<img alt="../../_images/compas_ags-diagrams-FormDiagram-split_edge-1.png" src="../../_images/compas_ags-diagrams-FormDiagram-split_edge-1.png" />
-</div>
 </dd></dl>
 
 </div>
@@ -152,6 +114,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -194,11 +157,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

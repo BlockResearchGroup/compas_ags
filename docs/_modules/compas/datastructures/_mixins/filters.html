@@ -53,9 +53,9 @@
                     
 
                     <h1>Source code for compas.datastructures._mixins.filters</h1><div class="highlight"><pre><code>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
@@ -226,60 +226,41 @@
 <span class="sd">        3-tuple</span>
 <span class="sd">            The next edge as a (u, v, data) tuple, if ``data=True``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
             <span class="n">is_match</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="n">attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_attributes</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">conditions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
-                    <span class="n">val</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                        <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-                        <span class="k">break</span>
-
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-                        <span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span> <span class="o">=</span> <span class="n">value</span>
-
-                        <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="n">minval</span> <span class="ow">or</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-
+                <span class="k">if</span> <span class="n">method</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">:</span>
+                    <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">break</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                        <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">break</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                    <span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span> <span class="o">=</span> <span class="n">value</span>
+                    <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="n">minval</span> <span class="ow">or</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
+                        <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
                         <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
                         <span class="k">break</span>
 
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
-                        <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-                        <span class="k">break</span>
-
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-                        <span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span> <span class="o">=</span> <span class="n">value</span>
-
-                        <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">minval</span> <span class="ow">or</span> <span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-
             <span class="k">if</span> <span class="n">is_match</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
-                    <span class="k">yield</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span>
+                    <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">yield</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
+                    <span class="k">yield</span> <span class="n">key</span>
 
     <span class="k">def</span> <span class="nf">edges_where_predicate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">predicate</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get edges for which a certain condition or set of conditions is true using a lambda function.</span>
@@ -330,12 +311,12 @@
 <span class="sd">            for u, v in mesh.edges_where_predicate(lambda u, v, attr: 3 in attr[&#39;extra_attr2&#39;]):</span>
 <span class="sd">                print u, v</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">predicate</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">predicate</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">attr</span><span class="p">):</span>
                 <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
-                    <span class="k">yield</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span>
+                    <span class="k">yield</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">yield</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
+                    <span class="k">yield</span> <span class="n">key</span>
 
 
 <span class="k">class</span> <span class="nc">FaceFilter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -363,56 +344,37 @@
 <span class="sd">            The next face and its attributes, if ``data=True``.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">fkey</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">fkey</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces</span><span class="p">():</span>
             <span class="n">is_match</span> <span class="o">=</span> <span class="kc">True</span>
+
+            <span class="n">attr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">face_attributes</span><span class="p">(</span><span class="n">fkey</span><span class="p">)</span>
 
             <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">conditions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">method</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="n">method</span><span class="p">):</span>
                     <span class="n">val</span> <span class="o">=</span> <span class="n">method</span><span class="p">(</span><span class="n">fkey</span><span class="p">)</span>
-
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
-                        <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-                        <span class="k">break</span>
-
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-                        <span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span> <span class="o">=</span> <span class="n">value</span>
-
-                        <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="n">minval</span> <span class="ow">or</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-
+                <span class="k">elif</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">:</span>
+                    <span class="n">val</span> <span class="o">=</span> <span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">:</span>
+                    <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
+                    <span class="k">break</span>
+
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">val</span><span class="p">:</span>
+                        <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">break</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
+                    <span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span> <span class="o">=</span> <span class="n">value</span>
+                    <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;</span> <span class="n">minval</span> <span class="ow">or</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
+                        <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="k">break</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="n">val</span><span class="p">:</span>
                         <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
                         <span class="k">break</span>
 
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="nb">list</span><span class="p">):</span>
-                        <span class="k">if</span> <span class="n">value</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-                        <span class="k">break</span>
-
-                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">)):</span>
-                        <span class="n">minval</span><span class="p">,</span> <span class="n">maxval</span> <span class="o">=</span> <span class="n">value</span>
-
-                        <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">minval</span> <span class="ow">or</span> <span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">maxval</span><span class="p">:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="k">if</span> <span class="n">value</span> <span class="o">!=</span> <span class="n">attr</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
-                            <span class="n">is_match</span> <span class="o">=</span> <span class="kc">False</span>
-                            <span class="k">break</span>
-
             <span class="k">if</span> <span class="n">is_match</span><span class="p">:</span>
-
                 <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">fkey</span><span class="p">,</span> <span class="n">attr</span>
                 <span class="k">else</span><span class="p">:</span>
@@ -510,6 +472,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../../examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../api.html">API Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../contributions.html">Contributions</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../devguide.html">Developer Guide</a></li>
@@ -541,11 +504,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

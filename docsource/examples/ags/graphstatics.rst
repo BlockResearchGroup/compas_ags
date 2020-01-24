@@ -10,8 +10,3 @@ Graph Statics
 .. literalinclude:: ../../../examples/example_graphstatics.py
     :language: python
 
-
-Downloads
-=========
-
-None

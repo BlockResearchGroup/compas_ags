@@ -61,7 +61,20 @@
 <dl class="method">
 <dt id="compas_ags.diagrams.ForceDiagram.face_coordinates">
 <code class="sig-prename descclassname">ForceDiagram.</code><code class="sig-name descname">face_coordinates</code><span class="sig-paren">(</span><em class="sig-param">fkey</em>, <em class="sig-param">axes='xyz'</em><span class="sig-paren">)</span></dt>
-<dd><p>Return the coordinates of the vertices of a face.</p>
+<dd><p>Compute the coordinates of the vertices of a face.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fkey</strong> (<em>int</em>) – The identifier of the face.</p></li>
+<li><p><strong>axes</strong> (<em>str, optional</em>) – The axes alon which to take the coordinates.
+Should be a combination of <code class="docutils literal notranslate"><span class="pre">'x'</span></code>, <code class="docutils literal notranslate"><span class="pre">'y'</span></code>, <code class="docutils literal notranslate"><span class="pre">'z'</span></code>.
+Default is <code class="docutils literal notranslate"><span class="pre">'xyz'</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>list of list</em> – The coordinates of the vertices of the face.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -96,6 +109,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -138,11 +152,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

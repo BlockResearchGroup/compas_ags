@@ -23,7 +23,7 @@
     
     
     
-        <link rel="prev" title="ForceDiagram.add_edge" href="compas_ags.diagrams.ForceDiagram.add_edge.html" />
+        <link rel="prev" title="ForceDiagram.__init__" href="compas_ags.diagrams.ForceDiagram.__init__.html" />
     
 
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -61,27 +61,34 @@
 <dl class="method">
 <dt id="compas_ags.diagrams.ForceDiagram.add_face">
 <code class="sig-prename descclassname">ForceDiagram.</code><code class="sig-name descname">add_face</code><span class="sig-paren">(</span><em class="sig-param">vertices</em>, <em class="sig-param">fkey=None</em>, <em class="sig-param">attr_dict=None</em>, <em class="sig-param">**kwattr</em><span class="sig-paren">)</span></dt>
-<dd><p>Add a face and specify its attributes (optional).</p>
-<p class="rubric">Notes</p>
-<ul class="simple">
-<li><p>All faces are closed. The closing link is implied and, therefore,
-the last vertex in the list should be different from the first.</p></li>
-<li><p>Building a face_adjacency list is slow, if we can’t rely on the fact
-that all faces have the same cycle directions. Therefore, it is
-worth considering to ensure unified cycle directions upon addition
-of a new face.</p></li>
-<li><p>A check could be added that no face is added that would leave edges
-without halfedges.</p></li>
-<li><p>Adding a face does not change the layout of edges.</p></li>
-</ul>
+<dd><p>Add a face to the mesh object.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>vertices</strong> (<em>list</em>) – A list of vertex keys.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> (<em>list</em>) – A list of vertex keys.</p></li>
+<li><p><strong>attr_dict</strong> (<em>dict, optional</em>) – Face attributes.</p></li>
+<li><p><strong>kwattr</strong> (<em>dict, optional</em>) – Additional named face attributes.
+Named face attributes overwrite corresponding attributes in the
+attribute dict (<code class="docutils literal notranslate"><span class="pre">attr_dict</span></code>).</p></li>
+</ul>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>str</em> – The key of the face.</p>
+<dd class="field-even"><p><em>int</em> – The key of the face.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#TypeError" title="(in Python v3.8)"><strong>TypeError</strong></a> – If the provided face key is of an unhashable type.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>If no key is provided for the face, one is generated
+automatically. An automatically generated key is an integer that increments
+the highest integer value of any key used so far by 1.</p>
+<p>If a key with an integer value is provided that is higher than the current
+highest integer key value, then the highest integer value is updated accordingly.</p>
+<p class="rubric">Examples</p>
+<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="go">&gt;&gt;&gt;</span>
+</code></pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -116,6 +123,7 @@ without halfedges.</p></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -158,11 +166,11 @@ without halfedges.</p></li>
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

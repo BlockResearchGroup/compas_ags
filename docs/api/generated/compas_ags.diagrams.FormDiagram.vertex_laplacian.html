@@ -61,13 +61,13 @@
 <dl class="method">
 <dt id="compas_ags.diagrams.FormDiagram.vertex_laplacian">
 <code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">vertex_laplacian</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span></dt>
-<dd><p>Return the vector from the vertex to the centroid of its 1-ring neighborhood.</p>
+<dd><p>Compute the vector from a vertex to the centroid of its neighbors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>key</strong> (<em>hashable</em>) – The identifier of the vertex.</p>
+<dd class="field-odd"><p><strong>key</strong> (<em>int</em>) – The identifier of the vertex.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>list</em> – The laplacian vector.</p>
+<dd class="field-even"><p><em>list</em> – The components of the vector.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -104,6 +104,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -146,11 +147,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

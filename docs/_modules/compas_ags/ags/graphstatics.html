@@ -53,46 +53,40 @@
                     
 
                     <h1>Source code for compas_ags.ags.graphstatics</h1><div class="highlight"><pre><code>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">compas</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">array</span>
-    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">eye</span>
-    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">zeros</span>
-    <span class="kn">from</span> <span class="nn">numpy</span> <span class="k">import</span> <span class="n">float64</span>
-    <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="k">import</span> <span class="n">cond</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">eye</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">zeros</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">float64</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">cond</span>
 
-    <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="k">import</span> <span class="n">solve</span>
-    <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="k">import</span> <span class="n">lstsq</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">solve</span>
+<span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">lstsq</span>
+<span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">diags</span>
 
-    <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="k">import</span> <span class="n">diags</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">angle_vectors_xy</span>
 
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">compas</span><span class="o">.</span><span class="n">raise_if_not_ironpython</span><span class="p">()</span>    
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">connectivity_matrix</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">equilibrium_matrix</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">spsolve_with_known</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">normrow</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">normalizerow</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">dof</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">rref_sympy</span> <span class="k">as</span> <span class="n">rref</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">nonpivots</span>
 
-
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">angle_vectors_xy</span>
-
-<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="k">import</span> <span class="n">connectivity_matrix</span>
-<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="k">import</span> <span class="n">equilibrium_matrix</span>
-<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="k">import</span> <span class="n">spsolve_with_known</span>
-<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="k">import</span> <span class="n">normrow</span>
-<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="k">import</span> <span class="n">normalizerow</span>
-<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="k">import</span> <span class="n">dof</span>
-<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="k">import</span> <span class="n">rref_sympy</span> <span class="k">as</span> <span class="n">rref</span>
-<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="k">import</span> <span class="n">nonpivots</span>
-
-<span class="kn">from</span> <span class="nn">compas_ags.ags</span> <span class="k">import</span> <span class="n">update_q_from_qind</span>
-<span class="kn">from</span> <span class="nn">compas_ags.ags</span> <span class="k">import</span> <span class="n">update_form_from_force</span>
+<span class="kn">from</span> <span class="nn">compas_ags.ags</span> <span class="kn">import</span> <span class="n">update_q_from_qind</span>
+<span class="kn">from</span> <span class="nn">compas_ags.ags</span> <span class="kn">import</span> <span class="n">update_form_from_force</span>
 
 
 <span class="n">__author__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tom Van Mele&#39;</span><span class="p">]</span>
-<span class="n">__email__</span>  <span class="o">=</span> <span class="s1">&#39;vanmelet@ethz.ch&#39;</span>
+<span class="n">__email__</span> <span class="o">=</span> <span class="s1">&#39;vanmelet@ethz.ch&#39;</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
@@ -110,7 +104,7 @@
 <span class="p">]</span>
 
 
-<span class="n">EPS</span>  <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">epsilon</span>
+<span class="n">EPS</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">sys</span><span class="o">.</span><span class="n">float_info</span><span class="o">.</span><span class="n">epsilon</span>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -119,27 +113,27 @@
 
 
 <span class="k">def</span> <span class="nf">form_identify_dof_xfunc</span><span class="p">(</span><span class="n">formdata</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">compas_tna.diagrams</span> <span class="k">import</span> <span class="n">FormDiagram</span>
+    <span class="kn">from</span> <span class="nn">compas_tna.diagrams</span> <span class="kn">import</span> <span class="n">FormDiagram</span>
     <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">formdata</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">form_identify_dof</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">form_count_dof_xfunc</span><span class="p">(</span><span class="n">formdata</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">compas_tna.diagrams</span> <span class="k">import</span> <span class="n">FormDiagram</span>
+    <span class="kn">from</span> <span class="nn">compas_tna.diagrams</span> <span class="kn">import</span> <span class="n">FormDiagram</span>
     <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">formdata</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">form_count_dof</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">form_update_q_from_qind_xfunc</span><span class="p">(</span><span class="n">formdata</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="k">import</span> <span class="n">FormDiagram</span>
+    <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">FormDiagram</span>
     <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
     <span class="n">form_update_q_from_qind</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">form</span><span class="o">.</span><span class="n">to_data</span><span class="p">()</span>
 
 
 <span class="k">def</span> <span class="nf">form_update_from_force_xfunc</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="k">import</span> <span class="n">FormDiagram</span>
-    <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="k">import</span> <span class="n">ForceDiagram</span>
+    <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">FormDiagram</span>
+    <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">ForceDiagram</span>
     <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
     <span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">force</span><span class="p">)</span>
     <span class="n">form_update_from_force</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -147,8 +141,8 @@
 
 
 <span class="k">def</span> <span class="nf">force_update_from_form_xfunc</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-    <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="k">import</span> <span class="n">FormDiagram</span>
-    <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="k">import</span> <span class="n">ForceDiagram</span>
+    <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">FormDiagram</span>
+    <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">ForceDiagram</span>
     <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
     <span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">force</span><span class="p">)</span>
     <span class="n">force_update_from_form</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
@@ -207,20 +201,17 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    .. code-block:: python</span>
-
-<span class="sd">        #</span>
-
+<span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">k_i</span>   <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
-    <span class="n">xy</span>    <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">get_vertices_attributes</span><span class="p">(</span><span class="s1">&#39;xy&#39;</span><span class="p">)</span>
+    <span class="n">k_i</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices_attributes</span><span class="p">(</span><span class="s1">&#39;xy&#39;</span><span class="p">)</span>
     <span class="n">fixed</span> <span class="o">=</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">fixed</span><span class="p">()]</span>
-    <span class="n">free</span>  <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertex</span><span class="p">)))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">))</span>
-    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_edge&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})]</span>
-    <span class="n">C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
-    <span class="n">E</span>     <span class="o">=</span> <span class="n">equilibrium_matrix</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">free</span><span class="p">)</span>
-    <span class="n">k</span><span class="p">,</span> <span class="n">m</span>  <span class="o">=</span> <span class="n">dof</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
-    <span class="n">ind</span>   <span class="o">=</span> <span class="n">nonpivots</span><span class="p">(</span><span class="n">rref</span><span class="p">(</span><span class="n">E</span><span class="p">))</span>
+    <span class="n">free</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertex</span><span class="p">)))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">))</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="n">equilibrium_matrix</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">free</span><span class="p">)</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">dof</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="n">nonpivots</span><span class="p">(</span><span class="n">rref</span><span class="p">(</span><span class="n">E</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">k</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="p">[</span><span class="n">edges</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ind</span><span class="p">]</span></div>
 
 
@@ -254,25 +245,18 @@
 <span class="sd">        \mathbf{C}_{i}^{t}\mathbf{V}</span>
 <span class="sd">        \end{bmatrix}</span>
 
-<span class="sd">    References</span>
-<span class="sd">    ----------</span>
-<span class="sd">    ...</span>
-
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    .. code-block:: python</span>
-
-<span class="sd">        #</span>
-
+<span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">k_i</span>   <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
-    <span class="n">xy</span>    <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">get_vertices_attributes</span><span class="p">(</span><span class="s1">&#39;xy&#39;</span><span class="p">)</span>
+    <span class="n">k_i</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices_attributes</span><span class="p">(</span><span class="s1">&#39;xy&#39;</span><span class="p">)</span>
     <span class="n">fixed</span> <span class="o">=</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">fixed</span><span class="p">()]</span>
-    <span class="n">free</span>  <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertex</span><span class="p">)))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">))</span>
-    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_edge&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})]</span>
-    <span class="n">C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
-    <span class="n">E</span>     <span class="o">=</span> <span class="n">equilibrium_matrix</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">free</span><span class="p">)</span>
-    <span class="n">k</span><span class="p">,</span> <span class="n">m</span>  <span class="o">=</span> <span class="n">dof</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
+    <span class="n">free</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertex</span><span class="p">)))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">))</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="n">equilibrium_matrix</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">free</span><span class="p">)</span>
+    <span class="n">k</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">dof</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">k</span><span class="p">,</span> <span class="n">m</span></div>
 
 
@@ -297,34 +281,31 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    .. code-block:: python</span>
-
-<span class="sd">        #</span>
-
+<span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">k_i</span>      <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">k_i</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
     <span class="n">uv_index</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">uv_index</span><span class="p">()</span>
-    <span class="n">vcount</span>   <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()</span>
-    <span class="n">ecount</span>   <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span>
-    <span class="n">fixed</span>    <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">leaves</span><span class="p">()</span>
-    <span class="n">fixed</span>    <span class="o">=</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fixed</span><span class="p">]</span>
-    <span class="n">free</span>     <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">vcount</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">))</span>
-    <span class="n">ind</span>      <span class="o">=</span> <span class="p">[</span><span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="kc">True</span><span class="p">))</span> <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_ind&#39;</span><span class="p">]]</span>
-    <span class="n">dep</span>      <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ecount</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span>
-    <span class="n">edges</span>    <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
-    <span class="n">xy</span>       <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-    <span class="n">q</span>        <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">q</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="n">C</span>        <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
-    <span class="n">E</span>        <span class="o">=</span> <span class="n">equilibrium_matrix</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">vcount</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()</span>
+    <span class="n">ecount</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span>
+    <span class="n">fixed</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">leaves</span><span class="p">()</span>
+    <span class="n">fixed</span> <span class="o">=</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fixed</span><span class="p">]</span>
+    <span class="n">free</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">vcount</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">))</span>
+    <span class="n">ind</span> <span class="o">=</span> <span class="p">[</span><span class="n">uv_index</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">ind</span><span class="p">()]</span>
+    <span class="n">dep</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ecount</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">ind</span><span class="p">))</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">q</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="n">equilibrium_matrix</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
 
     <span class="n">update_q_from_qind</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">dep</span><span class="p">,</span> <span class="n">ind</span><span class="p">)</span>
 
     <span class="n">uv</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
-    <span class="n">l</span>  <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">uv</span><span class="p">)</span>
-    <span class="n">f</span>  <span class="o">=</span> <span class="n">q</span> <span class="o">*</span> <span class="n">l</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">uv</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">q</span> <span class="o">*</span> <span class="n">l</span>
 
-    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">uv_index</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_edge&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">},</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">uv_index</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;q&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;f&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;l&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
@@ -366,36 +347,35 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    .. code-block:: python</span>
-
-
+<span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># form diagram</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="n">k_i</span>    <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
-    <span class="n">i_j</span>    <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">())}</span>
-    <span class="n">uv_e</span>   <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">uv_index</span><span class="p">()</span>
-    <span class="n">ij_e</span>   <span class="o">=</span> <span class="p">{(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">]):</span> <span class="n">uv_e</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">uv_e</span><span class="p">}</span>
-    <span class="n">xy</span>     <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">edges</span>  <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
-    <span class="n">C</span>      <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">k_i</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">i_j</span> <span class="o">=</span> <span class="p">{</span><span class="n">i</span><span class="p">:</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">k</span><span class="p">)]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">())}</span>
+    <span class="n">uv_e</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">uv_index</span><span class="p">()</span>
+    <span class="n">ij_e</span> <span class="o">=</span> <span class="p">{(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">]):</span> <span class="n">uv_e</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">uv_e</span><span class="p">}</span>
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
     <span class="c1"># add opposite edges for convenience...</span>
     <span class="n">ij_e</span><span class="o">.</span><span class="n">update</span><span class="p">({(</span><span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">]):</span> <span class="n">uv_e</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">uv_e</span><span class="p">})</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># constraints</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="n">leaves</span> <span class="o">=</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">leaves</span><span class="p">()]</span>
-    <span class="n">fixed</span>  <span class="o">=</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">fixed</span><span class="p">()]</span>
-    <span class="n">free</span>   <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">leaves</span><span class="p">))</span>
+    <span class="n">fixed</span> <span class="o">=</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">fixed</span><span class="p">()]</span>
+    <span class="n">free</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">leaves</span><span class="p">))</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># force diagram</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="n">_i_k</span>   <span class="o">=</span> <span class="p">{</span><span class="n">index</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">())}</span>
-    <span class="n">_xy</span>    <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">_i_k</span> <span class="o">=</span> <span class="p">{</span><span class="n">index</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">())}</span>
+    <span class="n">_xy</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">_edges</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
-    <span class="n">_uv_e</span>  <span class="o">=</span> <span class="p">{(</span><span class="n">_i_k</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_i_k</span><span class="p">[</span><span class="n">j</span><span class="p">]):</span> <span class="n">e</span> <span class="k">for</span> <span class="n">e</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_edges</span><span class="p">)}</span>
-    <span class="n">_C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">_edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">_uv_e</span> <span class="o">=</span> <span class="p">{(</span><span class="n">_i_k</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_i_k</span><span class="p">[</span><span class="n">j</span><span class="p">]):</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">_edges</span><span class="p">)}</span>
+    <span class="n">_C</span> <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">_edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">_uv_e</span><span class="o">.</span><span class="n">update</span><span class="p">({(</span><span class="n">v</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span> <span class="n">_uv_e</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_uv_e</span><span class="p">})</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># compute the coordinates of thet *free* vertices</span>
     <span class="c1"># as a function of the fixed vertices and the previous coordinates of the *free* vertices</span>
@@ -405,12 +385,12 @@
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># update</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="n">uv</span>  <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+    <span class="n">uv</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
     <span class="n">_uv</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_xy</span><span class="p">)</span>
-    <span class="n">a</span>   <span class="o">=</span> <span class="p">[</span><span class="n">angle_vectors_xy</span><span class="p">(</span><span class="n">uv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_uv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">deg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">))]</span>
-    <span class="n">l</span>   <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">uv</span><span class="p">)</span>
-    <span class="n">_l</span>  <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">_uv</span><span class="p">)</span>
-    <span class="n">q</span>   <span class="o">=</span> <span class="n">_l</span> <span class="o">/</span> <span class="n">l</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">[</span><span class="n">angle_vectors_xy</span><span class="p">(</span><span class="n">uv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">_uv</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">deg</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">))]</span>
+    <span class="n">l</span> <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">uv</span><span class="p">)</span>
+    <span class="n">_l</span> <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">_uv</span><span class="p">)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">_l</span> <span class="o">/</span> <span class="n">l</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># update form diagram</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
@@ -418,8 +398,8 @@
         <span class="n">index</span> <span class="o">=</span> <span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
-    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-        <span class="n">e</span> <span class="o">=</span> <span class="n">uv_e</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">uv_e</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;l&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">l</span><span class="p">[</span><span class="n">e</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">a</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">90</span><span class="p">:</span>
@@ -431,8 +411,8 @@
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># update force diagram</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-        <span class="n">e</span> <span class="o">=</span> <span class="n">_uv_e</span><span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">edges</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">_uv_e</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;a&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">a</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;l&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_l</span><span class="p">[</span><span class="n">e</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
 
@@ -461,21 +441,21 @@
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># form diagram</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="n">k_i</span>   <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
-    <span class="n">xy</span>    <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">k_i</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="p">[[</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">]]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
-    <span class="n">C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
-    <span class="n">Q</span>     <span class="o">=</span> <span class="n">diags</span><span class="p">([</span><span class="n">form</span><span class="o">.</span><span class="n">q</span><span class="p">()],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">uv</span>    <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">diags</span><span class="p">([</span><span class="n">form</span><span class="o">.</span><span class="n">q</span><span class="p">()],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">uv</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># force diagram</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="n">_k_i</span>   <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">_k_i</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
     <span class="n">_known</span> <span class="o">=</span> <span class="p">[</span><span class="n">_k_i</span><span class="p">[</span><span class="n">force</span><span class="o">.</span><span class="n">anchor</span><span class="p">()]]</span>
-    <span class="n">_xy</span>    <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">_xy</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">_edges</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
-    <span class="n">_C</span>     <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">_edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
-    <span class="n">_Ct</span>    <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">_C</span> <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">_edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+    <span class="n">_Ct</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># compute reciprocal for given q</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
@@ -494,7 +474,6 @@
 <span class="c1"># ==============================================================================</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-
     <span class="k">pass</span>
 </code></pre></div>
                     
@@ -527,6 +506,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../api.html">API Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../contributions.html">Contributions</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../devguide.html">Developer Guide</a></li>
@@ -558,11 +538,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

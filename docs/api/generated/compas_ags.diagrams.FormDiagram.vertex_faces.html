@@ -23,7 +23,7 @@
     
     
     
-        <link rel="prev" title="FormDiagram.vertex_degree_out" href="compas_ags.diagrams.FormDiagram.vertex_degree_out.html" />
+        <link rel="prev" title="FormDiagram.vertex_degree" href="compas_ags.diagrams.FormDiagram.vertex_degree.html" />
     
 
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -60,8 +60,26 @@
 <h1>FormDiagram.vertex_faces</h1>
 <dl class="method">
 <dt id="compas_ags.diagrams.FormDiagram.vertex_faces">
-<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">vertex_faces</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">ordered=False</em>, <em class="sig-param">include_None=False</em><span class="sig-paren">)</span></dt>
-<dd><p>Return the faces connected to a vertex.</p>
+<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">vertex_faces</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">ordered=False</em>, <em class="sig-param">include_none=False</em><span class="sig-paren">)</span></dt>
+<dd><p>The faces connected to a vertex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>int</em>) – The identifier of the vertex.</p></li>
+<li><p><strong>ordered</strong> (<em>bool, optional</em>) – Return the faces in cycling order.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>include_none</strong> (<em>bool, optional</em>) – Include <em>outside</em> faces in the list.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>list</em> – The faces connected to a vertex.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="go">&gt;&gt;&gt;</span>
+</code></pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -96,6 +114,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -138,11 +157,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

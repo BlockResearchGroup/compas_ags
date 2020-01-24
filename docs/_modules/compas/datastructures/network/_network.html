@@ -53,41 +53,39 @@
                     
 
                     <h1>Source code for compas.datastructures.network._network</h1><div class="highlight"><pre><code>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">print_function</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">absolute_import</span>
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="k">import</span> <span class="n">division</span>
+<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">print_function</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">collections</span>
 
-<span class="kn">from</span> <span class="nn">copy</span> <span class="k">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">ast</span> <span class="k">import</span> <span class="n">literal_eval</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
 
-<span class="kn">from</span> <span class="nn">compas.files</span> <span class="k">import</span> <span class="n">OBJ</span>
+<span class="kn">from</span> <span class="nn">compas.files</span> <span class="kn">import</span> <span class="n">OBJ</span>
 
-<span class="kn">from</span> <span class="nn">compas.utilities</span> <span class="k">import</span> <span class="n">geometric_key</span>
+<span class="kn">from</span> <span class="nn">compas.utilities</span> <span class="kn">import</span> <span class="n">geometric_key</span>
 
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">centroid_points</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="k">import</span> <span class="n">subtract_vectors</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">centroid_points</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">subtract_vectors</span>
 
-<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="k">import</span> <span class="n">Datastructure</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Datastructure</span>
 
-<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="k">import</span> <span class="n">VertexAttributesManagement</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="k">import</span> <span class="n">VertexHelpers</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="k">import</span> <span class="n">VertexMappings</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="k">import</span> <span class="n">VertexFilter</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="kn">import</span> <span class="n">VertexAttributesManagement</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="kn">import</span> <span class="n">VertexHelpers</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="kn">import</span> <span class="n">VertexMappings</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="kn">import</span> <span class="n">VertexFilter</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="kn">import</span> <span class="n">EdgeAttributesManagement</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="kn">import</span> <span class="n">EdgeHelpers</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="kn">import</span> <span class="n">EdgeGeometry</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="kn">import</span> <span class="n">EdgeMappings</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="kn">import</span> <span class="n">EdgeFilter</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="kn">import</span> <span class="n">FromToData</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="kn">import</span> <span class="n">FromToJson</span>
 
-<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="k">import</span> <span class="n">EdgeAttributesManagement</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="k">import</span> <span class="n">EdgeHelpers</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="k">import</span> <span class="n">EdgeGeometry</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="k">import</span> <span class="n">EdgeMappings</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="k">import</span> <span class="n">EdgeFilter</span>
-
-<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="k">import</span> <span class="n">FromToData</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures._mixins</span> <span class="k">import</span> <span class="n">FromToJson</span>
-
-<span class="kn">from</span> <span class="nn">compas.datastructures.network.operations</span> <span class="k">import</span> <span class="n">network_split_edge</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures.network.operations</span> <span class="kn">import</span> <span class="n">network_split_edge</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Network&#39;</span><span class="p">]</span>
@@ -159,7 +157,7 @@
 
     <span class="n">split_edge</span> <span class="o">=</span> <span class="n">network_split_edge</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">Network</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_key_to_str</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max_int_key</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -182,7 +180,7 @@
     <span class="c1"># move these to a mixin?</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Generate a readable representation of the data of the mesh.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 
@@ -901,7 +899,7 @@
         <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">nbrs</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edge</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
             <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">nbrs</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
                 <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
-                    <span class="k">yield</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span>
+                    <span class="k">yield</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span> <span class="n">attr</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
 
@@ -1363,7 +1361,7 @@
 <span class="sd">            network.plot()</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="kn">from</span> <span class="nn">compas_plotters</span> <span class="k">import</span> <span class="n">NetworkPlotter</span>
+        <span class="kn">from</span> <span class="nn">compas_plotters</span> <span class="kn">import</span> <span class="n">NetworkPlotter</span>
 
         <span class="n">plotter</span> <span class="o">=</span> <span class="n">NetworkPlotter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="n">plotter</span><span class="o">.</span><span class="n">draw_vertices</span><span class="p">(</span>
@@ -1387,7 +1385,7 @@
 
     <span class="kn">import</span> <span class="nn">compas</span>
 
-    <span class="kn">from</span> <span class="nn">compas_plotters</span> <span class="k">import</span> <span class="n">NetworkPlotter</span>
+    <span class="kn">from</span> <span class="nn">compas_plotters</span> <span class="kn">import</span> <span class="n">NetworkPlotter</span>
 
     <span class="n">network</span> <span class="o">=</span> <span class="n">Network</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">compas</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;lines.obj&#39;</span><span class="p">))</span>
 
@@ -1456,6 +1454,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../../../examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../api.html">API Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../contributions.html">Contributions</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../../../devguide.html">Developer Guide</a></li>
@@ -1487,11 +1486,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

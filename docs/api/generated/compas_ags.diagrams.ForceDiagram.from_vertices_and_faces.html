@@ -19,11 +19,11 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
     
-        <link rel="next" title="ForceDiagram.get_any_edge" href="compas_ags.diagrams.ForceDiagram.get_any_edge.html" />
+        <link rel="next" title="ForceDiagram.genus" href="compas_ags.diagrams.ForceDiagram.genus.html" />
     
     
     
-        <link rel="prev" title="ForceDiagram.from_vertices_and_edges" href="compas_ags.diagrams.ForceDiagram.from_vertices_and_edges.html" />
+        <link rel="prev" title="ForceDiagram.from_stl" href="compas_ags.diagrams.ForceDiagram.from_stl.html" />
     
 
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -65,9 +65,10 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>vertices</strong> (<em>list</em>) – A list of vertices, represented by their XYZ coordinates.</p></li>
-<li><p><strong>faces</strong> (<em>list</em>) – A list of faces.
-Each face is a list of indices referencing the list of vertex coordinates.</p></li>
+<li><p><strong>vertices</strong> (<em>list, dict</em>) – A list of vertices, represented by their XYZ coordinates,
+or a dictionary of vertex keys pointing to their XYZ coordinates.</p></li>
+<li><p><strong>faces</strong> (<em>list, dict</em>) – A list of faces, represented by a list of indices referencing the list of vertex coordinates,
+or a dictionary of face keys pointing to a list of indices referencing the list of vertex coordinates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
@@ -75,11 +76,7 @@ Each face is a list of indices referencing the list of vertex coordinates.</p></
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">compas</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="k">import</span> <span class="n">Mesh</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">vertices</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">faces</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]]</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_vertices_and_faces</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">faces</span><span class="p">)</span>
+<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="go">&gt;&gt;&gt;</span>
 </code></pre></div>
 </div>
 </dd></dl>
@@ -116,6 +113,7 @@ Each face is a list of indices referencing the list of vertex coordinates.</p></
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -158,11 +156,11 @@ Each face is a list of indices referencing the list of vertex coordinates.</p></
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
     
-        <link rel="next" title="ForceDiagram.faces_on_boundary" href="compas_ags.diagrams.ForceDiagram.faces_on_boundary.html" />
+        <link rel="next" title="ForceDiagram.faces_attribute" href="compas_ags.diagrams.ForceDiagram.faces_attribute.html" />
     
     
     
@@ -61,7 +61,16 @@
 <dl class="method">
 <dt id="compas_ags.diagrams.ForceDiagram.faces">
 <code class="sig-prename descclassname">ForceDiagram.</code><code class="sig-name descname">faces</code><span class="sig-paren">(</span><em class="sig-param">data=False</em><span class="sig-paren">)</span></dt>
-<dd><p>Return an iterator for the faces and their attributes (optional).</p>
+<dd><p>Iterate over the faces of the mesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>bool, optional</em>) – Return the face data as well as the face keys.</p>
+</dd>
+<dt class="field-even">Yields</dt>
+<dd class="field-even"><p><em>int or tuple</em> – The next face identifier, if <code class="docutils literal notranslate"><span class="pre">data</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>.
+The next face as a (fkey, attr) tuple, if <code class="docutils literal notranslate"><span class="pre">data</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p>
+</dd>
+</dl>
 </dd></dl>
 
 </div>
@@ -96,6 +105,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -138,11 +148,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

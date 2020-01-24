@@ -5,24 +5,22 @@ compas_ags.diagrams
 
 .. currentmodule:: compas_ags.diagrams
 
+Graphs
+======
 
-FormDiagram
-===========
+.. autosummary::
+    :toctree: generated/
+
+    FormGraph
+
+Diagrams
+========
 
 .. autosummary::
     :toctree: generated/
 
     FormDiagram
-
-
-ForceDiagram
-============
-
-.. autosummary::
-    :toctree: generated/
-
     ForceDiagram
-
 
 """
 from __future__ import absolute_import

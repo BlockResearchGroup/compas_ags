@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
     
-        <link rel="next" title="FormDiagram.vertices_on_boundary" href="compas_ags.diagrams.FormDiagram.vertices_on_boundary.html" />
+        <link rel="next" title="FormDiagram.vertices_attribute" href="compas_ags.diagrams.FormDiagram.vertices_attribute.html" />
     
     
     
@@ -61,16 +61,14 @@
 <dl class="method">
 <dt id="compas_ags.diagrams.FormDiagram.vertices">
 <code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">vertices</code><span class="sig-paren">(</span><em class="sig-param">data=False</em><span class="sig-paren">)</span></dt>
-<dd><p>Iterate over the vertices of the network.</p>
+<dd><p>Iterate over the vertices of the mesh.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>bool, optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code>, yield both the identifier and the attributes.</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>bool, optional</em>) – Return the vertex data as well as the vertex keys.</p>
 </dd>
 <dt class="field-even">Yields</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><em>hashable</em> – The next vertex identifier (<em>key</em>), if <code class="docutils literal notranslate"><span class="pre">data</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p><em>2-tuple</em> – The next vertex as a (key, attr) tuple, if <code class="docutils literal notranslate"><span class="pre">data</span></code> is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
-</ul>
+<dd class="field-even"><p><em>int or tuple</em> – The next vertex identifier, if <code class="docutils literal notranslate"><span class="pre">data</span></code> is false.
+The next vertex as a (key, attr) tuple, if <code class="docutils literal notranslate"><span class="pre">data</span></code> is true.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -107,6 +105,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -149,11 +148,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

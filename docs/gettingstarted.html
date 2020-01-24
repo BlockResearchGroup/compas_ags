@@ -60,29 +60,26 @@
 <h1>Getting Started</h1>
 <div class="section" id="installation">
 <h2>Installation</h2>
-<p>Released versions of <a class="reference internal" href="api/compas_ags.html#module-compas_ags" title="compas_ags"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_ags</span></code></a> can be installed with <em>pip</em>.
-To get the latest release do</p>
-<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>$ pip install compas_ags
+<p>With pip, <a class="reference internal" href="api/compas_ags.html#module-compas_ags" title="compas_ags"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_ags</span></code></a> can be installed directly from the GitHub repo.</p>
+<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>pip install git+https://github.com/BlockResearchGroup/compas_ags.git#egg<span class="o">=</span>compas_ags
 </code></pre></div>
 </div>
-<p>To get a specific release</p>
-<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>$ pip install <span class="nv">compas_ags</span><span class="o">==</span><span class="m">0</span>.1.0
+<p>Or from local source files.</p>
+<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>git clone https://github.com/BlockResearchGroup/compas_ags.git
+<span class="nb">cd</span> compas_ags
+pip install -e .
 </code></pre></div>
 </div>
-</div>
-<div class="section" id="updates">
-<h2>Updates</h2>
-<p>If you already have <a class="reference internal" href="api/compas_ags.html#module-compas_ags" title="compas_ags"><code class="xref py py-mod docutils literal notranslate"><span class="pre">compas_ags</span></code></a> installed and you want to upgrade to the latest
-version, do</p>
-<div class="language-bash notranslate"><div class="highlight"><pre><code><span></span>$ pip install compas_ags --upgrade
-</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Don’t forget the DOT at the end of <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span></code></p>
 </div>
 </div>
 <div class="section" id="first-steps">
 <h2>First steps</h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://compas-dev.github.io/compas_ags/examples.html">https://compas-dev.github.io/compas_ags/examples.html</a></p></li>
-<li><p><a class="reference external" href="https://compas-dev.github.io/compas_ags/api.html">https://compas-dev.github.io/compas_ags/api.html</a></p></li>
+<li><p><a class="reference external" href="https://blockresearchgroup.github.io/compas_ags/examples.html">https://blockresearchgroup.github.io/compas_ags/examples.html</a></p></li>
+<li><p><a class="reference external" href="https://blockresearchgroup.github.io/compas_ags/api.html">https://blockresearchgroup.github.io/compas_ags/api.html</a></p></li>
 </ul>
 </div>
 </div>
@@ -117,6 +114,7 @@ version, do</p>
 <li class="nav-item"><a class="nav-link reference internal" href="intro.html">Introduction</a></li>
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="examples.html">Examples</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="api.html">API Reference</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="contributions.html">Contributions</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="devguide.html">Developer Guide</a></li>
@@ -141,7 +139,6 @@ version, do</p>
                 <ul class="nav flex-column" id="compas-localnav">
 <li class="nav-item"><a class="nav-link reference internal" href="#">Getting Started</a><ul class="nav">
 <li class="nav-item"><a class="nav-link reference internal" href="#installation">Installation</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="#updates">Updates</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="#first-steps">First steps</a></li>
 </ul>
 </li>
@@ -156,11 +153,11 @@ version, do</p>
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

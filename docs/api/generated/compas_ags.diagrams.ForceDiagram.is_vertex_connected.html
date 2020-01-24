@@ -19,11 +19,11 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
     
-        <link rel="next" title="ForceDiagram.is_vertex_leaf" href="compas_ags.diagrams.ForceDiagram.is_vertex_leaf.html" />
+        <link rel="next" title="ForceDiagram.is_vertex_on_boundary" href="compas_ags.diagrams.ForceDiagram.is_vertex_on_boundary.html" />
     
     
     
-        <link rel="prev" title="ForceDiagram.is_edge_naked" href="compas_ags.diagrams.ForceDiagram.is_edge_naked.html" />
+        <link rel="prev" title="ForceDiagram.is_valid" href="compas_ags.diagrams.ForceDiagram.is_valid.html" />
     
 
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -61,13 +61,14 @@
 <dl class="method">
 <dt id="compas_ags.diagrams.ForceDiagram.is_vertex_connected">
 <code class="sig-prename descclassname">ForceDiagram.</code><code class="sig-name descname">is_vertex_connected</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span></dt>
-<dd><p>Verify if a specific vertex is connected.</p>
+<dd><p>Verify that a vertex is connected.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>key</strong> (<em>hashable</em>) – The identifier of the vertex.</p>
+<dd class="field-odd"><p><strong>key</strong> (<em>int</em>) – The identifier of the vertex.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>bool</em> – True or False.</p>
+<dd class="field-even"><p><em>bool</em> – True if the vertex is connected to at least one other vertex.
+False otherwise.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -104,6 +105,7 @@
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -146,11 +148,11 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

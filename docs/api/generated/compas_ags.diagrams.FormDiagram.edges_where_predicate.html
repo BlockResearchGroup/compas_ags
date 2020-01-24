@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
     
-        <link rel="next" title="FormDiagram.face_adjacency" href="compas_ags.diagrams.FormDiagram.face_adjacency.html" />
+        <link rel="next" title="FormDiagram.euler" href="compas_ags.diagrams.FormDiagram.euler.html" />
     
     
     
@@ -90,19 +90,19 @@ Default is <code class="docutils literal notranslate"><span class="pre">False</s
 <span class="n">mesh</span><span class="o">.</span><span class="n">add_face</span><span class="p">([</span><span class="n">v0</span><span class="p">,</span><span class="n">v1</span><span class="p">,</span><span class="n">v3</span><span class="p">])</span>
 <span class="n">mesh</span><span class="o">.</span><span class="n">add_face</span><span class="p">([</span><span class="n">v1</span><span class="p">,</span><span class="n">v2</span><span class="p">,</span><span class="n">v3</span><span class="p">])</span>
 
-<span class="n">mesh</span><span class="o">.</span><span class="n">update_default_edge_attributes</span><span class="p">({</span><span class="s1">&#39;extra_attr1&#39;</span><span class="p">:</span><span class="bp">None</span><span class="p">,</span> <span class="s2">&quot;extra_attr2&quot;</span><span class="p">:[]})</span>
+<span class="n">mesh</span><span class="o">.</span><span class="n">update_default_edge_attributes</span><span class="p">({</span><span class="s1">&#39;extra_attr1&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;extra_attr2&quot;</span><span class="p">:[]})</span>
 
 <span class="n">random_edge</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">get_any_edge</span><span class="p">()</span>
 <span class="n">mesh</span><span class="o">.</span><span class="n">set_edge_attributes</span><span class="p">(</span><span class="n">random_edge</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;extra_attr1&#39;</span><span class="p">,</span> <span class="s1">&#39;extra_attr2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">]])</span>
 
-<span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e_data</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">edges_where_predicate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;extra_attr1&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="bp">True</span><span class="p">):</span>
-    <span class="k">print</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e_data</span>
+<span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e_data</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">edges_where_predicate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;extra_attr1&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+    <span class="nb">print</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e_data</span>
 
 <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">edges_where_predicate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="s1">&#39;extra_attr1&#39;</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">):</span>
-    <span class="k">print</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
+    <span class="nb">print</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
 
 <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">edges_where_predicate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="mi">3</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;extra_attr2&#39;</span><span class="p">]):</span>
-    <span class="k">print</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
+    <span class="nb">print</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
 </code></pre></div>
 </div>
 </dd></dl>
@@ -139,6 +139,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">False</s
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -181,11 +182,11 @@ Default is <code class="docutils literal notranslate"><span class="pre">False</s
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Jan 24, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>
