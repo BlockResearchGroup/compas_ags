@@ -12,6 +12,7 @@ email: vanmelet@ethz.ch
 """
 import compas_ags
 
+from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
@@ -23,12 +24,14 @@ from compas_ags.ags import graphstatics
 # make form diagram from obj
 # make force diagram from form
 
-form = FormDiagram.from_obj(compas_ags.get('paper/gs_form_force.obj'))
+graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
+
+form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
 # set the fixed points
 
-left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
+left = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 
 fixed = [left, right]
@@ -55,7 +58,7 @@ form_lines = []
 for u, v in form.edges():
     form_lines.append({
         'start': form.vertex_coordinates(u, 'xy'),
-        'end'  : form.vertex_coordinates(v, 'xy'),
+        'end': form.vertex_coordinates(v, 'xy'),
         'width': 1.0,
         'color': '#cccccc',
         'style': '--'
@@ -65,7 +68,7 @@ force_lines = []
 for u, v in force.edges():
     force_lines.append({
         'start': force.vertex_coordinates(u, 'xy'),
-        'end'  : force.vertex_coordinates(v, 'xy'),
+        'end': force.vertex_coordinates(v, 'xy'),
         'width': 1.0,
         'color': '#cccccc',
         'style': '--'

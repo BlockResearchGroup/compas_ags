@@ -5,21 +5,15 @@ from __future__ import division
 import sys
 import compas
 
-try:
-    from numpy import array
-    from numpy import eye
-    from numpy import zeros
-    from numpy import float64
-    from numpy.linalg import cond
+from numpy import array
+from numpy import eye
+from numpy import zeros
+from numpy import float64
+from numpy.linalg import cond
 
-    from scipy.linalg import solve
-    from scipy.linalg import lstsq
-
-    from scipy.sparse import diags
-
-except ImportError:
-    compas.raise_if_not_ironpython()    
-
+from scipy.linalg import solve
+from scipy.linalg import lstsq
+from scipy.sparse import diags
 
 from compas.geometry import angle_vectors_xy
 
@@ -37,7 +31,7 @@ from compas_ags.ags import update_form_from_force
 
 
 __author__ = ['Tom Van Mele']
-__email__  = 'vanmelet@ethz.ch'
+__email__ = 'vanmelet@ethz.ch'
 
 
 __all__ = [
@@ -55,7 +49,7 @@ __all__ = [
 ]
 
 
-EPS  = 1 / sys.float_info.epsilon
+EPS = 1 / sys.float_info.epsilon
 
 
 # ==============================================================================
@@ -152,20 +146,17 @@ def form_identify_dof(form):
 
     Examples
     --------
-    .. code-block:: python
-
-        #
-
+    >>>
     """
-    k_i   = form.key_index()
-    xy    = form.get_vertices_attributes('xy')
+    k_i = form.key_index()
+    xy = form.vertices_attributes('xy')
     fixed = [k_i[key] for key in form.fixed()]
-    free  = list(set(range(len(form.vertex))) - set(fixed))
-    edges = [(k_i[u], k_i[v]) for u, v in form.edges_where({'is_edge': True})]
-    C     = connectivity_matrix(edges)
-    E     = equilibrium_matrix(C, xy, free)
-    k, m  = dof(E)
-    ind   = nonpivots(rref(E))
+    free = list(set(range(len(form.vertex))) - set(fixed))
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    C = connectivity_matrix(edges)
+    E = equilibrium_matrix(C, xy, free)
+    k, m = dof(E)
+    ind = nonpivots(rref(E))
     return k, m, [edges[i] for i in ind]
 
 
@@ -199,25 +190,18 @@ def form_count_dof(form):
         \mathbf{C}_{i}^{t}\mathbf{V}
         \end{bmatrix}
 
-    References
-    ----------
-    ...
-
     Examples
     --------
-    .. code-block:: python
-
-        #
-
+    >>>
     """
-    k_i   = form.key_index()
-    xy    = form.get_vertices_attributes('xy')
+    k_i = form.key_index()
+    xy = form.vertices_attributes('xy')
     fixed = [k_i[key] for key in form.fixed()]
-    free  = list(set(range(len(form.vertex))) - set(fixed))
-    edges = [(k_i[u], k_i[v]) for u, v in form.edges_where({'is_edge': True})]
-    C     = connectivity_matrix(edges)
-    E     = equilibrium_matrix(C, xy, free)
-    k, m  = dof(E)
+    free = list(set(range(len(form.vertex))) - set(fixed))
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    C = connectivity_matrix(edges)
+    E = equilibrium_matrix(C, xy, free)
+    k, m = dof(E)
     return k, m
 
 
@@ -242,34 +226,31 @@ def form_update_q_from_qind(form):
 
     Examples
     --------
-    .. code-block:: python
-
-        #
-
+    >>>
     """
-    k_i      = form.key_index()
+    k_i = form.key_index()
     uv_index = form.uv_index()
-    vcount   = form.number_of_vertices()
-    ecount   = form.number_of_edges()
-    fixed    = form.leaves()
-    fixed    = [k_i[key] for key in fixed]
-    free     = list(set(range(vcount)) - set(fixed))
-    ind      = [index for index, (u, v, attr) in enumerate(form.edges(True)) if attr['is_ind']]
-    dep      = list(set(range(ecount)) - set(ind))
-    edges    = [(k_i[u], k_i[v]) for u, v in form.edges()]
-    xy       = array(form.xy(), dtype=float64).reshape((-1, 2))
-    q        = array(form.q(), dtype=float64).reshape((-1, 1))
-    C        = connectivity_matrix(edges, 'csr')
-    E        = equilibrium_matrix(C, xy, free, 'csr')
+    vcount = form.number_of_vertices()
+    ecount = form.number_of_edges()
+    fixed = form.leaves()
+    fixed = [k_i[key] for key in fixed]
+    free = list(set(range(vcount)) - set(fixed))
+    ind = [uv_index[key] for key in form.ind()]
+    dep = list(set(range(ecount)) - set(ind))
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    xy = array(form.xy(), dtype=float64).reshape((-1, 2))
+    q = array(form.q(), dtype=float64).reshape((-1, 1))
+    C = connectivity_matrix(edges, 'csr')
+    E = equilibrium_matrix(C, xy, free, 'csr')
 
     update_q_from_qind(E, q, dep, ind)
 
     uv = C.dot(xy)
-    l  = normrow(uv)
-    f  = q * l
+    l = normrow(uv)
+    f = q * l
 
-    for u, v, attr in form.edges(True):
-        index = uv_index[(u, v)]
+    for key, attr in form.edges_where({'is_edge': True}, True):
+        index = uv_index[key]
         attr['q'] = q[index, 0]
         attr['f'] = f[index, 0]
         attr['l'] = l[index, 0]
@@ -311,36 +292,35 @@ def form_update_from_force(form, force, kmax=100):
 
     Examples
     --------
-    .. code-block:: python
-
-
+    >>>
     """
     # --------------------------------------------------------------------------
     # form diagram
     # --------------------------------------------------------------------------
-    k_i    = form.key_index()
-    i_j    = {i: [k_i[n] for n in form.vertex_neighbors(k)] for i, k in enumerate(form.vertices())}
-    uv_e   = form.uv_index()
-    ij_e   = {(k_i[u], k_i[v]): uv_e[(u, v)] for u, v in uv_e}
-    xy     = array(form.xy(), dtype=float64)
-    edges  = [(k_i[u], k_i[v]) for u, v in form.edges()]
-    C      = connectivity_matrix(edges, 'csr')
+    k_i = form.key_index()
+    i_j = {i: [k_i[n] for n in form.vertex_neighbors(k)] for i, k in enumerate(form.vertices())}
+    uv_e = form.uv_index()
+    ij_e = {(k_i[u], k_i[v]): uv_e[(u, v)] for u, v in uv_e}
+    xy = array(form.xy(), dtype=float64)
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    C = connectivity_matrix(edges, 'csr')
     # add opposite edges for convenience...
     ij_e.update({(k_i[v], k_i[u]): uv_e[(u, v)] for u, v in uv_e})
     # --------------------------------------------------------------------------
     # constraints
     # --------------------------------------------------------------------------
     leaves = [k_i[key] for key in form.leaves()]
-    fixed  = [k_i[key] for key in form.fixed()]
-    free   = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
+    fixed = [k_i[key] for key in form.fixed()]
+    free = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
     # --------------------------------------------------------------------------
     # force diagram
     # --------------------------------------------------------------------------
-    _i_k   = {index: key for index, key in enumerate(force.vertices())}
-    _xy    = array(force.xy(), dtype=float64)
+    _i_k = {index: key for index, key in enumerate(force.vertices())}
+    _xy = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)
-    _uv_e  = {(_i_k[i], _i_k[j]): e for e, (i, j) in enumerate(_edges)}
-    _C     = connectivity_matrix(_edges, 'csr')
+    _uv_e = {(_i_k[i], _i_k[j]): index for index, (i, j) in enumerate(_edges)}
+    _C = connectivity_matrix(_edges, 'csr')
+    _uv_e.update({(v, u): _uv_e[u, v] for u, v in _uv_e})
     # --------------------------------------------------------------------------
     # compute the coordinates of thet *free* vertices
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
@@ -350,12 +330,12 @@ def form_update_from_force(form, force, kmax=100):
     # --------------------------------------------------------------------------
     # update
     # --------------------------------------------------------------------------
-    uv  = C.dot(xy)
+    uv = C.dot(xy)
     _uv = _C.dot(_xy)
-    a   = [angle_vectors_xy(uv[i], _uv[i], deg=True) for i in range(len(edges))]
-    l   = normrow(uv)
-    _l  = normrow(_uv)
-    q   = _l / l
+    a = [angle_vectors_xy(uv[i], _uv[i], deg=True) for i in range(len(edges))]
+    l = normrow(uv)
+    _l = normrow(_uv)
+    q = _l / l
     # --------------------------------------------------------------------------
     # update form diagram
     # --------------------------------------------------------------------------
@@ -363,8 +343,8 @@ def form_update_from_force(form, force, kmax=100):
         index = k_i[key]
         attr['x'] = xy[index, 0]
         attr['y'] = xy[index, 1]
-    for u, v, attr in form.edges(True):
-        e = uv_e[(u, v)]
+    for key, attr in form.edges(True):
+        e = uv_e[key]
         attr['l'] = l[e, 0]
         attr['a'] = a[e]
         if a[e] < 90:
@@ -376,8 +356,8 @@ def form_update_from_force(form, force, kmax=100):
     # --------------------------------------------------------------------------
     # update force diagram
     # --------------------------------------------------------------------------
-    for u, v, attr in force.edges(True):
-        e = _uv_e[(u, v)]
+    for key, attr in force.edges(True):
+        e = _uv_e[key]
         attr['a'] = a[e]
         attr['l'] = _l[e, 0]
 
@@ -406,21 +386,21 @@ def force_update_from_form(force, form):
     # --------------------------------------------------------------------------
     # form diagram
     # --------------------------------------------------------------------------
-    k_i   = form.key_index()
-    xy    = array(form.xy(), dtype=float64)
+    k_i = form.key_index()
+    xy = array(form.xy(), dtype=float64)
     edges = [[k_i[u], k_i[v]] for u, v in form.edges()]
-    C     = connectivity_matrix(edges, 'csr')
-    Q     = diags([form.q()], [0])
-    uv    = C.dot(xy)
+    C = connectivity_matrix(edges, 'csr')
+    Q = diags([form.q()], [0])
+    uv = C.dot(xy)
     # --------------------------------------------------------------------------
     # force diagram
     # --------------------------------------------------------------------------
-    _k_i   = force.key_index()
+    _k_i = force.key_index()
     _known = [_k_i[force.anchor()]]
-    _xy    = array(force.xy(), dtype=float64)
+    _xy = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)
-    _C     = connectivity_matrix(_edges, 'csr')
-    _Ct    = _C.transpose()
+    _C = connectivity_matrix(_edges, 'csr')
+    _Ct = _C.transpose()
     # --------------------------------------------------------------------------
     # compute reciprocal for given q
     # --------------------------------------------------------------------------
@@ -439,5 +419,4 @@ def force_update_from_form(force, form):
 # ==============================================================================
 
 if __name__ == "__main__":
-
     pass

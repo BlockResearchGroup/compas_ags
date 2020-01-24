@@ -2,14 +2,15 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-from compas.utilities import geometric_key2
+from compas.utilities import geometric_key_xy
 from compas.datastructures import network_is_xy
+from compas.datastructures import network_find_faces
 
 from compas_ags.diagrams import Diagram
 
 
 __author__ = ['Tom Van Mele']
-__email__  = 'vanmelet@ethz.ch'
+__email__ = 'vanmelet@ethz.ch'
 
 
 __all__ = ['FormDiagram']
@@ -21,11 +22,11 @@ class FormDiagram(Diagram):
     def __init__(self):
         super(FormDiagram, self).__init__()
         self.attributes.update({
-            'name'                  : 'FormDiagram',
-            'color.vertex'          : (255, 255, 255),
-            'color.edge'            : (0, 0, 0),
-            'color.face'            : (0, 255, 255),
-            'color.vertex:is_fixed' : (255, 0, 0),
+            'name': 'FormDiagram',
+            'color.vertex': (255, 255, 255),
+            'color.edge': (0, 0, 0),
+            'color.face': (0, 255, 255),
+            'color.vertex:is_fixed': (255, 0, 0),
         })
         self.update_default_vertex_attributes({
             'is_fixed': False,
@@ -36,27 +37,77 @@ class FormDiagram(Diagram):
             'q': 1.0,
             'f': 0.0,
             'l': 0.0,
-            'is_ind'     : False,
-            'is_element' : False,
+            'is_ind': False,
+            'is_element': False,
             'is_reaction': False,
-            'is_load'    : False,
-            'is_edge'    : True,
+            'is_load': False,
+            'is_edge': True,
 
         })
 
+    @classmethod
+    def from_graph(cls, graph):
+        form = cls()
+        form.vertex = graph.vertex
+        form.halfedge = graph.halfedge
+        network_find_faces(form, breakpoints=graph.leaves())
+        form.edges_attribute('is_edge', False, keys=list(form.edges_on_boundary()))
+        return form
+
     # --------------------------------------------------------------------------
-    # faces
+    # Topology
     # --------------------------------------------------------------------------
+
+    def edges(self, data=False):
+        seen = set()
+        for u in self.halfedge:
+            for v in self.halfedge[u]:
+                if (u, v) in seen or (v, u) in seen:
+                    continue
+                seen.add((u, v))
+                seen.add((v, u))
+                if not self.edge_attribute((u, v), 'is_edge'):
+                    continue
+                if not data:
+                    yield u, v
+                else:
+                    yield (u, v), self.edge_attributes((u, v))
+
+    def leaves(self):
+        keys = []
+        for key in self.vertices():
+            edges = 0
+            nbrs = self.vertex_neighbors(key)
+            for nbr in nbrs:
+                if self.edge_attribute((key, nbr), 'is_edge'):
+                    edges += 1
+            if edges == 1:
+                keys.append(key)
+        return keys
 
     def breakpoints(self):
         return list(set(self.leaves() + self.fixed()))
+
+    def number_of_edges(self):
+        return len(list(self.edges()))
+
+    def face_adjacency_edge(self, f1, f2):
+        edges = list(self.edges())
+        for u, v in self.face_halfedges(f1):
+            if self.halfedge[v][u] == f2:
+                if (u, v) in edges:
+                    return u, v
+                return v, u
+
+    def uv_index(self):
+        return {key: index for index, key in enumerate(self.edges())}
 
     # --------------------------------------------------------------------------
     # Convenience functions for retrieving the attributes of the formdiagram.
     # --------------------------------------------------------------------------
 
     def q(self):
-        return [attr['q'] for u, v, attr in self.edges(True)]
+        return [attr['q'] for key, attr in self.edges(True)]
 
     def xy(self):
         return [[attr['x'], attr['y']] for key, attr in self.vertices(True)]
@@ -73,7 +124,7 @@ class FormDiagram(Diagram):
         return cx, cy
 
     def ind(self):
-        return [(u, v) for u, v, attr in self.edges(True) if attr['is_ind']]
+        return [key for key, attr in self.edges(True) if attr['is_ind']]
 
     # --------------------------------------------------------------------------
     # Set stuff
@@ -85,12 +136,12 @@ class FormDiagram(Diagram):
 
     def set_edge_force(self, u, v, force):
         l = self.edge_length(u, v)
-        self.edge[u][v]['is_ind'] = True
-        self.edge[u][v]['q'] = force / l
+        self.edge_attribute((u, v), 'is_ind', True)
+        self.edge_attribute((u, v), 'q', force / l)
 
     def set_edge_forcedensity(self, u, v, q):
-        self.edge[u][v]['is_ind'] = True
-        self.edge[u][v]['q'] = q
+        self.edge_attribute((u, v), 'is_ind', True)
+        self.edge_attribute((u, v), 'q', q)
 
     def set_edge_force_by_index(self, index, force):
         for i, (u, v) in enumerate(self.edges()):
@@ -108,10 +159,10 @@ class FormDiagram(Diagram):
         if points:
             xy_key = {}
             for key in self.vertices():
-                gkey = geometric_key2(self.vertex_coordinates(key, 'xy'))
+                gkey = geometric_key_xy(self.vertex_coordinates(key, 'xy'))
                 xy_key[gkey] = key
             for xy in points:
-                gkey = geometric_key2(xy)
+                gkey = geometric_key_xy(xy)
                 if gkey in xy_key:
                     key = xy_key[gkey]
                     self.vertex[key]['is_fixed'] = True
@@ -120,21 +171,14 @@ class FormDiagram(Diagram):
         if points:
             xy_key = {}
             for key in self.vertices():
-                gkey = geometric_key2(self.vertex_coordinates(key, 'xy'))
+                gkey = geometric_key_xy(self.vertex_coordinates(key, 'xy'))
                 xy_key[gkey] = key
             for xy in points:
-                gkey = geometric_key2(xy)
+                gkey = geometric_key_xy(xy)
                 if gkey in xy_key:
                     key = xy_key[gkey]
                     self.vertex[key]['cx'] = 1.0
                     self.vertex[key]['cy'] = 1.0
-
-    # --------------------------------------------------------------------------
-    # Topological functionality
-    # --------------------------------------------------------------------------
-
-    def is_2d(self):
-        return network_is_xy(self)
 
 
 # ==============================================================================
@@ -153,7 +197,7 @@ if __name__ == '__main__':
     for u, v in form.edges():
         lines.append({
             'start': form.vertex_coordinates(u),
-            'end'  : form.vertex_coordinates(v),
+            'end': form.vertex_coordinates(v),
             'color': '#cccccc',
             'width': 0.5,
         })
@@ -162,7 +206,7 @@ if __name__ == '__main__':
 
     vcolor = {key: '#ff0000' for key in form.fixed()}
     vlabel = {key: key for key in form.vertices()}
-    elabel = {(u, v): str(index) for index, (u, v) in enumerate(form.edges())}
+    elabel = {key: str(index) for index, key in enumerate(form.edges())}
 
     plotter = NetworkPlotter(form, figsize=(10.0, 7.0), fontsize=8)
 

@@ -111,8 +111,8 @@ class Viewer(object):
 
         # scale and position
 
-        x = self.form.get_vertices_attribute('x')
-        y = self.form.get_vertices_attribute('y')
+        x = self.form.vertices_attribute('x')
+        y = self.form.vertices_attribute('y')
 
         if lines:
             x += [line['start'][0] for line in lines]
@@ -151,7 +151,7 @@ class Viewer(object):
             _lines  = []
             _arrows = []
 
-            for u, v, attr in self.form.edges(True):
+            for (u, v), attr in self.form.edges_where({'is_edge': True}, True):
                 sp, ep = self.form.edge_coordinates(u, v, 'xy')
                 sp = ((sp[0] + dx) / scale, (sp[1] + dy) / scale)
                 ep = ((ep[0] + dx) / scale, (ep[1] + dy) / scale)
@@ -295,8 +295,8 @@ class Viewer(object):
 
         # scale and position
 
-        x = self.force.get_vertices_attribute('x')
-        y = self.force.get_vertices_attribute('y')
+        x = self.force.vertices_attribute('x')
+        y = self.force.vertices_attribute('y')
         if lines:
             x += [line['start'][0] for line in lines]
             x += [line['end'][0] for line in lines]
@@ -330,7 +330,7 @@ class Viewer(object):
         if edges_on:
             leaves = set(self.form.leaves())
             _arrows = []
-            for u, v, attr in self.force.edges(True):
+            for (u, v), attr in self.force.edges(True):
                 sp, ep = self.force.edge_coordinates(u, v, 'xy')
                 sp = ((sp[0] + dx) / scale, (sp[1] + dy) / scale)
                 ep = ((ep[0] + dx) / scale, (ep[1] + dy) / scale)

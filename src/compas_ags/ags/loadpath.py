@@ -22,7 +22,7 @@ from compas_ags.ags import update_form_from_force
 
 
 __author__ = ['Tom Van Mele', 'Andrew Liew']
-__email__  = 'vanmelet@ethz.ch'
+__email__ = 'vanmelet@ethz.ch'
 
 
 __all__ = [
@@ -94,15 +94,15 @@ def compute_external_work(form, force):
         #
 
     """
-    k_i   = form.key_index()
-    xy    = array(form.xy(), dtype=float64)
+    k_i = form.key_index()
+    xy = array(form.xy(), dtype=float64)
     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
-    C     = connectivity_matrix(edges, 'csr')
-    q     = array(form.q(), dtype=float64).reshape((-1, 1))
+    C = connectivity_matrix(edges, 'csr')
+    q = array(form.q(), dtype=float64).reshape((-1, 1))
 
-    leaves   = set(form.leaves())
+    leaves = set(form.leaves())
     external = [i for i, (u, v) in enumerate(form.edges()) if u in leaves or v in leaves]
-    leaves   = [k_i[key] for key in leaves]
+    leaves = [k_i[key] for key in leaves]
 
     l = normrow(C.dot(xy))
     f = q * l
@@ -154,21 +154,21 @@ def compute_internal_work(form, force):
         #
 
     """
-    k_i   = form.key_index()
-    xy    = array(form.xy(), dtype=float64)
+    k_i = form.key_index()
+    xy = array(form.xy(), dtype=float64)
     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
-    C     = connectivity_matrix(edges, 'csr')
+    C = connectivity_matrix(edges, 'csr')
 
-    _xy    = force.xy()
+    _xy = force.xy()
     _edges = force.ordered_edges(form)
-    _C     = connectivity_matrix(_edges, 'csr')
+    _C = connectivity_matrix(_edges, 'csr')
 
-    leaves   = set(form.leaves())
+    leaves = set(form.leaves())
     internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
 
-    l   = normrow(C.dot(xy))
-    _l  = normrow(_C.dot(_xy))
-    li  = l[internal]
+    l = normrow(C.dot(xy))
+    _l = normrow(_C.dot(_xy))
+    li = l[internal]
     _li = _l[internal]
 
     return li.T.dot(_li)[0, 0]
@@ -208,23 +208,23 @@ def compute_internal_work_tension(form, force):
         #
 
     """
-    k_i   = form.key_index()
-    xy    = array(form.xy(), dtype=float64)
+    k_i = form.key_index()
+    xy = array(form.xy(), dtype=float64)
     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
-    C     = connectivity_matrix(edges, 'csr')
-    q     = array(form.q(), dtype=float64).reshape((-1, 1))
+    C = connectivity_matrix(edges, 'csr')
+    q = array(form.q(), dtype=float64).reshape((-1, 1))
 
-    _xy    = force.xy()
+    _xy = force.xy()
     _edges = force.ordered_edges(form)
-    _C     = connectivity_matrix(_edges, 'csr')
+    _C = connectivity_matrix(_edges, 'csr')
 
-    leaves   = set(form.leaves())
+    leaves = set(form.leaves())
     internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
-    tension  = [i for i in internal if q[i, 0] > 0]
+    tension = [i for i in internal if q[i, 0] > 0]
 
-    l   = normrow(C.dot(xy))
-    _l  = normrow(_C.dot(_xy))
-    li  = l[tension]
+    l = normrow(C.dot(xy))
+    _l = normrow(_C.dot(_xy))
+    li = l[tension]
     _li = _l[tension]
 
     return li.T.dot(_li)[0, 0]
@@ -264,23 +264,23 @@ def compute_internal_work_compression(form, force):
         #
 
     """
-    k_i   = form.key_index()
-    xy    = array(form.xy(), dtype=float64)
+    k_i = form.key_index()
+    xy = array(form.xy(), dtype=float64)
     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
-    C     = connectivity_matrix(edges, 'csr')
-    q     = array(form.q(), dtype=float64).reshape((-1, 1))
+    C = connectivity_matrix(edges, 'csr')
+    q = array(form.q(), dtype=float64).reshape((-1, 1))
 
-    _xy    = force.xy()
+    _xy = force.xy()
     _edges = force.ordered_edges(form)
-    _C     = connectivity_matrix(_edges, 'csr')
+    _C = connectivity_matrix(_edges, 'csr')
 
-    leaves      = set(form.leaves())
-    internal    = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
+    leaves = set(form.leaves())
+    internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
     compression = [i for i in internal if q[i, 0] < 0]
 
-    l   = normrow(C.dot(xy))
-    _l  = normrow(_C.dot(_xy))
-    li  = l[compression]
+    l = normrow(C.dot(xy))
+    _l = normrow(_C.dot(_xy))
+    li = l[compression]
     _li = _l[compression]
 
     return li.T.dot(_li)[0, 0]
@@ -323,27 +323,28 @@ def optimise_loadpath(form, force, algo='COBYLA'):
     vice versa, parallelisation is no longer effective.
 
     """
-    k_i    = form.key_index()
-    i_j    = dict((i, [k_i[n] for n in form.vertex_neighbors(k)]) for i, k in enumerate(form.vertices()))
-    uv_e   = form.uv_index()
-    ij_e   = dict(((k_i[u], k_i[v]), uv_e[(u, v)]) for u, v in uv_e)
-    xy     = array(form.xy(), dtype=float64)
-    edges  = [(k_i[u], k_i[v]) for u, v in form.edges()]
-    C      = connectivity_matrix(edges, 'csr')
+    k_i = form.key_index()
+    i_j = dict((i, [k_i[n] for n in form.vertex_neighbors(k)]) for i, k in enumerate(form.vertices()))
+    uv_e = form.uv_index()
+    ij_e = dict(((k_i[u], k_i[v]), uv_e[(u, v)]) for u, v in uv_e)
+    xy = array(form.xy(), dtype=float64)
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    C = connectivity_matrix(edges, 'csr')
     # add opposite edges for convenience...
     ij_e.update(dict(((k_i[v], k_i[u]), uv_e[(u, v)]) for u, v in uv_e))
 
-    leaves   = [k_i[key] for key in form.leaves()]
-    fixed    = [k_i[key] for key in form.fixed()]
-    free     = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
+    leaves = [k_i[key] for key in form.leaves()]
+    fixed = [k_i[key] for key in form.fixed()]
+    free = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
     internal = [i for i, (u, v) in enumerate(form.edges()) if k_i[u] not in leaves and k_i[v] not in leaves]
 
-    _k_i   = dict((key, index) for index, key in enumerate(force.vertices()))
-    _i_k   = dict((index, key) for index, key in enumerate(force.vertices()))
-    _xy    = array(force.xy(), dtype=float64)
+    _k_i = dict((key, index) for index, key in enumerate(force.vertices()))
+    _i_k = dict((index, key) for index, key in enumerate(force.vertices()))
+    _xy = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)
-    _C     = connectivity_matrix(_edges, 'csr')
-    _uv_e  = dict(((_i_k[i], _i_k[j]), e) for e, (i, j) in enumerate(_edges))
+    _C = connectivity_matrix(_edges, 'csr')
+    _uv_e = dict(((_i_k[i], _i_k[j]), e) for e, (i, j) in enumerate(_edges))
+    _uv_e.update({(v, u): _uv_e[u, v] for u, v in _uv_e})
 
     _free = [key for key, attr in force.vertices(True) if attr['is_param']]
     _free = [_k_i[key] for key in _free]
@@ -353,17 +354,17 @@ def optimise_loadpath(form, force, algo='COBYLA'):
 
         update_form_from_force(xy, _xy, free, leaves, i_j, ij_e, _C)
 
-        l   = normrow(C.dot(xy))
-        _l  = normrow(_C.dot(_xy))
-        li  = l[internal]
+        l = normrow(C.dot(xy))
+        _l = normrow(_C.dot(_xy))
+        li = l[internal]
         _li = _l[internal]
-        lp  = li.T.dot(_li)[0, 0]
+        lp = li.T.dot(_li)[0, 0]
 
         print(lp)
 
         return(lp)
 
-    x0     = _xy[_free, 0]
+    x0 = _xy[_free, 0]
     # bounds = [(None, 0) for i in range(len(_free))]
     res = minimize(
         objfunc,
@@ -374,19 +375,19 @@ def optimise_loadpath(form, force, algo='COBYLA'):
         options={'maxiter': 1000}
     )
 
-    uv  = C.dot(xy)
+    uv = C.dot(xy)
     _uv = _C.dot(_xy)
-    a   = [angle_vectors_xy(uv[i], _uv[i]) for i in range(len(edges))]
-    l   = normrow(uv)
-    _l  = normrow(_uv)
-    q   = _l / l
+    a = [angle_vectors_xy(uv[i], _uv[i]) for i in range(len(edges))]
+    l = normrow(uv)
+    _l = normrow(_uv)
+    q = _l / l
 
     for key, attr in form.vertices(True):
         index = k_i[key]
         attr['x'] = xy[index, 0]
         attr['y'] = xy[index, 1]
 
-    for u, v, attr in form.edges(True):
+    for (u, v), attr in form.edges(True):
         e = uv_e[(u, v)]
         attr['l'] = l[e, 0]
         attr['a'] = a[e]
@@ -402,7 +403,7 @@ def optimise_loadpath(form, force, algo='COBYLA'):
         attr['x'] = _xy[index, 0]
         attr['y'] = _xy[index, 1]
 
-    for u, v, attr in force.edges(True):
+    for (u, v), attr in force.edges(True):
         e = _uv_e[(u, v)]
         attr['a'] = a[e]
         attr['l'] = _l[e, 0]

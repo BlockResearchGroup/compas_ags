@@ -1,6 +1,7 @@
 import compas
 import compas_ags
 
+from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
@@ -64,7 +65,9 @@ edges = [
     (5, 18),
 ]
 
-form = FormDiagram.from_vertices_and_edges(vertices, edges)
+graph = FormGraph.from_vertices_and_edges(vertices, edges)
+
+form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
 index_uv = form.index_uv()
@@ -73,59 +76,28 @@ ind = [3, 6, 10, 13, 16]
 
 for index in ind:
     u, v = index_uv[index]
-    form.edge[u][v]['is_ind'] = True
-    form.edge[u][v]['q'] = 1.
+    form.edge_attribute((u, v), 'is_ind', True)
+    form.edge_attribute((u, v), 'q', 1.0)
 
 graphstatics.form_update_q_from_qind(form)
 graphstatics.force_update_from_form(force, form)
 
-force.vertex[7]['x']  = 0
-force.vertex[7]['y']  = 0
+force.vertex_attributes(7, 'xy', [0, 0])
+force.vertex_attributes(8, 'xy', [0, 2.5])
+force.vertex_attributes(13, 'xy', [0, -2.5])
+force.vertex_attributes(6, 'xy', [-2, 2.5])
+force.vertex_attributes(1, 'xy', [-2, -2.5])
+force.vertex_attributes(9, 'xy', [0, 1.5])
+force.vertex_attributes(12, 'xy', [0, -1.5])
+force.vertex_attributes(5, 'xy', [-2, 1.5])
+force.vertex_attributes(2, 'xy', [-2, -1.5])
+force.vertex_attributes(10, 'xy', [0, 0.5])
+force.vertex_attributes(11, 'xy', [0, -0.5])
+force.vertex_attributes(4, 'xy', [-2, 0.5])
+force.vertex_attributes(3, 'xy', [-2, -0.5])
 
-force.vertex[8]['x']  = 0
-force.vertex[8]['y']  = 2.5
-force.vertex[13]['x'] = 0
-force.vertex[13]['y'] = -2.5
-
-force.vertex[6]['x']  = -2
-force.vertex[6]['y']  = 2.5
-force.vertex[1]['x']  = -2
-force.vertex[1]['y']  = -2.5
-
-force.vertex[9]['x']  = 0
-force.vertex[9]['y']  = 1.5
-force.vertex[12]['x'] = 0
-force.vertex[12]['y'] = -1.5
-
-force.vertex[5]['x']  = -2
-force.vertex[5]['y']  = 1.5
-force.vertex[2]['x']  = -2
-force.vertex[2]['y']  = -1.5
-
-force.vertex[10]['x'] = 0
-force.vertex[10]['y'] = 0.5
-force.vertex[11]['x'] = 0
-force.vertex[11]['y'] = -0.5
-
-force.vertex[4]['x']  = -2
-force.vertex[4]['y']  = 0.5
-force.vertex[3]['x']  = -2
-force.vertex[3]['y']  = -0.5
-
-force.vertex[1]['is_param'] = True
-force.vertex[2]['is_param'] = True
-force.vertex[3]['is_param'] = True
-force.vertex[4]['is_param'] = True
-force.vertex[5]['is_param'] = True
-force.vertex[6]['is_param'] = True
-
-form.vertex[0]['is_fixed'] = True
-form.vertex[1]['is_fixed'] = True
-form.vertex[2]['is_fixed'] = True
-form.vertex[3]['is_fixed'] = True
-form.vertex[4]['is_fixed'] = True
-form.vertex[5]['is_fixed'] = True
-form.vertex[6]['is_fixed'] = True
+force.vertices_attribute('is_param', True, keys=[1, 2, 3, 4, 5, 6])
+form.vertices_attribute('is_fixed', True, keys=[0, 1, 2, 3, 4, 5, 6])
 
 graphstatics.form_update_from_force(form, force)
 loadpath.optimise_loadpath(form, force)

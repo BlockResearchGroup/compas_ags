@@ -27,13 +27,10 @@ ForceDiagram
 """
 from __future__ import absolute_import
 
+from .formgraph import *
 from .diagram import *
 from .formdiagram import *
 from .forcediagram import *
 
-from . import diagram
-from . import formdiagram
-from . import forcediagram
 
-
-__all__ = formdiagram.__all__ + forcediagram.__all__
+__all__ = [name for name in dir() if not name.startswith('_')]

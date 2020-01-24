@@ -8,34 +8,29 @@ Getting Started
 Installation
 ============
 
-Released versions of :mod:`compas_ags` can be installed with *pip*.
-To get the latest release do
+With pip, :mod:`compas_ags` can be installed directly from the GitHub repo.
 
-::
+.. code-block:: bash
 
-    $ pip install compas_ags
-
-
-To get a specific release
-
-::
-
-    $ pip install compas_ags==0.1.0
+    pip install git+https://github.com/BlockResearchGroup/compas_ags.git#egg=compas_ags
 
 
-Updates
-=======
+Or from local source files.
 
-If you already have :mod:`compas_ags` installed and you want to upgrade to the latest
-version, do
+.. code-block:: bash
 
-::
+    git clone https://github.com/BlockResearchGroup/compas_ags.git
+    cd compas_ags
+    pip install -e .
 
-    $ pip install compas_ags --upgrade
+
+.. note::
+
+    Don't forget the DOT at the end of ``pip install -e .``
 
 
 First steps
 ===========
 
-* https://compas-dev.github.io/compas_ags/examples.html
-* https://compas-dev.github.io/compas_ags/api.html
+* https://blockresearchgroup.github.io/compas_ags/examples.html
+* https://blockresearchgroup.github.io/compas_ags/api.html

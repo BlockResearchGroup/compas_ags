@@ -2,14 +2,15 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-from compas.datastructures import network_find_faces
-from compas.datastructures import network_dual
+# from compas.datastructures import network_find_faces
+# from compas.datastructures import network_dual
+from compas.datastructures import mesh_dual
 
 from compas_ags.diagrams import Diagram
 
 
 __author__ = ['Tom Van Mele', 'Vedad Alic']
-__email__  = ['<vanmelet@ethz.ch>', '<vedad.alic@construction.lth.se>']
+__email__ = ['<vanmelet@ethz.ch>', '<vedad.alic@construction.lth.se>']
 
 
 __all__ = ['ForceDiagram']
@@ -21,18 +22,18 @@ class ForceDiagram(Diagram):
     def __init__(self):
         super(ForceDiagram, self).__init__()
         self.attributes.update({
-            'name'         : 'ForceDiagram',
-            'color.vertex' : (255, 255, 255),
-            'color.edge'   : (200, 200, 200),
-            'color.face'   : (0, 255, 255),
+            'name': 'ForceDiagram',
+            'color.vertex': (255, 255, 255),
+            'color.edge': (200, 200, 200),
+            'color.face': (0, 255, 255),
         })
         self.update_default_vertex_attributes({
-            'is_fixed'  : False,
-            'is_anchor' : False,
-            'is_param'  : False,
+            'is_fixed': False,
+            'is_anchor': False,
+            'is_param': False,
         })
         self.update_default_edge_attributes({
-            'l'   : 0.0,
+            'l': 0.0,
             'lmin': 1e-7,
             'lmax': 1e+7,
         })
@@ -43,8 +44,7 @@ class ForceDiagram(Diagram):
 
     @classmethod
     def from_formdiagram(cls, formdiagram):
-        network_find_faces(formdiagram, formdiagram.breakpoints())
-        return network_dual(formdiagram, cls)
+        return mesh_dual(formdiagram, cls)
 
     # --------------------------------------------------------------------------
     # Convenience functions for retrieving attributes of the force diagram.
@@ -93,9 +93,9 @@ class ForceDiagram(Diagram):
 
     def ordered_edges(self, form, index=True):
         key_index = self.key_index()
-        uv_index  = self.uv_index(form=form)
-        index_uv  = dict((i, uv) for uv, i in uv_index.items())
-        edges     = [index_uv[i] for i in range(self.number_of_edges())]
+        uv_index = self.uv_index(form=form)
+        index_uv = dict((i, uv) for uv, i in uv_index.items())
+        edges = [index_uv[i] for i in range(self.number_of_edges())]
         if not index:
             return edges
         return [[key_index[u], key_index[v]] for u, v in edges]
