@@ -65,8 +65,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>predicate</strong> (<em>callable</em>) – The condition you want to evaluate. The callable takes 3 parameters: <code class="docutils literal notranslate"><span class="pre">u</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>, <code class="docutils literal notranslate"><span class="pre">attr</span></code> and should return <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p><strong>data</strong> (<em>bool, optional</em>) – Yield the vertices and their data attributes.
+<li><p><strong>predicate</strong> (<em>callable</em>) – The condition you want to evaluate.
+The callable takes 3 parameters: <code class="docutils literal notranslate"><span class="pre">u</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>, <code class="docutils literal notranslate"><span class="pre">attr</span></code> and should return <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>data</strong> (<em>bool, optional</em>) – Yield the nodes and their data attributes.
 Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
 </ul>
 </dd>
@@ -78,31 +79,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">False</s
 </dd>
 </dl>
 <p class="rubric">Examples</p>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span><span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
-
-<span class="n">mesh</span> <span class="o">=</span> <span class="n">Mesh</span><span class="p">()</span>
-
-<span class="n">v0</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">add_vertex</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-<span class="n">v1</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">add_vertex</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-<span class="n">v2</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">add_vertex</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-<span class="n">v3</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">add_vertex</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">100.0</span><span class="p">,</span> <span class="n">z</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
-
-<span class="n">mesh</span><span class="o">.</span><span class="n">add_face</span><span class="p">([</span><span class="n">v0</span><span class="p">,</span><span class="n">v1</span><span class="p">,</span><span class="n">v3</span><span class="p">])</span>
-<span class="n">mesh</span><span class="o">.</span><span class="n">add_face</span><span class="p">([</span><span class="n">v1</span><span class="p">,</span><span class="n">v2</span><span class="p">,</span><span class="n">v3</span><span class="p">])</span>
-
-<span class="n">mesh</span><span class="o">.</span><span class="n">update_default_edge_attributes</span><span class="p">({</span><span class="s1">&#39;extra_attr1&#39;</span><span class="p">:</span><span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;extra_attr2&quot;</span><span class="p">:[]})</span>
-
-<span class="n">random_edge</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">get_any_edge</span><span class="p">()</span>
-<span class="n">mesh</span><span class="o">.</span><span class="n">set_edge_attributes</span><span class="p">(</span><span class="n">random_edge</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;extra_attr1&#39;</span><span class="p">,</span> <span class="s1">&#39;extra_attr2&#39;</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">9</span><span class="p">]])</span>
-
-<span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e_data</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">edges_where_predicate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;extra_attr1&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
-    <span class="nb">print</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">e_data</span>
-
-<span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">edges_where_predicate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="s1">&#39;extra_attr1&#39;</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">):</span>
-    <span class="nb">print</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
-
-<span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mesh</span><span class="o">.</span><span class="n">edges_where_predicate</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">attr</span><span class="p">:</span> <span class="mi">3</span> <span class="ow">in</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;extra_attr2&#39;</span><span class="p">]):</span>
-    <span class="nb">print</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
+<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="go">&gt;&gt;&gt;</span>
 </code></pre></div>
 </div>
 </dd></dl>
@@ -182,7 +159,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">False</s
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Jan 24, 2020.
+                Last updated on Feb 16, 2020.
             
 
             

@@ -12,6 +12,8 @@ email: vanmelet@ethz.ch
 """
 import compas_ags
 
+from compas_plotters import MeshPlotter
+
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
@@ -37,11 +39,11 @@ right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 fixed = [left, right]
 
 form.set_fixed(fixed)
-force.set_fixed([2])
+force.set_fixed([0])
 
 # set the magnitude of the applied load
 
-form.set_edge_force_by_index(0, -10.0)
+form.set_edge_force_by_index(1, -10.0)
 
 # update the diagrams
 
@@ -76,7 +78,7 @@ for u, v in force.edges():
 
 # modify the geometry of the force diagram
 
-force.vertex[1]['x'] -= 5.0
+force.vertex[4]['x'] -= 5.0
 
 # update the formdiagram
 
@@ -85,8 +87,8 @@ graphstatics.form_update_from_force(form, force, kmax=100)
 # add arrow to lines to indicate movement
 
 force_lines.append({
-    'start': force_key_xyz[1],
-    'end': force.vertex_coordinates(1),
+    'start': force_key_xyz[4],
+    'end': force.vertex_coordinates(4),
     'color': '#ff0000',
     'width': 10.0,
     'style': '-',
@@ -101,7 +103,8 @@ viewer.draw_form(lines=form_lines,
                  forces_on=False,
                  vertexlabel={key: key for key in form.vertices()},
                  vertexsize=0.2,
-                 vertexcolor={key: '#000000' for key in fixed})
+                 vertexcolor={key: '#000000' for key in fixed},
+                 edgelabel={key: index for index, key in enumerate(form.edges())})
 
 viewer.draw_force(lines=force_lines,
                   vertexlabel={key: key for key in force.vertices()},

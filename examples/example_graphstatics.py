@@ -27,7 +27,7 @@ graphstatics.force_update_from_form(force, form)
 left = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 
-viewer = Viewer(form, force, delay_setup=False)
+viewer = Viewer(form, force, delay_setup=False, figsize=(8, 5))
 
 viewer.draw_form(
     vertexsize=0.15,

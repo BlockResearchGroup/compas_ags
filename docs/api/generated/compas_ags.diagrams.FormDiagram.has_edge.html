@@ -19,11 +19,11 @@
     <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
     
-        <link rel="next" title="FormDiagram.has_vertex" href="compas_ags.diagrams.FormDiagram.has_vertex.html" />
+        <link rel="next" title="FormDiagram.has_face" href="compas_ags.diagrams.FormDiagram.has_face.html" />
     
     
     
-        <link rel="prev" title="FormDiagram.halfedges" href="compas_ags.diagrams.FormDiagram.halfedges.html" />
+        <link rel="prev" title="FormDiagram.halfedge_face" href="compas_ags.diagrams.FormDiagram.halfedge_face.html" />
     
 
     <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -60,19 +60,19 @@
 <h1>FormDiagram.has_edge</h1>
 <dl class="method">
 <dt id="compas_ags.diagrams.FormDiagram.has_edge">
-<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">has_edge</code><span class="sig-paren">(</span><em class="sig-param">u</em>, <em class="sig-param">v</em>, <em class="sig-param">directed=True</em><span class="sig-paren">)</span></dt>
-<dd><p>Verify if the network contains a specific edge.</p>
+<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">has_edge</code><span class="sig-paren">(</span><em class="sig-param">key</em><span class="sig-paren">)</span></dt>
+<dd><p>Verify that the mesh contains a specific edge.</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>This method may produce unexpected results.</p>
+</div>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>u</strong> (<em>hashable</em>) – The identifier of the first vertex of the edge.</p></li>
-<li><p><strong>v</strong> (<em>hashable</em>) – The identifier of the secondt vertex of the edge.</p></li>
-<li><p><strong>directed</strong> (<em>bool, optional</em>) – Take into accoun the direction of the edge.
-Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>key</strong> (<em>tuple of int</em>) – The identifier of the edge.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>bool</em> – True if the edge is present, False otherwise.</p>
+<dd class="field-even"><p><em>bool</em> – True if the edge exists.
+False otherwise.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -109,6 +109,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
 <li class="nav-item"><a class="nav-link reference internal" href="../../intro.html">Introduction</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../gettingstarted.html">Getting Started</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../publications.html">Publications</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav active">
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
@@ -151,11 +152,11 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Dec 11, 2019.
+                Last updated on Feb 16, 2020.
             
 
             
-                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.1.
+                Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.3.1.
             
         </div>
     </footer>

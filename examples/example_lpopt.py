@@ -11,7 +11,7 @@ from compas_ags.ags import graphstatics
 from compas_ags.ags import loadpath
 
 
-vertices = [
+nodes = [
     [0.0, 0.0, 0],
     [1.0, 0.0, 0],
     [2.0, 0.0, 0],
@@ -32,8 +32,7 @@ vertices = [
     [2.0, +1.0, 0],
     [3.0, +1.0, 0],
     [4.0, +1.0, 0],
-    [5.0, +1.0, 0],
-]
+    [5.0, +1.0, 0]]
 
 edges = [
     (0, 1),
@@ -62,17 +61,16 @@ edges = [
     (2, 15),
     (3, 16),
     (4, 17),
-    (5, 18),
-]
+    (5, 18)]
 
-graph = FormGraph.from_vertices_and_edges(vertices, edges)
+graph = FormGraph.from_nodes_and_edges(nodes, edges)
 
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
 index_uv = form.index_uv()
 
-ind = [3, 6, 10, 13, 16]
+ind = [4, 7, 10, 13, 16]
 
 for index in ind:
     u, v = index_uv[index]
@@ -82,21 +80,22 @@ for index in ind:
 graphstatics.form_update_q_from_qind(form)
 graphstatics.force_update_from_form(force, form)
 
-force.vertex_attributes(7, 'xy', [0, 0])
-force.vertex_attributes(8, 'xy', [0, 2.5])
-force.vertex_attributes(13, 'xy', [0, -2.5])
-force.vertex_attributes(6, 'xy', [-2, 2.5])
-force.vertex_attributes(1, 'xy', [-2, -2.5])
-force.vertex_attributes(9, 'xy', [0, 1.5])
-force.vertex_attributes(12, 'xy', [0, -1.5])
-force.vertex_attributes(5, 'xy', [-2, 1.5])
-force.vertex_attributes(2, 'xy', [-2, -1.5])
-force.vertex_attributes(10, 'xy', [0, 0.5])
-force.vertex_attributes(11, 'xy', [0, -0.5])
-force.vertex_attributes(4, 'xy', [-2, 0.5])
-force.vertex_attributes(3, 'xy', [-2, -0.5])
+force.vertex_attributes(1, 'xy', [0, 2.5])
+force.vertex_attributes(2, 'xy', [0, 1.5])
+force.vertex_attributes(3, 'xy', [0, 0.5])
+force.vertex_attributes(0, 'xy', [0, 0])
+force.vertex_attributes(4, 'xy', [0, -0.5])
+force.vertex_attributes(5, 'xy', [0, -1.5])
+force.vertex_attributes(6, 'xy', [0, -2.5])
 
-force.vertices_attribute('is_param', True, keys=[1, 2, 3, 4, 5, 6])
+force.vertex_attributes(12, 'xy', [-2, 2.5])
+force.vertex_attributes(11, 'xy', [-2, 1.5])
+force.vertex_attributes(10, 'xy', [-2, 0.5])
+force.vertex_attributes(9, 'xy', [-2, -0.5])
+force.vertex_attributes(8, 'xy', [-2, -1.5])
+force.vertex_attributes(7, 'xy', [-2, -2.5])
+
+force.vertices_attribute('is_param', True, keys=[7, 8, 9, 10, 11, 12])
 form.vertices_attribute('is_fixed', True, keys=[0, 1, 2, 3, 4, 5, 6])
 
 graphstatics.form_update_from_force(form, force)
@@ -104,8 +103,13 @@ loadpath.optimise_loadpath(form, force)
 
 viewer = Viewer(form, force, delay_setup=False)
 
-viewer.draw_form(forcescale=5, vertexlabel={key: key for key in form.vertices()}, vertexsize=0.2)
-viewer.draw_force(vertexlabel={key: key for key in force.vertices()}, vertexsize=0.2)
+viewer.draw_form(
+    forcescale=5,
+    vertexlabel={key: str(key) for key in form.vertices()},
+    vertexsize=0.2)
+viewer.draw_force(
+    vertexlabel={key: str(key) for key in force.vertices()},
+    vertexsize=0.2)
 
 # viewer.save('C:\\Users\\tomvm\\Code\\__temp\\lpopt.png', dpi=300)
 viewer.show()

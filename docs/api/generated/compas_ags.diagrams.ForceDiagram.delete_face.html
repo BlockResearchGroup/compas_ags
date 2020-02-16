@@ -67,6 +67,10 @@
 <dd class="field-odd"><p><strong>fkey</strong> (<em>int</em>) – The identifier of the face.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>In some cases, disconnected vertices can remain after application of this
+method. To remove these vertices as well, combine this method with vertex
+culling (<a class="reference internal" href="compas_ags.diagrams.ForceDiagram.cull_vertices.html#compas_ags.diagrams.ForceDiagram.cull_vertices" title="compas_ags.diagrams.ForceDiagram.cull_vertices"><code class="xref py py-meth docutils literal notranslate"><span class="pre">cull_vertices()</span></code></a>).</p>
 <p class="rubric">Examples</p>
 <div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="go">&gt;&gt;&gt;</span>
 </code></pre></div>
@@ -148,7 +152,7 @@
     <footer class="bg-dark pb-5">
         <div class="container text-center pt-5 pb-5 text-muted">
             
-                Last updated on Jan 24, 2020.
+                Last updated on Feb 16, 2020.
             
 
             

@@ -40,10 +40,8 @@ FormDiagram
       ~FormDiagram.edge_coordinates
       ~FormDiagram.edge_direction
       ~FormDiagram.edge_faces
-      ~FormDiagram.edge_label_name
       ~FormDiagram.edge_length
       ~FormDiagram.edge_midpoint
-      ~FormDiagram.edge_name
       ~FormDiagram.edge_point
       ~FormDiagram.edge_vector
       ~FormDiagram.edges
@@ -69,10 +67,8 @@ FormDiagram
       ~FormDiagram.face_degree
       ~FormDiagram.face_flatness
       ~FormDiagram.face_halfedges
-      ~FormDiagram.face_label_name
       ~FormDiagram.face_max_degree
       ~FormDiagram.face_min_degree
-      ~FormDiagram.face_name
       ~FormDiagram.face_neighborhood
       ~FormDiagram.face_neighbors
       ~FormDiagram.face_normal
@@ -104,13 +100,16 @@ FormDiagram
       ~FormDiagram.from_stl
       ~FormDiagram.from_vertices_and_faces
       ~FormDiagram.genus
-      ~FormDiagram.get_any_edge
       ~FormDiagram.get_any_face
       ~FormDiagram.get_any_face_vertex
       ~FormDiagram.get_any_vertex
       ~FormDiagram.get_any_vertices
       ~FormDiagram.gkey_key
       ~FormDiagram.halfedge_face
+      ~FormDiagram.has_edge
+      ~FormDiagram.has_face
+      ~FormDiagram.has_halfedge
+      ~FormDiagram.has_vertex
       ~FormDiagram.identify_constraints
       ~FormDiagram.identify_fixed
       ~FormDiagram.ind
@@ -122,7 +121,6 @@ FormDiagram
       ~FormDiagram.is_edge_on_boundary
       ~FormDiagram.is_empty
       ~FormDiagram.is_face_on_boundary
-      ~FormDiagram.is_halfedge
       ~FormDiagram.is_manifold
       ~FormDiagram.is_orientable
       ~FormDiagram.is_quadmesh
@@ -146,6 +144,7 @@ FormDiagram
       ~FormDiagram.smooth_area
       ~FormDiagram.smooth_centroid
       ~FormDiagram.split_edge
+      ~FormDiagram.split_face
       ~FormDiagram.summary
       ~FormDiagram.to_data
       ~FormDiagram.to_json
@@ -178,11 +177,9 @@ FormDiagram
       ~FormDiagram.vertex_curvature
       ~FormDiagram.vertex_degree
       ~FormDiagram.vertex_faces
-      ~FormDiagram.vertex_label_name
       ~FormDiagram.vertex_laplacian
       ~FormDiagram.vertex_max_degree
       ~FormDiagram.vertex_min_degree
-      ~FormDiagram.vertex_name
       ~FormDiagram.vertex_neighborhood
       ~FormDiagram.vertex_neighborhood_centroid
       ~FormDiagram.vertex_neighbors

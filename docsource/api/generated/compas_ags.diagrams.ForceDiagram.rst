@@ -39,10 +39,8 @@ ForceDiagram
       ~ForceDiagram.edge_coordinates
       ~ForceDiagram.edge_direction
       ~ForceDiagram.edge_faces
-      ~ForceDiagram.edge_label_name
       ~ForceDiagram.edge_length
       ~ForceDiagram.edge_midpoint
-      ~ForceDiagram.edge_name
       ~ForceDiagram.edge_point
       ~ForceDiagram.edge_vector
       ~ForceDiagram.edges
@@ -69,10 +67,8 @@ ForceDiagram
       ~ForceDiagram.face_degree
       ~ForceDiagram.face_flatness
       ~ForceDiagram.face_halfedges
-      ~ForceDiagram.face_label_name
       ~ForceDiagram.face_max_degree
       ~ForceDiagram.face_min_degree
-      ~ForceDiagram.face_name
       ~ForceDiagram.face_neighborhood
       ~ForceDiagram.face_neighbors
       ~ForceDiagram.face_normal
@@ -104,22 +100,23 @@ ForceDiagram
       ~ForceDiagram.from_stl
       ~ForceDiagram.from_vertices_and_faces
       ~ForceDiagram.genus
-      ~ForceDiagram.get_any_edge
       ~ForceDiagram.get_any_face
       ~ForceDiagram.get_any_face_vertex
       ~ForceDiagram.get_any_vertex
       ~ForceDiagram.get_any_vertices
       ~ForceDiagram.gkey_key
       ~ForceDiagram.halfedge_face
+      ~ForceDiagram.has_edge
+      ~ForceDiagram.has_face
+      ~ForceDiagram.has_halfedge
+      ~ForceDiagram.has_vertex
       ~ForceDiagram.index_key
-      ~ForceDiagram.index_uv
       ~ForceDiagram.indexed_face_vertices
       ~ForceDiagram.insert_vertex
       ~ForceDiagram.is_connected
       ~ForceDiagram.is_edge_on_boundary
       ~ForceDiagram.is_empty
       ~ForceDiagram.is_face_on_boundary
-      ~ForceDiagram.is_halfedge
       ~ForceDiagram.is_manifold
       ~ForceDiagram.is_orientable
       ~ForceDiagram.is_quadmesh
@@ -140,6 +137,7 @@ ForceDiagram
       ~ForceDiagram.smooth_area
       ~ForceDiagram.smooth_centroid
       ~ForceDiagram.split_edge
+      ~ForceDiagram.split_face
       ~ForceDiagram.summary
       ~ForceDiagram.to_data
       ~ForceDiagram.to_json
@@ -173,11 +171,9 @@ ForceDiagram
       ~ForceDiagram.vertex_curvature
       ~ForceDiagram.vertex_degree
       ~ForceDiagram.vertex_faces
-      ~ForceDiagram.vertex_label_name
       ~ForceDiagram.vertex_laplacian
       ~ForceDiagram.vertex_max_degree
       ~ForceDiagram.vertex_min_degree
-      ~ForceDiagram.vertex_name
       ~ForceDiagram.vertex_neighborhood
       ~ForceDiagram.vertex_neighborhood_centroid
       ~ForceDiagram.vertex_neighbors

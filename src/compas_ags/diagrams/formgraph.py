@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 from compas.datastructures import Network
-
+from compas.datastructures import network_is_xy
 
 __all__ = ['FormGraph']
 

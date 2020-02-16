@@ -4,7 +4,7 @@ from __future__ import division
 
 from compas.utilities import geometric_key_xy
 from compas.datastructures import network_is_xy
-from compas.datastructures import network_find_faces
+from compas.datastructures import network_find_cycles
 
 from compas_ags.diagrams import Diagram
 
@@ -47,10 +47,10 @@ class FormDiagram(Diagram):
 
     @classmethod
     def from_graph(cls, graph):
-        form = cls()
-        form.vertex = graph.vertex
-        form.halfedge = graph.halfedge
-        network_find_faces(form, breakpoints=graph.leaves())
+        points = graph.to_points()
+        cycles = network_find_cycles(graph, breakpoints=graph.leaves())
+        print(cycles)
+        form = cls.from_vertices_and_faces(points, cycles)
         form.edges_attribute('is_edge', False, keys=list(form.edges_on_boundary()))
         return form
 
@@ -101,6 +101,9 @@ class FormDiagram(Diagram):
 
     def uv_index(self):
         return {key: index for index, key in enumerate(self.edges())}
+
+    def index_uv(self):
+        return {index: key for index, key in enumerate(self.edges())}
 
     # --------------------------------------------------------------------------
     # Convenience functions for retrieving the attributes of the formdiagram.
