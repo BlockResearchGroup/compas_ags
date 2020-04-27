@@ -11,11 +11,20 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-from compas_ags.diagrams import FormDiagram
-from compas_bi_ags.diagrams import ForceDiagram
-from compas_ags.viewers import Viewer
-from compas_bi_ags.bi_ags import graphstatics
+import numpy as np
 
+from compas_ags.diagrams import FormGraph
+from compas_ags.diagrams import FormDiagram
+from compas_ags.diagrams import ForceDiagram
+from compas_ags.viewers import Viewer
+from compas_ags.ags import graphstatics
+
+from compas_ags.ags2.constraints import ConstraintsCollection, HorizontalFix, VerticalFix
+import compas_ags.ags2.rootfinding as rf
+
+# ------------------------------------------------------------------------------
+#   1. create a funicular structure from nodes and edges, make form and force diagrams
+# ------------------------------------------------------------------------------
 edges = [
         (0,  11),
         (1,  10),
@@ -76,29 +85,32 @@ vertices = [
     [43.6350930439,  0.0,            0.0],
 ]
 
-form = FormDiagram.from_vertices_and_edges(vertices, edges)
+graph = FormGraph.from_nodes_and_edges(vertices, edges)
+form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
+# ------------------------------------------------------------------------------
+#   2. prescribe edge force density and set fixed vertices
+# ------------------------------------------------------------------------------
 edges_ind = [
     (9,  22),
     (10, 16),
 ]
 for index in edges_ind:
     u, v = index
-    form.edge[u][v]['is_ind'] = True
-    form.edge[u][v]['q'] = -1.
+    form.edge_attribute((u, v), 'is_ind', True)
+    form.edge_attribute((u, v), 'q', -1.)
 
 # set the fixed points
 left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 40., 'y': 0.0}))[0]
 fixed = [left, right]
-
 form.set_fixed(fixed)
 force.set_anchor([5])
 
+# update the diagrams
 graphstatics.form_update_q_from_qind(form)
 graphstatics.force_update_from_form(force, form)
-
 
 # store lines representing the current state of equilibrium
 form_lines = []
@@ -123,9 +135,9 @@ for u, v in force.edges():
 
 
 # --------------------------------------------------------------------------
-# Begin force diagram manipulation
+#   3. force diagram manipulation and modify the form diagram
 # --------------------------------------------------------------------------
-import numpy as np
+# set constraints
 _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
 _x_min = min(_xy[:,0])
 
@@ -134,8 +146,6 @@ for i, v in enumerate(_xy):
     if v[0] > (_x_min-.1) and v[0] < (_x_min+1):
        move_vertices.append(i)
 
-
-from compas_bi_ags.bi_ags.constraints import ConstraintsCollection, HorizontalFix, VerticalFix
 C = ConstraintsCollection(form)
 C.add_constraint(HorizontalFix(form, left))
 C.add_constraint(VerticalFix(form, left))
@@ -143,22 +153,21 @@ C.add_constraint(HorizontalFix(form, right))
 C.add_constraint(VerticalFix(form, right))
 C.constrain_dependent_leaf_edges_lengths()
 
-import compas_bi_ags.bi_ags.rootfinding as rf
-
+# modify the geometry of the force diagram and update the form diagram using Newton's method
 xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
 _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
 _xy[move_vertices, 0] += 6
 _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
 rf.compute_form_from_force_newton(form, force, _X_goal, constraints=C)
-constraint_lines = C.get_lines()
-# --------------------------------------------------------------------------
-# End force diagram manipulation
-# --------------------------------------------------------------------------
 
+constraint_lines = C.get_lines()
 form_lines = form_lines + constraint_lines
 
-# display the original configuration
-# and the configuration after modifying the force diagram
+
+# ------------------------------------------------------------------------------
+#   4. display the orginal configuration
+#      and the configuration after modifying the force diagram
+# ------------------------------------------------------------------------------
 viewer = Viewer(form, force, delay_setup=False)
 
 viewer.draw_form(lines=form_lines,

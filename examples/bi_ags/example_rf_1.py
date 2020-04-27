@@ -12,17 +12,24 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_ags
+from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
-from compas_bi_ags.diagrams import ForceDiagram
+from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
-from compas_bi_ags.bi_ags import graphstatics
+from compas_ags.ags import graphstatics
 
-# make form diagram from obj
-# make force diagram from form
-form = FormDiagram.from_obj(compas_ags.get('paper/gs_form_force.obj'))
+# ------------------------------------------------------------------------------
+#   1. get lines of an orthogonal grid and its boundary conditions
+#      make form and force diagrams
+# ------------------------------------------------------------------------------
+graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
+
+form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
-# set the fixed points
+# ------------------------------------------------------------------------------
+#   2. set the fixed vertices
+# ------------------------------------------------------------------------------
 left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 fixed = [left, right]
@@ -30,8 +37,10 @@ fixed = [left, right]
 form.set_fixed(fixed)
 force.set_anchor([5])
 
+# ------------------------------------------------------------------------------
+#   3. set applied load
+# ------------------------------------------------------------------------------
 # set the magnitude of the applied load
-#form.set_edge_force_by_index(0, -10.0)
 e1 =  {'v': list(form.vertices_where({'x': 3.0, 'y': 3.0}))[0],
        'u': list(form.vertices_where({'x': 3.669563106796117, 'y': 5.008689320388349}))[0]}
 form.set_edge_forcedensity(e1['v'], e1['u'], -1.0)
@@ -64,38 +73,42 @@ for u, v in force.edges():
         'style': '--'
     })
 
+
 # --------------------------------------------------------------------------
-# Begin force diagram manipulation
+#   4. force diagram manipulation and modify the form diagram
 # --------------------------------------------------------------------------
 direct = False
 if direct:
+    # example reference: COMPAS_AGS\examples\rtl.py
     # modify the geometry of the force diagram
-    force.vertex[5]['x'] -= 0.5
+    force.vertex[4]['x'] -= 0.5
     # update the form diagram
-    graphstatics.form_update_from_force_direct(form, force)
+    graphstatics.form_update_from_force(form, force, kmax=100)
 else:
-    import compas_bi_ags.bi_ags.rootfinding as rf
+    import compas_ags.ags2.rootfinding as rf
     import numpy as np
+    # modify the geometry of the force diagram and update the form diagram using Newton's method
     xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
     _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-    _xy[force.key_index()[5], 0] -= 0.5
+    _xy[force.key_index()[4], 0] -= 0.5
     _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
-    rf.compute_form_from_force_newton(form, force, _X_goal)
-# --------------------------------------------------------------------------
-# End force diagram manipulation
-# --------------------------------------------------------------------------
+    # note that no constraint is defined, thus shift may happen of the form diagram
+    rf.compute_form_from_force_newton(form, force, _X_goal, constraints=None)
 
 # add arrow to lines to indicate movement
 force_lines.append({
-    'start': force_key_xyz[5],
-    'end': force.vertex_coordinates(5),
+    'start': force_key_xyz[4],
+    'end': force.vertex_coordinates(4),
     'color': '#ff0000',
     'width': 10.0,
     'style': '-',
 })
 
-# display the original configuration
-# and the configuration after modifying the force diagram
+
+# ------------------------------------------------------------------------------
+#   5. display the orginal configuration
+#      and the configuration after modifying the force diagram
+# ------------------------------------------------------------------------------
 viewer = Viewer(form, force, delay_setup=False)
 
 viewer.draw_form(lines=form_lines,

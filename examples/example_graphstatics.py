@@ -14,20 +14,36 @@ from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
 from compas_ags.ags import graphstatics
 
+
+# ------------------------------------------------------------------------------
+#   1. get lines of a plane triangle frame in equilibrium, its applied loads and reaction forces
+#      make form and force diagrams
+# ------------------------------------------------------------------------------
 graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
 
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
+
+# ------------------------------------------------------------------------------
+#   2. set applied load
+# ------------------------------------------------------------------------------
+# choose an independent edge and set the magnitude of the applied load
+# the system is statically determinate, thus choosing one edge is enough
 form.set_edge_force_by_index(0, -30.0)
 
+# update force densities of form and force diagrams
 graphstatics.form_update_q_from_qind(form)
 graphstatics.force_update_from_form(force, form)
 
-left = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
-right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 
+# ------------------------------------------------------------------------------
+#   3. display force and form diagrams
+# ------------------------------------------------------------------------------
 viewer = Viewer(form, force, delay_setup=False, figsize=(8, 5))
+
+left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
+right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 
 viewer.draw_form(
     vertexsize=0.15,

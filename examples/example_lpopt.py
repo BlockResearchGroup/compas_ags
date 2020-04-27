@@ -1,3 +1,10 @@
+"""Optimise the loadpath of a truss using the parameters of the force domain and
+visualise the result using a form and force diagram.
+
+author:  
+email:  
+
+"""
 import compas
 import compas_ags
 
@@ -11,6 +18,11 @@ from compas_ags.ags import graphstatics
 from compas_ags.ags import loadpath
 
 
+# ------------------------------------------------------------------------------
+#   1. create a planar truss structure, its applied loads and boundary conditions
+#      from nodes and edges
+#      make form and force diagrams
+# ------------------------------------------------------------------------------
 nodes = [
     [0.0, 0.0, 0],
     [1.0, 0.0, 0],
@@ -68,18 +80,29 @@ graph = FormGraph.from_nodes_and_edges(nodes, edges)
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
+
+# ------------------------------------------------------------------------------
+#   2. assign applied loads
+# ------------------------------------------------------------------------------
+# apply loads to the bottom chord
 index_uv = form.index_uv()
-
-ind = [4, 7, 10, 13, 16]
-
+ind = [4, 7, 10, 13, 16] 
 for index in ind:
     u, v = index_uv[index]
     form.edge_attribute((u, v), 'is_ind', True)
     form.edge_attribute((u, v), 'q', 1.0)
 
+# update force densities of form and force diagram
 graphstatics.form_update_q_from_qind(form)
 graphstatics.force_update_from_form(force, form)
 
+
+# ------------------------------------------------------------------------------
+#   3. optimize the loadpath
+# ------------------------------------------------------------------------------
+# modify force in the truss by updating vertex coordinates of the force diagram
+# force in members of the top chord and bottom chord are set to be the same
+# now the form is no longer in equilibrium
 force.vertex_attributes(1, 'xy', [0, 2.5])
 force.vertex_attributes(2, 'xy', [0, 1.5])
 force.vertex_attributes(3, 'xy', [0, 0.5])
@@ -95,12 +118,21 @@ force.vertex_attributes(9, 'xy', [-2, -0.5])
 force.vertex_attributes(8, 'xy', [-2, -1.5])
 force.vertex_attributes(7, 'xy', [-2, -2.5])
 
+# forces in members of top chord and connecting struts are force domain parameters
 force.vertices_attribute('is_param', True, keys=[7, 8, 9, 10, 11, 12])
+# fix boundary vertices, the nodes of the bottom chord
 form.vertices_attribute('is_fixed', True, keys=[0, 1, 2, 3, 4, 5, 6])
 
+# update force and form diagrams
 graphstatics.form_update_from_force(form, force)
+# optimize the loadpath and output the optimal distribution of forces that 
+# results in overall minimum-volumn solution for given form diagram
 loadpath.optimise_loadpath(form, force)
 
+
+# ------------------------------------------------------------------------------
+#   4. display force and form diagrams
+# ------------------------------------------------------------------------------
 viewer = Viewer(form, force, delay_setup=False)
 
 viewer.draw_form(

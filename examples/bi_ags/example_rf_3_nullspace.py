@@ -10,17 +10,28 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_ags
+from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
-from compas_bi_ags.diagrams import ForceDiagram
+from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
-from compas_bi_ags.bi_ags import graphstatics
+from compas_ags.ags import graphstatics
 
-# make form diagram from obj
-# make force diagram from form
-form = FormDiagram.from_obj(compas_ags.get('paper/gs_form_force.obj'))
+import compas_ags.ags2.rootfinding as rf
+from compas_ags.ags2.constraints import ConstraintsCollection, HorizontalFix
+
+
+# ------------------------------------------------------------------------------
+#   1. get lines of a plane triangle frame in equilibrium, its applied loads and reaction forces
+# ------------------------------------------------------------------------------
+graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
+
+form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
-# set the fixed points
+
+# ------------------------------------------------------------------------------
+#   2. set the fixed vertices
+# ------------------------------------------------------------------------------
 left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 fixed = [left, right]
@@ -28,8 +39,10 @@ fixed = [left, right]
 form.set_fixed(fixed)
 force.set_anchor([5])
 
-# set the magnitude of the applied load
-#form.set_edge_force_by_index(0, -10.0)
+
+# ------------------------------------------------------------------------------
+#   3. set applied load
+# ------------------------------------------------------------------------------
 e1 ={'v': list(form.vertices_where({'x': 3.0, 'y': 3.0}))[0],
      'u': list(form.vertices_where({'x': 3.669563106796117, 'y': 5.008689320388349}))[0]}
 form.set_edge_forcedensity(e1['v'], e1['u'], -1.0)
@@ -43,27 +56,28 @@ force_key_xyz = {key: force.vertex_coordinates(key) for key in force.vertices()}
 
 
 # --------------------------------------------------------------------------
-# Begin force diagram manipulation
+#   4. force diagram manipulation and ompute the nullspace
 # --------------------------------------------------------------------------
-from compas_bi_ags.bi_ags.constraints import ConstraintsCollection, HorizontalFix
+# set constraints
 C = ConstraintsCollection(form)
+# fix y coordinates of the left and right vertices
 C.add_constraint(HorizontalFix(form, left))
 C.add_constraint(HorizontalFix(form, right))
+# fix the length of edges connecting leaf vertices
 C.constrain_dependent_leaf_edges_lengths()
 constraint_lines = C.get_lines()
 
-import compas_bi_ags.bi_ags.rootfinding as rf
+# compute the amount of nullspace modes 
+# which means the amount of independent solutions of form diagrams 
 ns = rf.compute_nullspace(form, force, C)
 print("Dimension of nullspace: " + str(len(ns)))
-# --------------------------------------------------------------------------
-# End force diagram manipulation
-# --------------------------------------------------------------------------
 
 
 # --------------------------------------------------------------------------
-# Draw diagrams and nullspace mode i
+#   5. display force diagram and a specific solution of form diagram
 # --------------------------------------------------------------------------
 def show(i):
+    # i is the index of nullspace mode
     c = 10
     c += 1
     nsi = ns[i] * c
@@ -80,9 +94,9 @@ def show(i):
 
 
     form_lines = form_lines + constraint_lines
+    
     # display the original configuration
     # and the configuration after modifying the force diagram
-
     viewer = Viewer(form, force, delay_setup=False)
     viewer.draw_form(lines=form_lines,
                      forces_on=False,
@@ -99,4 +113,5 @@ def show(i):
     )
 
     viewer.show()
+
 show(0)

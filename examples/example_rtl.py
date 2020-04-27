@@ -23,16 +23,18 @@ from compas_ags.viewers import Viewer
 from compas_ags.ags import graphstatics
 
 
-# make form diagram from obj
-# make force diagram from form
-
+# ------------------------------------------------------------------------------
+#   1. get lines of a plane triangle frame in equilibrium, its applied loads and reaction forces
+# ------------------------------------------------------------------------------
 graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
 
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
-# set the fixed points
 
+# ------------------------------------------------------------------------------
+#   2. set the fixed points
+# ------------------------------------------------------------------------------
 left = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 
@@ -41,21 +43,21 @@ fixed = [left, right]
 form.set_fixed(fixed)
 force.set_fixed([0])
 
-# set the magnitude of the applied load
 
+# ------------------------------------------------------------------------------
+#   3. set applied load
+# ------------------------------------------------------------------------------
+# choose an independent edge and set the magnitude of the applied load
 form.set_edge_force_by_index(1, -10.0)
 
-# update the diagrams
-
+# update force densities of form and force diagrams
 graphstatics.form_update_q_from_qind(form)
 graphstatics.force_update_from_form(force, form)
 
 # store the original vertex locations
-
 force_key_xyz = {key: force.vertex_coordinates(key) for key in force.vertices()}
 
 # store lines representing the current state of equilibrium
-
 form_lines = []
 for u, v in form.edges():
     form_lines.append({
@@ -65,7 +67,6 @@ for u, v in form.edges():
         'color': '#cccccc',
         'style': '--'
     })
-
 force_lines = []
 for u, v in force.edges():
     force_lines.append({
@@ -76,16 +77,17 @@ for u, v in force.edges():
         'style': '--'
     })
 
-# modify the geometry of the force diagram
 
+# ------------------------------------------------------------------------------
+#   4. force diagram manipulation and modify the form diagram
+# ------------------------------------------------------------------------------
+# modify the geometry of the force diagram
 force.vertex[4]['x'] -= 5.0
 
 # update the formdiagram
-
 graphstatics.form_update_from_force(form, force, kmax=100)
 
 # add arrow to lines to indicate movement
-
 force_lines.append({
     'start': force_key_xyz[4],
     'end': force.vertex_coordinates(4),
@@ -94,9 +96,11 @@ force_lines.append({
     'style': '-',
 })
 
-# display the orginal configuration
-# and the configuration after modifying the force diagram
 
+# ------------------------------------------------------------------------------
+#   5. display the orginal configuration
+#      and the configuration after modifying the force diagram
+# ------------------------------------------------------------------------------
 viewer = Viewer(form, force, delay_setup=False)
 
 viewer.draw_form(lines=form_lines,

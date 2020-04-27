@@ -24,8 +24,8 @@ from compas.numerical import equilibrium_matrix
 from compas.numerical import laplacian_matrix
 from compas.numerical import solve_with_known
 
-from compas_bi_ags.utilities.errorhandler import SolutionError
-from compas_bi_ags.utilities.helpers import check_solutions
+from compas_ags.utilities.errorhandler import SolutionError
+from compas_ags.utilities.helpers import check_solutions
 from compas_ags.ags.graphstatics import form_update_q_from_qind, force_update_from_form
 
 __author__    = ['Vedad Alic', ]

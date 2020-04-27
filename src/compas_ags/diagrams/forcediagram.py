@@ -152,6 +152,7 @@ class ForceDiagram(Diagram):
         M
             The matrix described in compas_bi_ags.bi_ags.graphstatics.form_update_from_force_direct
         """
+        import numpy as np
         nr_col_jac = M.shape[1]
         constraint_rows = np.zeros((0, M.shape[1]))
         residual = np.zeros((0, 1))

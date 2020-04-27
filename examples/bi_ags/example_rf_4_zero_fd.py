@@ -12,24 +12,42 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import compas_ags
-from compas_ags.diagrams import FormDiagram
-from compas_bi_ags.diagrams import ForceDiagram
-from compas_ags.viewers import Viewer
-from compas_bi_ags.bi_ags import graphstatics
+import numpy as np
 
-# make form diagram from obj
-# make force diagram from form
-form = FormDiagram.from_obj(compas_ags.get('zero_fd.obj'))
+import compas_ags
+import compas_ags.utilities.errorhandler as eh
+from compas_ags.diagrams import FormGraph
+from compas_ags.diagrams import FormDiagram
+from compas_ags.diagrams import ForceDiagram
+from compas_ags.viewers import Viewer
+from compas_ags.ags import graphstatics
+
+import compas_ags.ags2.rootfinding as rf
+from compas_ags.ags2.graphstatics import form_update_from_force_direct
+
+
+# ------------------------------------------------------------------------------
+#   1. make form diagram from obj, make force diagram from form
+# ------------------------------------------------------------------------------
+graph = FormGraph.from_obj(compas_ags.get('zero_fd.obj'))
+
+form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
-# set the fixed points
+
+# ------------------------------------------------------------------------------
+#   2. set the fixed vertices
+# ------------------------------------------------------------------------------
 left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 12.0, 'y': 0.0}))[0]
 fixed = [left, right]
 
 form.set_fixed(fixed)
 
+
+# ------------------------------------------------------------------------------
+#   3. set applied load
+# ------------------------------------------------------------------------------
 e1 = {'v': list(form.vertices_where({'x': 0.0, 'y': 6.0}))[0],
       'u': list(form.vertices_where({'x': 0.0, 'y': 12.0}))[0]}
 e2 = {'v': list(form.vertices_where({'x': 6.0, 'y': 6.0}))[0],
@@ -37,13 +55,10 @@ e2 = {'v': list(form.vertices_where({'x': 6.0, 'y': 6.0}))[0],
 e3 = {'v': list(form.vertices_where({'x': 12.0, 'y': 6.0}))[0],
       'u': list(form.vertices_where({'x': 12.0, 'y': 12.0}))[0]}
 
-#force.set_fixed([2])
-
 # set the magnitude of the applied load
 form.set_edge_force(e1['u'], e1['v'], -10.0)
 form.set_edge_force(e2['u'], e2['v'], -10.0)
 form.set_edge_force(e3['u'], e3['v'], -10.0)
-
 
 # update the diagrams
 graphstatics.form_update_q_from_qind(form)
@@ -73,7 +88,9 @@ for u, v in force.edges():
         'style': '--'
     })
 
-#  Display the original configuration
+# --------------------------------------------------------------------------
+#   4. display the original configuration
+# --------------------------------------------------------------------------
 viewer = Viewer(form, force, delay_setup=False)
 viewer.draw_form(forces_on=False,
                  vertexlabel={key: key for key in form.vertices()},
@@ -91,11 +108,8 @@ viewer.draw_force(vertexlabel={key: key for key in force.vertices()},
 viewer.show()
 
 # --------------------------------------------------------------------------
-# Begin force diagram manipulation
+#   5. force diagram manipulation and find form diagram possibilities
 # --------------------------------------------------------------------------
-import compas_bi_ags.bi_ags.rootfinding as rf
-import compas_bi_ags.utilities.errorhandler as eh
-import numpy as np
 xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
 _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
 
@@ -112,20 +126,19 @@ for i in range(_xy.shape[0]):
 # modify the geometry of the force diagram and update form diagram
 try:
     force.vertex[idx+1]['x'] += 1.0
-    graphstatics.form_update_from_force_direct(form, force)
+    form_update_from_force_direct(form, force)
 except eh.SolutionError as e:
     # Root finding solution for when direct solution fails
     force.vertex[idx+1]['x'] -= 1.0
     _xy[idx, 0] += 1.0
     _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
     rf.compute_form_from_force_newton(form, force, _X_goal)
-# --------------------------------------------------------------------------
-# End force diagram manipulation
-# --------------------------------------------------------------------------
 
 
-# display the original configuration
-# and the configuration after modifying the force diagram
+# --------------------------------------------------------------------------
+#   6. display the original configuration
+#      and the configuration after modifying the force diagram
+# --------------------------------------------------------------------------
 viewer = Viewer(form, force, delay_setup=False)
 
 viewer.draw_form(lines=form_lines,

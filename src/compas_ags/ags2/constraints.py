@@ -93,9 +93,9 @@ class ConstraintsCollection:
         leaves = self.form.leaves()
         edges = self.form.edges(True)
         dependent_leaf_edges = []
-        for i, (u, v, attr) in enumerate(edges):
+        for i, (u, v) in enumerate(edges):
             if u in leaves or v in leaves:
-                if not attr['is_ind']:
+                if not self.edge_attribute((u, v), 'is_ind'):
                     dependent_leaf_edges.append(i)
         for e in dependent_leaf_edges:
             self.add_constraint(LengthFix(self.form, e))
