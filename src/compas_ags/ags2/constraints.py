@@ -91,11 +91,10 @@ class ConstraintsCollection:
 
     def constrain_dependent_leaf_edges_lengths(self):
         leaves = self.form.leaves()
-        edges = self.form.edges(True)
         dependent_leaf_edges = []
-        for i, (u, v) in enumerate(edges):
+        for i, (u, v) in enumerate(self.form.edges()):
             if u in leaves or v in leaves:
-                if not self.edge_attribute((u, v), 'is_ind'):
+                if not self.form.edge_attribute((u, v), 'is_ind'):
                     dependent_leaf_edges.append(i)
         for e in dependent_leaf_edges:
             self.add_constraint(LengthFix(self.form, e))
