@@ -160,7 +160,7 @@ form_lines = form_lines + constraint_lines
 viewer = Viewer(form, force, delay_setup=False)
 
 viewer.draw_form(lines=form_lines,
-                 forces_on=False,
+                 forces_on=True,
                  vertexlabel={key: key for key in form.vertices()},
                  external_on=False,
                  vertexsize=0.2,
@@ -171,7 +171,7 @@ viewer.draw_form(lines=form_lines,
 viewer.draw_force(lines=force_lines,
                   vertexlabel={key: key for key in force.vertices()},
                   vertexsize=0.2,
-                  edgelabel={uv: index for index, uv in enumerate(force.edges())}
+                  edgelabel=viewer.check_edge_pairs()[1]
 )
 
 viewer.show()

@@ -49,11 +49,11 @@ class FormDiagram(Diagram):
     def from_graph(cls, graph):
         points = graph.to_points()
         cycles = network_find_cycles(graph, breakpoints=graph.leaves())
-        print(cycles)
+        # print(cycles)
         form = cls.from_vertices_and_faces(points, cycles)
         form.edges_attribute('is_edge', False, keys=list(form.edges_on_boundary()))
         return form
-
+    
     # --------------------------------------------------------------------------
     # Topology
     # --------------------------------------------------------------------------

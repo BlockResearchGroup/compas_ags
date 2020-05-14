@@ -8,6 +8,7 @@ from compas_plotters.core import draw_xpoints_xy
 from compas_plotters.core import draw_xlines_xy
 from compas_plotters.core import draw_xarrows_xy
 from compas_plotters.core import draw_xlabels_xy
+from compas_plotters.core import draw_xpolygons_xy
 
 from compas.geometry import  dot_vectors
 
@@ -215,20 +216,39 @@ class Viewer(object):
                 draw_xlines_xy(_lines, self.ax1, alpha=0.5)
 
         # faces
-        # if faces_on:
 
-        _labels = []
-        for fkey in facelabel:
-            x, y, _ = self.form.face_centroid(fkey)
-            _labels.append({
-                'pos'      : [(x + dx) / scale, (y + dy) / scale],
-                'text'     : str(facelabel[fkey]),
-                'fontsize' : self.default_fontsize,
-                'color'    : self.default_facecolor,
-                'textcolor': self.default_textcolor,
-            })
-        if _labels:
-            draw_xlabels_xy(_labels, self.ax1)
+        if faces_on:
+            # _labels = []
+            # for fkey in self.form.faces():
+            #     x, y, _ = self.form.face_centroid(fkey)
+            #     _labels.append({
+            #         'pos'      : [(x + dx) / scale, (y + dy) / scale],
+            #         'text'     : str(fkey) if fkey not in facelabel else str(facelabel[fkey]),
+            #         'fontsize' : self.default_fontsize * 2,  # TEMP! TO DIFFER FROM OTHER LABELS
+            #         'color'    : self.default_facecolor,
+            #         'textcolor': self.default_textcolor,
+            #     })
+            # if _labels:
+            #     draw_xlabels_xy(_labels, self.ax1)
+            
+            # self.default_facecolor
+            _face_polygons = []
+            for fkey in self.form.faces():
+                vkeys = [vkey for vkey in self.form.face_vertices(fkey)]
+                polygon_vertices = [self.form.vertex_coordinates(vkey, axes='xy') for vkey in vkeys]
+                polygon_vertices = [[(x + dx) / scale, (y + dy) / scale] for (x, y) in polygon_vertices ]  # scale the polygon
+                _face_polygons.append({
+                    'points'   : polygon_vertices, 
+                    'facecolor': '#e5e5e5',
+                    'edgecolor': '#ffffff',
+                    'edgewidth': 10.0,
+                    'text'     : str(fkey) if fkey not in facelabel else str(facelabel[fkey]),
+                    'fontsize' : self.default_fontsize * 2,  # TEMP! TO DIFFER FROM OTHER LABELS
+                    'textcolor': self.default_textcolor,
+                })
+            if _face_polygons:
+                draw_xpolygons_xy(_face_polygons, self.ax1)
+
 
         # points
 
@@ -313,6 +333,7 @@ class Viewer(object):
                    edgecolor=None,
                    facecolor=None,
                    edgelabel=None,
+                   facelabel=None,
                    vertexlabel=None,
                    vertexsize=None,
                    lines=None,
@@ -322,6 +343,7 @@ class Viewer(object):
 
         vertexlabel = vertexlabel or {}
         edgelabel   = edgelabel or {}
+        facelabel   = facelabel or {}
         vertexsize  = size_to_sizedict(vertexsize, self.force.vertices(), self.default_vertexsize)
         vertexcolor = color_to_colordict(vertexcolor, self.force.vertices(), self.default_vertexcolor)
         edgecolor   = color_to_colordict(edgecolor, self.force.edges(), self.default_edgecolor)
@@ -418,6 +440,27 @@ class Viewer(object):
                 })
             for style in _lines:
                 draw_xlines_xy(_lines[style], self.ax2, linestyle=style)
+
+            # faces
+
+        if faces_on:
+            _face_polygons = []
+            for fkey in self.force.faces():
+                vkeys = [vkey for vkey in self.force.face_vertices(fkey)]
+                polygon_vertices = [self.force.vertex_coordinates(vkey, axes='xy') for vkey in vkeys]
+                polygon_vertices = [[(x + dx) / scale, (y + dy) / scale] for (x, y) in polygon_vertices ]  # scale the polygon
+                _face_polygons.append({
+                    'points'   : polygon_vertices, 
+                    'facecolor': '#e5e5e5',
+                    'edgecolor': '#ffffff',
+                    'edgewidth': 10.0,
+                    'text'     : str(fkey) if fkey not in facelabel else str(facelabel[fkey]),
+                    'fontsize' : self.default_fontsize * 2,  # TEMP! TO DIFFER FROM OTHER LABELS
+                    'textcolor': self.default_textcolor,
+                })
+            if _face_polygons:
+                draw_xpolygons_xy(_face_polygons, self.ax2)
+
 
     def show(self):
         plt.show()
