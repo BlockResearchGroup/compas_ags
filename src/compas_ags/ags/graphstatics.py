@@ -37,15 +37,21 @@ __email__ = 'vanmelet@ethz.ch'
 __all__ = [
     'form_identify_dof',
     'form_identify_dof_xfunc',
+
     'form_count_dof',
     'form_count_dof_xfunc',
+
     'form_update_q_from_qind',
     'form_update_q_from_qind_xfunc',
+    'form_update_q_from_qind_rhino',
+
     'form_update_from_force',
     'form_update_from_force_xfunc',
 
     'force_update_from_form',
     'force_update_from_form_xfunc',
+    'force_update_from_form_rhino',
+
 ]
 
 
@@ -71,7 +77,7 @@ def form_count_dof_xfunc(formdata, *args, **kwargs):
 
 def form_update_q_from_qind_xfunc(formdata, *args, **kwargs):
     from compas_ags.diagrams import FormDiagram
-    form = FormDiagram.from_data(form)
+    form = FormDiagram.from_data(formdata)
     form_update_q_from_qind(form, *args, **kwargs)
     return form.to_data()
 
@@ -412,6 +418,26 @@ def force_update_from_form(force, form):
         i = _k_i[key]
         attr['x'] = _xy[i, 0]
         attr['y'] = _xy[i, 1]
+
+
+# ==============================================================================
+# Functions with return to use in Rhino with RPC
+# ==============================================================================
+
+
+from compas_ags.diagrams import FormDiagram
+from compas_ags.diagrams import ForceDiagram
+
+def form_update_q_from_qind_rhino(formdata):
+    form = FormDiagram.from_data(formdata)
+    form_update_q_from_qind(form)
+    return form.to_data()
+
+def force_update_from_form_rhino(forcedata, formdata):
+    force = ForceDiagram.from_data(forcedata)
+    form = FormDiagram.from_data(formdata)
+    force_update_from_form(force, form)
+    return force.to_data()
 
 
 # ==============================================================================

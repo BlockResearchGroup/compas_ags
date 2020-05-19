@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 from compas.utilities import geometric_key_xy
-from compas.datastructures import network_is_xy
+# from compas.datastructures import network_is_xy
 from compas.datastructures import network_find_cycles
 
 from compas_ags.diagrams import Diagram
@@ -53,7 +53,7 @@ class FormDiagram(Diagram):
         form = cls.from_vertices_and_faces(points, cycles)
         form.edges_attribute('is_edge', False, keys=list(form.edges_on_boundary()))
         return form
-    
+
     # --------------------------------------------------------------------------
     # Topology
     # --------------------------------------------------------------------------

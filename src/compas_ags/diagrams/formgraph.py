@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 from compas.datastructures import Network
-from compas.datastructures import network_is_xy
+# from compas.datastructures import network_is_xy
 
 __all__ = ['FormGraph']
 
@@ -14,7 +14,7 @@ class FormGraph(Network):
         super(FormGraph, self).__init__()
 
     def is_2d(self):
-        return network_is_xy(self)
+        return True # network_is_xy(self)
 
 
 # ==============================================================================
