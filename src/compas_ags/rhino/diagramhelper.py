@@ -9,6 +9,7 @@ import compas_rhino
 
 from compas.utilities import flatten
 from compas.utilities import geometric_key
+from compas.utilities import i_to_rgb
 
 from compas_rhino.geometry import RhinoPoint
 from compas_rhino.geometry import RhinoCurve
@@ -30,8 +31,84 @@ except ImportError:
     compas.raise_if_ironpython()
 
 
-__all__ = ['DiagramHelper']
+__all__ = ['DiagramHelper',
+            'check_edge_pairs', 
+            'draw_dual_form_faces_force_vertices',
+            'draw_dual_form_vertices_force_faces',
+            'draw_dual_edges', 
+            ]
 
+def check_edge_pairs(form, force):
+    # check the uv direction in force diagrams
+    # return edge uv that need to be flipped in force digram
+    # and edge index corresponding to the form diagram
+
+    from compas.geometry import  dot_vectors
+    edges_to_flip = []
+    form_edges = {uv: index for index, uv in enumerate(form.edges())}
+    force_edgelabel_pairs = {}
+    for i, (u, v) in enumerate(force.edges()):
+        force_vector = force.edge_vector(u, v)
+        half_edge = form.face_adjacency_halfedge(u, v)
+
+        if half_edge in form_edges:
+            form_vector = form.edge_vector(half_edge[0], half_edge[1])
+            dot_product = dot_vectors(form_vector, force_vector)
+            force_in_form = form.edge_attribute(half_edge, 'f')
+            if force_in_form * dot_product < 0:
+                edges_to_flip.append((u, v))
+
+        else:
+            half_edge = form.face_adjacency_halfedge(v, u)
+            form_vector = form.edge_vector(half_edge[0], half_edge[1])
+            dot_product = dot_vectors(form_vector, force_vector)
+            force_in_form = form.edge_attribute(half_edge, 'f')
+            if force_in_form * dot_product < 0:
+                edges_to_flip.append((u, v))
+
+        force_edgelabel_pairs[u,v] = form_edges[half_edge]
+
+    return edges_to_flip, force_edgelabel_pairs
+
+
+def draw_dual_form_faces_force_vertices(form, force, formartist, forceartist, color_scheme=i_to_rgb):
+    c_dict  = {}
+    for i, fkey in enumerate(form.faces()):
+        value = float(i) / (form.number_of_faces() - 1)
+        color = color_scheme(value)
+        c_dict[fkey] = color
+    
+    formartist.draw_edges()
+    formartist.draw_faces(color=c_dict)
+    formartist.draw_facelabels()
+    forceartist.draw_edges()
+    forceartist.draw_vertexlabels(color=c_dict)
+
+
+def draw_dual_form_vertices_force_faces(form, force, formartist, forceartist, color_scheme=i_to_rgb):
+    c_dict  = {}
+
+    if force.number_of_faces() == 1:
+        c_dict[list(force.faces())[0]] = color_scheme(1.0)
+    else:
+        for i, fkey in enumerate(force.faces()):
+            value = float(i) / (force.number_of_faces() - 1)
+            color = color_scheme(value)
+            c_dict[fkey] = color
+
+    formartist.draw_edges()
+    formartist.draw_vertexlabels(color=c_dict)
+    forceartist.draw_edges()
+    forceartist.draw_faces(color=c_dict)
+    forceartist.draw_facelabels()
+
+
+def draw_dual_edges(form, force, formartist, forceartist):
+    formartist.draw_edges()
+    formartist.draw_edgelabels(text={uv: index for index, uv in enumerate(form.edges())})
+    forceartist.draw_edges()
+    forceartist.draw_edgelabels(text=check_edge_pairs(form, force)[1])
+    
 
 def match_edges(diagram, keys):
     temp = compas_rhino.get_objects(name="{}.edge.*".format(diagram.name))

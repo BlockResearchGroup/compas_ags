@@ -1,14 +1,20 @@
+from compas_rhino import unload_modules
+unload_modules("compas")
+
 import rhinoscriptsyntax as rs
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
+from compas_ags.rhino import FormArtist
+from compas_ags.rhino import ForceArtist
 from compas.utilities import geometric_key
 import compas_rhino
 from compas_rhino.artists import MeshArtist
 import math
 
-from compas.rpc import Proxy
 
+
+from compas.rpc import Proxy
 graphstatics = Proxy('compas_ags.ags.graphstatics')
 
 # Select lines in rhino
@@ -57,25 +63,44 @@ form = FormDiagram.from_data(form_data)
 force = ForceDiagram.from_data(force_data)
 
 
-formartist = MeshArtist(form, layer='FormDiagram')
-formartist.clear()
-formartist.draw_mesh()
-formartist.draw_faces()
-formartist.draw_vertices()
-formartist.draw_edges()
-formartist.draw_vertexlabels()
-formartist.draw_edgelabels()
-formartist.draw_facelabels()
+# display
+
+formartist = FormArtist(form, layer='FormDiagram')
+forceartist = ForceArtist(force, layer='ForceDiagram')
+
+#formartist.clear()
+#formartist.draw_mesh()
+#formartist.draw_faces()
+#formartist.draw_vertices()
+#formartist.draw_edges()
+#formartist.draw_vertexlabels()
+#formartist.draw_edgelabels()
+#formartist.draw_facelabels()
+#
+#forceartist.clear()
+#forceartist.draw_mesh()
+#forceartist.draw_faces()
+#forceartist.draw_vertices()
+#forceartist.draw_edges()
+#forceartist.draw_vertexlabels()
+#forceartist.draw_edgelabels()
 
 
-forceartist = MeshArtist(force, layer='ForceDiagram')
-forceartist.clear()
-forceartist.draw_mesh()
-forceartist.draw_faces()
-forceartist.draw_vertices()
-forceartist.draw_edges()
-forceartist.draw_vertexlabels()
-forceartist.draw_edgelabels()
-forceartist.draw_facelabels()
+## draw dual form faces and force vertices ------------------------------------
+#from compas_ags.rhino import draw_dual_form_faces_force_vertices
+#draw_dual_form_faces_force_vertices(form, force, formartist, forceartist)
+
+
+## draw dual force faces and form non-leaf vertices ---------------------------
+#from compas_ags.rhino import draw_dual_form_vertices_force_faces
+#draw_dual_form_vertices_force_faces(form, force, formartist, forceartist)
+
+
+# draw dual force faces and form non-leaf vertices ----------------------------
+from compas_ags.rhino import draw_dual_edges
+draw_dual_edges(form, force, formartist, forceartist)
+
+#formartist.draw_leaves()
+
 
 print('Done')
