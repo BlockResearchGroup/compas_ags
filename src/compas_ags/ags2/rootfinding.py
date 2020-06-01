@@ -277,6 +277,33 @@ def compute_jacobian(form, force):
     return jacobian
 
 
+def compute_nullspace_xfunc(formdata, forcedata, cj=None, cr=None):
+    from compas_ags.diagrams import FormDiagram
+    from compas_ags.diagrams import ForceDiagram
+    form = FormDiagram.from_data(formdata)
+    force = ForceDiagram.from_data(forcedata)
+    jacobian = compute_jacobian(form, force)
+
+    if cj is not None and cr is not None:
+        cj = np.asarray(cj)
+        cr = np.asarray(cr)
+        jacobian = np.vstack((jacobian, cj))
+
+    _vcount = force.number_of_vertices()
+    _k_i = force.key_index()
+    _known = _k_i[force.anchor()]
+    _bc = [_known, _vcount + _known]
+
+    red_jacobian = np.delete(jacobian, _bc, axis=0)
+    A = nullspace(red_jacobian).T
+
+    null_space = []
+    for a in A:
+        xy = a.reshape((2, -1)).T
+        null_space.append(xy)
+    return null_space
+
+
 def compute_nullspace(form, force, constraints=None):
     jacobian = compute_jacobian(form, force)
     if constraints:

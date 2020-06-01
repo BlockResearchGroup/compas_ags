@@ -28,33 +28,19 @@ form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
 # set independent edge and force
-guids = compas_rhino.select_lines(message='Loaded Edges')
-lines = compas_rhino.get_line_coordinates(guids)
+from compas_ags.rhino import select_loaded_edges
+index, uv = select_loaded_edges(form)
 force_value = rs.GetReal("Force on Edges", 1.0)
-force_point = rs.GetPoint("Set Force Diagram Location")
 
-gkey_key = form.gkey_key()
-uv_i = form.uv_index()
-print(uv_i)
-print(gkey_key)
-for p1,p2 in lines:
-    u = gkey_key[geometric_key(p1)]
-    v = gkey_key[geometric_key(p2)]
-    print(u,v)
-    try:
-        index = uv_i[(u, v)]
-        uv = (u, v)
-    except:
-        index = uv_i[(v, u)]
-        vu = (v, u)
-    print(index)
-    form.set_edge_force_by_index(index, force_value)
+form.set_edge_force_by_index(index, force_value)
+
 
 # set the fixed branch and anchor of force diagram
-form.set_fixed([0,1])
-force.set_anchor([0])
-force.vertex_attribute(0, 'x', force_point[0])  # can ask for user to input a location
-force.vertex_attribute(0, 'y', force_point[1])
+#fixed = 
+#form.set_fixed([0,1])
+
+from compas_ags.rhino import select_forcediagram_location
+select_forcediagram_location(force)
     
 # update diagrams
 form_data = graphstatics.form_update_q_from_qind_rhino(form.to_data())
@@ -100,7 +86,49 @@ forceartist = ForceArtist(force, layer='ForceDiagram')
 from compas_ags.rhino import draw_dual_edges
 draw_dual_edges(form, force, formartist, forceartist)
 
-#formartist.draw_leaves()
+# show the force in an edge ---------------------------------------------------
+forceartist.draw_edge_force()
+
+# draw independent edges ------------------------------------------------------
+formartist.draw_independent_edge()
+forceartist.draw_independent_edges(form)
+
+
+# select constraints in the form diagram
+formartist.draw_vertices()
+formartist.draw_vertexlabels()
+
+
+#guid = compas_rhino.select_point(message='Select Constraints')
+#point = compas_rhino.get_point_coordinates(guid)
+#print(point)
+
+from compas_rhino.selectors import VertexSelector
+vkey = VertexSelector.select_vertex(form, message='Select constraint vertex')
+print(vkey)
+
+#------------------------------ rewrite constraints class ---------------------
+from compas_ags.constraints import ConstraintsCollection
+C = ConstraintsCollection(form)
+from compas_ags.constraints import HorizontalFix, VerticalFix
+C.add_constraint(HorizontalFix(form, vkey))
+C.add_constraint(VerticalFix(form, vkey))
+cj, cr = C.compute_constraints()
+
+# compute null-space
+rf = Proxy('compas_ags.ags2.rootfinding')
+#jacobian = rf.compute_jacobian_xfunc(form.to_data(), force.to_data())
+nullspace = rf.compute_nullspace_xfunc(form.to_data(), force.to_data(), cj, cr)
+print('Dimension of null-space is %s' % len(nullspace))
+
+
+
+#ns = rf.compute_nullspace(form.to_data(), force.to_data(), C)
+#print(ns)
+
+#C = ConstraintsCollection(form)
+#C = constraints.ConstraintsCollection(form.to_data())
+
 
 
 print('Done')
