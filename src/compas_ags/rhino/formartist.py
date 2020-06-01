@@ -46,7 +46,8 @@ class FormArtist(MeshArtist):
         return self.mesh
 
 
-    def draw_leaves(self, color=None):
+    def draw_leaves(self, color=None, arrows=False):
+        # draw leaves 
         leaves  = set(self.form.leaves())
         print('leaves', leaves)
         lines = []
@@ -57,10 +58,23 @@ class FormArtist(MeshArtist):
                 lines.append({
                     'start': self.form.vertex_coordinates(u),
                     'end': self.form.vertex_coordinates(v),
-                    'arrow': 'end',
+                    'arrow': 'end' if arrows is True else None,
                     'color': color or self.settings.get('color.leaves'), 
                     'name': "{}.leaf_edge".format(index),
                     'width': 0.3
+                })
+        return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+    
+
+    def draw_independent_edge(self):
+        lines = []
+        for index, ((u, v), attr) in enumerate(self.form.edges_where({'is_edge': True}, True)):
+            if attr['is_ind']:
+                lines.append({
+                    'start': self.form.vertex_coordinates(u),
+                    'end': self.form.vertex_coordinates(v),
+                    'name': "{}.independent_edge".format(index),
+                    'width': 1.0
                 })
         return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
 

@@ -19,6 +19,17 @@ except ImportError:
     if 'ironpython' not in sys.version.lower():
         raise
 
+from numpy import array
+from numpy import eye
+from numpy import zeros
+from numpy import float64
+from numpy.linalg import cond
+from numpy import matrix
+from scipy.linalg import solve
+from scipy.linalg import lstsq
+
+from scipy.sparse import diags
+
 from compas.numerical import connectivity_matrix
 from compas.numerical import equilibrium_matrix
 from compas.numerical import laplacian_matrix
@@ -34,6 +45,7 @@ __email__     = 'vedad.alic@construction.lth.se'
 
 __all__ = [
     'compute_jacobian',
+    'compute_jacobian_xfunc', 
     'get_red_residual_and_jacobian',
     'compute_form_from_force_newton'
 ]
@@ -149,6 +161,13 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
 
     return red_jacobian, red_r
 
+def compute_jacobian_xfunc(formdata, forcedata, *args, **kwargs):
+    from compas_ags.diagrams import FormDiagram
+    from compas_ags.diagrams import ForceDiagram
+    form = FormDiagram.from_data(formdata)
+    force = ForceDiagram.from_data(forcedata)
+    return compute_jacobian(form, force, *args, **kwargs)
+    
 
 def compute_jacobian(form, force):
     r"""Compute the Jacobian matrix.
@@ -163,7 +182,7 @@ def compute_jacobian(form, force):
     ----------
     form : compas_ags.diagrams.formdiagram.FormDiagram
         The form diagram.
-    force : compas_bi_ags.diagrams.forcediagram.ForceDiagram
+    force : compas_ags.diagrams.forcediagram.ForceDiagram
         The force diagram.
 
     Returns
@@ -198,7 +217,8 @@ def compute_jacobian(form, force):
     Q = np.diag(np.asmatrix(q).getA1())
     Q = np.asmatrix(Q)
 
-    independent_edges = list(form.edges_where({'is_ind': True}))
+    # independent_edges = list(form.edges_where({'is_ind': True}))
+    independent_edges = [(k_i[u], k_i[v]) for (u, v) in list(form.edges_where({'is_ind': True}))]
     independent_edges_idx = [edges.index(i) for i in independent_edges]
     dependent_edges_idx = list(set(range(ecount)) - set(independent_edges_idx))
 

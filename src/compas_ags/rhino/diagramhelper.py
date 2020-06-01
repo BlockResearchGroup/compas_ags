@@ -32,11 +32,45 @@ except ImportError:
 
 
 __all__ = ['DiagramHelper',
+            'select_forcediagram_location', 
+            'select_loaded_edges', 
             'check_edge_pairs', 
+            'find_force_ind', 
             'draw_dual_form_faces_force_vertices',
             'draw_dual_form_vertices_force_faces',
             'draw_dual_edges', 
             ]
+
+
+def select_forcediagram_location(force):
+    # can ask for user to input a location
+    force_point = rs.GetPoint("Set Force Diagram Location")
+    force.set_anchor([0])
+    force.vertex_attribute(0, 'x', force_point[0])  
+    force.vertex_attribute(0, 'y', force_point[1])
+
+
+def select_loaded_edges(form):
+    guids = compas_rhino.select_lines(message='Loaded Edges')
+    lines = compas_rhino.get_line_coordinates(guids)
+    gkey_key = form.gkey_key()
+    uv_i = form.uv_index()
+    print(uv_i)
+    print(gkey_key)
+    for p1,p2 in lines:
+        u = gkey_key[geometric_key(p1)]
+        v = gkey_key[geometric_key(p2)]
+        print(u,v)
+        try:
+            index = uv_i[(u, v)]
+            uv = (u, v)
+            return index, uv
+        except:
+            index = uv_i[(v, u)]
+            vu = (v, u)
+            return index, vu
+        
+
 
 def check_edge_pairs(form, force):
     # check the uv direction in force diagrams
@@ -69,6 +103,18 @@ def check_edge_pairs(form, force):
         force_edgelabel_pairs[u,v] = form_edges[half_edge]
 
     return edges_to_flip, force_edgelabel_pairs
+
+def find_force_ind(form, force):
+        # check the corresponding independent edges in the force diagram
+        force_idx_uv = {idx:uv for uv, idx in check_edge_pairs(form, force)[1].items()}
+        form_index_uv = form.index_uv()
+
+        force_ind = []
+        for idx in list(force_idx_uv.keys()):
+            u, v = form_index_uv[idx]
+            if (u, v) in form.ind():
+                force_ind.append(force_idx_uv[idx])
+        return force_ind
 
 
 def draw_dual_form_faces_force_vertices(form, force, formartist, forceartist, color_scheme=i_to_rgb):
