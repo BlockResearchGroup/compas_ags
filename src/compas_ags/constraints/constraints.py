@@ -80,15 +80,6 @@ class ConstraintsCollection:
             (j, r) = constraint.compute_constraint()
             jac.append(j)
             res.append([r])
-        return jac, res
-    #     import numpy as np
-    #     jac = np.zeros((0, self.constraints[0].number_of_cols))
-    #     res = np.zeros((0, 1))
-    #     for constraint in self.constraints:
-    #         (j, r) = constraint.compute_constraint()
-    #         jac = np.vstack((jac, j))
-    #         res = np.vstack((res, r))
-    #     return jac, res
 
     def update_constraints(self):
         for constraint in self.constraints:
@@ -125,13 +116,7 @@ class HorizontalFix(AbstractConstraint):
     def set_initial_position(self):
         self.P = self.form.vertex_coordinates(self.vertex, 'xy')[0]
 
-    def compute_constraint(self):
-        # import numpy as np
-        # constraint_jac_row = np.zeros((1, self.number_of_cols))
-        # idx = self.form.key_index()[self.vertex]
-        # constraint_jac_row[0, idx] = 1
-        # r = self.form.vertex_coordinates(self.vertex, 'xy')[0] - self.P
-        
+    def compute_constraint(self):       
         constraint_jac_row = [0] * self.number_of_cols
         idx = self.form.key_index()[self.vertex]
         constraint_jac_row[idx] = 1
@@ -169,12 +154,6 @@ class VerticalFix(AbstractConstraint):
         self.P = self.form.vertex_coordinates(self.vertex, 'xy')[1]
 
     def compute_constraint(self):
-    #     import numpy as np
-    #     constraint_jac_row = np.zeros((1, self.number_of_cols))
-    #     idx = self.form.key_index()[self.vertex] + self.form.number_of_vertices()
-    #     constraint_jac_row[0, idx] = 1
-    #     r = self.form.vertex_coordinates(self.vertex, 'xy')[1] - self.P
-
         constraint_jac_row = [0] * self.number_of_cols
         idx = self.form.key_index()[self.vertex] + self.form.number_of_vertices()
         constraint_jac_row[idx] = 1
@@ -220,8 +199,6 @@ class LengthFix(AbstractConstraint):
         self.L = m.sqrt(dx ** 2 + dy ** 2)  # Initial length
 
     def compute_constraint(self):
-    #     import numpy as np
-    #     constraint_jac_row = np.zeros((1, self.number_of_cols))
 
         constraint_jac_row = [0] * self.number_of_cols
         u, v = list(self.form.edges())[self.edge]
@@ -237,12 +214,6 @@ class LengthFix(AbstractConstraint):
         constraint_jac_row[v + self.form.number_of_vertices()] = -dy / l  # y1
         r = l - self.L
         return constraint_jac_row, r
-
-    #     constraint_jac_row[0, u] = dx / l  # x0
-    #     constraint_jac_row[0, v] = -dx / l  # x1
-    #     constraint_jac_row[0, u + self.form.number_of_vertices()] = dy / l  # y0
-    #     constraint_jac_row[0, v + self.form.number_of_vertices()] = -dy / l  # y1
-    #     r = l - self.L
 
 
 class SetLength(LengthFix):
