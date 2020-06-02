@@ -6,10 +6,10 @@ import compas
 
 from compas.geometry import add_vectors
 from compas_rhino.selectors import VertexSelector
+from compas_rhino.selectors import EdgeSelector
 
 try:
     import Rhino
-    # import rhinoscriptsyntax as rs
     from Rhino.ApplicationSettings import *
     from Rhino.Geometry import Point3d
 
@@ -24,12 +24,29 @@ except ImportError:
 
 
 __all__ = ['rhino_vertex_constraints', 
+            'rhino_edge_constraints', 
             'get_initial_point',     
             'rhino_vertex_move',
             ]
 
 
 def rhino_vertex_constraints(diagram):
+    """set vertex constraints in Rhino: fix vertex x, y coordinates 
+
+    Parameters
+    ----------
+    diagram: compas_ags.formdiagram.FormDiagram
+        The diagram where vertices need to be fixed
+    
+    Return 
+    ----------
+    constraint_dict: dict
+        key: int
+            vertex key of the digram
+        value: [boolean, boolean]
+            x,y fixed is True, not fixed is false
+    """
+
     constraint_dict = {}
 
     go = Rhino.Input.Custom.GetOption()
@@ -46,11 +63,54 @@ def rhino_vertex_constraints(diagram):
         if vkey is None:
             break
         opt = go.Get()
-        go.Get()
         if go.CommandResult() != Rhino.Commands.Result.Success:
             break
         if opt == Rhino.Input.GetResult.Option:  # keep picking options
             constraint_dict[vkey] = [boolOptionX.CurrentValue, boolOptionY.CurrentValue]
+            continue
+        break
+    
+    return constraint_dict
+
+
+def rhino_edge_constraints(diagram):
+    """set edge constraints in Rhino: fix length of an edge 
+
+    Parameters
+    ----------
+    diagram: compas_ags.formdiagram.FormDiagram
+        The diagram where vertices need to be fixed
+    
+    Return 
+    ----------
+    constraint_dict: dict
+        key: int
+            vertex key of the edge
+        value: boolean
+            True: length of the edge is fixed 
+
+    TODO??: SET EDGE LENGTH
+    """
+
+    constraint_dict = {}
+
+    go = Rhino.Input.Custom.GetOption()
+    go.SetCommandPrompt('Set Constraints')
+
+    boolOptionL = Rhino.Input.Custom.OptionToggle(False, 'False', 'True')
+    go.AddOptionToggle('fix_length', boolOptionL)
+
+
+    while True:
+        uv = EdgeSelector.select_edge(diagram, message='Select constraint edge')
+        print(uv)
+        if uv is None:
+            break
+        opt = go.Get()
+        if go.CommandResult() != Rhino.Commands.Result.Success:
+            break
+        if opt == Rhino.Input.GetResult.Option:  # keep picking options
+            constraint_dict[uv] = boolOptionL.CurrentValue
             continue
         break
     
