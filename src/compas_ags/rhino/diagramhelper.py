@@ -32,6 +32,7 @@ except ImportError:
 
 
 __all__ = ['DiagramHelper',
+            'display_nullspace_rhino',
             'select_forcediagram_location', 
             'select_loaded_edges', 
             'check_edge_pairs', 
@@ -40,6 +41,28 @@ __all__ = ['DiagramHelper',
             'draw_dual_form_vertices_force_faces',
             'draw_dual_edges', 
             ]
+
+
+def display_nullspace_rhino(diagram, nullspace, i):
+    if i >= len(nullspace):
+        raise ValueError
+    else:
+        c = 10
+        nsi = nullspace[i] 
+
+        # store lines representing the current null space mode
+        form_lines = []
+        keys = list(diagram.edges())
+        for (u, v) in keys:
+            sp = [x + y * c for x, y in zip(diagram.vertex_coordinates(u, 'xy'),  nsi[u])]
+            sp.append(0)
+            ep = [x + y * c for x, y in zip(diagram.vertex_coordinates(v, 'xy'),  nsi[v])]
+            ep.append(0)
+            line = {}
+            line['start'] = sp
+            line['end'] = ep
+            form_lines.append(line)
+        compas_rhino.draw_lines(form_lines, clear=False, redraw=False)
 
 
 def select_forcediagram_location(force):
@@ -69,7 +92,6 @@ def select_loaded_edges(form):
             index = uv_i[(v, u)]
             vu = (v, u)
             return index, vu
-        
 
 
 def check_edge_pairs(form, force):

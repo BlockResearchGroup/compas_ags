@@ -100,7 +100,6 @@ def rhino_edge_constraints(diagram):
     boolOptionL = Rhino.Input.Custom.OptionToggle(False, 'False', 'True')
     go.AddOptionToggle('fix_length', boolOptionL)
 
-
     while True:
         uv = EdgeSelector.select_edge(diagram, message='Select constraint edge')
         print(uv)
