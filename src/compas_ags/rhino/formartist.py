@@ -22,6 +22,7 @@ class FormArtist(MeshArtist):
         self.settings.update({
             'color.vertex': (255, 255, 255),
             'color.edge': (0, 0, 0),
+            'color.leaves': (255, 0, 0), 
             'color.face': (210, 210, 210),
             'color.reaction': (0, 255, 0),
             'color.residual': (0, 255, 255),
@@ -43,6 +44,40 @@ class FormArtist(MeshArtist):
     @property
     def form(self):
         return self.mesh
+
+
+    def draw_leaves(self, color=None, arrows=False):
+        # draw leaves 
+        leaves  = set(self.form.leaves())
+        print('leaves', leaves)
+        lines = []
+        for index, ((u, v), attr) in enumerate(self.form.edges_where({'is_edge': True}, True)):
+            print(index, u, v)
+            if u in leaves or v in leaves:
+                print(u, v, 'hey im passing here')
+                lines.append({
+                    'start': self.form.vertex_coordinates(u),
+                    'end': self.form.vertex_coordinates(v),
+                    'arrow': 'end' if arrows is True else None,
+                    'color': color or self.settings.get('color.leaves'), 
+                    'name': "{}.leaf_edge".format(index),
+                    'width': 0.3
+                })
+        return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+    
+
+    def draw_independent_edge(self):
+        lines = []
+        for index, ((u, v), attr) in enumerate(self.form.edges_where({'is_edge': True}, True)):
+            if attr['is_ind']:
+                lines.append({
+                    'start': self.form.vertex_coordinates(u),
+                    'end': self.form.vertex_coordinates(v),
+                    'name': "{}.independent_edge".format(index),
+                    'width': 1.0
+                })
+        return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+
 
     def clear(self):
         super(FormArtist, self).clear()
