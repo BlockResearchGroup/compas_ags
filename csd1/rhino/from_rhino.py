@@ -39,9 +39,10 @@ form.set_edge_force_by_index(index, force_value)
 #fixed = 
 #form.set_fixed([0,1])
 
+
 from compas_ags.rhino import select_forcediagram_location
 select_forcediagram_location(force)
-    
+
 # update diagrams
 form_data = graphstatics.form_update_q_from_qind_rhino(form.to_data())
 force_data = graphstatics.force_update_from_form_rhino(force.to_data(), form_data)
@@ -97,37 +98,64 @@ forceartist.draw_independent_edges(form)
 # select constraints in the form diagram
 formartist.draw_vertices()
 formartist.draw_vertexlabels()
+forceartist.draw_vertices()
 
 
-#guid = compas_rhino.select_point(message='Select Constraints')
-#point = compas_rhino.get_point_coordinates(guid)
-#print(point)
 
-from compas_rhino.selectors import VertexSelector
-vkey = VertexSelector.select_vertex(form, message='Select constraint vertex')
-print(vkey)
+# =============================================================================
 
-#------------------------------ rewrite constraints class ---------------------
+
+# set constraints
 from compas_ags.constraints import ConstraintsCollection
 C = ConstraintsCollection(form)
-from compas_ags.constraints import HorizontalFix, VerticalFix
-C.add_constraint(HorizontalFix(form, vkey))
-C.add_constraint(VerticalFix(form, vkey))
+
+# set vertex constraints
+from compas_ags.rhino import rhino_vertex_constraints
+C.constrain_dependent_leaf_edges_lengths()
+constraint_dict = rhino_vertex_constraints(form)
+print(constraint_dict)
+C.update_rhino_vertex_constraints(constraint_dict)
+
+print(len(C.constraints))
+
 cj, cr = C.compute_constraints()
+print(cj, cr)
 
 # compute null-space
 rf = Proxy('compas_ags.ags2.rootfinding')
-#jacobian = rf.compute_jacobian_xfunc(form.to_data(), force.to_data())
 nullspace = rf.compute_nullspace_xfunc(form.to_data(), force.to_data(), cj, cr)
+print(nullspace, 'null_space')
+
 print('Dimension of null-space is %s' % len(nullspace))
 
+def show(i):
+    c = 10
+    c += 1
+    nsi = nullspace[i] 
+    # store lines representing the current null space mode
+    form_lines = []
+    keys = list(form.edges())
+    for (u, v) in keys:
+        sp = [x + y * c for x, y in zip(form.vertex_coordinates(u, 'xy'),  nsi[u])]
+        sp.append(0)
+        ep = [x + y * c for x, y in zip(form.vertex_coordinates(v, 'xy'),  nsi[v])]
+        ep.append(0)
+        dict = {}
+        dict['start'] = sp
+        dict['end'] = ep
+        form_lines.append(dict)
+    compas_rhino.draw_lines(form_lines, clear=False, redraw=False)
+#show(2)
 
 
-#ns = rf.compute_nullspace(form.to_data(), force.to_data(), C)
-#print(ns)
 
-#C = ConstraintsCollection(form)
-#C = constraints.ConstraintsCollection(form.to_data())
+
+#from compas_ags.rhino import rhino_vertex_move
+#rhino_vertex_move(force)
+#
+#forceartist2 = ForceArtist(force, layer='ForceDiagram')
+#forceartist2.draw_vertices()
+
 
 
 

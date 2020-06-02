@@ -283,7 +283,7 @@ def compute_nullspace_xfunc(formdata, forcedata, cj=None, cr=None):
     form = FormDiagram.from_data(formdata)
     force = ForceDiagram.from_data(forcedata)
     jacobian = compute_jacobian(form, force)
-
+    
     if cj is not None and cr is not None:
         cj = np.asarray(cj)
         cr = np.asarray(cr)

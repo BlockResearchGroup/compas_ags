@@ -4,20 +4,31 @@ from __future__ import division
 
 import sys
 
-try:
-    from numpy import array
-    from numpy import eye
-    from numpy import zeros
-    from numpy import float64
-    from numpy.linalg import cond
-    from numpy import matrix
-    from scipy.linalg import solve
-    from scipy.linalg import lstsq
+# try:
+#     from numpy import array
+#     from numpy import eye
+#     from numpy import zeros
+#     from numpy import float64
+#     from numpy.linalg import cond
+#     from numpy import matrix
+#     from scipy.linalg import solve
+#     from scipy.linalg import lstsq
 
-    from scipy.sparse import diags
-except ImportError:
-    if 'ironpython' not in sys.version.lower():
-        raise
+#     from scipy.sparse import diags
+# except ImportError:
+#     if 'ironpython' not in sys.version.lower():
+#         raise
+
+from numpy import array
+from numpy import eye
+from numpy import zeros
+from numpy import float64
+from numpy.linalg import cond
+from numpy import matrix
+from scipy.linalg import solve
+from scipy.linalg import lstsq
+
+from scipy.sparse import diags
 
 from compas_ags.ags.graphstatics import *
 from compas.geometry import angle_vectors_xy

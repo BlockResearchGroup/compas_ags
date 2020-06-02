@@ -80,6 +80,7 @@ class ConstraintsCollection:
             (j, r) = constraint.compute_constraint()
             jac.append(j)
             res.append([r])
+        return jac, res
 
     def update_constraints(self):
         for constraint in self.constraints:
@@ -103,6 +104,27 @@ class ConstraintsCollection:
                     dependent_leaf_edges.append(i)
         for e in dependent_leaf_edges:
             self.add_constraint(LengthFix(self.form, e))
+    
+    def update_rhino_vertex_constraints(self, c_dict):
+        """
+        c_dict: dictionary
+            compas_ags.rhino.rhino_vertex_constraints(diagram)
+        """
+        for vkey in c_dict.keys():
+            if c_dict[vkey][0] is True:
+                self.add_constraint(HorizontalFix(self.form, vkey))
+            if c_dict[vkey][1] is True:
+                self.add_constraint(VerticalFix(self.form, vkey))
+
+
+    def update_rhino_edge_constraints(self, c_dict):
+        """
+        c_dict: dictionary
+            compas_ags.rhino.rhino_edge_constraints(diagram)
+        """
+        for uv in c_dict.keys():
+            if c_dict[uv] is True:
+                self.add_constraint(LengthFix(self.form, uv))
 
 
 class HorizontalFix(AbstractConstraint):
