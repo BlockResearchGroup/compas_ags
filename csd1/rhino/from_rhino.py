@@ -97,38 +97,61 @@ forceartist.draw_independent_edges(form)
 # select constraints in the form diagram
 formartist.draw_vertices()
 formartist.draw_vertexlabels()
+forceartist.draw_vertices()
 
 
-#guid = compas_rhino.select_point(message='Select Constraints')
-#point = compas_rhino.get_point_coordinates(guid)
-#print(point)
 
-from compas_rhino.selectors import VertexSelector
-vkey = VertexSelector.select_vertex(form, message='Select constraint vertex')
-print(vkey)
+# =============================================================================
 
-#------------------------------ rewrite constraints class ---------------------
+
+# set constraints
 from compas_ags.constraints import ConstraintsCollection
 C = ConstraintsCollection(form)
-from compas_ags.constraints import HorizontalFix, VerticalFix
-C.add_constraint(HorizontalFix(form, vkey))
-C.add_constraint(VerticalFix(form, vkey))
+
+# set vertex constraints
+from compas_ags.rhino import rhino_vertex_constraints
+constraint_dict = rhino_vertex_constraints(form)
+C.update_rhino_vertex_constraints(constraint_dict)
+
 cj, cr = C.compute_constraints()
 
 # compute null-space
 rf = Proxy('compas_ags.ags2.rootfinding')
-#jacobian = rf.compute_jacobian_xfunc(form.to_data(), force.to_data())
 nullspace = rf.compute_nullspace_xfunc(form.to_data(), force.to_data(), cj, cr)
 print('Dimension of null-space is %s' % len(nullspace))
 
 
-
-#ns = rf.compute_nullspace(form.to_data(), force.to_data(), C)
-#print(ns)
-
+#vkey = VertexSelector.select_vertex(form, message='Select constraint vertex')
+#print(vkey)
+#
+##------------------------------ rewrite constraints class ---------------------
+#from compas_ags.constraints import ConstraintsCollection
 #C = ConstraintsCollection(form)
-#C = constraints.ConstraintsCollection(form.to_data())
-
-
-
-print('Done')
+#from compas_ags.constraints import HorizontalFix, VerticalFix
+#C.add_constraint(HorizontalFix(form, vkey))
+#C.add_constraint(VerticalFix(form, vkey))
+#cj, cr = C.compute_constraints()
+#
+## compute null-space
+#rf = Proxy('compas_ags.ags2.rootfinding')
+##jacobian = rf.compute_jacobian_xfunc(form.to_data(), force.to_data())
+#nullspace = rf.compute_nullspace_xfunc(form.to_data(), force.to_data(), cj, cr)
+#print('Dimension of null-space is %s' % len(nullspace))
+#
+#
+##
+##from compas_ags.rhino import rhino_vertex_move
+##rhino_vertex_move(force)
+##
+##forceartist2 = ForceArtist(force, layer='ForceDiagram')
+##forceartist2.draw_vertices()
+#
+##ns = rf.compute_nullspace(form.to_data(), force.to_data(), C)
+##print(ns)
+#
+##C = ConstraintsCollection(form)
+##C = constraints.ConstraintsCollection(form.to_data())
+#
+#
+#
+#print('Done')
