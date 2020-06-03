@@ -53,7 +53,7 @@ __all__ = [
 ]
 
 
-def compute_form_from_force_newton_xfunc(formdata, forcedata, xy_goal, tol=1e5, cj=None, cr=None):
+def compute_form_from_force_newton_xfunc(formdata, forcedata, xy_dict, tol=1e5, cj=None, cr=None):
     from compas_ags.diagrams import FormDiagram
     from compas_ags.diagrams import ForceDiagram
     form = FormDiagram.from_data(formdata)
@@ -65,6 +65,10 @@ def compute_form_from_force_newton_xfunc(formdata, forcedata, xy_goal, tol=1e5, 
     eps = np.spacing(1)
 
     # Move the anchored vertex by modifying the initial force diagram coordinates
+    xy_goal = []
+    
+    for vkey in force.vertices():
+        xy_goal.append(xy_dict[str(vkey])
     xy_goal = np.asarray(xy_goal).reshape((-1, 2))
     _X_goal = np.vstack((np.asmatrix(xy_goal[:, 0]).transpose(), np.asmatrix(xy_goal[:, 1]).transpose()))
     

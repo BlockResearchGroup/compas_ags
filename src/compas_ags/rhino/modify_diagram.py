@@ -199,18 +199,20 @@ def rhino_vertice_move(diagram):
     new_diagram = diagram.copy()
 
     translation = target - ip
-    xy = []   # xy coordinates of targeted 
+    xy = {}   # xy coordinates of targeted 
     for vkey in diagram.vertices():
         if vkey in vkeys:
             new_xyz = add_vectors(diagram.vertex_coordinates(vkey), translation)
-            xy.append([new_xyz[0], new_xyz[1]])
+            xy[vkey] = [new_xyz[0], new_xyz[1]]
+            # xy.append([new_xyz[0], new_xyz[1]])
             new_diagram.vertex[vkey]['constrained'] = False
             new_diagram.vertex[vkey]['x'] = new_xyz[0]
             new_diagram.vertex[vkey]['y'] = new_xyz[1]
             new_diagram.vertex[vkey]['z'] = new_xyz[2]
         else:
             xyz = diagram.vertex_coordinates(vkey)
-            xy.append([xyz[0], xyz[1]])
+            # xy.append([xyz[0], xyz[1]])
+            xy[vkey] = [xyz[0], xyz[1]]
     
     return xy, new_diagram
 

@@ -138,7 +138,7 @@ print('Dimension of null-space is %s' % len(nullspace))
 from compas_ags.rhino import rhino_vertice_move
 xy, force2 = rhino_vertice_move(force)
 print(xy, 'xy')
-
+print(force.to_data())
 # TODO: if the move is too far, iterate? / display
 
 forceartist2 = ForceArtist(force2, layer='ForceDiagram2')
@@ -148,10 +148,10 @@ forceartist2.draw_edge_force()
 forceartist2.draw_independent_edges(form)
 
 formdata2 = rf.compute_form_from_force_newton_xfunc(form.to_data(), force.to_data(), xy, tol=1e5, cj=cj, cr=cr)
-print(formdata2)
+#print(rf.compute_form_from_force_newton_xfunc(form.to_data(), force.to_data(), xy, tol=1e5, cj=cj, cr=cr))
 form2 = FormDiagram.from_data(formdata2)
 
-formartist2 = FormArtist(form2, layer='FormArtist2')
+formartist2 = FormArtist(form2, layer='F/ormArtist2')
 formartist2.draw_vertices()
 formartist2.draw_edges()
 
