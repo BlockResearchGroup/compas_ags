@@ -26,7 +26,7 @@ except ImportError:
 __all__ = ['rhino_vertex_constraints', 
             'rhino_edge_constraints', 
             'get_initial_point',     
-            'rhino_vertex_move',
+            'rhino_vertice_move',
             ]
 
 
@@ -124,8 +124,21 @@ def get_initial_point(message='Point to move from?'):
     return ip
 
 
-def rhino_vertex_move(diagram):
-    vkeys = VertexSelector.select_vertices(diagram)
+def rhino_vertice_move(diagram):
+    """Select diagram vertices and move them
+
+    Parameters
+    ----------
+    diagram: compas_ags.formdiagram.FormDiagram / compas_ags.forcediagram.ForceDiagram 
+        Diagram
+
+    Return 
+    ----------
+    xy: list
+        List contains new 
+    """
+
+    vkeys = VertexSelector.select_vertices(diagram, message='Select vertice to move')
 
     nbr_vkeys = {}
     edges = set()
@@ -181,10 +194,26 @@ def rhino_vertex_move(diagram):
             target = gp.Point()
         break
 
+    
+    # create a copy of the diagram
+    new_diagram = diagram.copy()
+
     translation = target - ip
-    for vkey in vkeys:
-        new_xyz = add_vectors(diagram.vertex_coordinates(vkey), translation)
-        diagram.vertex_update_xyz(vkey, new_xyz, constrained=False)
+    xy = []   # xy coordinates of targeted 
+    for vkey in diagram.vertices():
+        if vkey in vkeys:
+            new_xyz = add_vectors(diagram.vertex_coordinates(vkey), translation)
+            xy.append([new_xyz[0], new_xyz[1]])
+            new_diagram.vertex[vkey]['constrained'] = False
+            new_diagram.vertex[vkey]['x'] = new_xyz[0]
+            new_diagram.vertex[vkey]['y'] = new_xyz[1]
+            new_diagram.vertex[vkey]['z'] = new_xyz[2]
+        else:
+            xyz = diagram.vertex_coordinates(vkey)
+            xy.append([xyz[0], xyz[1]])
+    
+    return xy, new_diagram
+
 
 # ==============================================================================
 # Debugging

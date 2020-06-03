@@ -95,9 +95,11 @@ def select_loaded_edges(form):
 
 
 def check_edge_pairs(form, force):
-    # check the uv direction in force diagrams
-    # return edge uv that need to be flipped in force digram
-    # and edge index corresponding to the form diagram
+    """check the uv direction in force diagrams
+    
+    return edge uv that need to be flipped in force digram
+    and edge index corresponding to the form diagram
+    """
 
     from compas.geometry import  dot_vectors
     edges_to_flip = []
@@ -125,6 +127,7 @@ def check_edge_pairs(form, force):
         force_edgelabel_pairs[u,v] = form_edges[half_edge]
 
     return edges_to_flip, force_edgelabel_pairs
+
 
 def find_force_ind(form, force):
         # check the corresponding independent edges in the force diagram

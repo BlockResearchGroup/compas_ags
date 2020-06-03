@@ -47,8 +47,56 @@ __all__ = [
     'compute_jacobian',
     'compute_jacobian_xfunc', 
     'get_red_residual_and_jacobian',
-    'compute_form_from_force_newton'
+    'get_red_residual_and_jacobian_xfunc',
+    'compute_form_from_force_newton',
+    'compute_form_from_force_newton_xfunc', 
 ]
+
+
+def compute_form_from_force_newton_xfunc(formdata, forcedata, xy_goal, tol=1e5, cj=None, cr=None):
+    from compas_ags.diagrams import FormDiagram
+    from compas_ags.diagrams import ForceDiagram
+    form = FormDiagram.from_data(formdata)
+    force = ForceDiagram.from_data(forcedata)
+
+    xy = array(form.xy(), dtype=float64).reshape((-1, 2))
+    X = np.vstack((np.asmatrix(xy[:, 0]).transpose(), np.asmatrix(xy[:, 1]).transpose()))
+
+    eps = np.spacing(1)
+
+    # Move the anchored vertex by modifying the initial force diagram coordinates
+    xy_goal = np.asarray(xy_goal).reshape((-1, 2))
+    _X_goal = np.vstack((np.asmatrix(xy_goal[:, 0]).transpose(), np.asmatrix(xy_goal[:, 1]).transpose()))
+    
+    _xy_goal = _X_goal.reshape((2, -1)).T
+    _update_coordinates(force, _xy_goal)
+
+    # SEEMS USELESS??!!
+    # if constraints:
+    #     constraints.update_constraints()
+
+    # Begin Newton
+    diff = 100
+    n_iter = 1
+    while diff > (eps * tol):
+        red_jacobian, red_r = get_red_residual_and_jacobian_xfunc(form, force, _X_goal, cj, cr)
+
+        # Do the least squares solution
+        dx = np.linalg.lstsq(red_jacobian, -red_r)[0]
+
+        X = X + dx
+        xy = X.reshape((2, -1)).T
+        _update_coordinates(form, xy)
+
+        diff = np.linalg.norm(red_r)
+        if n_iter > 20:
+            raise SolutionError('Did not converge')
+
+        print('i: {0:0} diff: {1:.2e}'.format(n_iter, float(diff)))
+        n_iter += 1
+
+    print('Converged in {0} iterations'.format(n_iter))
+    return form.to_data()
 
 
 def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=None):
@@ -83,6 +131,7 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=No
     _xy_goal = _X_goal.reshape((2, -1)).T
     _update_coordinates(force, _xy_goal)
 
+    # SEEMS USELESS??!!
     if constraints:
         constraints.update_constraints()
 
@@ -107,6 +156,31 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=No
         n_iter += 1
 
     print('Converged in {0} iterations'.format(n_iter))
+
+
+def get_red_residual_and_jacobian_xfunc(form, force, _X_goal, cj=None, cr=None):
+    jacobian = compute_jacobian(form, force)
+
+    _vcount = force.number_of_vertices()
+    _k_i = force.key_index()
+    _known = _k_i[force.anchor()]
+    _bc = [_known, _vcount + _known]
+    _xy = array(force.xy(), dtype=float64)
+    r = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose())) - _X_goal
+
+    if cj is not None and cr is not None:
+        cj = np.asarray(cj)
+        cr = np.asarray(cr)
+        jacobian = np.vstack((jacobian, cj))
+        r = np.vstack((r, cr))
+
+    check_solutions(jacobian, r)
+
+    # Remove rows due to fixed vertex in the force diagram
+    red_r = np.delete(r, _bc, axis=0)
+    red_jacobian = np.delete(jacobian, _bc, axis=0)
+
+    return red_jacobian, red_r
 
 
 def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
