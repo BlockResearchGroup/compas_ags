@@ -165,8 +165,8 @@ class Viewer(object):
                         _arrows.append({
                             'start'    : sp,
                             'end'      : ep,
-                            'width'    : self.default_externalforcewidth,
-                            'color'    : self.default_externalforcecolor,
+                            'width'    : self.default_externalforcewidth if not attr['is_ind'] else self.default_edgewidth * 3,
+                            'color'    : self.default_externalforcecolor if not attr['is_ind'] else '#000000',
                             'text'     : text,
                             'fontsize' : self.default_fontsize
                         })
@@ -218,20 +218,6 @@ class Viewer(object):
         # faces
 
         if faces_on:
-            # _labels = []
-            # for fkey in self.form.faces():
-            #     x, y, _ = self.form.face_centroid(fkey)
-            #     _labels.append({
-            #         'pos'      : [(x + dx) / scale, (y + dy) / scale],
-            #         'text'     : str(fkey) if fkey not in facelabel else str(facelabel[fkey]),
-            #         'fontsize' : self.default_fontsize * 2,  # TEMP! TO DIFFER FROM OTHER LABELS
-            #         'color'    : self.default_facecolor,
-            #         'textcolor': self.default_textcolor,
-            #     })
-            # if _labels:
-            #     draw_xlabels_xy(_labels, self.ax1)
-            
-            # self.default_facecolor
             _face_polygons = []
             for fkey in self.form.faces():
                 vkeys = [vkey for vkey in self.form.face_vertices(fkey)]
@@ -323,6 +309,20 @@ class Viewer(object):
 
         return edges_to_flip, force_edgelabel_pairs
 
+
+    def find_force_ind(self):
+        # check the corresponding independent edges in the force diagram
+        force_idx_uv = {idx:uv for uv, idx in self.check_edge_pairs()[1].items()}
+        form_index_uv = self.form.index_uv()
+
+        force_ind = []
+        for idx in list(force_idx_uv.keys()):
+            u, v = form_index_uv[idx]
+            if (u, v) in self.form.ind():
+                force_ind.append(force_idx_uv[idx])
+        return force_ind
+
+
     def draw_force(self,
                    vertices_on=True,
                    edges_on=True,
@@ -397,8 +397,8 @@ class Viewer(object):
                     _arrows.append({
                         'start' : sp,
                         'end'   : ep,
-                        'color' : self.default_externalforcecolor,
-                        'width' : self.default_externalforcewidth,
+                        'color' : self.default_externalforcecolor if (u, v) not in self.find_force_ind() else '#000000',
+                        'width' : self.default_externalforcewidth if (u, v) not in self.find_force_ind() else self.default_edgewidth * 3,
                         'text'  : text,
                         'fontsize'  : self.default_fontsize,
                     })

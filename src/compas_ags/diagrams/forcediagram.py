@@ -2,10 +2,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-# from compas.datastructures import network_find_faces
-# from compas.datastructures import network_dual
 from compas.datastructures import mesh_dual
-
 from compas_ags.diagrams import Diagram
 
 
@@ -13,7 +10,8 @@ __author__ = ['Tom Van Mele', 'Vedad Alic']
 __email__ = ['<vanmelet@ethz.ch>', '<vedad.alic@construction.lth.se>']
 
 
-__all__ = ['ForceDiagram']
+__all__ = ['ForceDiagram', 
+            ]
 
 
 class ForceDiagram(Diagram):

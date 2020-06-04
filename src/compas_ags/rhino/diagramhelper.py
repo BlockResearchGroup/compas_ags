@@ -9,6 +9,7 @@ import compas_rhino
 
 from compas.utilities import flatten
 from compas.utilities import geometric_key
+from compas.utilities import i_to_rgb
 
 from compas_rhino.geometry import RhinoPoint
 from compas_rhino.geometry import RhinoCurve
@@ -30,8 +31,152 @@ except ImportError:
     compas.raise_if_ironpython()
 
 
-__all__ = ['DiagramHelper']
+__all__ = ['DiagramHelper',
+            'display_nullspace_rhino',
+            'select_forcediagram_location', 
+            'select_loaded_edges', 
+            'check_edge_pairs', 
+            'find_force_ind', 
+            'draw_dual_form_faces_force_vertices',
+            'draw_dual_form_vertices_force_faces',
+            'draw_dual_edges', 
+            ]
 
+
+def display_nullspace_rhino(diagram, nullspace, i):
+    if i >= len(nullspace):
+        raise ValueError
+    else:
+        c = 10
+        nsi = nullspace[i] 
+
+        # store lines representing the current null space mode
+        form_lines = []
+        keys = list(diagram.edges())
+        for (u, v) in keys:
+            sp = [x + y * c for x, y in zip(diagram.vertex_coordinates(u, 'xy'),  nsi[u])]
+            sp.append(0)
+            ep = [x + y * c for x, y in zip(diagram.vertex_coordinates(v, 'xy'),  nsi[v])]
+            ep.append(0)
+            line = {}
+            line['start'] = sp
+            line['end'] = ep
+            form_lines.append(line)
+        compas_rhino.draw_lines(form_lines, clear=False, redraw=False)
+
+
+def select_forcediagram_location(force):
+    # can ask for user to input a location
+    force_point = rs.GetPoint("Set Force Diagram Location")
+    force.set_anchor([0])
+    force.vertex_attribute(0, 'x', force_point[0])  
+    force.vertex_attribute(0, 'y', force_point[1])
+
+
+def select_loaded_edges(form):
+    guids = compas_rhino.select_lines(message='Loaded Edges')
+    lines = compas_rhino.get_line_coordinates(guids)
+    gkey_key = form.gkey_key()
+    uv_i = form.uv_index()
+    print(uv_i)
+    print(gkey_key)
+    for p1,p2 in lines:
+        u = gkey_key[geometric_key(p1)]
+        v = gkey_key[geometric_key(p2)]
+        print(u,v)
+        try:
+            index = uv_i[(u, v)]
+            uv = (u, v)
+            return index, uv
+        except:
+            index = uv_i[(v, u)]
+            vu = (v, u)
+            return index, vu
+
+
+def check_edge_pairs(form, force):
+    # check the uv direction in force diagrams
+    # return edge uv that need to be flipped in force digram
+    # and edge index corresponding to the form diagram
+
+    from compas.geometry import  dot_vectors
+    edges_to_flip = []
+    form_edges = {uv: index for index, uv in enumerate(form.edges())}
+    force_edgelabel_pairs = {}
+    for i, (u, v) in enumerate(force.edges()):
+        force_vector = force.edge_vector(u, v)
+        half_edge = form.face_adjacency_halfedge(u, v)
+
+        if half_edge in form_edges:
+            form_vector = form.edge_vector(half_edge[0], half_edge[1])
+            dot_product = dot_vectors(form_vector, force_vector)
+            force_in_form = form.edge_attribute(half_edge, 'f')
+            if force_in_form * dot_product < 0:
+                edges_to_flip.append((u, v))
+
+        else:
+            half_edge = form.face_adjacency_halfedge(v, u)
+            form_vector = form.edge_vector(half_edge[0], half_edge[1])
+            dot_product = dot_vectors(form_vector, force_vector)
+            force_in_form = form.edge_attribute(half_edge, 'f')
+            if force_in_form * dot_product < 0:
+                edges_to_flip.append((u, v))
+
+        force_edgelabel_pairs[u,v] = form_edges[half_edge]
+
+    return edges_to_flip, force_edgelabel_pairs
+
+def find_force_ind(form, force):
+        # check the corresponding independent edges in the force diagram
+        force_idx_uv = {idx:uv for uv, idx in check_edge_pairs(form, force)[1].items()}
+        form_index_uv = form.index_uv()
+
+        force_ind = []
+        for idx in list(force_idx_uv.keys()):
+            u, v = form_index_uv[idx]
+            if (u, v) in form.ind():
+                force_ind.append(force_idx_uv[idx])
+        return force_ind
+
+
+def draw_dual_form_faces_force_vertices(form, force, formartist, forceartist, color_scheme=i_to_rgb):
+    c_dict  = {}
+    for i, fkey in enumerate(form.faces()):
+        value = float(i) / (form.number_of_faces() - 1)
+        color = color_scheme(value)
+        c_dict[fkey] = color
+    
+    formartist.draw_edges()
+    formartist.draw_faces(color=c_dict)
+    formartist.draw_facelabels()
+    forceartist.draw_edges()
+    forceartist.draw_vertexlabels(color=c_dict)
+
+
+def draw_dual_form_vertices_force_faces(form, force, formartist, forceartist, color_scheme=i_to_rgb):
+    c_dict  = {}
+
+    if force.number_of_faces() == 1:
+        c_dict[list(force.faces())[0]] = color_scheme(1.0)
+    else:
+        for i, fkey in enumerate(force.faces()):
+            value = float(i) / (force.number_of_faces() - 1)
+            color = color_scheme(value)
+            c_dict[fkey] = color
+
+    formartist.draw_edges()
+    formartist.draw_vertexlabels(color=c_dict)
+    forceartist.draw_edges()
+    forceartist.draw_faces(color=c_dict)
+    forceartist.draw_facelabels()
+
+
+def draw_dual_edges(form, force, formartist, forceartist):
+    formartist.draw_edges()
+    formartist.draw_edgelabels(text={uv: index for index, uv in enumerate(form.edges())})
+    forceartist.draw_edges()
+    forceartist.draw_edgelabels(text=check_edge_pairs(form, force)[1])
+    
 
 def match_edges(diagram, keys):
     temp = compas_rhino.get_objects(name="{}.edge.*".format(diagram.name))

@@ -3,9 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 from compas.utilities import geometric_key_xy
-# from compas.datastructures import network_is_xy
 from compas.datastructures import network_find_cycles
-
 from compas_ags.diagrams import Diagram
 
 
@@ -13,7 +11,8 @@ __author__ = ['Tom Van Mele']
 __email__ = 'vanmelet@ethz.ch'
 
 
-__all__ = ['FormDiagram']
+__all__ = ['FormDiagram',
+            ]
 
 
 class FormDiagram(Diagram):
