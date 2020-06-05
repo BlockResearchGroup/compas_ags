@@ -177,4 +177,4 @@ def show(i):
 
     viewer.show()
 
-show(13)
+show(2)
