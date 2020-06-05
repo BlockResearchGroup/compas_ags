@@ -9,7 +9,7 @@ from compas.utilities import i_to_rgb
 from compas_rhino.artists import MeshArtist
 
 from compas_ags.rhino import find_force_ind
-
+from .diagramhelper import check_edge_pairs
 
 __all__ = ['ForceArtist']
 
@@ -35,6 +35,17 @@ class ForceArtist(MeshArtist):
         super(ForceArtist, self).__init__(force, layer=layer)
         self.force = force
     
+
+    def draw_diagram(self, form=None):
+        self.clear()
+        self.draw_vertices()
+        self.draw_vertexlabels()
+        self.draw_edges()
+        if form is not None:
+            self.draw_edgelabels(text=check_edge_pairs(form, self.force)[1])
+        self.redraw()
+
+
     def draw_edge_force(self):
         force_dict = {}
         c_dict  = {}

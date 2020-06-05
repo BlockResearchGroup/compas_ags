@@ -64,7 +64,7 @@ def display_nullspace_rhino(diagram, nullspace, i):
             line['start'] = sp
             line['end'] = ep
             form_lines.append(line)
-        compas_rhino.draw_lines(form_lines, clear=False, redraw=False)
+        compas_rhino.draw_lines(form_lines, layer='nullspace', clear=False, redraw=False)
 
 
 def select_forcediagram_location(force):
@@ -84,10 +84,12 @@ def select_fixed_vertices(form):
         print(vkey)
         form.vertex_attribute(vkey, 'is_fixed', True)
 
+
 def diagram_fix_vertice(diagram):
     vkeys = VertexSelector.select_vertices(diagram, message='Select vertice to fix')
     for vkey in vkeys:
         diagram.vertex_attribute(vkey, 'is_fixed', True)
+    print(vkeys)
     return vkeys
 
 def diagram_independent_edge(diagram):
@@ -178,7 +180,6 @@ def draw_dual_form_faces_force_vertices(form, force, formartist, forceartist, co
 
 def draw_dual_form_vertices_force_faces(form, force, formartist, forceartist, color_scheme=i_to_rgb):
     c_dict  = {}
-
     if force.number_of_faces() == 1:
         c_dict[list(force.faces())[0]] = color_scheme(1.0)
     else:
@@ -186,7 +187,6 @@ def draw_dual_form_vertices_force_faces(form, force, formartist, forceartist, co
             value = float(i) / (force.number_of_faces() - 1)
             color = color_scheme(value)
             c_dict[fkey] = color
-
     formartist.draw_edges()
     formartist.draw_vertexlabels(color=c_dict)
     forceartist.draw_edges()
@@ -194,11 +194,24 @@ def draw_dual_form_vertices_force_faces(form, force, formartist, forceartist, co
     forceartist.draw_facelabels()
 
 
-def draw_dual_edges(form, force, formartist, forceartist):
+def draw_dual_edges(form, force, formartist, forceartist, color_scheme=i_to_rgb):
+    """visualize dual edges
+    """
+    form_c_dict  = {}
+    for i, uv in enumerate(form.edges()):
+        value = float(i) / (form.number_of_edges() - 1)
+        color = color_scheme(value)
+        form_c_dict[uv] = color
     formartist.draw_edges()
-    formartist.draw_edgelabels(text={uv: index for index, uv in enumerate(form.edges())})
+    formartist.draw_edgelabels(text={uv: index for index, uv in enumerate(form.edges())}, color=form_c_dict)
+
     forceartist.draw_edges()
-    forceartist.draw_edgelabels(text=check_edge_pairs(form, force)[1])
+    force_c_dict = {}
+    force_uv_form_idx_pairs = check_edge_pairs(form, force)[1]
+    for force_uv, form_idx in iter(force_uv_form_idx_pairs.items()):
+        form_uv = list(form.edges())[form_idx]
+        force_c_dict[force_uv] = form_c_dict[form_uv]
+    forceartist.draw_edgelabels(text=force_uv_form_idx_pairs, color=force_c_dict)
     
 
 def match_edges(diagram, keys):
