@@ -121,42 +121,38 @@ print(len(C.constraints))
 cj, cr = C.compute_constraints()
 print(cj, cr)
 
+# null-space ------------------------------------------------------------------
 # compute null-space
 rf = Proxy('compas_ags.ags2.rootfinding')
-nullspace = rf.compute_nullspace_xfunc(form.to_data(), force.to_data(), cj, cr)
-print(nullspace, 'null_space')
+#nullspace = rf.compute_nullspace_xfunc(form.to_data(), force.to_data(), cj, cr)
+#print('Dimension of null-space is %s' % len(nullspace))
 
-print('Dimension of null-space is %s' % len(nullspace))
-
-def show(i):
-    c = 10
-    c += 1
-    nsi = nullspace[i] 
-    # store lines representing the current null space mode
-    form_lines = []
-    keys = list(form.edges())
-    for (u, v) in keys:
-        sp = [x + y * c for x, y in zip(form.vertex_coordinates(u, 'xy'),  nsi[u])]
-        sp.append(0)
-        ep = [x + y * c for x, y in zip(form.vertex_coordinates(v, 'xy'),  nsi[v])]
-        ep.append(0)
-        dict = {}
-        dict['start'] = sp
-        dict['end'] = ep
-        form_lines.append(dict)
-    compas_rhino.draw_lines(form_lines, clear=False, redraw=False)
-#show(2)
+# display null-soace
+#from compas_ags.rhino import display_nullspace_rhino
+#i = 0  
+#display_nullspace_rhino(form, nullspace, i)
+# =----------------------------------------------------------------------------
 
 
+# update force diagram
+from compas_ags.rhino import rhino_vertice_move
+xy, force2 = rhino_vertice_move(force)
+print(xy, 'xy')
+print(force.to_data())
+# TODO: if the move is too far, iterate? / display
 
+forceartist2 = ForceArtist(force2, layer='ForceDiagram2')
+forceartist2.draw_vertices()
+forceartist2.draw_edges()
+forceartist2.draw_edge_force()
+forceartist2.draw_independent_edges(form)
 
-#from compas_ags.rhino import rhino_vertex_move
-#rhino_vertex_move(force)
-#
-#forceartist2 = ForceArtist(force, layer='ForceDiagram')
-#forceartist2.draw_vertices()
+formdata2 = rf.compute_form_from_force_newton_xfunc(form.to_data(), force.to_data(), xy, tol=1e5, cj=cj, cr=cr)
+#print(rf.compute_form_from_force_newton_xfunc(form.to_data(), force.to_data(), xy, tol=1e5, cj=cj, cr=cr))
+form2 = FormDiagram.from_data(formdata2)
 
-
-
+formartist2 = FormArtist(form2, layer='F/ormArtist2')
+formartist2.draw_vertices()
+formartist2.draw_edges()
 
 print('Done')
