@@ -35,6 +35,8 @@ __all__ = ['DiagramHelper',
             'display_nullspace_rhino',
             'select_forcediagram_location', 
             'select_loaded_edges', 
+            'select_fixed_vertices',
+            'diagram_fix_vertice', 
             'check_edge_pairs', 
             'find_force_ind', 
             'draw_dual_form_faces_force_vertices',
@@ -73,8 +75,26 @@ def select_forcediagram_location(force):
     force.vertex_attribute(0, 'y', force_point[1])
 
 
+def select_fixed_vertices(form):
+    guids = compas_rhino.select_points(message='Select Fix Vertice')
+    pts = compas_rhino.get_point_coordinates(guids)
+    gkey_key = form.gkey_key()
+    for pt in pts:
+        vkey = gkey_key[geometric_key(pts)]
+        print(vkey)
+        form.vertex_attribute(vkey, 'is_fixed', True)
+
+def diagram_fix_vertice(diagram):
+    vkeys = VertexSelector.select_vertices(diagram, message='Select vertice to fix')
+    for vkey in vkeys:
+        diagram.vertex_attribute(vkey, 'is_fixed', True)
+    return vkeys
+
+def diagram_independent_edge(diagram):
+    pass
+
 def select_loaded_edges(form):
-    guids = compas_rhino.select_lines(message='Loaded Edges')
+    guids = compas_rhino.select_lines(message='Select Loaded Edges')
     lines = compas_rhino.get_line_coordinates(guids)
     gkey_key = form.gkey_key()
     uv_i = form.uv_index()

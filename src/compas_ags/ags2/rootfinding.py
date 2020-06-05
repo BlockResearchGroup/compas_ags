@@ -68,7 +68,7 @@ def compute_form_from_force_newton_xfunc(formdata, forcedata, xy_dict, tol=1e5, 
     xy_goal = []
     
     for vkey in force.vertices():
-        xy_goal.append(xy_dict[str(vkey])
+        xy_goal.append(xy_dict[str(vkey)])
     xy_goal = np.asarray(xy_goal).reshape((-1, 2))
     _X_goal = np.vstack((np.asmatrix(xy_goal[:, 0]).transpose(), np.asmatrix(xy_goal[:, 1]).transpose()))
     

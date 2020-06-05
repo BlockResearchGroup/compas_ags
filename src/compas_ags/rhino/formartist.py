@@ -22,13 +22,14 @@ class FormArtist(MeshArtist):
         self.settings.update({
             'color.vertex': (255, 255, 255),
             'color.edge': (0, 0, 0),
-            'color.leaves': (255, 0, 0), 
+            'color.leaves': (0, 255, 0), 
             'color.face': (210, 210, 210),
             'color.reaction': (0, 255, 0),
             'color.residual': (0, 255, 255),
             'color.load': (0, 255, 0),
             'color.selfweight': (0, 0, 255),
             'color.force': (0, 0, 255),
+            'color.fix':(255, 0, 0), 
             'scale.reaction': 1.0,
             'scale.residual': 1.0,
             'scale.load': 1.0,
@@ -46,8 +47,18 @@ class FormArtist(MeshArtist):
         return self.mesh
 
 
+    def draw_diagram(self):
+        self.clear()
+        self.draw_vertices()
+        self.draw_vertexlabels()
+        self.draw_edges()
+        self.draw_edgelabels(text={uv: index for index, uv in enumerate(self.form.edges())})
+        self.redraw()
+
+
     def draw_leaves(self, color=None, arrows=False):
         # draw leaves 
+        # arrows direction arbitary
         leaves  = set(self.form.leaves())
         print('leaves', leaves)
         lines = []
@@ -61,7 +72,7 @@ class FormArtist(MeshArtist):
                     'arrow': 'end' if arrows is True else None,
                     'color': color or self.settings.get('color.leaves'), 
                     'name': "{}.leaf_edge".format(index),
-                    'width': 0.3
+                    'width': 0.5
                 })
         return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
     
@@ -77,6 +88,20 @@ class FormArtist(MeshArtist):
                     'width': 1.0
                 })
         return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+
+
+    def draw_fixed_vertice(self, color=None):
+        fixed = self.form.fixed()
+        self.clear_vertexlabels(keys=fixed)
+        labels = []
+        for vkey in fixed:
+            labels.append({
+                'pos'  : self.form.vertex_coordinates(vkey),
+                'text' : str(vkey),
+                'color': color or self.settings.get('color.fix'),
+                'name' : "{}.fixed_vertex.{}".format(self.form.name, vkey)
+            })
+        compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
 
 
     def clear(self):
