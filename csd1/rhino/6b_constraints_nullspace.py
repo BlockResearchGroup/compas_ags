@@ -47,7 +47,6 @@ constraint_dict = rhino_vertex_constraints(form)
 C.update_rhino_vertex_constraints(constraint_dict)
 
 cj, cr = C.compute_constraints()
-print(cj, cr)
 
 
 # ==============================================================================

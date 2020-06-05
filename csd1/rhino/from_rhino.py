@@ -124,10 +124,10 @@ print(cj, cr)
 # null-space ------------------------------------------------------------------
 # compute null-space
 rf = Proxy('compas_ags.ags2.rootfinding')
-nullspace = rf.compute_nullspace_xfunc(form.to_data(), force.to_data(), cj, cr)
-print('Dimension of null-space is %s' % len(nullspace))
+#nullspace = rf.compute_nullspace_xfunc(form.to_data(), force.to_data(), cj, cr)
+#print('Dimension of null-space is %s' % len(nullspace))
 
-## display null-soace
+# display null-soace
 #from compas_ags.rhino import display_nullspace_rhino
 #i = 0  
 #display_nullspace_rhino(form, nullspace, i)

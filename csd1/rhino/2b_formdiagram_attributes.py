@@ -1,6 +1,7 @@
 from compas_rhino import unload_modules
 unload_modules("compas")
 
+import os
 import rhinoscriptsyntax as rs
 
 import compas_rhino
@@ -48,7 +49,7 @@ form.set_edge_force_by_index(index, force_value)
 
 # set the fixed vertices of form diagram
 fixed = diagram_fix_vertice(form)
-print(fixed)
+
 
 # ==============================================================================
 # Visualize result
@@ -56,3 +57,13 @@ print(fixed)
 formartist.draw_fixed_vertice()
 formartist.draw_leaves()
 formartist.draw_independent_edge()
+
+
+# ==============================================================================
+# Export result
+# ==============================================================================
+HERE = os.path.dirname(__file__)
+DATA = os.path.join(HERE, 'data')
+form_file = os.path.join(DATA, 'form.json')
+
+form.to_json(form_file)
