@@ -52,7 +52,7 @@ class ForceArtist(MeshArtist):
 
         max_length = 0
         for i, (u, v) in enumerate(self.force.edges()):
-            length = distance_point_point(self.force.vertex_coordinates(u), self.force.vertex_coordinates(v))
+            length = self.force.edge_length(u, v)
             length = round(length, 2)
             if length > max_length:
                 max_length = length

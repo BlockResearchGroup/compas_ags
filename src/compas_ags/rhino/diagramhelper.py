@@ -36,6 +36,7 @@ __all__ = ['DiagramHelper',
             'select_forcediagram_location', 
             'select_loaded_edges', 
             'select_fixed_vertices',
+            'set_edge_loads',
             'diagram_fix_vertice', 
             'check_edge_pairs', 
             'find_force_ind', 
@@ -92,6 +93,16 @@ def diagram_fix_vertice(diagram):
     print(vkeys)
     return vkeys
 
+
+def set_edge_loads(form):
+    # select multiple independent edges and set forces
+    while True:
+        uv = EdgeSelector.select_edge(form, message='Select Loaded Edge')
+        if uv is None:
+            break
+        force_value = rs.GetReal("Force on Edges", 1.0)
+        form.set_edge_force(uv[0], uv[1], force_value)
+        
 
 def select_loaded_edges(form):
     guids = compas_rhino.select_lines(message='Select Loaded Edges')
