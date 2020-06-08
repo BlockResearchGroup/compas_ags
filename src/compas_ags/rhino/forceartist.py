@@ -59,8 +59,12 @@ class ForceArtist(MeshArtist):
             
         self.draw_edgelabels(text=force_dict, color=c_dict)
 
+    
+    def clear_independent_edge(self):
+        compas_rhino.delete_objects_by_name(name='{}.independent_edge.*'.format(self.force.name))
 
     def draw_independent_edges(self, form):
+        self.clear_independent_edge()
         indices = find_force_ind(form, self.force)
         print(indices)
         lines = []
@@ -69,7 +73,7 @@ class ForceArtist(MeshArtist):
                 lines.append({
                     'start': self.force.vertex_coordinates(u),
                     'end': self.force.vertex_coordinates(v),
-                    'name': "{}.independent_edge".format(index),
+                    'name': "{}.independent_edge.{}".format(self.force.name, index),
                     'width': 1.0
                 })
         return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)

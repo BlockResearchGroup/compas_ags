@@ -2,8 +2,10 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import compas_rhino
 
+from math import fabs
+
+import compas_rhino
 from compas.geometry import scale_vector
 from compas.utilities import i_to_green
 
@@ -29,6 +31,8 @@ class FormArtist(MeshArtist):
             'color.load': (0, 255, 0),
             'color.selfweight': (0, 0, 255),
             'color.force': (0, 0, 255),
+            'color.compression': (0, 0, 255),
+            'color.tension': (255, 0, 0),
             'color.fix':(255, 0, 0), 
             'scale.reaction': 1.0,
             'scale.residual': 1.0,
@@ -56,9 +60,14 @@ class FormArtist(MeshArtist):
         self.redraw()
 
 
+    def clear_leaves(self):
+        compas_rhino.delete_objects_by_name(name='{}.leaf_edge.*'.format(self.form.name))
+
+
     def draw_leaves(self, color=None, arrows=False):
         # draw leaves 
         # arrows direction arbitary
+        self.clear_leaves()
         leaves  = set(self.form.leaves())
         print('leaves', leaves)
         lines = []
@@ -71,26 +80,35 @@ class FormArtist(MeshArtist):
                     'end': self.form.vertex_coordinates(v),
                     'arrow': 'end' if arrows is True else None,
                     'color': color or self.settings.get('color.leaves'), 
-                    'name': "{}.leaf_edge".format(index),
+                    'name': "{}.leaf_edge.{}".format(self.form.name, index),
                     'width': 0.5
                 })
-        return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+        compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
     
 
+    def clear_independent_edge(self):
+        compas_rhino.delete_objects_by_name(name='{}.independent_edge.*'.format(self.form.name))
+
+
     def draw_independent_edge(self):
+        self.clear_independent_edge()
         lines = []
         for index, ((u, v), attr) in enumerate(self.form.edges_where({'is_edge': True}, True)):
             if attr['is_ind']:
                 lines.append({
                     'start': self.form.vertex_coordinates(u),
                     'end': self.form.vertex_coordinates(v),
-                    'name': "{}.independent_edge".format(index),
+                    'name': "{}.independent_edge.{}".format(self.form.name, index),
                     'width': 1.0
                 })
-        return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+        compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+
+    def clear_fixed_vertice(self):
+        compas_rhino.delete_objects_by_name(name='{}.fixed_vertex.*'.format(self.form.name))
 
 
     def draw_fixed_vertice(self, color=None):
+        self.clear_fixed_vertice()
         fixed = self.form.fixed()
         self.clear_vertexlabels(keys=fixed)
         labels = []
@@ -250,26 +268,34 @@ class FormArtist(MeshArtist):
         self.clear_forces()
 
         lines = []
-        color = color or self.settings['color.force']
+        color = color or self.settings['color.compression']
         scale = scale or self.settings['scale.force']
         tol = self.settings['tol.force']
         tol2 = tol ** 2
+        leaves  = set(self.form.leaves())
 
-        for u, v, attr in self.form.edges_where({'_is_edge': True, '_is_external': False}, True):
-            sp, ep = self.form.edge_coordinates(u, v)
-            radius = scale * attr['_f']
+        # for u, v, attr in self.form.edges_where({'_is_edge': True, '_is_external': False}, True):
+        for (u, v), attr in self.form.edges_where({'is_edge': True}, True):
+            if u not in leaves and v not in leaves:
+                sp, ep = self.form.edge_coordinates(u, v)
+                f = attr['f']
 
-            if radius ** 2 < tol2:
-                continue
+                if f != 0:
+                    radius = scale * f
+                else:
+                    f = self.form.edge_attribute((v, u), 'f')
+                    radius = scale * f
 
-            lines.append({
-                'start': sp,
-                'end': ep,
-                'radius': radius,
-                'color': color,
-                'name': "{}.force.{}-{}".format(self.form.name, u, v)
+                if radius ** 2 < tol2:
+                    continue
+
+                lines.append({
+                    'start': sp,
+                    'end': ep,
+                    'radius': radius,
+                    'color': color if f > 0 else self.settings['color.tension'],
+                    'name': "{}.force.{}-{}".format(self.form.name, u, v)
             })
-
         compas_rhino.draw_cylinders(lines, layer=self.layer, clear=False, redraw=False)
 
     def draw_residuals(self, scale=None, color=None):

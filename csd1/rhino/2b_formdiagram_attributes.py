@@ -46,7 +46,6 @@ index, uv = select_loaded_edges(form)
 force_value = rs.GetReal("Force on Edges", 1.0)
 form.set_edge_force_by_index(index, force_value)
 
-
 # set the fixed vertices of form diagram
 fixed = diagram_fix_vertice(form)
 
