@@ -210,6 +210,7 @@ class FormArtist(MeshArtist):
 
         compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
 
+
     def draw_reactions(self, scale=None, color=None):
         self.clear_reactions()
 

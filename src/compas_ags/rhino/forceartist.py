@@ -27,14 +27,14 @@ class ForceArtist(MeshArtist):
     
     __module__ = 'compas_tna.rhino'
 
-    # @property
-    # def force(self):
-    #     return self.datastructure
-
     def __init__(self, force, layer=None):
         super(ForceArtist, self).__init__(force, layer=layer)
-        self.force = force
-    
+
+
+    @property
+    def force(self):
+        return self.mesh
+
 
     def draw_diagram(self, form=None):
         self.clear()
@@ -46,22 +46,30 @@ class ForceArtist(MeshArtist):
         self.redraw()
 
 
-    def draw_edge_force(self):
+    def draw_edge_force(self, draw=True):
         force_dict = {}
         c_dict  = {}
 
+        max_length = 0
         for i, (u, v) in enumerate(self.force.edges()):
             length = distance_point_point(self.force.vertex_coordinates(u), self.force.vertex_coordinates(v))
             length = round(length, 2)
-            force_dict[(u, v)] = "%s kN" % length
-            value = float(i) / (self.force.number_of_edges() - 1)
+            if length > max_length:
+                max_length = length
+            force_dict[(u, v)] = length
+        
+        for i, (u, v) in enumerate(self.force.edges()):
+            value = force_dict[(u, v)] / max_length
             c_dict[(u, v)] = i_to_rgb(value)
-            
-        self.draw_edgelabels(text=force_dict, color=c_dict)
+        
+        if draw is True:
+            self.draw_edgelabels(text=dict((v,"%s kN" % k) for v, k in force_dict.items()), color=c_dict)
+        return c_dict
 
     
     def clear_independent_edge(self):
         compas_rhino.delete_objects_by_name(name='{}.independent_edge.*'.format(self.force.name))
+
 
     def draw_independent_edges(self, form):
         self.clear_independent_edge()
@@ -77,6 +85,7 @@ class ForceArtist(MeshArtist):
                     'width': 1.0
                 })
         return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+
 
 # ==============================================================================
 # Main

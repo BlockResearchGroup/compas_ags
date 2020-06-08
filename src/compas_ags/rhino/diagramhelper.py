@@ -92,8 +92,6 @@ def diagram_fix_vertice(diagram):
     print(vkeys)
     return vkeys
 
-def diagram_independent_edge(diagram):
-    pass
 
 def select_loaded_edges(form):
     guids = compas_rhino.select_lines(message='Select Loaded Edges')
@@ -194,25 +192,41 @@ def draw_dual_form_vertices_force_faces(form, force, formartist, forceartist, co
     forceartist.draw_facelabels()
 
 
-def draw_dual_edges(form, force, formartist, forceartist, color_scheme=i_to_rgb):
+def draw_dual_edges(form, force, formartist, forceartist, color_scheme=i_to_rgb, show_forces=False):
     """visualize dual edges
+    color gradient corresponds to force magnitude in the edge
     """
-    form_c_dict  = {}
-    for i, uv in enumerate(form.edges()):
-        value = float(i) / (form.number_of_edges() - 1)
-        color = color_scheme(value)
-        form_c_dict[uv] = color
-    formartist.draw_edges()
-    formartist.draw_edgelabels(text={uv: index for index, uv in enumerate(form.edges())}, color=form_c_dict)
+    # form_c_dict  = {}
+    # for i, uv in enumerate(form.edges()):
+    #     value = float(i) / (form.number_of_edges() - 1)
+    #     color = color_scheme(value)
+    #     form_c_dict[uv] = color
+    # formartist.draw_edges()
+    # formartist.draw_edgelabels(text={uv: index for index, uv in enumerate(form.edges())}, color=form_c_dict)
 
-    forceartist.draw_edges()
-    force_c_dict = {}
+    # forceartist.draw_edges()
+    # force_c_dict = {}
+    # force_uv_form_idx_pairs = check_edge_pairs(form, force)[1]
+    # for force_uv, form_idx in iter(force_uv_form_idx_pairs.items()):
+    #     form_uv = list(form.edges())[form_idx]
+    #     force_c_dict[force_uv] = form_c_dict[form_uv]
+    # forceartist.draw_edgelabels(text=force_uv_form_idx_pairs, color=force_c_dict)
+
+    form_c_dict = {}
+    if show_forces is True:
+        force_c_dict = forceartist.draw_edge_force(draw=True)
+    else:
+        force_c_dict = forceartist.draw_edge_force(draw=False)
     force_uv_form_idx_pairs = check_edge_pairs(form, force)[1]
     for force_uv, form_idx in iter(force_uv_form_idx_pairs.items()):
         form_uv = list(form.edges())[form_idx]
-        force_c_dict[force_uv] = form_c_dict[form_uv]
-    forceartist.draw_edgelabels(text=force_uv_form_idx_pairs, color=force_c_dict)
+        form_c_dict[form_uv] = force_c_dict[force_uv]
     
+    formartist.draw_edges()
+    formartist.draw_edgelabels(text={uv: index for index, uv in enumerate(form.edges())}, color=form_c_dict)
+    forceartist.draw_edges()
+    forceartist.draw_edgelabels(text=force_uv_form_idx_pairs, color=force_c_dict)
+
 
 def match_edges(diagram, keys):
     temp = compas_rhino.get_objects(name="{}.edge.*".format(diagram.name))
