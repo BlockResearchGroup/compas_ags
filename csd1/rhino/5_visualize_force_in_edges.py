@@ -34,7 +34,5 @@ forceartist = ForceArtist(force, layer='ForceDiagram')
 formartist.draw_diagram()
 forceartist.draw_diagram(form=form)
 
-
-# TODO: 
-# show force in form diagram, change color in force diagram
+formartist.draw_forces(scale=0.1)
 forceartist.draw_edge_force()
