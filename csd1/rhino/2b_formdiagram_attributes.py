@@ -9,7 +9,7 @@ import compas_rhino
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.rhino import FormArtist
-from compas_ags.rhino import select_loaded_edges
+from compas_ags.rhino import set_edge_loads
 from compas_ags.rhino import diagram_fix_vertice
 
 # ==============================================================================
@@ -41,10 +41,7 @@ rs.HideObjects(loads_guids)
 formartist = FormArtist(form, layer='FormDiagram')
 formartist.draw_diagram()
 
-# set independent edge and force
-index, uv = select_loaded_edges(form)
-force_value = rs.GetReal("Force on Edges", 1.0)
-form.set_edge_force_by_index(index, force_value)
+set_edge_loads(form)
 
 # set the fixed vertices of form diagram
 fixed = diagram_fix_vertice(form)

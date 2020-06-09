@@ -42,7 +42,6 @@ formartist = FormArtist(form, layer='FormDiagram')
 formartist.draw_diagram()
 formartist.draw_fixed_vertice()
 formartist.draw_independent_edge()
-formartist.draw_forces(scale=0.1)
 
 forceartist = ForceArtist(force, layer='ForceDiagram')
 forceartist.draw_diagram(form=form)
