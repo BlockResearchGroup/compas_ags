@@ -42,10 +42,15 @@ from compas_ags.constraints import ConstraintsCollection
 C = ConstraintsCollection(form)
 
 # set vertex constraints
-from compas_ags.rhino import rhino_vertex_constraints
+#from compas_ags.rhino import rhino_vertex_constraints
 C.constrain_dependent_leaf_edges_lengths()
-constraint_dict = rhino_vertex_constraints(form)
+ 
+#constraint_dict = rhino_vertex_constraints(form)
+from compas_ags.rhino import rhino_constraint_visualization
+constraint_dict = rhino_constraint_visualization(form, scale=0.5)
+
 C.update_rhino_vertex_constraints(constraint_dict)
+
 
 cj, cr = C.compute_constraints()
 
