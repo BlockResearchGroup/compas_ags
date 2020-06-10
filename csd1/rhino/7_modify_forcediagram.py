@@ -45,28 +45,26 @@ C = ConstraintsCollection(form)
 from compas_ags.rhino import rhino_vertex_constraints
 C.constrain_dependent_leaf_edges_lengths()
 constraint_dict = rhino_vertex_constraints(form)
-print(constraint_dict)
 C.update_rhino_vertex_constraints(constraint_dict)
 
-print(len(C.constraints))
-
 cj, cr = C.compute_constraints()
-print(cj, cr)
+
+# compute null-space
+nullspace = rf.compute_nullspace_xfunc(form.to_data(), force.to_data(), cj, cr)
+print('Dimension of null-space is %s' % len(nullspace))
 
 # update force diagram
 # TODO: if the move is too far, iterate? / display (Ricardo.. ignore this line)
 from compas_ags.rhino import rhino_vertice_move
 xy, force2 = rhino_vertice_move(force)
 
+# update form diagram
 forceartist2 = ForceArtist(force2, layer='ForceDiagram2')
 forceartist2.draw_diagram(form)
 
-# -----------------HERE IS THE PROBLEM!!!!!!------------------------------------
+# update force diagram
 formdata2 = rf.compute_form_from_force_newton_xfunc(form.to_data(), force.to_data(), xy, tol=1e5, cj=cj, cr=cr)
 form2 = FormDiagram.from_data(formdata2)
-# -----------------HERE IS THE PROBLEM!!!!!!------------------------------------
-
-
 formartist2 = FormArtist(form2, layer='FormDiagram2')
 formartist2.draw_diagram()
 

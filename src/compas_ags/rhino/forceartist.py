@@ -28,11 +28,13 @@ class ForceArtist(MeshArtist):
     
     __module__ = 'compas_tna.rhino'
 
+
     def __init__(self, force, layer=None):
         super(ForceArtist, self).__init__(force, layer=layer)
         self.settings.update({
             'color.anchor':(255, 0, 0)
         })
+
 
     @property
     def force(self):
