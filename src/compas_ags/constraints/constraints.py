@@ -221,9 +221,11 @@ class LengthFix(AbstractConstraint):
         self.L = m.sqrt(dx ** 2 + dy ** 2)  # Initial length
 
     def compute_constraint(self):
-
+        k_i = self.form.key_index()
         constraint_jac_row = [0] * self.number_of_cols
         u, v = list(self.form.edges())[self.edge]
+        u = k_i[u]
+        v = k_i[v]
         s = self.form.vertex_coordinates(u, 'xy')
         e = self.form.vertex_coordinates(v, 'xy')
         dx = s[0] - e[0]

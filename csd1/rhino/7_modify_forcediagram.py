@@ -30,6 +30,7 @@ formartist = FormArtist(form, layer='FormDiagram')
 forceartist = ForceArtist(force, layer='ForceDiagram')
 formartist.draw_diagram()
 forceartist.draw_diagram(form=form)
+forceartist.draw_anchor_vertex()
 
 # ==============================================================================
 # Constraints
@@ -66,5 +67,7 @@ form2 = FormDiagram.from_data(formdata2)
 # -----------------HERE IS THE PROBLEM!!!!!!------------------------------------
 
 
-formartist2 = FormArtist(form2, layer='FormArtist2')
+formartist2 = FormArtist(form2, layer='FormDiagram2')
 formartist2.draw_diagram()
+
+print('success!')
