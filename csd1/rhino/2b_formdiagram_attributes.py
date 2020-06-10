@@ -41,6 +41,7 @@ rs.HideObjects(loads_guids)
 formartist = FormArtist(form, layer='FormDiagram')
 formartist.draw_diagram()
 
+# set independent edge and force
 set_edge_loads(form)
 
 # set the fixed vertices of form diagram

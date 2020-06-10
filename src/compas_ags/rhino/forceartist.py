@@ -11,6 +11,7 @@ from compas_rhino.artists import MeshArtist
 from compas_ags.rhino import find_force_ind
 from .diagramhelper import check_edge_pairs
 
+
 __all__ = ['ForceArtist']
 
 
@@ -27,8 +28,12 @@ class ForceArtist(MeshArtist):
     
     __module__ = 'compas_tna.rhino'
 
+
     def __init__(self, force, layer=None):
         super(ForceArtist, self).__init__(force, layer=layer)
+        self.settings.update({
+            'color.anchor':(255, 0, 0)
+        })
 
 
     @property
@@ -44,6 +49,24 @@ class ForceArtist(MeshArtist):
         if form is not None:
             self.draw_edgelabels(text=check_edge_pairs(form, self.force)[1])
         self.redraw()
+
+
+    def clear_anchor_vertex(self):
+        compas_rhino.delete_objects_by_name(name='{}.anchor_vertex.*'.format(self.force.name))
+
+
+    def draw_anchor_vertex(self, color=None):
+        self.clear_anchor_vertex()
+        anchor = self.force.anchor()
+        self.clear_vertexlabels(keys=[anchor])
+        labels = []
+        labels.append({
+            'pos'  : self.force.vertex_coordinates(anchor),
+            'text' : str(anchor),
+            'color': color or self.settings.get('color.anchor'),
+            'name' : "{}.anchor_vertex.{}".format(self.force.name, anchor)
+        })
+        compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
 
 
     def draw_edge_force(self, draw=True):

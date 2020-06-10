@@ -2,14 +2,19 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+
 import compas
 
 from compas.geometry import add_vectors
 from compas_rhino.selectors import VertexSelector
 from compas_rhino.selectors import EdgeSelector
 
+from System.Drawing.Color import FromArgb
+
 try:
     import Rhino
+    import rhinoscriptsyntax as rs
+    import scriptcontext as sc
     from Rhino.ApplicationSettings import *
     from Rhino.Geometry import Point3d
 
@@ -25,6 +30,7 @@ except ImportError:
 
 __all__ = ['rhino_vertex_constraints', 
             'rhino_edge_constraints', 
+            'rhino_constraint_visualization',
             'get_initial_point',     
             'rhino_vertice_move',
             ]
@@ -47,30 +53,145 @@ def rhino_vertex_constraints(diagram):
             x,y fixed is True, not fixed is false
     """
 
-    constraint_dict = {}
+    constraint_dict = {k:[False, False] for k in diagram.vertices()}
 
     go = Rhino.Input.Custom.GetOption()
-    go.SetCommandPrompt('Set Constraints')
+    go.SetCommandPrompt('Set Constraints.')
 
     boolOptionX = Rhino.Input.Custom.OptionToggle(False, 'False', 'True')
     boolOptionY = Rhino.Input.Custom.OptionToggle(False, 'False', 'True')
-
-    go.AddOptionToggle('fix_X', boolOptionX)
-    go.AddOptionToggle('fix_Y', boolOptionY)
         
     while True:
+        #select vertex
         vkey = VertexSelector.select_vertex(diagram, message='Select constraint vertex')
         if vkey is None:
             break
+        
+        # update constraint condition of selected vertex
+        go.ClearCommandOptions()
+        boolOptionX.CurrentValue = constraint_dict[vkey][0]
+        boolOptionY.CurrentValue = constraint_dict[vkey][1]
+        go.AddOptionToggle('fix_X', boolOptionX)
+        go.AddOptionToggle('fix_Y', boolOptionY)
+
         opt = go.Get()
         if go.CommandResult() != Rhino.Commands.Result.Success:
             break
-        if opt == Rhino.Input.GetResult.Option:  # keep picking options
+        if opt == Rhino.Input.GetResult.Option:
+            # update constraint dictionary
             constraint_dict[vkey] = [boolOptionX.CurrentValue, boolOptionY.CurrentValue]
-            continue
+            print('current constraint', constraint_dict)
+            continue # keep picking options
         break
     
     return constraint_dict
+
+
+
+def rhino_constraint_visualization(diagram, layer='constraints', scale=1.0):
+    # check the layers to draw constraint lines
+    from Rhino.DocObjects.ObjectColorSource import ColorFromObject
+    layer_index = sc.doc.Layers.FindByFullPath(layer, True)
+    # clear layer
+    if layer_index >= 0: 
+        rhobjs = sc.doc.Objects.FindByLayer(layer)
+        rs.DeleteObjects(rhobjs)
+    # if the layer doesn't exist, create a new one
+    else:
+        new_layer = Rhino.DocObjects.Layer()
+        new_layer.Name = layer
+        layer_index = sc.doc.Layers.Add(new_layer)
+
+    # color to show constraints
+    color=(255, 0, 0)
+
+    constraint_dict = {k:[False, False] for k in diagram.vertices()}
+    constraint_dict_copy = {k:[False, False] for k in diagram.vertices()} # to check the last change of the dict
+    lines_dict =  {k:[None, None] for k in diagram.vertices()}
+
+    go = Rhino.Input.Custom.GetOption()
+    go.SetCommandPrompt('Set Constraints.')
+
+    boolOptionX = Rhino.Input.Custom.OptionToggle(False, 'False', 'True')
+    boolOptionY = Rhino.Input.Custom.OptionToggle(False, 'False', 'True')
+        
+    while True:
+        #select vertex
+        vkey = VertexSelector.select_vertex(diagram, message='Select constraint vertex')
+        if vkey is None:
+            break
+        
+        # update constraint condition of selected vertex
+        go.ClearCommandOptions()
+        boolOptionX.CurrentValue = constraint_dict[vkey][0]
+        boolOptionY.CurrentValue = constraint_dict[vkey][1]
+        go.AddOptionToggle('fix_X', boolOptionX)
+        go.AddOptionToggle('fix_Y', boolOptionY)
+
+        opt = go.Get()
+        if go.CommandResult() != Rhino.Commands.Result.Success:
+            break
+        if opt == Rhino.Input.GetResult.Option:
+            # update constraint dictionary
+            constraint_dict[vkey] = [boolOptionX.CurrentValue, boolOptionY.CurrentValue]
+            _fore_constrint = constraint_dict_copy[vkey]
+
+            x = diagram.vertex_coordinates(vkey)[0]
+            y = diagram.vertex_coordinates(vkey)[1]
+            s_pt = [x, y]
+            e_pt = [x, y]
+
+            # add x constraint
+            if _fore_constrint[0] is False and boolOptionX.CurrentValue is True:
+                s_pt[0] -= 1 * scale
+                e_pt[0] += 1 * scale
+                guid = sc.doc.Objects.AddLine(Point3d(s_pt[0], s_pt[1], 0), Point3d(e_pt[0], e_pt[1], 0))
+                obj = sc.doc.Objects.Find(guid)
+                attr = obj.Attributes
+                attr.ObjectColor = FromArgb(*color)
+                attr.ColorSource = ColorFromObject
+                attr.LayerIndex = layer_index
+                obj.CommitChanges()
+                lines_dict[vkey][0] = obj
+                sc.doc.Views.Redraw()
+
+            # add y constraint
+            elif _fore_constrint[1] is False and boolOptionY.CurrentValue is True:
+                s_pt[1] -= 1 * scale
+                e_pt[1] += 1 * scale
+                guid = sc.doc.Objects.AddLine(Point3d(s_pt[0], s_pt[1], 0), Point3d(e_pt[0], e_pt[1], 0))
+                obj = sc.doc.Objects.Find(guid)
+                attr = obj.Attributes
+                attr.ObjectColor = FromArgb(*color)
+                attr.ColorSource = ColorFromObject
+                attr.LayerIndex = layer_index
+                obj.CommitChanges()
+                lines_dict[vkey][1] = obj
+                sc.doc.Views.Redraw()
+
+            # remove x constraints
+            elif _fore_constrint[0] is True and boolOptionX.CurrentValue is False:
+                obj = lines_dict[vkey][0]
+                sc.doc.Objects.Delete(obj)
+                lines_dict[vkey][0] = None
+                sc.doc.Views.Redraw()
+
+            # remove y constraints
+            elif _fore_constrint[1] is True and boolOptionY.CurrentValue is False:
+                obj = lines_dict[vkey][1]
+                sc.doc.Objects.Delete(obj)
+                lines_dict[vkey][1] = None
+                sc.doc.Views.Redraw()
+
+            constraint_dict_copy[vkey] = [boolOptionX.CurrentValue, boolOptionY.CurrentValue]
+
+            print('current constraint', constraint_dict)
+            continue # keep picking options
+        break
+    
+    return constraint_dict
+
+#--------------------------------------------------------------
 
 
 def rhino_edge_constraints(diagram):
@@ -135,10 +256,18 @@ def rhino_vertice_move(diagram):
     Return 
     ----------
     xy: list
-        List contains new 
+        Dict contains new vertex keys and xy coordinates
+    new_diagram:
+        New diagram
     """
 
     vkeys = VertexSelector.select_vertices(diagram, message='Select vertice to move')
+
+    anchor_key = diagram.anchor()
+    print('anchor key is %s' % anchor_key) 
+    print(vkeys)
+    for vkey in vkeys:
+        if vkey == anchor_key: print('it contains keys that should not be moved')
 
     nbr_vkeys = {}
     edges = set()
@@ -204,14 +333,12 @@ def rhino_vertice_move(diagram):
         if vkey in vkeys:
             new_xyz = add_vectors(diagram.vertex_coordinates(vkey), translation)
             xy[vkey] = [new_xyz[0], new_xyz[1]]
-            # xy.append([new_xyz[0], new_xyz[1]])
             new_diagram.vertex[vkey]['constrained'] = False
             new_diagram.vertex[vkey]['x'] = new_xyz[0]
             new_diagram.vertex[vkey]['y'] = new_xyz[1]
             new_diagram.vertex[vkey]['z'] = new_xyz[2]
         else:
             xyz = diagram.vertex_coordinates(vkey)
-            # xy.append([xyz[0], xyz[1]])
             xy[vkey] = [xyz[0], xyz[1]]
     
     return xy, new_diagram
