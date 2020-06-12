@@ -66,7 +66,7 @@ class ForceArtist(MeshArtist):
             'color': color or self.settings.get('color.anchor'),
             'name' : "{}.anchor_vertex.{}".format(self.force.name, anchor)
         })
-        compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
+        compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=True)
 
 
     def draw_edge_force(self, draw=True):
