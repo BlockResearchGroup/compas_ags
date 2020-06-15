@@ -308,9 +308,16 @@ def move_force_vertice(diagram, diagramartist):
             gp.DynamicDraw += OnDynamicDraw
             gp.SetCommandPrompt('Point to move to')
 
-            gp.Get()
-            gp.SetBasePoint(ip, False)
-            target = gp.Point()
+            while True:
+                get_rc = gp.Get()
+                gp.SetBasePoint(ip, False)
+                if gp.CommandResult() != Rhino.Commands.Result.Success:
+                    continue
+                if get_rc == Rhino.Input.GetResult.Option:
+                    continue
+                elif get_rc == Rhino.Input.GetResult.Point:
+                    target = gp.Point()
+                break
 
             translation = target - ip
             

@@ -131,23 +131,30 @@ class FormArtist(MeshArtist):
         self.clear_residuals()
         self.clear_angles()
 
+
     def clear_loads(self):
         compas_rhino.delete_objects_by_name(name='{}.load.*'.format(self.form.name))
+
 
     def clear_selfweight(self):
         compas_rhino.delete_objects_by_name(name='{}.selfweight.*'.format(self.form.name))
 
+
     def clear_reactions(self):
         compas_rhino.delete_objects_by_name(name='{}.reaction.*'.format(self.form.name))
+
 
     def clear_forces(self):
         compas_rhino.delete_objects_by_name(name='{}.force.*'.format(self.form.name))
 
+
     def clear_residuals(self):
         compas_rhino.delete_objects_by_name(name='{}.residual.*'.format(self.form.name))
 
+
     def clear_angles(self):
         compas_rhino.delete_objects_by_name(name='{}.angle.*'.format(self.form.name))
+
 
     def draw_loads(self, scale=None, color=None):
         self.clear_loads()
@@ -178,6 +185,7 @@ class FormArtist(MeshArtist):
             })
 
         compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+
 
     def draw_selfweight(self, scale=None, color=None):
         self.clear_selfweight()
@@ -275,17 +283,16 @@ class FormArtist(MeshArtist):
         tol2 = tol ** 2
         leaves  = set(self.form.leaves())
 
-        # for u, v, attr in self.form.edges_where({'_is_edge': True, '_is_external': False}, True):
         for (u, v), attr in self.form.edges_where({'is_edge': True}, True):
             if u not in leaves and v not in leaves:
                 sp, ep = self.form.edge_coordinates(u, v)
                 f = attr['f']
 
                 if f != 0:
-                    radius = scale * f
+                    radius = abs(scale * f)
                 else:
                     f = self.form.edge_attribute((v, u), 'f')
-                    radius = scale * f
+                    radius = abs(scale * f)
 
                 if radius ** 2 < tol2:
                     continue
@@ -296,8 +303,9 @@ class FormArtist(MeshArtist):
                     'radius': radius,
                     'color': color if f > 0 else self.settings['color.tension'],
                     'name': "{}.force.{}-{}".format(self.form.name, u, v)
-            })
-        compas_rhino.draw_cylinders(lines, layer=self.layer, clear=False, redraw=False)
+                })
+        compas_rhino.draw_cylinders(lines, layer=self.layer, clear=False, redraw=True)
+
 
     def draw_residuals(self, scale=None, color=None):
         self.clear_residuals()

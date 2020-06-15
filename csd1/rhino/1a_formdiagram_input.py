@@ -19,6 +19,7 @@ lines = compas_rhino.get_line_coordinates(guids)
 rs.HideObjects(guids)
 
 graph = FormGraph.from_lines(lines)
+print(graph.is_2d())
 form = FormDiagram.from_graph(graph)
 
 

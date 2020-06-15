@@ -23,6 +23,8 @@ force_file = os.path.join(DATA, 'force.json')
 form = FormDiagram.from_json(form_file)
 force = ForceDiagram.from_json(force_file)
 
+print(list(form.edges()))
+print(form)
 
 # ==============================================================================
 # Visualize result

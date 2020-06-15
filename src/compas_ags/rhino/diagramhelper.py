@@ -183,7 +183,9 @@ def draw_dual_form_faces_force_vertices(form, force, formartist, forceartist, co
     formartist.draw_edges()
     formartist.draw_faces(color=c_dict)
     formartist.draw_facelabels()
+
     forceartist.draw_edges()
+    forceartist.clear_vertexlabels()
     forceartist.draw_vertexlabels(color=c_dict)
 
 
@@ -197,7 +199,9 @@ def draw_dual_form_vertices_force_faces(form, force, formartist, forceartist, co
             color = color_scheme(value)
             c_dict[fkey] = color
     formartist.draw_edges()
+    formartist.clear_vertexlabels()
     formartist.draw_vertexlabels(color=c_dict)
+
     forceartist.draw_edges()
     forceartist.draw_faces(color=c_dict)
     forceartist.draw_facelabels()

@@ -56,9 +56,9 @@ cj, cr = C.compute_constraints()
 
 
 
-# compute null-space
-nullspace = rf.compute_nullspace_xfunc(form.to_data(), force.to_data(), cj, cr)
-print('Dimension of null-space is %s' % len(nullspace))
+## compute null-space
+#nullspace = rf.compute_nullspace_xfunc(form.to_data(), force.to_data(), cj, cr)
+#print('Dimension of null-space is %s' % len(nullspace))
 
 # update force diagram
 # TODO: if the move is too far, iterate? / display (Ricardo.. ignore this line)
