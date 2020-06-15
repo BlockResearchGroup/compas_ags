@@ -34,6 +34,7 @@ __all__ = ['rhino_vertex_constraints',
             'get_initial_point',     
             'rhino_vertice_move',
             'move_force_vertice',
+            'move_form_vertice',
             ]
 
 
@@ -261,7 +262,7 @@ def get_initial_point(message='Point to move from?'):
     return ip
 
 
-from .conduit import ForceConduit
+from .conduit import ForceConduit, FormConduit
 
 def move_force_vertice(diagram, diagramartist):
     def OnDynamicDraw(sender, e):
@@ -355,6 +356,90 @@ def move_force_vertice(diagram, diagramartist):
     rs.EnableRedraw(False)
     return xy, diagram
 
+def move_form_vertice(diagram, diagramartist):
+    def OnDynamicDraw(sender, e):
+        cp = e.CurrentPoint
+        translation = cp - ip
+        for vkey in vkeys:
+            xyz = diagram.vertex_coordinates(vkey)
+            sp  = Point3d(*xyz)
+            for nbr_vkey in nbr_vkeys[vkey]:
+                nbr  = diagram.vertex_coordinates(nbr_vkey)
+                np   = Point3d(*nbr)
+                line = Rhino.Geometry.Line(sp, sp + translation)
+                e.Display.DrawDottedLine(np, sp + translation, dotted_color)
+                e.Display.DrawArrow(line, arrow_color, 15, 0)
+
+        for pair in list(edges):
+            pair = list(pair)
+            u  = diagram.vertex_coordinates(pair[0])
+            v  = diagram.vertex_coordinates(pair[1])
+            sp = Point3d(*u) + translation
+            ep = Point3d(*v) + translation
+            e.Display.DrawLine(sp, ep, edge_color, 3)
+
+    fixed_key = diagram.fixed()
+    print('fixed key is %s' % fixed_key) 
+    
+    # xy coordinates of targeted 
+    xy = {} 
+    for vkey in diagram.vertices():
+        xyz = diagram.vertex_coordinates(vkey)
+        xy[vkey] = [xyz[0], xyz[1]]
+
+    rs.EnableRedraw(True)
+    conduit = FormConduit(diagramartist)
+    
+    while True:
+        vkeys = VertexSelector.select_vertices(diagram, message='Select vertices to move')
+        if vkeys == []:
+            break
+        nbr_vkeys = {}
+        edges = set()
+        for vkey in vkeys:
+            all_nbrs = diagram.vertex_neighbors(vkey)
+            nbrs = []
+            for nbr in all_nbrs:
+                if nbr in vkeys:
+                    edges.add(frozenset([vkey, nbr]))
+                else:
+                    nbrs.append(nbr)
+            nbr_vkeys[vkey] = nbrs
+        
+        # get the point to move from 
+        ip = get_initial_point()
+
+        gp = Rhino.Input.Custom.GetPoint()
+        gp.DynamicDraw += OnDynamicDraw
+        gp.SetCommandPrompt('Point to move to')
+
+        while True:
+            get_rc = gp.Get()
+            gp.SetBasePoint(ip, False)
+            if gp.CommandResult() != Rhino.Commands.Result.Success:
+                continue
+            if get_rc == Rhino.Input.GetResult.Option:
+                continue
+            elif get_rc == Rhino.Input.GetResult.Point:
+                target = gp.Point()
+            break
+
+        translation = target - ip
+        
+        for vkey in diagram.vertices():
+            if vkey in vkeys:
+                new_xyz = add_vectors(diagram.vertex_coordinates(vkey), translation)
+                xy[vkey] = [new_xyz[0], new_xyz[1]]
+                diagram.vertex[vkey]['constrained'] = False
+                diagram.vertex[vkey]['x'] = new_xyz[0]
+                diagram.vertex[vkey]['y'] = new_xyz[1]
+                diagram.vertex[vkey]['z'] = new_xyz[2]
+
+        conduit.redraw()
+        continue
+
+    rs.EnableRedraw(False)
+    return xy, diagram
 
 def rhino_vertice_move(diagram):
     """Select diagram vertices and move them
