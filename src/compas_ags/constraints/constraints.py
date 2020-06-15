@@ -37,16 +37,6 @@ class AbstractConstraint(object):
         self._width = 1.0
         self._style = '--'
 
-    # @abstractmethod
-    # def compute_constraint(self):
-    #     """Computes the residual and Jacobian matrix of the constraint."""
-    #     pass
-
-    # @abstractmethod
-    # def update_constraint_goal(self):
-    #     """Update constraint values based on current form diagram"""
-    #     pass
-
     @property
     def number_of_cols(self):
         vcount = self.form.number_of_vertices()
@@ -69,6 +59,13 @@ class ConstraintsCollection:
     def __init__(self, form):
         self.constraints = []  # type: list[AbstractConstraint]
         self.form = form   # type: FormDiagram
+
+
+    # def update_fixed_vertices(self):
+    #     fixed = self.form.fixed()
+
+    #     pass
+
 
     def add_constraint(self, constraint):
         self.constraints.append(constraint)

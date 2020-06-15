@@ -34,6 +34,7 @@ class ForceArtist(MeshArtist):
         self.settings.update({
             'color.anchor':(255, 0, 0)
         })
+        self.update_edge_force()
 
 
     @property
@@ -41,14 +42,49 @@ class ForceArtist(MeshArtist):
         return self.mesh
 
 
-    def draw_diagram(self, form=None):
+    def draw_diagram(self, form=None, scale=None):
         self.clear()
+
+        # scale the force diagram according to the dimension of form diagram
+        if scale is True and form is not None:
+            scale = self.calculate_scale(form)
+            self.scale_diagram(scale)
+        elif scale is not None:
+            self.scale_diagram(scale)
+
         self.draw_vertices()
         self.draw_vertexlabels()
         self.draw_edges()
         if form is not None:
             self.draw_edgelabels(text=check_edge_pairs(form, self.force)[1])
         self.redraw()
+
+
+    def calculate_scale(self, form):
+        form_x = form.vertices_attribute('x')
+        form_y = form.vertices_attribute('y')
+        form_xdim = max(form_x) - min(form_x)
+        form_ydim = max(form_y) - min(form_y)
+
+        force_x = self.force.vertices_attribute('x')
+        force_y = self.force.vertices_attribute('y')
+        force_xdim = max(force_x) - min(force_x)
+        force_ydim = max(force_y) - min(force_y)
+
+        scale = max([force_xdim / form_xdim, force_ydim / form_ydim])
+        return scale
+
+    
+    def scale_diagram(self, scale):
+        x = self.force.vertices_attribute('x')
+        y = self.force.vertices_attribute('y')
+        anchor = self.force.anchor()
+        dx = self.force.vertex_coordinates(anchor)[0]
+        dy = self.force.vertex_coordinates(anchor)[1]
+
+        for vkey, attr in self.force.vertices(True):
+            attr['x'] = dx + (attr['x'] - dx) / scale
+            attr['y'] = dy + (attr['y'] - dy) / scale
 
 
     def clear_anchor_vertex(self):
@@ -69,14 +105,24 @@ class ForceArtist(MeshArtist):
         compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=True)
 
 
+    def update_edge_force(self):
+        (u, v) = list(self.force.edges())[0] # get an edge
+        # check whether the force diagram is scaled already
+        if self.force.edge_attribute((u, v), 'force') is None:  
+            self.force.update_default_edge_attributes({'force': 0.0})
+            for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):
+                length = self.force.edge_length(u, v)
+                length = round(length, 2)
+                attr['force'] = length
+
+
     def draw_edge_force(self, draw=True):
         force_dict = {}
         c_dict  = {}
-
         max_length = 0
-        for i, (u, v) in enumerate(self.force.edges()):
-            length = self.force.edge_length(u, v)
-            length = round(length, 2)
+
+        for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):
+            length = attr['force']
             if length > max_length:
                 max_length = length
             force_dict[(u, v)] = length

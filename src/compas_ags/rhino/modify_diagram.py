@@ -92,6 +92,8 @@ def rhino_vertex_constraints(diagram):
 def rhino_constraint_visualization(diagram, layer='constraints', scale=1.0):
     # check the layers to draw constraint lines
     from Rhino.DocObjects.ObjectColorSource import ColorFromObject
+    import copy
+
     layer_index = sc.doc.Layers.FindByFullPath(layer, True)
     # clear layer
     if layer_index >= 0: 
@@ -103,12 +105,39 @@ def rhino_constraint_visualization(diagram, layer='constraints', scale=1.0):
         new_layer.Name = layer
         layer_index = sc.doc.Layers.Add(new_layer)
 
-    # color to show constraints
-    color=(255, 0, 0)
-
+    # update the fixed vertices
+    fixed = diagram.fixed()
     constraint_dict = {k:[False, False] for k in diagram.vertices()}
-    constraint_dict_copy = {k:[False, False] for k in diagram.vertices()} # to check the last change of the dict
     lines_dict =  {k:[None, None] for k in diagram.vertices()}
+
+    def draw_lines(x_s, y_s, x_e, y_e, **kwargs):
+        color=(255, 0, 0)  # color to show constraints
+        guid = sc.doc.Objects.AddLine(Point3d(x_s, y_s, 0), Point3d(x_e, y_e, 0))
+        obj = sc.doc.Objects.Find(guid)
+        attr = obj.Attributes
+        attr.ObjectColor = FromArgb(*color)
+        attr.ColorSource = ColorFromObject
+        attr.LayerIndex = layer_index
+        obj.CommitChanges()
+        return obj
+
+    for vkey in fixed:
+        constraint_dict[vkey] = [True, True]
+        x = diagram.vertex_coordinates(vkey)[0]
+        y = diagram.vertex_coordinates(vkey)[1]
+        s_pt = [x, y]
+        e_pt = [x, y]
+        x_s = s_pt[0] - 1 * scale
+        x_e = e_pt[0] + 1 * scale
+        y_s = s_pt[1] - 1 * scale
+        y_e = e_pt[1] + 1 * scale
+        obj_x = draw_lines(x_s, s_pt[1], x_e, e_pt[1])
+        obj_y = draw_lines(s_pt[0], y_s, e_pt[0], y_e)
+        lines_dict[vkey][0] = obj_x
+        lines_dict[vkey][1] = obj_y
+        sc.doc.Views.Redraw()
+        
+    constraint_dict_copy = copy.deepcopy(constraint_dict) # to check the last change of the dict
 
     go = Rhino.Input.Custom.GetOption()
     go.SetCommandPrompt('Set Constraints.')
@@ -146,13 +175,7 @@ def rhino_constraint_visualization(diagram, layer='constraints', scale=1.0):
             if _fore_constrint[0] is False and boolOptionX.CurrentValue is True:
                 s_pt[0] -= 1 * scale
                 e_pt[0] += 1 * scale
-                guid = sc.doc.Objects.AddLine(Point3d(s_pt[0], s_pt[1], 0), Point3d(e_pt[0], e_pt[1], 0))
-                obj = sc.doc.Objects.Find(guid)
-                attr = obj.Attributes
-                attr.ObjectColor = FromArgb(*color)
-                attr.ColorSource = ColorFromObject
-                attr.LayerIndex = layer_index
-                obj.CommitChanges()
+                obj = draw_lines(s_pt[0], s_pt[1], e_pt[0], e_pt[1])
                 lines_dict[vkey][0] = obj
                 sc.doc.Views.Redraw()
 
@@ -160,13 +183,7 @@ def rhino_constraint_visualization(diagram, layer='constraints', scale=1.0):
             elif _fore_constrint[1] is False and boolOptionY.CurrentValue is True:
                 s_pt[1] -= 1 * scale
                 e_pt[1] += 1 * scale
-                guid = sc.doc.Objects.AddLine(Point3d(s_pt[0], s_pt[1], 0), Point3d(e_pt[0], e_pt[1], 0))
-                obj = sc.doc.Objects.Find(guid)
-                attr = obj.Attributes
-                attr.ObjectColor = FromArgb(*color)
-                attr.ColorSource = ColorFromObject
-                attr.LayerIndex = layer_index
-                obj.CommitChanges()
+                obj = draw_lines(s_pt[0], s_pt[1], e_pt[0], e_pt[1])
                 lines_dict[vkey][1] = obj
                 sc.doc.Views.Redraw()
 
