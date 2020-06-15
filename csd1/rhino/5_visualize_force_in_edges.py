@@ -23,6 +23,8 @@ force_file = os.path.join(DATA, 'force.json')
 form = FormDiagram.from_json(form_file)
 force = ForceDiagram.from_json(force_file)
 
+print(list(form.edges()))
+print(form)
 
 # ==============================================================================
 # Visualize result
@@ -34,7 +36,5 @@ forceartist = ForceArtist(force, layer='ForceDiagram')
 formartist.draw_diagram()
 forceartist.draw_diagram(form=form)
 
-
-# TODO: 
-# show force in form diagram, change color in force diagram
+formartist.draw_forces(scale=0.1)
 forceartist.draw_edge_force()

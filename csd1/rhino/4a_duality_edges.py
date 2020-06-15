@@ -31,6 +31,6 @@ force = ForceDiagram.from_json(force_file)
 formartist = FormArtist(form, layer='FormDiagram')
 forceartist = ForceArtist(force, layer='ForceDiagram')
 
-draw_dual_edges(form, force, formartist, forceartist)
+draw_dual_edges(form, force, formartist, forceartist, show_forces=False)
 
 

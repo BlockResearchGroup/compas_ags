@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 from compas.datastructures import Network
-# from compas.datastructures import network_is_xy
+
 
 __all__ = ['FormGraph']
 
@@ -12,9 +12,14 @@ class FormGraph(Network):
 
     def __init__(self):
         super(FormGraph, self).__init__()
+        self.is_2d()
 
     def is_2d(self):
-        return True # network_is_xy(self)
+        for key in self.nodes():
+            if self.node_attribute(key, 'z') != 0.0 : 
+                print('Node %s not in xy plane. It will be projected to xy plane' % key)
+                self.node_attribute(key, 'z', 0.0)
+        return True
 
 
 # ==============================================================================
@@ -22,4 +27,5 @@ class FormGraph(Network):
 # ==============================================================================
 
 if __name__ == '__main__':
-    pass
+    network = Network()
+    formgraph = FormGraph()

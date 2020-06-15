@@ -11,6 +11,7 @@ from compas_rhino.artists import MeshArtist
 from compas_ags.rhino import find_force_ind
 from .diagramhelper import check_edge_pairs
 
+
 __all__ = ['ForceArtist']
 
 
@@ -27,14 +28,18 @@ class ForceArtist(MeshArtist):
     
     __module__ = 'compas_tna.rhino'
 
-    # @property
-    # def force(self):
-    #     return self.datastructure
 
     def __init__(self, force, layer=None):
         super(ForceArtist, self).__init__(force, layer=layer)
-        self.force = force
-    
+        self.settings.update({
+            'color.anchor':(255, 0, 0)
+        })
+
+
+    @property
+    def force(self):
+        return self.mesh
+
 
     def draw_diagram(self, form=None):
         self.clear()
@@ -46,21 +51,51 @@ class ForceArtist(MeshArtist):
         self.redraw()
 
 
-    def draw_edge_force(self):
+    def clear_anchor_vertex(self):
+        compas_rhino.delete_objects_by_name(name='{}.anchor_vertex.*'.format(self.force.name))
+
+
+    def draw_anchor_vertex(self, color=None):
+        self.clear_anchor_vertex()
+        anchor = self.force.anchor()
+        self.clear_vertexlabels(keys=[anchor])
+        labels = []
+        labels.append({
+            'pos'  : self.force.vertex_coordinates(anchor),
+            'text' : str(anchor),
+            'color': color or self.settings.get('color.anchor'),
+            'name' : "{}.anchor_vertex.{}".format(self.force.name, anchor)
+        })
+        compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=True)
+
+
+    def draw_edge_force(self, draw=True):
         force_dict = {}
         c_dict  = {}
 
+        max_length = 0
         for i, (u, v) in enumerate(self.force.edges()):
-            length = distance_point_point(self.force.vertex_coordinates(u), self.force.vertex_coordinates(v))
+            length = self.force.edge_length(u, v)
             length = round(length, 2)
-            force_dict[(u, v)] = "%s kN" % length
-            value = float(i) / (self.force.number_of_edges() - 1)
+            if length > max_length:
+                max_length = length
+            force_dict[(u, v)] = length
+        
+        for i, (u, v) in enumerate(self.force.edges()):
+            value = force_dict[(u, v)] / max_length
             c_dict[(u, v)] = i_to_rgb(value)
-            
-        self.draw_edgelabels(text=force_dict, color=c_dict)
+        
+        if draw is True:
+            self.draw_edgelabels(text=dict((v,"%s kN" % k) for v, k in force_dict.items()), color=c_dict)
+        return c_dict
+
+    
+    def clear_independent_edge(self):
+        compas_rhino.delete_objects_by_name(name='{}.independent_edge.*'.format(self.force.name))
 
 
     def draw_independent_edges(self, form):
+        self.clear_independent_edge()
         indices = find_force_ind(form, self.force)
         print(indices)
         lines = []
@@ -69,10 +104,11 @@ class ForceArtist(MeshArtist):
                 lines.append({
                     'start': self.force.vertex_coordinates(u),
                     'end': self.force.vertex_coordinates(v),
-                    'name': "{}.independent_edge".format(index),
+                    'name': "{}.independent_edge.{}".format(self.force.name, index),
                     'width': 1.0
                 })
         return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+
 
 # ==============================================================================
 # Main

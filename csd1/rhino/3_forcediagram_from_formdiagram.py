@@ -38,7 +38,6 @@ force = ForceDiagram.from_data(force_data)
 # ==============================================================================
 # Visualize result
 # ==============================================================================
-
 formartist = FormArtist(form, layer='FormDiagram')
 formartist.draw_diagram()
 formartist.draw_fixed_vertice()
