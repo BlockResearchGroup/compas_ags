@@ -44,6 +44,7 @@ class ForceArtist(MeshArtist):
 
     def draw_diagram(self, form=None, scale=None):
         self.clear()
+        compas_rhino.delete_objects_by_name(name='{}.*'.format(self.force.name))
 
         # scale the force diagram according to the dimension of form diagram
         if scale is True and form is not None:

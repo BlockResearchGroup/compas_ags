@@ -53,6 +53,7 @@ class FormArtist(MeshArtist):
 
     def draw_diagram(self):
         self.clear()
+        compas_rhino.delete_objects_by_name(name='{}.*'.format(self.form.name))
         self.draw_vertices()
         self.draw_vertexlabels()
         self.draw_edges()
