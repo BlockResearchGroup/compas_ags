@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-
+import math as m
 import compas
 
 from compas.geometry import add_vectors
@@ -23,6 +23,9 @@ try:
     dotted_color = FromArgb(0, 0, 0)
     arrow_color  = FromArgb(255, 0, 79)
     edge_color   = FromArgb(0, 0, 0)
+    black          = FromArgb(0, 0, 0)
+    gray           = FromArgb(200, 200, 200)
+    white          = FromArgb(255, 255, 255)
 
 except ImportError:
     compas.raise_if_ironpython()
@@ -289,6 +292,12 @@ def move_force_vertice(diagram, diagramartist):
                 line = Rhino.Geometry.Line(sp, sp + translation)
                 e.Display.DrawDottedLine(np, sp + translation, dotted_color)
                 e.Display.DrawArrow(line, arrow_color, 15, 0)
+
+                # display force magnitudes
+                dis_real = m.sqrt((cp[0] - nbr_x_trans) ** 2 + (cp[1] - nbr_y_trans) ** 2) * sca_factor
+                dot_x = (cp[0] - nbr_x_trans) / 2 + nbr_x_trans
+                dot_y = (cp[1] - nbr_y_trans) / 2 + nbr_y_trans
+                e.Display.DrawDot(Point3d(dot_x, dot_y, 0), str(round(dis_real, 2)), gray, white)
 
         # TODO: show labels, how much force is in the edge
         for pair in list(edges):
