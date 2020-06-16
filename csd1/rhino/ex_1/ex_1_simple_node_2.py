@@ -26,14 +26,14 @@ form = FormDiagram.from_json(form_file)
 force = ForceDiagram.from_json(force_file)
 
 formartist = FormArtist(form, layer='FormDiagram')
-forceartist = ForceArtist(force, layer='ForceDiagram')
+forceartist = ForceArtist(force, form=form, layer='ForceDiagram')
 
 formartist.draw_diagram()
 formartist.draw_independent_edge()
 formartist.draw_fixed_vertice()
 
-forceartist.draw_diagram(form=form)
-forceartist.draw_independent_edges(form)
+forceartist.draw_diagram()
+forceartist.draw_independent_edges()
 forceartist.draw_edge_force()
 forceartist.draw_anchor_vertex()
 
@@ -57,9 +57,9 @@ force = ForceDiagram.from_data(force_data)
 
 # when update force diagram, force artist doesn't update automatically? 
 # construct a new force artist
-forceartist = ForceArtist(force, layer='ForceDiagram')
-forceartist.draw_diagram(form=form, scale=True)
-forceartist.draw_independent_edges(form)
+forceartist = ForceArtist(force, form=form, layer='ForceDiagram')
+forceartist.draw_diagram()
+forceartist.draw_independent_edges()
 forceartist.draw_edge_force()
 
 

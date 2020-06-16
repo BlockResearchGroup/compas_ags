@@ -25,14 +25,14 @@ form = FormDiagram.from_json(form_file)
 force = ForceDiagram.from_json(force_file)
 
 formartist = FormArtist(form, layer='FormDiagram')
-forceartist = ForceArtist(force, layer='ForceDiagram')
+forceartist = ForceArtist(force, form=form, layer='ForceDiagram')
 
 formartist.draw_diagram()
 formartist.draw_independent_edge()
 formartist.draw_fixed_vertice()
 
-forceartist.draw_diagram(form=form)
-forceartist.draw_independent_edges(form)
+forceartist.draw_diagram()
+forceartist.draw_independent_edges()
 forceartist.draw_edge_force()
 forceartist.draw_anchor_vertex()
 
@@ -45,10 +45,9 @@ from compas_ags.constraints import ConstraintsCollection
 C = ConstraintsCollection(form)
 
 # set vertex constraints
-#from compas_ags.rhino import rhino_vertex_constraints
-C.constrain_dependent_leaf_edges_lengths()
-
 from compas_ags.rhino import rhino_constraint_visualization
+
+C.constrain_dependent_leaf_edges_lengths()
 constraint_dict = rhino_constraint_visualization(form, scale=1)
 C.update_rhino_vertex_constraints(constraint_dict)
 
@@ -63,9 +62,9 @@ print('Dimension of null-space is %s' % len(nullspace))
 from compas_ags.rhino import move_force_vertice
 xy, force = move_force_vertice(force, forceartist)
 
-forceartist.draw_diagram(form=form)
-forceartist.draw_independent_edges(form)
-
+forceartist.draw_diagram()
+forceartist.draw_independent_edges()
+forceartist.draw_edge_force()
 
 # ==============================================================================
 # Update Formdiagram
@@ -74,7 +73,7 @@ formdata = rf.compute_form_from_force_newton_xfunc(form.to_data(), force.to_data
 form = FormDiagram.from_data(formdata)
 formartist = FormArtist(form, layer='FormDiagram')
 formartist.draw_diagram()
-
+formartist.draw_independent_edge()
 
 
 

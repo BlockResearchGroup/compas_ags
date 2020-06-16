@@ -1,3 +1,6 @@
+from compas_rhino import unload_modules  
+unload_modules("compas")
+
 from compas.rpc import Proxy
 from compas_ags.rhino import select_forcediagram_location
 from compas_ags.rhino import diagram_fix_vertice
@@ -10,8 +13,7 @@ from compas_ags.diagrams import FormGraph
 import compas_rhino
 import rhinoscriptsyntax as rs
 import os
-from compas_rhino import unload_modules  
-unload_modules("compas")
+
 
 
 graphstatics = Proxy('compas_ags.ags.graphstatics')
@@ -57,9 +59,9 @@ force = ForceDiagram.from_data(force_data)
 formartist.draw_independent_edge()
 formartist.draw_fixed_vertice()
 
-forceartist = ForceArtist(force, layer='ForceDiagram')
-forceartist.draw_diagram(form=form)
-forceartist.draw_independent_edges(form)
+forceartist = ForceArtist(force, form=form, layer='ForceDiagram')
+forceartist.draw_diagram()
+forceartist.draw_independent_edges()
 forceartist.draw_edge_force()
 forceartist.draw_anchor_vertex()
 

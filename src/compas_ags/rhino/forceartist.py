@@ -6,6 +6,7 @@ import compas_rhino
 
 from compas.geometry import distance_point_point
 from compas.utilities import i_to_rgb
+from compas.utilities import color_to_colordict
 from compas_rhino.artists import MeshArtist
 
 from compas_ags.rhino import find_force_ind
@@ -29,54 +30,179 @@ class ForceArtist(MeshArtist):
     __module__ = 'compas_tna.rhino'
 
 
-    def __init__(self, force, layer=None):
+    def __init__(self, force, form=None, layer=None):
         super(ForceArtist, self).__init__(force, layer=layer)
+
         self.settings.update({
             'color.anchor':(255, 0, 0)
         })
         self.update_edge_force()
-
+        self.form = form
+        self.scale = scale = self.calculate_scale()
 
     @property
     def force(self):
         return self.mesh
 
 
-    def draw_diagram(self, form=None, scale=None):
+    def draw_diagram(self):
         self.clear()
         compas_rhino.delete_objects_by_name(name='{}.*'.format(self.force.name))
 
-        # scale the force diagram according to the dimension of form diagram
-        if scale is True and form is not None:
-            scale = self.calculate_scale(form)
-            self.scale_diagram(scale)
-        elif scale is not None:
-            self.scale_diagram(scale)
+        self.draw_scale_vertices()
+        self.draw_scale_vertexlabels()
+        self.draw_scale_edges()
+        if self.form is not None:
+            self.draw_scale_edgelabels(text=check_edge_pairs(self.form, self.force)[1])
 
-        self.draw_vertices()
-        self.draw_vertexlabels()
-        self.draw_edges()
-        if form is not None:
-            self.draw_edgelabels(text=check_edge_pairs(form, self.force)[1])
         self.redraw()
 
 
-    def calculate_scale(self, form):
-        form_x = form.vertices_attribute('x')
-        form_y = form.vertices_attribute('y')
-        form_xdim = max(form_x) - min(form_x)
-        form_ydim = max(form_y) - min(form_y)
+    def calculate_scale(self):
+        # calculate the scale factor of force diagram
+        if self.form is not None:
+            form_x = self.form.vertices_attribute('x')
+            form_y = self.form.vertices_attribute('y')
+            form_xdim = max(form_x) - min(form_x)
+            form_ydim = max(form_y) - min(form_y)
 
-        force_x = self.force.vertices_attribute('x')
-        force_y = self.force.vertices_attribute('y')
-        force_xdim = max(force_x) - min(force_x)
-        force_ydim = max(force_y) - min(force_y)
+            force_x = self.force.vertices_attribute('x')
+            force_y = self.force.vertices_attribute('y')
+            force_xdim = max(force_x) - min(force_x)
+            force_ydim = max(force_y) - min(force_y)
 
-        scale = max([force_xdim / form_xdim, force_ydim / form_ydim])
+            scale = max([force_xdim / form_xdim, force_ydim / form_ydim])
+        else:
+            scale = 1
+
         return scale
 
-    
+
+    def draw_scale_vertices(self, keys=None, color=None):
+        anchor = self.force.anchor()
+        dx = self.force.vertex_coordinates(anchor)[0]
+        dy = self.force.vertex_coordinates(anchor)[1]
+
+        keys = keys or list(self.force.vertices())
+        colordict = color_to_colordict(color,
+                                       keys,
+                                       default=self.settings.get('color.vertex'),
+                                       colorformat='rgb',
+                                       normalize=False)
+        points = []
+        for key in keys:
+            x = self.force.vertex_coordinates(key)[0]
+            y = self.force.vertex_coordinates(key)[1]
+            points.append({
+                'pos': [dx + (x - dx) / self.scale, dy + (y - dy) / self.scale, 0],
+                'name': "{}.vertex.{}".format(self.force.name, key),
+                'color': colordict[key]
+            })
+        return compas_rhino.draw_points(points, layer=self.layer, clear=False, redraw=True)
+
+
+    def draw_scale_vertexlabels(self, text=None, color=None):
+        if text is None:
+            textdict = {key: str(key) for key in self.force.vertices()}
+        elif isinstance(text, dict):
+            textdict = text
+        elif text == 'key':
+            textdict = {key: str(key) for key in self.force.vertices()}
+        elif text == 'index':
+            textdict = {key: str(index) for index, key in enumerate(self.force.vertices())}
+        else:
+            raise NotImplementedError
+        
+        anchor = self.force.anchor()
+        dx = self.force.vertex_coordinates(anchor)[0]
+        dy = self.force.vertex_coordinates(anchor)[1]
+
+        colordict = color_to_colordict(color,
+                                       textdict.keys(),
+                                       default=self.settings.get('color.vertex'),
+                                       colorformat='rgb',
+                                       normalize=False)
+        labels = []
+
+        for key, text in iter(textdict.items()):
+            x = self.force.vertex_coordinates(key)[0]
+            y = self.force.vertex_coordinates(key)[1]
+            labels.append({
+                'pos': [dx + (x - dx) / self.scale, dy + (y - dy) / self.scale, 0],
+                'name': "{}.vertex.label.{}".format(self.force.name, key),
+                'color': colordict[key],
+                'text': textdict[key]
+            })
+
+        return compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=True)
+
+
+    def draw_scale_edges(self, keys=None, color=None):
+        anchor = self.force.anchor()
+        dx = self.force.vertex_coordinates(anchor)[0]
+        dy = self.force.vertex_coordinates(anchor)[1]
+
+        keys = keys or list(self.force.edges())
+        colordict = color_to_colordict(color,
+                                       keys,
+                                       default=self.settings.get('color.edge'),
+                                       colorformat='rgb',
+                                       normalize=False)
+        lines = []
+        for u, v in keys:
+            u_x = self.force.vertex_coordinates(u)[0]
+            u_y = self.force.vertex_coordinates(u)[1]
+            v_x = self.force.vertex_coordinates(v)[0]
+            v_y = self.force.vertex_coordinates(v)[1]
+            lines.append({
+                'start': [dx + (u_x - dx) / self.scale, dy + (u_y - dy) / self.scale, 0],
+                'end': [dx + (v_x - dx) / self.scale, dy + (v_y - dy) / self.scale, 0],
+                'color': colordict[(u, v)],
+                'name': "{}.edge.{}-{}".format(self.force.name, u, v)
+            })
+
+        return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=True)
+
+
+    def draw_scale_edgelabels(self, text=None, color=None):
+        anchor = self.force.anchor()
+        dx = self.force.vertex_coordinates(anchor)[0]
+        dy = self.force.vertex_coordinates(anchor)[1]
+
+        if text is None:
+            textdict = {(u, v): "{}-{}".format(u, v) for u, v in self.force.edges()}
+        elif isinstance(text, dict):
+            textdict = text
+        else:
+            raise NotImplementedError
+
+        colordict = color_to_colordict(color,
+                                       textdict.keys(),
+                                       default=self.settings.get('color.edge'),
+                                       colorformat='rgb',
+                                       normalize=False)
+        labels = []
+
+        for (u, v), text in iter(textdict.items()):
+            u_x = self.force.vertex_coordinates(u)[0]
+            u_y = self.force.vertex_coordinates(u)[1]
+            v_x = self.force.vertex_coordinates(v)[0]
+            v_y = self.force.vertex_coordinates(v)[1]
+            s = [dx + (u_x - dx) / self.scale, dy + (u_y - dy) / self.scale, 0]
+            e = [dx + (v_x - dx) / self.scale, dy + (v_y - dy) / self.scale, 0]
+            labels.append({
+                'pos': [(a + b) / 2 for a, b in zip(s, e)],
+                'name': "{}.edge.label.{}-{}".format(self.force.name, u, v),
+                'color': colordict[(u, v)],
+                'text': textdict[(u, v)]
+            })
+
+        return compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=True)
+
+
     def scale_diagram(self, scale):
+        # TO BE DELETED?
+        # be careful to use... this modify the force diagram, instead of just drawing
         x = self.force.vertices_attribute('x')
         y = self.force.vertices_attribute('y')
         anchor = self.force.anchor()
@@ -133,7 +259,7 @@ class ForceArtist(MeshArtist):
             c_dict[(u, v)] = i_to_rgb(value)
         
         if draw is True:
-            self.draw_edgelabels(text=dict((v,"%s kN" % k) for v, k in force_dict.items()), color=c_dict)
+            self.draw_scale_edgelabels(text=dict((v,"%s kN" % k) for v, k in force_dict.items()), color=c_dict)
         return c_dict
 
     
@@ -141,20 +267,31 @@ class ForceArtist(MeshArtist):
         compas_rhino.delete_objects_by_name(name='{}.independent_edge.*'.format(self.force.name))
 
 
-    def draw_independent_edges(self, form):
+    def draw_independent_edges(self):
         self.clear_independent_edge()
-        indices = find_force_ind(form, self.force)
-        print(indices)
+        if self.form is None:
+            raise "form diagram doesn't exist"
+        else:
+            indices = find_force_ind(self.form, self.force)
+        
+        anchor = self.force.anchor()
+        dx = self.force.vertex_coordinates(anchor)[0]
+        dy = self.force.vertex_coordinates(anchor)[1]
+
         lines = []
         for index, ((u, v), attr) in enumerate(self.force.edges(True)):
             if (u, v) in indices:
+                u_x = self.force.vertex_coordinates(u)[0]
+                u_y = self.force.vertex_coordinates(u)[1]
+                v_x = self.force.vertex_coordinates(v)[0]
+                v_y = self.force.vertex_coordinates(v)[1]
                 lines.append({
-                    'start': self.force.vertex_coordinates(u),
-                    'end': self.force.vertex_coordinates(v),
+                    'start': [dx + (u_x - dx) / self.scale, dy + (u_y - dy) / self.scale, 0],
+                    'end': [dx + (v_x - dx) / self.scale, dy + (v_y - dy) / self.scale, 0],
                     'name': "{}.independent_edge.{}".format(self.force.name, index),
                     'width': 1.0
                 })
-        return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+        return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=True)
 
 
 # ==============================================================================
