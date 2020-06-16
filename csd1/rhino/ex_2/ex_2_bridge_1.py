@@ -22,10 +22,20 @@ graphstatics = Proxy('compas_ags.ags.graphstatics')
 # ==============================================================================
 # Input
 # ==============================================================================
-guids = compas_rhino.get_lines(layer='input_lines')
-lines = compas_rhino.get_line_coordinates(guids)
+# Get lines from layers in rhino
+structure_guids = compas_rhino.get_lines(layer='structure')
+structure_lines = compas_rhino.get_line_coordinates(structure_guids)
+reaction_guids = compas_rhino.get_lines(layer='reaction')
+reaction_lines = compas_rhino.get_line_coordinates(reaction_guids)
+loads_guids = compas_rhino.get_lines(layer='loads')
+loads_lines = compas_rhino.get_line_coordinates(loads_guids)
 
-rs.HideObjects(guids)
+lines = structure_lines + reaction_lines + loads_lines
+
+# Hide input lines
+rs.HideObjects(structure_guids)
+rs.HideObjects(reaction_guids)
+rs.HideObjects(loads_guids)
 
 graph = FormGraph.from_lines(lines)
 form = FormDiagram.from_graph(graph)
@@ -65,14 +75,12 @@ forceartist.draw_independent_edges()
 forceartist.draw_edge_force()
 forceartist.draw_anchor_vertex()
 
-
 # ==============================================================================
 # Save data
 # ==============================================================================
 HERE = os.path.dirname(__file__)
 DATA = os.path.join(HERE, 'data')
-
-form_file = os.path.join(DATA, 'ex_1_form.json')
+form_file = os.path.join(DATA, 'ex_2_form.json')
 form.to_json(form_file)
-force_file = os.path.join(DATA, 'ex_1_force.json')
+force_file = os.path.join(DATA, 'ex_2_force.json')
 force.to_json(force_file)

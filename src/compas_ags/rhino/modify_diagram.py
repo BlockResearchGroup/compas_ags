@@ -297,9 +297,8 @@ def move_force_vertice(diagram, diagramartist):
                 dis_real = m.sqrt((cp[0] - nbr_x_trans) ** 2 + (cp[1] - nbr_y_trans) ** 2) * sca_factor
                 dot_x = (cp[0] - nbr_x_trans) / 2 + nbr_x_trans
                 dot_y = (cp[1] - nbr_y_trans) / 2 + nbr_y_trans
-                e.Display.DrawDot(Point3d(dot_x, dot_y, 0), str(round(dis_real, 2)), gray, white)
+                e.Display.DrawDot(Point3d(dot_x, dot_y, 0), '%s kN' % (round(dis_real, 2)), gray, white)
 
-        # TODO: show labels, how much force is in the edge
         for pair in list(edges):
             pair = list(pair)
             u  = diagram.vertex_coordinates(pair[0])
