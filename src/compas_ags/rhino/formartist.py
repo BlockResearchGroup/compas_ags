@@ -70,12 +70,10 @@ class FormArtist(MeshArtist):
         # arrows direction arbitary
         self.clear_leaves()
         leaves  = set(self.form.leaves())
-        print('leaves', leaves)
         lines = []
         for index, ((u, v), attr) in enumerate(self.form.edges_where({'is_edge': True}, True)):
             print(index, u, v)
             if u in leaves or v in leaves:
-                print(u, v, 'hey im passing here')
                 lines.append({
                     'start': self.form.vertex_coordinates(u),
                     'end': self.form.vertex_coordinates(v),
@@ -288,6 +286,7 @@ class FormArtist(MeshArtist):
             if u not in leaves and v not in leaves:
                 sp, ep = self.form.edge_coordinates(u, v)
                 f = attr['f']
+                print(f, 'f')
 
                 if f != 0:
                     radius = abs(scale * f)
@@ -297,7 +296,8 @@ class FormArtist(MeshArtist):
 
                 if radius ** 2 < tol2:
                     continue
-
+                print(radius, 'radius')
+                
                 lines.append({
                     'start': sp,
                     'end': ep,

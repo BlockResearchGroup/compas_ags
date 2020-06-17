@@ -153,6 +153,7 @@ def rhino_constraint_visualization(diagram, layer='constraints', scale=1.0):
         #select vertex
         vkey = VertexSelector.select_vertex(diagram, message='Select constraint vertex')
         if vkey is None:
+            print('Nothing is selected. End of selection.')
             break
         
         # update constraint condition of selected vertex
@@ -243,8 +244,8 @@ def rhino_edge_constraints(diagram):
 
     while True:
         uv = EdgeSelector.select_edge(diagram, message='Select constraint edge')
-        print(uv)
         if uv is None:
+            print('Nothing is selected. End of selection.')
             break
         opt = go.Get()
         if go.CommandResult() != Rhino.Commands.Result.Success:

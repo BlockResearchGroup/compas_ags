@@ -25,6 +25,7 @@ from compas_rhino.selectors import FaceSelector
 try:
     import Rhino
     from Rhino.Geometry import Point3d
+    import scriptcontext as sc
     import rhinoscriptsyntax as rs
 
 except ImportError:
@@ -97,11 +98,13 @@ def diagram_fix_vertice(diagram):
 def set_edge_loads(form):
     # select multiple independent edges and set forces
     while True:
-        uv = EdgeSelector.select_edge(form, message='Select Loaded Edge')
-        if uv is None:
+        edges = EdgeSelector.select_edges(form, message='Select Loaded Edge')
+        if edges == []:
+            print('Nothing is selected. End of selection.')
             break
         force_value = rs.GetReal("Force on Edges", 1.0)
-        form.set_edge_force(uv[0], uv[1], force_value)
+        for (u, v) in edges: 
+            form.set_edge_force(u, v, force_value)
         
 
 def select_loaded_edges(form):
@@ -109,8 +112,6 @@ def select_loaded_edges(form):
     lines = compas_rhino.get_line_coordinates(guids)
     gkey_key = form.gkey_key()
     uv_i = form.uv_index()
-    print(uv_i)
-    print(gkey_key)
     for p1,p2 in lines:
         u = gkey_key[geometric_key(p1)]
         v = gkey_key[geometric_key(p2)]
