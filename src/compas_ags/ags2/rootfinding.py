@@ -100,7 +100,7 @@ def compute_form_from_force_newton_xfunc(formdata, forcedata, xy_dict, tol=1e5, 
         n_iter += 1
 
     print('Converged in {0} iterations'.format(n_iter))
-    return form.to_data()
+    return form.to_data(), n_iter
 
 
 def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=None):
