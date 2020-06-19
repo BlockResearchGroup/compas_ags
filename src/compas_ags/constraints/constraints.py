@@ -9,8 +9,6 @@ import math as m
 
 from compas_ags.diagrams.formdiagram import FormDiagram
 
-__author__ = ['Vedad Alic', ]
-__email__ = 'vedad.alic@construction.lth.se'
 
 __all__ = [
     'ConstraintsCollection',
@@ -21,13 +19,14 @@ __all__ = [
 
 class AbstractConstraint(object):
     """
+    NOTE: THIS CLASS HAS NOTHING TO DO WITH NUMPY, WHICH IS CREATED FOR RHINO RPC.
+
     Used to derive form diagram constraints. The derived constraints
     must implement the compute_constraint and update_constraint_goal methods.
     """
 
     __metaclass__ = ABCMeta
     def __init__(self, form):
-        # super().__init__()
         self.form = form  # type: FormDiagram
 
         # --------------------------------------------------------------------------
@@ -61,14 +60,9 @@ class ConstraintsCollection:
         self.form = form   # type: FormDiagram
 
 
-    # def update_fixed_vertices(self):
-    #     fixed = self.form.fixed()
-
-    #     pass
-
-
     def add_constraint(self, constraint):
         self.constraints.append(constraint)
+
 
     def compute_constraints(self):
         jac = []
@@ -79,9 +73,11 @@ class ConstraintsCollection:
             res.append([r])
         return jac, res
 
+
     def update_constraints(self):
         for constraint in self.constraints:
             constraint.update_constraint_goal()
+
 
     def get_lines(self):
         """Get lines to draw in viewer."""
@@ -92,6 +88,7 @@ class ConstraintsCollection:
                 lines = lines + line
         return lines
 
+
     def constrain_dependent_leaf_edges_lengths(self):
         leaves = self.form.leaves()
         dependent_leaf_edges = []
@@ -101,7 +98,8 @@ class ConstraintsCollection:
                     dependent_leaf_edges.append(i)
         for e in dependent_leaf_edges:
             self.add_constraint(LengthFix(self.form, e))
-    
+
+
     def update_rhino_vertex_constraints(self, c_dict):
         """
         c_dict: dictionary
@@ -135,7 +133,7 @@ class HorizontalFix(AbstractConstraint):
     def set_initial_position(self):
         self.P = self.form.vertex_coordinates(self.vertex, 'xy')[0]
 
-    def compute_constraint(self):       
+    def compute_constraint(self):
         constraint_jac_row = [0] * self.number_of_cols
         idx = self.form.key_index()[self.vertex]
         constraint_jac_row[idx] = 1
@@ -221,13 +219,13 @@ class LengthFix(AbstractConstraint):
         k_i = self.form.key_index()
         constraint_jac_row = [0] * self.number_of_cols
         u, v = list(self.form.edges())[self.edge]
-        u = k_i[u]
-        v = k_i[v]
         s = self.form.vertex_coordinates(u, 'xy')
         e = self.form.vertex_coordinates(v, 'xy')
         dx = s[0] - e[0]
         dy = s[1] - e[1]
         l = m.sqrt(dx ** 2 + dy ** 2)  # Current length
+        u = k_i[u]
+        v = k_i[v]
 
         constraint_jac_row[u] = dx / l  # x0
         constraint_jac_row[v] = -dx / l  # x1

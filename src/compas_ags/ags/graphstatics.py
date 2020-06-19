@@ -26,6 +26,8 @@ from compas.numerical import dof
 from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
 
+from compas_ags.diagrams import FormDiagram
+from compas_ags.diagrams import ForceDiagram
 from compas_ags.ags import update_q_from_qind
 from compas_ags.ags import update_form_from_force
 
@@ -36,22 +38,19 @@ __email__ = 'vanmelet@ethz.ch'
 
 __all__ = [
     'form_identify_dof',
-    'form_identify_dof_xfunc',
+    'form_identify_dof_rpc',
 
     'form_count_dof',
-    'form_count_dof_xfunc',
+    'form_count_dof_rpc',
 
     'form_update_q_from_qind',
-    'form_update_q_from_qind_xfunc',
-    'form_update_q_from_qind_rhino',
+    'form_update_q_from_qind_rpc',
 
     'form_update_from_force',
-    'form_update_from_force_xfunc',
+    'form_update_from_force_rpc',
 
     'force_update_from_form',
-    'force_update_from_form_xfunc',
-    'force_update_from_form_rhino',
-
+    'force_update_from_form_rpc',
 ]
 
 
@@ -59,43 +58,38 @@ EPS = 1 / sys.float_info.epsilon
 
 
 # ==============================================================================
-# xfuncs
+# rpccs
 # ==============================================================================
 
 
-def form_identify_dof_xfunc(formdata, *args, **kwargs):
+def form_identify_dof_rpc(formdata, *args, **kwargs):
     from compas_tna.diagrams import FormDiagram
     form = FormDiagram.from_data(formdata)
     return form_identify_dof(form, *args, **kwargs)
 
 
-def form_count_dof_xfunc(formdata, *args, **kwargs):
+def form_count_dof_rpc(formdata, *args, **kwargs):
     from compas_tna.diagrams import FormDiagram
     form = FormDiagram.from_data(formdata)
     return form_count_dof(form, *args, **kwargs)
 
 
-def form_update_q_from_qind_xfunc(formdata, *args, **kwargs):
-    from compas_ags.diagrams import FormDiagram
+def form_update_q_from_qind_rpc(formdata, *args, **kwargs):
     form = FormDiagram.from_data(formdata)
     form_update_q_from_qind(form, *args, **kwargs)
     return form.to_data()
 
 
-def form_update_from_force_xfunc(form, force, *args, **kwargs):
-    from compas_ags.diagrams import FormDiagram
-    from compas_ags.diagrams import ForceDiagram
+def form_update_from_force_rpc(form, force, *args, **kwargs):
     form = FormDiagram.from_data(form)
     force = ForceDiagram.from_data(force)
     form_update_from_force(form, force, *args, **kwargs)
     return form.to_data()
 
 
-def force_update_from_form_xfunc(force, form, *args, **kwargs):
-    from compas_ags.diagrams import FormDiagram
-    from compas_ags.diagrams import ForceDiagram
-    form = FormDiagram.from_data(form)
-    force = ForceDiagram.from_data(force)
+def force_update_from_form_rpc(forcedata, formdata, *args, **kwargs):
+    form = FormDiagram.from_data(formdata)
+    force = ForceDiagram.from_data(forcedata)
     force_update_from_form(force, form, *args, **kwargs)
     return force.to_data()
 
@@ -418,26 +412,6 @@ def force_update_from_form(force, form):
         i = _k_i[key]
         attr['x'] = _xy[i, 0]
         attr['y'] = _xy[i, 1]
-
-
-# ==============================================================================
-# Functions with return to use in Rhino with RPC
-# ==============================================================================
-
-
-from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import ForceDiagram
-
-def form_update_q_from_qind_rhino(formdata):
-    form = FormDiagram.from_data(formdata)
-    form_update_q_from_qind(form)
-    return form.to_data()
-
-def force_update_from_form_rhino(forcedata, formdata):
-    force = ForceDiagram.from_data(forcedata)
-    form = FormDiagram.from_data(formdata)
-    force_update_from_form(force, form)
-    return force.to_data()
 
 
 # ==============================================================================

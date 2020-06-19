@@ -185,9 +185,9 @@ def draw_dual_form_faces_force_vertices(form, force, formartist, forceartist, co
     formartist.draw_faces(color=c_dict)
     formartist.draw_facelabels()
 
-    forceartist.draw_edges()
+    forceartist.draw_scale_edges()
     forceartist.clear_vertexlabels()
-    forceartist.draw_vertexlabels(color=c_dict)
+    forceartist.draw_scale_vertexlabels(color=c_dict)
 
 
 def draw_dual_form_vertices_force_faces(form, force, formartist, forceartist, color_scheme=i_to_rgb):
@@ -203,9 +203,9 @@ def draw_dual_form_vertices_force_faces(form, force, formartist, forceartist, co
     formartist.clear_vertexlabels()
     formartist.draw_vertexlabels(color=c_dict)
 
-    forceartist.draw_edges()
-    forceartist.draw_faces(color=c_dict)
-    forceartist.draw_facelabels()
+    forceartist.draw_scale_edges()
+    forceartist.draw_scale_faces(color=c_dict)
+    forceartist.draw_scale_facelabels()
 
 
 def draw_dual_edges(form, force, formartist, forceartist, color_scheme=i_to_rgb, show_forces=False):
@@ -224,8 +224,8 @@ def draw_dual_edges(form, force, formartist, forceartist, color_scheme=i_to_rgb,
     
     formartist.draw_edges()
     formartist.draw_edgelabels(text={uv: index for index, uv in enumerate(form.edges())}, color=form_c_dict)
-    forceartist.draw_edges()
-    forceartist.draw_edgelabels(text=force_uv_form_idx_pairs, color=force_c_dict)
+    forceartist.draw_scale_edges()
+    forceartist.draw_scale_edgelabels(text=force_uv_form_idx_pairs, color=force_c_dict)
 
 
 def match_edges(diagram, keys):

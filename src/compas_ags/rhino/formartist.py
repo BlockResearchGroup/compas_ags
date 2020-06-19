@@ -16,10 +16,18 @@ __all__ = ['FormArtist']
 
 
 class FormArtist(MeshArtist):
+    """Inherits the compas :class:`MeshArtist`, provides functionality for visualisation of graphic statics applications.
+    
+    Parameters
+    ----------
+    form: compas_ags.diagrams.FormDiagram
+        The form diagram to draw.
+    layer: string, optional
+        The name of the layer that will contain the forcediagram.
+    """
 
-    __module__ = 'compas_tna.rhino'
 
-    def __init__(self, form, layer=None):
+    def __init__(self, form, force=None, layer=None):
         super(FormArtist, self).__init__(form, layer=layer)
         self.settings.update({
             'color.vertex': (255, 255, 255),
@@ -45,15 +53,16 @@ class FormArtist(MeshArtist):
             'tol.force': 1e-3,
             'tol.selfweight': 1e-3,
         })
+        self.force = force
 
     @property
     def form(self):
         return self.mesh
 
-
     def draw_diagram(self):
         self.clear()
         compas_rhino.delete_objects_by_name(name='{}.*'.format(self.form.name))
+
         self.draw_vertices()
         self.draw_vertexlabels()
         self.draw_edges()

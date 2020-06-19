@@ -45,12 +45,80 @@ __email__     = 'vedad.alic@construction.lth.se'
 
 __all__ = [
     'compute_jacobian',
-    'compute_jacobian_xfunc', 
+    'compute_jacobian_rpc', 
+
     'get_red_residual_and_jacobian',
-    'get_red_residual_and_jacobian_xfunc',
+    'get_red_residual_and_jacobian_rpc',
+    
     'compute_form_from_force_newton',
-    'compute_form_from_force_newton_xfunc', 
+    'compute_form_from_force_newton_rpc', 
+    'compute_form_from_force_newton_xfunc',
+
+    'just_return_index_2_coord',
 ]
+
+
+def just_return_index_2_coord(formdata, forcedata):
+    from compas_ags.diagrams import FormDiagram
+    from compas_ags.diagrams import ForceDiagram
+    form = FormDiagram.from_data(formdata)
+    i_k = form.index_key()
+    print('this is the coordinate of the vertex that will be fixed in reality:')
+    coord = form.vertex_coordinates(i_k[1])
+
+    return coord
+
+
+def compute_form_from_force_newton_rpc(formdata, forcedata, tol=1e5):
+    
+    from compas_ags.diagrams import FormDiagram
+    from compas_ags.diagrams import ForceDiagram
+
+    form = FormDiagram.from_data(formdata)
+    force = ForceDiagram.from_data(forcedata)
+
+    xy = array(form.xy(), dtype=float64).reshape((-1, 2))
+    X = np.vstack((np.asmatrix(xy[:, 0]).transpose(), np.asmatrix(xy[:, 1]).transpose()))
+
+    _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
+    _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
+
+    constraint_dict = {key: [form.vertex_attribute(key, '_fixed_X') , form.vertex_attribute(key, '_fixed_Y')] for key in form.vertices()}
+
+
+    # APPLY THE CONSTRAINTS HERE< SO THIS SHOULD COME WITH ATTRIBUTES ON VERTICES AND EDGES FROM RHINO
+    # TODO: Make a similar version of the fixing attributes in X and Y to fix the length on the edges
+    from compas_ags.constraints import ConstraintsCollection
+    C = ConstraintsCollection(form)
+    C.update_rhino_vertex_constraints(constraint_dict)
+    C.constrain_dependent_leaf_edges_lengths()
+
+    eps = np.spacing(1)
+
+    # Begin Newton
+    diff = 100
+    n_iter = 1
+    while diff > (eps * tol):
+        # CJ and CR need to be modified with the iterations. Check later if even should be included inside get_red_residual_and_jacobian_xfunc...
+        cj, cr = C.compute_constraints()
+        red_jacobian, red_r = get_red_residual_and_jacobian_rpc(form, force, _X_goal, cj, cr)
+
+        # Do the least squares solution
+        dx = np.linalg.lstsq(red_jacobian, -red_r)[0]
+
+        X = X + dx
+        xy = X.reshape((2, -1)).T
+        _update_coordinates(form, xy)
+
+        diff = np.linalg.norm(red_r)
+        if n_iter > 20:
+            raise SolutionError('Did not converge')
+
+        print('i: {0:0} diff: {1:.2e}'.format(n_iter, float(diff)))
+        n_iter += 1
+
+    print('Converged in {0} iterations'.format(n_iter))
+    return [[form.to_data()], [force.to_data()]]
 
 
 def compute_form_from_force_newton_xfunc(formdata, forcedata, xy_dict, tol=1e5, cj=None, cr=None):
@@ -58,6 +126,9 @@ def compute_form_from_force_newton_xfunc(formdata, forcedata, xy_dict, tol=1e5, 
     from compas_ags.diagrams import ForceDiagram
     form = FormDiagram.from_data(formdata)
     force = ForceDiagram.from_data(forcedata)
+    i_k = form.index_key()
+    print('this is the coordinate of the vertex that will be fixed in reality:')
+    print(form.vertex_coordinates(i_k[1]))
 
     xy = array(form.xy(), dtype=float64).reshape((-1, 2))
     X = np.vstack((np.asmatrix(xy[:, 0]).transpose(), np.asmatrix(xy[:, 1]).transpose()))
@@ -66,12 +137,12 @@ def compute_form_from_force_newton_xfunc(formdata, forcedata, xy_dict, tol=1e5, 
 
     # Move the anchored vertex by modifying the initial force diagram coordinates
     xy_goal = []
-    
+
     for vkey in force.vertices():
         xy_goal.append(xy_dict[str(vkey)])
     xy_goal = np.asarray(xy_goal).reshape((-1, 2))
     _X_goal = np.vstack((np.asmatrix(xy_goal[:, 0]).transpose(), np.asmatrix(xy_goal[:, 1]).transpose()))
-    
+
     _xy_goal = _X_goal.reshape((2, -1)).T
     _update_coordinates(force, _xy_goal)
 
@@ -100,7 +171,7 @@ def compute_form_from_force_newton_xfunc(formdata, forcedata, xy_dict, tol=1e5, 
         n_iter += 1
 
     print('Converged in {0} iterations'.format(n_iter))
-    return form.to_data(), n_iter
+    return form.to_data()
 
 
 def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=None):
@@ -162,7 +233,7 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=No
     print('Converged in {0} iterations'.format(n_iter))
 
 
-def get_red_residual_and_jacobian_xfunc(form, force, _X_goal, cj=None, cr=None):
+def get_red_residual_and_jacobian_rpc(form, force, _X_goal, cj=None, cr=None):
     jacobian = compute_jacobian(form, force)
 
     _vcount = force.number_of_vertices()
@@ -239,7 +310,8 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
 
     return red_jacobian, red_r
 
-def compute_jacobian_xfunc(formdata, forcedata, *args, **kwargs):
+
+def compute_jacobian_rpc(formdata, forcedata, *args, **kwargs):
     from compas_ags.diagrams import FormDiagram
     from compas_ags.diagrams import ForceDiagram
     form = FormDiagram.from_data(formdata)
@@ -355,13 +427,13 @@ def compute_jacobian(form, force):
     return jacobian
 
 
-def compute_nullspace_xfunc(formdata, forcedata, cj=None, cr=None):
+def compute_nullspace_rpc(formdata, forcedata, cj=None, cr=None):
     from compas_ags.diagrams import FormDiagram
     from compas_ags.diagrams import ForceDiagram
     form = FormDiagram.from_data(formdata)
     force = ForceDiagram.from_data(forcedata)
     jacobian = compute_jacobian(form, force)
-    
+
     if cj is not None and cr is not None:
         cj = np.asarray(cj)
         cr = np.asarray(cr)
