@@ -3,9 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 from compas.utilities import geometric_key_xy
-from compas.datastructures import network_is_xy
 from compas.datastructures import network_find_cycles
-
 from compas_ags.diagrams import Diagram
 
 
@@ -13,7 +11,8 @@ __author__ = ['Tom Van Mele']
 __email__ = 'vanmelet@ethz.ch'
 
 
-__all__ = ['FormDiagram']
+__all__ = ['FormDiagram',
+            ]
 
 
 class FormDiagram(Diagram):
@@ -49,7 +48,7 @@ class FormDiagram(Diagram):
     def from_graph(cls, graph):
         points = graph.to_points()
         cycles = network_find_cycles(graph, breakpoints=graph.leaves())
-        print(cycles)
+        # print(cycles)
         form = cls.from_vertices_and_faces(points, cycles)
         form.edges_attribute('is_edge', False, keys=list(form.edges_on_boundary()))
         return form

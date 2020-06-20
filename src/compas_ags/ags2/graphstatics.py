@@ -4,20 +4,16 @@ from __future__ import division
 
 import sys
 
-try:
-    from numpy import array
-    from numpy import eye
-    from numpy import zeros
-    from numpy import float64
-    from numpy.linalg import cond
-    from numpy import matrix
-    from scipy.linalg import solve
-    from scipy.linalg import lstsq
+from numpy import array
+from numpy import eye
+from numpy import zeros
+from numpy import float64
+from numpy.linalg import cond
+from numpy import matrix
+from scipy.linalg import solve
+from scipy.linalg import lstsq
 
-    from scipy.sparse import diags
-except ImportError:
-    if 'ironpython' not in sys.version.lower():
-        raise
+from scipy.sparse import diags
 
 from compas_ags.ags.graphstatics import *
 from compas.geometry import angle_vectors_xy
@@ -72,7 +68,7 @@ def form_update_from_force_direct(form, force):
     ----------
     form : compas_ags.diagrams.formdiagram.FormDiagram
         The form diagram to update.
-    force : compas_bi_ags.diagrams.forcediagram.ForceDiagram
+    force : compas_ags.diagrams.forcediagram.ForceDiagram
         The force diagram on which the update is based.
 
     """
@@ -118,7 +114,7 @@ def form_update_from_force_direct(form, force):
     _V = np.diag(_uv[:, 1])
 
     # Get reciprocal force densities
-    from compas_bi_ags.utilities.errorhandler import SolutionError
+    from compas_ags.utilities.errorhandler import SolutionError
     if any(abs(q) < 1e-14):
         raise SolutionError('Found zero force density, direct solution not possible.')
     q = np.divide(1, q)
@@ -138,7 +134,7 @@ def form_update_from_force_direct(form, force):
     rhs = np.vstack((rhs, res))
 
     # Get independent variables
-    from compas_bi_ags.utilities.helpers import get_independent_stress, check_solutions
+    from compas_ags.utilities.helpers import get_independent_stress, check_solutions
     nr_free_vars, free_vars, dependent_vars = get_independent_stress(M)
     #k, m  = dof(M)
     #ind   = nonpivots(rref(M))

@@ -2,10 +2,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-# from compas.datastructures import network_find_faces
-# from compas.datastructures import network_dual
 from compas.datastructures import mesh_dual
-
 from compas_ags.diagrams import Diagram
 
 
@@ -13,7 +10,8 @@ __author__ = ['Tom Van Mele', 'Vedad Alic']
 __email__ = ['<vanmelet@ethz.ch>', '<vedad.alic@construction.lth.se>']
 
 
-__all__ = ['ForceDiagram']
+__all__ = ['ForceDiagram', 
+            ]
 
 
 class ForceDiagram(Diagram):
@@ -152,6 +150,7 @@ class ForceDiagram(Diagram):
         M
             The matrix described in compas_bi_ags.bi_ags.graphstatics.form_update_from_force_direct
         """
+        import numpy as np
         nr_col_jac = M.shape[1]
         constraint_rows = np.zeros((0, M.shape[1]))
         residual = np.zeros((0, 1))
@@ -184,8 +183,8 @@ class ForceDiagram(Diagram):
     # --------------------------------------------------------------------------
 
     def update(self, formdiagram):
-        from compas_ags.algorithms.graphstatics import update_forcediagram
-        update_forcediagram(self, formdiagram)
+        from compas_ags.ags import force_update_from_form
+        force_update_from_form(self, formdiagram)
 
 
 # ==============================================================================
