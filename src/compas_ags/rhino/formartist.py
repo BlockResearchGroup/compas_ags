@@ -32,11 +32,11 @@ class FormArtist(MeshArtist):
         self.settings.update({
             'color.vertex': (255, 255, 255),
             'color.edge': (0, 0, 0),
-            'color.leaves': (0, 255, 0), 
+            'color.leaves': (0,100,0),  # dark green
             'color.face': (210, 210, 210),
-            'color.reaction': (0, 255, 0),
+            'color.reaction': (100, 100, 100),  # dark black
             'color.residual': (0, 255, 255),
-            'color.load': (0, 255, 0),
+            'color.load': (0,100,0),  # dark green, (34,139,34) forest green
             'color.selfweight': (0, 0, 255),
             'color.force': (0, 0, 255),
             'color.compression': (0, 0, 255),
@@ -65,7 +65,10 @@ class FormArtist(MeshArtist):
 
         self.draw_vertices()
         self.draw_vertexlabels()
-        self.draw_edges()
+
+        self.draw_external_edges()
+        self.draw_internal_edges()
+
         self.draw_edgelabels(text={uv: index for index, uv in enumerate(self.form.edges())})
         self.redraw()
 
@@ -77,11 +80,9 @@ class FormArtist(MeshArtist):
     def draw_leaves(self, color=None, arrows=False):
         # draw leaves 
         # arrows direction arbitary
-        self.clear_leaves()
         leaves  = set(self.form.leaves())
         lines = []
         for index, ((u, v), attr) in enumerate(self.form.edges_where({'is_edge': True}, True)):
-            print(index, u, v)
             if u in leaves or v in leaves:
                 lines.append({
                     'start': self.form.vertex_coordinates(u),
@@ -93,6 +94,16 @@ class FormArtist(MeshArtist):
                 })
         compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
     
+
+    def draw_external_edges(self):
+        external_edges = self.form.external_edges()
+        self.draw_edges(keys=external_edges, color=self.settings.get('color.leaves'))
+
+
+    def draw_internal_edges(self):
+        internal_edges = list(self.form.edges_where({'is_external': False}))
+        self.draw_edges(keys=internal_edges)
+
 
     def clear_independent_edge(self):
         compas_rhino.delete_objects_by_name(name='{}.independent_edge.*'.format(self.form.name))

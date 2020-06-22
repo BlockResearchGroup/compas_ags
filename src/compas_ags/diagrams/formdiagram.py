@@ -12,7 +12,7 @@ __email__ = 'vanmelet@ethz.ch'
 
 
 __all__ = ['FormDiagram',
-            ]
+           ]
 
 
 class FormDiagram(Diagram):
@@ -41,7 +41,7 @@ class FormDiagram(Diagram):
             'is_reaction': False,
             'is_load': False,
             'is_edge': True,
-
+            'is_external': False
         })
 
     @classmethod
@@ -101,8 +101,20 @@ class FormDiagram(Diagram):
     def uv_index(self):
         return {key: index for index, key in enumerate(self.edges())}
 
+
     def index_uv(self):
         return {index: key for index, key in enumerate(self.edges())}
+
+ 
+    def external_edges(self):
+        external_edges = []
+        leaves = self.leaves()
+        for i, (u, v) in enumerate(self.edges()):
+            if u in leaves or v in leaves:
+                external_edges.append((u, v))
+                self.edge_attribute((u, v), 'is_external', True)
+        return external_edges
+
 
     # --------------------------------------------------------------------------
     # Convenience functions for retrieving the attributes of the formdiagram.
