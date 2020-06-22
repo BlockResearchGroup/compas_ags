@@ -2,11 +2,11 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-
 from math import fabs
 
 import compas_rhino
 from compas.geometry import scale_vector
+from compas.geometry import add_vectors
 from compas.utilities import i_to_green
 
 from compas_rhino.artists import MeshArtist
@@ -16,32 +16,52 @@ __all__ = ['FormArtist']
 
 
 class FormArtist(MeshArtist):
-    """Inherits the compas :class:`MeshArtist`, provides functionality for visualisation of graphic statics applications.
-    
+    """Extends :class:`MeshArtist` with functionality for the visualisation of form diagrams in GS applications.
+
     Parameters
     ----------
-    form: compas_ags.diagrams.FormDiagram
+    form : :class:`compas_ags.diagrams.FormDiagram`
         The form diagram to draw.
     layer: string, optional
-        The name of the layer that will contain the forcediagram.
+        The name of the layer that will contain the formdiagram.
+        Default is ``None``.
+
+    Attributes
+    ----------
+    settings : dict
+        Visualisation settings.
+    guids : dict
+        GUIDs of Rhino objects created by the artists.
+
+    Notes
+    -----
+    The artist keeps track of the Rhino objects it creates in ``self.guids``.
+    The artist iterates over the edges of the form diagram to collect drawing information.
+    The edge generator of the form diagram excludes edges where ``'is_edge' is False``.
     """
 
-
-    def __init__(self, form, force=None, layer=None):
-        super(FormArtist, self).__init__(form, layer=layer)
+    def __init__(self, form, settings=None, **kwargs):
+        super(FormArtist, self).__init__(form, **kwargs)
         self.settings.update({
-            'color.vertex': (255, 255, 255),
-            'color.edge': (0, 0, 0),
-            'color.leaves': (0, 255, 0), 
-            'color.face': (210, 210, 210),
-            'color.reaction': (0, 255, 0),
-            'color.residual': (0, 255, 255),
-            'color.load': (0, 255, 0),
+            'show.vertices': True,
+            'show.edges': True,
+            'show.faces': False,
+            'show.vertexlabels': True,
+            'show.edgelabels': False,
+            'show.facelabels': False,
+            'color.vertices': (255, 255, 255),
+            'color.edges': (0, 0, 0),
+            'color.faces': (210, 210, 210),
+            'color.edges:is_ind': (255, 255, 255),
+            'color.edges:is_external': (0, 255, 0),
+            'color.reactions': (0, 255, 0),
+            'color.residuals': (0, 255, 255),
+            'color.loads': (0, 255, 0),
             'color.selfweight': (0, 0, 255),
-            'color.force': (0, 0, 255),
+            'color.forces': (0, 0, 255),
             'color.compression': (0, 0, 255),
             'color.tension': (255, 0, 0),
-            'color.fix':(255, 0, 0), 
+            'color.vertices:is_fixed': (255, 0, 0),
             'scale.reaction': 1.0,
             'scale.residual': 1.0,
             'scale.load': 1.0,
@@ -53,326 +73,332 @@ class FormArtist(MeshArtist):
             'tol.force': 1e-3,
             'tol.selfweight': 1e-3,
         })
-        self.force = force
+        if settings:
+            self.settings.update(settings)
+        self.guids = {}
 
     @property
     def form(self):
+        """The form diagram assigned to the artist."""
         return self.mesh
 
-    def draw_diagram(self):
-        self.clear()
-        compas_rhino.delete_objects_by_name(name='{}.*'.format(self.form.name))
-
-        self.draw_vertices()
-        self.draw_vertexlabels()
-        self.draw_edges()
-        self.draw_edgelabels(text={uv: index for index, uv in enumerate(self.form.edges())})
-        self.redraw()
-
-
-    def clear_leaves(self):
-        compas_rhino.delete_objects_by_name(name='{}.leaf_edge.*'.format(self.form.name))
-
-
-    def draw_leaves(self, color=None, arrows=False):
-        # draw leaves 
-        # arrows direction arbitary
-        self.clear_leaves()
-        leaves  = set(self.form.leaves())
-        lines = []
-        for index, ((u, v), attr) in enumerate(self.form.edges_where({'is_edge': True}, True)):
-            print(index, u, v)
-            if u in leaves or v in leaves:
-                lines.append({
-                    'start': self.form.vertex_coordinates(u),
-                    'end': self.form.vertex_coordinates(v),
-                    'arrow': 'end' if arrows is True else None,
-                    'color': color or self.settings.get('color.leaves'), 
-                    'name': "{}.leaf_edge.{}".format(self.form.name, index),
-                    'width': 0.5
-                })
-        compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
-    
-
-    def clear_independent_edge(self):
-        compas_rhino.delete_objects_by_name(name='{}.independent_edge.*'.format(self.form.name))
-
-
-    def draw_independent_edge(self):
-        self.clear_independent_edge()
-        lines = []
-        for index, ((u, v), attr) in enumerate(self.form.edges_where({'is_edge': True}, True)):
-            if attr['is_ind']:
-                lines.append({
-                    'start': self.form.vertex_coordinates(u),
-                    'end': self.form.vertex_coordinates(v),
-                    'name': "{}.independent_edge.{}".format(self.form.name, index),
-                    'width': 1.0
-                })
-        compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
-
-    def clear_fixed_vertice(self):
-        compas_rhino.delete_objects_by_name(name='{}.fixed_vertex.*'.format(self.form.name))
-
-
-    def draw_fixed_vertice(self, color=None):
-        self.clear_fixed_vertice()
-        fixed = self.form.fixed()
-        self.clear_vertexlabels(keys=fixed)
-        labels = []
-        for vkey in fixed:
-            labels.append({
-                'pos'  : self.form.vertex_coordinates(vkey),
-                'text' : str(vkey),
-                'color': color or self.settings.get('color.fix'),
-                'name' : "{}.fixed_vertex.{}".format(self.form.name, vkey)
-            })
-        compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
-
+    @form.setter
+    def form(self, value):
+        self.mesh = form
 
     def clear(self):
-        super(FormArtist, self).clear()
-        self.clear_loads()
-        self.clear_selfweight()
-        self.clear_reactions()
-        self.clear_forces()
-        self.clear_residuals()
-        self.clear_angles()
+        for name in list(self.guids.keys()):
+            guids = list(self.guids[name].values())
+            compas_rhino.delete_objects(guids)
+            del self.guids[name]
 
+    def draw(self):
+        """Draw the base form diagram."""
+        self.clear()
+        self.clear_layer()
 
-    def clear_loads(self):
-        compas_rhino.delete_objects_by_name(name='{}.load.*'.format(self.form.name))
+        if self.settings['show.vertices']:
+            color = {}
+            color.update({vertex: self.settings['color.vertices'] for vertex in self.form.vertices()})
+            guids = self.draw_vertices(color=color)
+            self.guids['vertices'] = dict(zip(self.form.vertices(), guids))
 
+        if self.settings['show.vertexlabels']:
+            guids = self.draw_vertexlabels()
+            self.guids['vertexlabels'] = dict(zip(self.form.vertices(), guids))
 
-    def clear_selfweight(self):
-        compas_rhino.delete_objects_by_name(name='{}.selfweight.*'.format(self.form.name))
+        if self.settings['show.edges']:
+            color = {}
+            color.update({edge: self.settings['color.edges'] for edge in self.form.edges()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.form.external()})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.form.edges_where({'is_ind': True})})
+            guids = self.draw_edges(color=color)
+            self.guids['edges'] = dict(zip(self.form.edges(), guids))
 
+        if self.settings['show.edgelabels']:
+            text = {edge: index for index, edge in enumerate(self.form.edges())}
+            color.update({edge: self.settings['color.edges'] for edge in self.form.edges()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.form.external()})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.form.edges_where({'is_ind': True})})
+            guids = self.draw_edgelabels(text=text, color=color)
+            self.guids['edgelabels'] = dict(zip(self.form.edges(), guids))
 
-    def clear_reactions(self):
-        compas_rhino.delete_objects_by_name(name='{}.reaction.*'.format(self.form.name))
+    # def draw_external(self, arrow=False, scale=1.0):
+    #     """Draw the symbols for the external forces as an overlay of the edges.
 
+    #     An external force has a point of application,
+    #     a line of action, direction, and magnitude.
 
-    def clear_forces(self):
-        compas_rhino.delete_objects_by_name(name='{}.force.*'.format(self.form.name))
+    #     Parameters
+    #     ----------
+    #     color : rgb color, optional
+    #         RGB color specification.
+    #         The default value is in ``FormArtist.settings['color.external']``.
+    #     arrow : bool, optional
+    #         Add an arrow.
+    #         Default is ``False``.
+    #     scale : float, optional
+    #         The length of the line representing the force symbol.
+    #         Default is ``1.0``.
 
+    #     Returns
+    #     -------
+    #     None
 
-    def clear_residuals(self):
-        compas_rhino.delete_objects_by_name(name='{}.residual.*'.format(self.form.name))
+    #     Notes
+    #     -----
+    #     The GUIDs of the Rhino objects created by this method
+    #     are stored in ``FormArtist.guids['external']``.
+    #     """
+    #     compas_rhino.delete_objects(self.guids.setdefault('external'))
+    #     leaves = set(self.form.leaves())
+    #     lines = []
+    #     for u, v in self.form.edges():
+    #         if u not in leaves and v not in leaves:
+    #             continue
+    #         lines.append({
+    #             'start': self.form.vertex_coordinates(u),
+    #             'end': self.form.vertex_coordinates(v),
+    #             'arrow': 'end' if arrow else None,
+    #             'color': color or self.settings.get('color.external'),
+    #             'name': "{}.external.{}-{}".format(self.form.name, u, v),
+    #             'width': 0.5
+    #         })
+    #     self.guids['external'] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
 
+    # def draw_loads(self, scale=None, color=None):
+    #     """Draw the symbols for the loads as an overlay of the edges.
 
-    def clear_angles(self):
-        compas_rhino.delete_objects_by_name(name='{}.angle.*'.format(self.form.name))
+    #     A load has a point of application, a line of action, direction, and magnitude.
+    #     The magnitude of the symbol is controlled by the scale factor.
+    #     The magnitude of the actual load is stored as an editable edge attribute.
 
+    #     Parameters
+    #     ----------
+    #     color : rgb color, optional
+    #         RGB color specification.
+    #         The default value is in ``FormArtist.settings['color.external']``.
+    #     arrow : bool, optional
+    #         Add an arrow.
+    #         Default is ``False``.
+    #     scale : float, optional
+    #         The length of the line representing the force symbol.
+    #         Default is ``1.0``.
 
-    def draw_loads(self, scale=None, color=None):
-        self.clear_loads()
+    #     Returns
+    #     -------
+    #     None
 
-        lines = []
-        color = color or self.settings['color.load']
-        scale = scale or self.settings['scale.load']
-        tol = self.settings['tol.load']
-        tol2 = tol ** 2
+    #     Notes
+    #     -----
+    #     The GUIDs of the Rhino objects created by this method
+    #     are stored in ``FormArtist.guids['external']``.
+    #     """
+    #     compas_rhino.delete_objects(self.guids.setdefault('loads'))
+    #     lines = []
+    #     color = color or self.settings['color.load']
+    #     scale = scale or self.settings['scale.load']
+    #     tol = self.settings['tol.load']
+    #     tol2 = tol ** 2
+    #     for key, attr in self.form.vertices_where({'is_anchor': False, 'is_external': False}, True):
+    #         px = scale * attr['px']
+    #         py = scale * attr['py']
+    #         pz = scale * attr['pz']
+    #         if px ** 2 + py ** 2 + pz ** 2 < tol2:
+    #             continue
+    #         sp = self.form.vertex_coordinates(key)
+    #         ep = sp[0] + px, sp[1] + py, sp[2] + pz
+    #         lines.append({
+    #             'start': sp,
+    #             'end': ep,
+    #             'color': color,
+    #             'arrow': 'end',
+    #             'name': "{}.load.{}".format(self.form.name, key)
+    #         })
+    #     self.guids['loads'] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
 
-        for key, attr in self.form.vertices_where({'is_anchor': False, '_is_external': False}, True):
-            px = scale * attr['px']
-            py = scale * attr['py']
-            pz = scale * attr['pz']
+    # # def draw_independent_edges(self):
+    # #     compas_rhino.delete_objects(self.guids.setdefault('independent_edges'))
+    # #     lines = []
+    # #     for index, (u, v) in enumerate(self.form.edges_where({'is_ind': True})):
+    # #         lines.append({
+    # #             'start': self.form.vertex_coordinates(u),
+    # #             'end': self.form.vertex_coordinates(v),
+    # #             'name': "{}.independent_edge.{}".format(self.form.name, index),
+    # #             'width': 1.0
+    # #         })
+    # #     self.guids['independent_edges'] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
 
-            if px ** 2 + py ** 2 + pz ** 2 < tol2:
-                continue
+    # # def draw_fixed_vertices(self, color=None):
+    # #     compas_rhino.delete_objects(self.guids.setdefault('fixed_vertices'))
+    # #     labels = []
+    # #     for vkey in self.form.fixed():
+    # #         labels.append({
+    # #             'pos'  : self.form.vertex_coordinates(vkey),
+    # #             'text' : str(vkey),
+    # #             'color': color or self.settings.get('color.fix'),
+    # #             'name' : "{}.fixed_vertex.{}".format(self.form.name, vkey)
+    # #         })
+    # #     self.guids['fixed_vertices'] = compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
 
-            sp = self.form.vertex_coordinates(key)
-            ep = sp[0] + px, sp[1] + py, sp[2] + pz
+    # def draw_selfweight(self, scale=None, color=None):
+    #     compas_rhino.delete_objects(self.guids.setdefault('selfweight'))
+    #     lines = []
+    #     color = color or self.settings['color.selfweight']
+    #     scale = scale or self.settings['scale.selfweight']
+    #     tol = self.settings['tol.selfweight']
+    #     tol2 = tol ** 2
+    #     for key, attr in self.form.vertices_where({'is_anchor': False, 'is_external': False}, True):
+    #         t = attr['t']
+    #         a = self.form.vertex_area(key)
+    #         sp = self.form.vertex_coordinates(key)
+    #         dz = scale * t * a
+    #         if dz ** 2 < tol2:
+    #             continue
+    #         ep = sp[0], sp[1], sp[2] - dz
+    #         lines.append({
+    #             'start': sp,
+    #             'end': ep,
+    #             'color': color,
+    #             'arrow': 'end',
+    #             'name': "{}.selfweight.{}".format(self.form.name, key)
+    #         })
+    #     self.guids['selfweight'] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
 
-            lines.append({
-                'start': sp,
-                'end': ep,
-                'color': color,
-                'arrow': 'end',
-                'name': "{}.load.{}".format(self.form.name, key)
-            })
+    # def draw_reactions(self, scale=None, color=None):
+    #     """Draw the resultant of the external forces at an anchored node.
 
-        compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+    #     No arrows are added to the lines.
+    #     GUIDs of the Rhino objects created by this method are stored in ``FormArtist.guids['reactions']``.
 
+    #     Parameters
+    #     ----------
+    #     scale : float, optional
+    #         The scale factor for the resultant.
+    #         Default is in ``FormArtist.settings['scale.reaction']``.
+    #     color : rgb color, optional
+    #         RGB color specification.
+    #         The default value is in ``FormArtist.settings['color.external']``.
 
-    def draw_selfweight(self, scale=None, color=None):
-        self.clear_selfweight()
+    #     Returns
+    #     -------
+    #     None
+    #     """
+    #     compas_rhino.delete_objects(self.guids.setdefault('reactions'))
+    #     lines = []
+    #     color = color or self.settings['color.reaction']
+    #     scale = scale or self.settings['scale.reaction']
+    #     tol = self.settings['tol.reaction']
+    #     tol2 = tol ** 2
+    #     for key in self.form.vertices_where({'is_anchor': True}):
+    #         rx = 0
+    #         ry = 0
+    #         for nbr in self.form.vertex_neighbors(key):
+    #             if not self.form.edge_attribute((key, nbr), 'is_external'):
+    #                 continue
+    #             f = self.form.edge_attribute((key, nbr), 'f')
+    #             u = self.form.edge_direction(key, nbr)
+    #             rx += u[0] * f
+    #             ry += u[1] * f
+    #         rx = scale * rx
+    #         ry = scale * ry
+    #         sp = self.form.vertex_coordinates(key)
+    #         if rx ** 2 + ry ** 2 > tol2:
+    #             ep = sp[0] + rx, sp[1] + ry, sp[2]
+    #             lines.append({
+    #                 'start': sp,
+    #                 'end': ep,
+    #                 'color': color,
+    #                 'arrow': None,
+    #                 'name': "{}.reaction.{}".format(self.form.name, key)
+    #             })
+    #     self.guids['reactions'] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
 
-        lines = []
-        color = color or self.settings['color.selfweight']
-        scale = scale or self.settings['scale.selfweight']
-        tol = self.settings['tol.selfweight']
-        tol2 = tol ** 2
+    # def draw_forces(self, scale=None, color=None):
+    #     compas_rhino.delete_objects(self.guids.setdefault('forces'))
+    #     lines = []
+    #     color_compression = color or self.settings['color.compression']
+    #     color_tension = color or self.settings['color.tension']
+    #     scale = scale or self.settings['scale.force']
+    #     tol = self.settings['tol.force']
+    #     leaves = set(self.form.leaves())
+    #     for (u, v) in self.form.edges():
+    #         if u not in leaves and v not in leaves:
+    #             sp, ep = self.form.edge_coordinates(u, v)
+    #             f = self.form.edge_attribute((u, v), 'f')
+    #             radius = fabs(scale * f)
+    #             if radius < tol:
+    #                 continue
+    #             color = color_compression if f > 0 else color_tension
+    #             lines.append({
+    #                 'start': sp,
+    #                 'end': ep,
+    #                 'radius': radius,
+    #                 'color': color,
+    #                 'name': "{}.force.{}-{}".format(self.form.name, u, v)
+    #             })
+    #     self.guids['forces'] = compas_rhino.draw_cylinders(lines, layer=self.layer, clear=False, redraw=True)
 
-        for key, attr in self.form.vertices_where({'is_anchor': False, '_is_external': False}, True):
-            t = attr['t']
-            a = self.form.vertex_area(key)
-            sp = self.form.vertex_coordinates(key)
+    # def draw_residuals(self, scale=None, color=None):
+    #     compas_rhino.delete_objects(self.guids.setdefault('residuals'))
+    #     lines = []
+    #     color = color or self.settings['color.residual']
+    #     scale = scale or self.settings['scale.residual']
+    #     tol = self.settings['tol.residual']
+    #     for key in self.form.vertices_where({'is_anchor': False, 'is_external': False}):
+    #         r = self.form.vertex_attributes(key, ['_rx', '_ry', '_rz'])
+    #         r[:] = scale_vector(r, scale)
+    #         if length_vector(r) < tol:
+    #             continue
+    #         sp = self.form.vertex_coordinates(key)
+    #         ep = add_vectors(sp, r)
+    #         lines.append({
+    #             'start': sp,
+    #             'end': ep,
+    #             'color': color,
+    #             'arrow': 'start',
+    #             'name': "{}.residual.{}".format(self.form.name, key)
+    #         })
+    #     self.guids['residuals'] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
 
-            dz = scale * t * a
+    # def draw_angles(self, tol=5.0):
+    #     """Draw labels with the angle deviation between corresponding edges of form and force.
 
-            if dz ** 2 < tol2:
-                continue
+    #     The label is drawn at the midpoint of the form diagram edges.
+    #     GUIDs of Rhino objects created by this method are stored in ``FormArtist.guids['angles']``.
 
-            ep = sp[0], sp[1], sp[2] - dz
+    #     Parameters
+    #     ----------
+    #     tol : float, optional
+    #         Angles below this value are excluded from the labels.
+    #         Default is ``5.0``.
 
-            lines.append({
-                'start': sp,
-                'end': ep,
-                'color': color,
-                'arrow': 'end',
-                'name': "{}.selfweight.{}".format(self.form.name, key)
-            })
+    #     Returns
+    #     -------
+    #     None
+    #     """
+    #     compas_rhino.delete_objects(self.guids.setdefault('angles'))
+    #     a_max = tol if tol else max(self.form.edges_attribute('a'))
+    #     a_min = 0
+    #     a_range = a_max - a_min
+    #     if a_range:
+    #         labels = []
+    #         for (u, v) in self.form.edges():
+    #             a = self.form.edge_attribute((u, v), 'a')
+    #             a_deg = 180 * a / 3.14159
+    #             if a_deg > tol:
+    #                 labels.append({
+    #                     'pos': self.form.edge_midpoint(u, v),
+    #                     'text': "{:.0f}".format(a_deg),
+    #                     'color': i_to_green((a - a_min) / a_range),
+    #                     'name': "{}.angle.{}-{}".format(self.form.name, u, v)
+    #                 })
+    #         self.guids['angles'] = compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
 
-        compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
-
-
-    def draw_reactions(self, scale=None, color=None):
-        self.clear_reactions()
-
-        lines = []
-        color = color or self.settings['color.reaction']
-        scale = scale or self.settings['scale.reaction']
-        tol = self.settings['tol.reaction']
-        tol2 = tol ** 2
-
-        for key, attr in self.form.vertices_where({'is_anchor': True}, True):
-            rx = attr['_rx']
-            ry = attr['_ry']
-            rz = attr['_rz']
-
-            for nbr in self.form.vertex_neighbors(key):
-                is_external = self.form.edge_attribute((key, nbr), '_is_external')
-
-                if is_external:
-                    f = self.form.edge_attribute((key, nbr), '_f')
-                    u = self.form.edge_direction(key, nbr)
-                    u[2] = 0
-                    v = scale_vector(u, f)
-
-                    rx += v[0]
-                    ry += v[1]
-
-            rx = scale * rx
-            ry = scale * ry
-            rz = scale * rz
-
-            sp = self.form.vertex_coordinates(key)
-
-            if rx ** 2 + ry ** 2 > tol2:
-                e1 = sp[0] + rx, sp[1] + ry, sp[2]
-                lines.append({
-                    'start': sp,
-                    'end': e1,
-                    'color': color,
-                    'arrow': 'start',
-                    'name': "{}.reaction.{}".format(self.form.name, key)
-                })
-
-            if rz ** 2 > tol2:
-                e2 = sp[0], sp[1], sp[2] + rz
-                lines.append({
-                    'start': sp,
-                    'end': e2,
-                    'color': color,
-                    'arrow': 'start',
-                    'name': "{}.reaction.{}".format(self.form.name, key)
-                })
-
-        compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
-
-    def draw_forces(self, scale=None, color=None):
-        self.clear_forces()
-
-        lines = []
-        color = color or self.settings['color.compression']
-        scale = scale or self.settings['scale.force']
-        tol = self.settings['tol.force']
-        tol2 = tol ** 2
-        leaves  = set(self.form.leaves())
-
-        for (u, v), attr in self.form.edges_where({'is_edge': True}, True):
-            if u not in leaves and v not in leaves:
-                sp, ep = self.form.edge_coordinates(u, v)
-                f = attr['f']
-                print(f, 'f')
-
-                if f != 0:
-                    radius = abs(scale * f)
-                else:
-                    f = self.form.edge_attribute((v, u), 'f')
-                    radius = abs(scale * f)
-
-                if radius ** 2 < tol2:
-                    continue
-                print(radius, 'radius')
-                
-                lines.append({
-                    'start': sp,
-                    'end': ep,
-                    'radius': radius,
-                    'color': color if f > 0 else self.settings['color.tension'],
-                    'name': "{}.force.{}-{}".format(self.form.name, u, v)
-                })
-        compas_rhino.draw_cylinders(lines, layer=self.layer, clear=False, redraw=True)
-
-
-    def draw_residuals(self, scale=None, color=None):
-        self.clear_residuals()
-
-        lines = []
-        color = color or self.settings['color.residual']
-        scale = scale or self.settings['scale.residual']
-        tol = self.settings['tol.residual']
-        tol2 = tol ** 2
-
-        for key, attr in self.form.vertices_where({'is_anchor': False, '_is_external': False}, True):
-            rx = scale * attr['_rx']
-            ry = scale * attr['_ry']
-            rz = scale * attr['_rz']
-
-            if rx ** 2 + ry ** 2 + rz ** 2 < tol2:
-                continue
-
-            sp = self.form.vertex_coordinates(key)
-            ep = sp[0] + rx, sp[1] + ry, sp[2] + rz
-
-            lines.append({
-                'start': sp,
-                'end': ep,
-                'color': color,
-                'arrow': 'start',
-                'name': "{}.residual.{}".format(self.form.name, key)
-            })
-
-        compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
-
-    def draw_angles(self, tol=5.0):
-        self.clear_angles()
-
-        a = self.form.edges_attribute('_a')
-        a_max = tol
-        a_min = 0
-        a_range = a_max - a_min
-
-        if a_range:
-            labels = []
-            for u, v, attr in self.form.edges(True):
-                a = 180 * attr['_a'] / 3.14159
-                if a > tol:
-                    labels.append({
-                        'pos': self.form.edge_midpoint(u, v),
-                        'text': "{:.2f}".format(attr['a'] / 3.14159 * 180),
-                        'color': i_to_green((attr['a'] - a_min) / a_range),
-                        'name': "{}.angle.{}-{}".format(self.form.name, u, v)
-                    })
-
-            compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
 
 # ==============================================================================
 # Main
 # ==============================================================================
-
 
 if __name__ == "__main__":
     pass

@@ -11,8 +11,7 @@ __author__ = ['Tom Van Mele']
 __email__ = 'vanmelet@ethz.ch'
 
 
-__all__ = ['FormDiagram',
-            ]
+__all__ = ['FormDiagram']
 
 
 class FormDiagram(Diagram):
@@ -41,14 +40,12 @@ class FormDiagram(Diagram):
             'is_reaction': False,
             'is_load': False,
             'is_edge': True,
-
         })
 
     @classmethod
     def from_graph(cls, graph):
         points = graph.to_points()
         cycles = network_find_cycles(graph, breakpoints=graph.leaves())
-        # print(cycles)
         form = cls.from_vertices_and_faces(points, cycles)
         form.edges_attribute('is_edge', False, keys=list(form.edges_on_boundary()))
         return form
@@ -104,37 +101,44 @@ class FormDiagram(Diagram):
     def index_uv(self):
         return {index: key for index, key in enumerate(self.edges())}
 
+    def external(self):
+        external = []
+        leaves = set(self.leaves())
+        for u, v in self.edges():
+            if u in leaves or v in leaves:
+                external.append((u, v))
+        return external
+
     # --------------------------------------------------------------------------
     # Convenience functions for retrieving the attributes of the formdiagram.
     # --------------------------------------------------------------------------
 
     def q(self):
-        return [attr['q'] for key, attr in self.edges(True)]
+        return self.edges_attribute('q')
 
     def xy(self):
-        return [[attr['x'], attr['y']] for key, attr in self.vertices(True)]
+        return self.vertices_attributes('xy')
 
     def fixed(self):
-        return [key for key, attr in self.vertices(True) if attr['is_fixed']]
+        return list(self.vertices_where({'is_fixed': True}))
 
     def constrained(self):
         return [key for key, attr in self.vertices(True) if attr['cx'] or attr['cy']]
 
     def constraints(self):
-        cx = [attr['cx'] for key, attr in self.vertices(True)]
-        cy = [attr['cy'] for key, attr in self.vertices(True)]
+        cx = self.vertices_attribute('cx')
+        cy = self.vertices_attribute('cy')
         return cx, cy
 
     def ind(self):
-        return [key for key, attr in self.edges(True) if attr['is_ind']]
+        return list(self.edges_where({'is_ind': True}))
 
     # --------------------------------------------------------------------------
     # Set stuff
     # --------------------------------------------------------------------------
 
     def set_fixed(self, keys):
-        for key, attr in self.vertices(True):
-            attr['is_fixed'] = key in keys
+        self.vertices_attribute('is_fixed', True, keys=keys)
 
     def set_edge_force(self, u, v, force):
         l = self.edge_length(u, v)
@@ -161,7 +165,7 @@ class FormDiagram(Diagram):
         if points:
             xy_key = {}
             for key in self.vertices():
-                gkey = geometric_key_xy(self.vertex_coordinates(key, 'xy'))
+                gkey = geometric_key_xy(self.vertex_attributes(key, 'xy'))
                 xy_key[gkey] = key
             for xy in points:
                 gkey = geometric_key_xy(xy)
@@ -173,7 +177,7 @@ class FormDiagram(Diagram):
         if points:
             xy_key = {}
             for key in self.vertices():
-                gkey = geometric_key_xy(self.vertex_coordinates(key, 'xy'))
+                gkey = geometric_key_xy(self.vertex_attributes(key, 'xy'))
                 xy_key[gkey] = key
             for xy in points:
                 gkey = geometric_key_xy(xy)

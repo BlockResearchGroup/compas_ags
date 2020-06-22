@@ -6,7 +6,7 @@ compas_ags.ags
 .. currentmodule:: compas_ags.ags
 
 
-core
+Core
 ====
 
 .. autosummary::
@@ -16,8 +16,8 @@ core
     update_form_from_force
 
 
-graphstatics
-============
+Graph Statics
+=============
 
 .. autosummary::
     :toctree: generated/
@@ -29,8 +29,8 @@ graphstatics
     force_update_from_form
 
 
-loadpath
-========
+Load Path
+=========
 
 .. autosummary::
     :toctree: generated/
@@ -42,18 +42,19 @@ loadpath
     compute_internal_work_compression
     optimise_loadpath
 
-
 """
-
+from __future__ import print_function
 from __future__ import absolute_import
+from __future__ import division
 
-from .core import *
-from .graphstatics import *
-from .loadpath import *
+import compas
 
-from . import core
-from . import graphstatics
-from . import loadpath
+if compas.IPY:
+    from .graphstatics import form_identify_dof_proxy
+    from .graphstatics import form_count_dof_proxy
+    from .graphstatics import form_update_q_from_qind_proxy
+    from .graphstatics import form_update_from_force_proxy
+else:
+    from .graphstatics import *
 
-
-__all__ = core.__all__ + graphstatics.__all__ + loadpath.__all__
+__all__ = [name for name in dir() if not name.startswith('_')]

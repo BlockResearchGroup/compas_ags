@@ -9,13 +9,13 @@ from compas.utilities import i_to_rgb
 from compas.utilities import color_to_colordict
 from compas_rhino.artists import MeshArtist
 
-from compas_ags.rhino import find_force_ind
-from .diagramhelper import check_edge_pairs
+# from compas_ags.rhino import find_force_ind
+# from .diagramhelper import check_edge_pairs
 
-try:
-    import rhinoscriptsyntax as rs
-except ImportError:
-    compas.raise_if_ironpython()
+# try:
+#     import rhinoscriptsyntax as rs
+# except ImportError:
+#     compas.raise_if_ironpython()
 
 
 __all__ = ['ForceArtist']
@@ -23,7 +23,7 @@ __all__ = ['ForceArtist']
 
 class ForceArtist(MeshArtist):
     """Inherits the compas :class:`MeshArtist`, provides functionality for visualisation of graphic statics applications.
-    
+
     Parameters
     ----------
     force: compas_ags.diagrams.ForceDiagram
@@ -121,7 +121,7 @@ class ForceArtist(MeshArtist):
             textdict = {key: str(index) for index, key in enumerate(self.force.vertices())}
         else:
             raise NotImplementedError
-        
+
         anchor = self.force.anchor()
         dx = self.force.vertex_coordinates(anchor)[0]
         dy = self.force.vertex_coordinates(anchor)[1]
@@ -246,7 +246,7 @@ class ForceArtist(MeshArtist):
         anchor = self.force.anchor()
         dx = self.force.vertex_coordinates(anchor)[0]
         dy = self.force.vertex_coordinates(anchor)[1]
-        
+
         if text is None:
             textdict = {key: str(key) for key in self.force.faces()}
         elif isinstance(text, dict):
@@ -264,7 +264,7 @@ class ForceArtist(MeshArtist):
         for key, text in iter(textdict.items()):
             cen_pt = self.force.face_center(key)
             labels.append({
-                'pos': [dx + (cen_pt[0] - dx) / self.scale, dy + (cen_pt[1] - dy) / self.scale, 0], 
+                'pos': [dx + (cen_pt[0] - dx) / self.scale, dy + (cen_pt[1] - dy) / self.scale, 0],
                 'name': "{}.face.label.{}".format(self.force.name, key),
                 'color': colordict[key],
                 'text': textdict[key],
@@ -330,16 +330,16 @@ class ForceArtist(MeshArtist):
             if length > max_length:
                 max_length = length
             force_dict[(u, v)] = length
-        
+
         for i, (u, v) in enumerate(self.force.edges()):
             value = force_dict[(u, v)] / max_length
             c_dict[(u, v)] = i_to_rgb(value)
-        
+
         if draw is True:
             self.draw_scale_edgelabels(text=dict((v,"%s kN" % k) for v, k in force_dict.items()), color=c_dict)
         return c_dict
 
-    
+
     def clear_independent_edge(self):
         compas_rhino.delete_objects_by_name(name='{}.independent_edge.*'.format(self.force.name))
 
@@ -350,7 +350,7 @@ class ForceArtist(MeshArtist):
             raise "form diagram doesn't exist"
         else:
             indices = find_force_ind(self.form, self.force)
-        
+
         anchor = self.force.anchor()
         dx = self.force.vertex_coordinates(anchor)[0]
         dy = self.force.vertex_coordinates(anchor)[1]

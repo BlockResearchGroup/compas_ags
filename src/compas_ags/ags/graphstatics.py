@@ -28,8 +28,9 @@ from compas.numerical import nonpivots
 
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
-from compas_ags.ags import update_q_from_qind
-from compas_ags.ags import update_form_from_force
+
+from compas_ags.ags.core import update_q_from_qind
+from compas_ags.ags.core import update_form_from_force
 
 
 __author__ = ['Tom Van Mele']
@@ -38,19 +39,16 @@ __email__ = 'vanmelet@ethz.ch'
 
 __all__ = [
     'form_identify_dof',
-    'form_identify_dof_rpc',
-
     'form_count_dof',
-    'form_count_dof_rpc',
-
     'form_update_q_from_qind',
-    'form_update_q_from_qind_rpc',
-
     'form_update_from_force',
-    'form_update_from_force_rpc',
-
     'force_update_from_form',
-    'force_update_from_form_rpc',
+
+    'form_identify_dof_proxy',
+    'form_count_dof_proxy',
+    'form_update_q_from_qind_proxy',
+    'form_update_from_force_proxy',
+    'force_update_from_form_proxy',
 ]
 
 
@@ -58,36 +56,36 @@ EPS = 1 / sys.float_info.epsilon
 
 
 # ==============================================================================
-# rpccs
+# proxy
 # ==============================================================================
 
 
-def form_identify_dof_rpc(formdata, *args, **kwargs):
+def form_identify_dof_proxy(formdata, *args, **kwargs):
     from compas_tna.diagrams import FormDiagram
     form = FormDiagram.from_data(formdata)
     return form_identify_dof(form, *args, **kwargs)
 
 
-def form_count_dof_rpc(formdata, *args, **kwargs):
+def form_count_dof_proxy(formdata, *args, **kwargs):
     from compas_tna.diagrams import FormDiagram
     form = FormDiagram.from_data(formdata)
     return form_count_dof(form, *args, **kwargs)
 
 
-def form_update_q_from_qind_rpc(formdata, *args, **kwargs):
+def form_update_q_from_qind_proxy(formdata, *args, **kwargs):
     form = FormDiagram.from_data(formdata)
     form_update_q_from_qind(form, *args, **kwargs)
     return form.to_data()
 
 
-def form_update_from_force_rpc(form, force, *args, **kwargs):
+def form_update_from_force_proxy(formdata, forcedata, *args, **kwargs):
     form = FormDiagram.from_data(form)
     force = ForceDiagram.from_data(force)
     form_update_from_force(form, force, *args, **kwargs)
     return form.to_data()
 
 
-def force_update_from_form_rpc(forcedata, formdata, *args, **kwargs):
+def force_update_from_form_proxy(forcedata, formdata, *args, **kwargs):
     form = FormDiagram.from_data(formdata)
     force = ForceDiagram.from_data(forcedata)
     force_update_from_form(force, form, *args, **kwargs)
@@ -415,7 +413,7 @@ def force_update_from_form(force, form):
 
 
 # ==============================================================================
-# Debugging
+# Main
 # ==============================================================================
 
 if __name__ == "__main__":

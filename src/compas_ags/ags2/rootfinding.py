@@ -1,35 +1,23 @@
-from compas.numerical import nullspace
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
 
 import sys
 
-try:
-    import numpy as np
-    from numpy import array
-    from numpy import eye
-    from numpy import zeros
-    from numpy import float64
-    from numpy import matrix
-    from numpy.linalg import cond
-
-    from scipy.linalg import solve
-    from scipy.linalg import lstsq
-
-    from scipy.sparse import diags
-except ImportError:
-    if 'ironpython' not in sys.version.lower():
-        raise
-
+import numpy as np
 from numpy import array
 from numpy import eye
 from numpy import zeros
 from numpy import float64
-from numpy.linalg import cond
 from numpy import matrix
+from numpy.linalg import cond
+
 from scipy.linalg import solve
 from scipy.linalg import lstsq
 
 from scipy.sparse import diags
 
+from compas.numerical import nullspace
 from compas.numerical import connectivity_matrix
 from compas.numerical import equilibrium_matrix
 from compas.numerical import laplacian_matrix
@@ -39,38 +27,34 @@ from compas_ags.utilities.errorhandler import SolutionError
 from compas_ags.utilities.helpers import check_solutions
 from compas_ags.ags.graphstatics import form_update_q_from_qind, force_update_from_form
 
+
 __author__    = ['Vedad Alic', ]
 __license__   = 'MIT License'
 __email__     = 'vedad.alic@construction.lth.se'
 
+
 __all__ = [
     'compute_jacobian',
-    'compute_jacobian_rpc', 
-
     'get_red_residual_and_jacobian',
-    'get_red_residual_and_jacobian_rpc',
-    
     'compute_form_from_force_newton',
-    'compute_form_from_force_newton_rpc', 
-    'compute_form_from_force_newton_xfunc',
+    # 'just_return_index_2_coord',
 
-    'just_return_index_2_coord',
+    'compute_jacobian_proxy',
+    'get_red_residual_and_jacobian_proxy',
+    'compute_form_from_force_newton_proxy',
 ]
 
 
-def just_return_index_2_coord(formdata, forcedata):
-    from compas_ags.diagrams import FormDiagram
-    from compas_ags.diagrams import ForceDiagram
-    form = FormDiagram.from_data(formdata)
-    i_k = form.index_key()
-    print('this is the coordinate of the vertex that will be fixed in reality:')
-    coord = form.vertex_coordinates(i_k[1])
-
-    return coord
+# def just_return_index_2_coord(formdata, forcedata):
+#     from compas_ags.diagrams import FormDiagram
+#     from compas_ags.diagrams import ForceDiagram
+#     form = FormDiagram.from_data(formdata)
+#     i_k = form.index_key()
+#     coord = form.vertex_coordinates(i_k[1])
+#     return coord
 
 
 def compute_form_from_force_newton_rpc(formdata, forcedata, tol=1e5):
-    
     from compas_ags.diagrams import FormDiagram
     from compas_ags.diagrams import ForceDiagram
 
@@ -317,7 +301,7 @@ def compute_jacobian_rpc(formdata, forcedata, *args, **kwargs):
     form = FormDiagram.from_data(formdata)
     force = ForceDiagram.from_data(forcedata)
     return compute_jacobian(form, force, *args, **kwargs)
-    
+
 
 def compute_jacobian(form, force):
     r"""Compute the Jacobian matrix.

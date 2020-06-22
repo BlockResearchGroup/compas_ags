@@ -1,3 +1,32 @@
+"""
+********************************************************************************
+compas_ags.ags2
+********************************************************************************
+
+.. currentmodule:: compas_ags.ags2
+
+
+Constraints
+===========
+
+.. autosummary::
+    :toctree: generated/
+
+
+Graph Statics
+=============
+
+.. autosummary::
+    :toctree: generated/
+
+
+Root Finding
+============
+
+.. autosummary::
+    :toctree: generated/
+
+"""
 from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division

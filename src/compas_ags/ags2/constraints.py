@@ -1,11 +1,15 @@
+from __future__ import print_function
+from __future__ import absolute_import
+from __future__ import division
+
 from abc import ABC, abstractmethod
-
 import numpy as np
-
 from compas_ags.diagrams.formdiagram import FormDiagram
+
 
 __author__ = ['Vedad Alic', ]
 __email__ = 'vedad.alic@construction.lth.se'
+
 
 __all__ = [
     'ConstraintsCollection',
@@ -15,18 +19,23 @@ __all__ = [
 
 
 class AbstractConstraint(ABC):
-    """
-    Used to derive form diagram constraints. The derived constraints
+    """Used to derive form diagram constraints. The derived constraints
     must implement the compute_constraint and update_constraint_goal methods.
+
+    Parameters
+    ----------
+    form : :class:`compas_ags.diagrams.FormDiagram`
+        The form diagram to which the constraints are applied.
+
+    Attributes
+    ----------
+    form : :class:`compas_ags.diagrams.FormDiagram`
+        The form diagram to which the constraints are applied.
     """
 
     def __init__(self, form):
         super().__init__()
-        self.form = form  # type: FormDiagram
-
-        # --------------------------------------------------------------------------
-        # Drawing properties
-        # --------------------------------------------------------------------------
+        self.form = form
         self._color = '#1524c6'
         self._width = 1.0
         self._style = '--'
@@ -51,9 +60,8 @@ class AbstractConstraint(ABC):
         pass
 
 
-class ConstraintsCollection:
-    """
-    Computes the Jacobian d_X/dX and residual r of the added constraints
+class ConstraintsCollection(object):
+    """Computes the Jacobian d_X/dX and residual r of the added constraints
     where X contains the form diagram coordinates in *Fortran* order
     (first all x-coordinates, then all y-coordinates) and _X contains the
     force diagram coordinates in *Fortran* order (first all _x-coordinates,
@@ -221,3 +229,11 @@ class SetLength(LengthFix):
 
     def update_constraint_goal(self):
         pass
+
+
+# ==============================================================================
+# Main
+# ==============================================================================
+
+if __name__ == '__main__':
+    pass

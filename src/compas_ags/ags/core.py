@@ -51,10 +51,7 @@ def update_q_from_qind(E, q, dep, ind):
 
     Examples
     --------
-    .. code-block:: python
-
-        #
-
+    >>>
     """
     m = E.shape[0] - len(dep)
     qi = q[ind]
