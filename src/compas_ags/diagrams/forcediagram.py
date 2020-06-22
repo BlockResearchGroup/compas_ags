@@ -183,8 +183,8 @@ class ForceDiagram(Diagram):
     # --------------------------------------------------------------------------
 
     def update(self, formdiagram):
-        from compas_ags.algorithms.graphstatics import update_forcediagram
-        update_forcediagram(self, formdiagram)
+        from compas_ags.ags import force_update_from_form
+        force_update_from_form(self, formdiagram)
 
 
 # ==============================================================================

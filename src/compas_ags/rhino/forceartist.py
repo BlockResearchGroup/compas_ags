@@ -12,25 +12,31 @@ from compas_rhino.artists import MeshArtist
 from compas_ags.rhino import find_force_ind
 from .diagramhelper import check_edge_pairs
 
+try:
+    import rhinoscriptsyntax as rs
+except ImportError:
+    compas.raise_if_ironpython()
+
 
 __all__ = ['ForceArtist']
 
 
 class ForceArtist(MeshArtist):
-    """Inherits the compas :class:`MeshArtist`, provides functionality for visualisation of 3D graphic statics applications.
+    """Inherits the compas :class:`MeshArtist`, provides functionality for visualisation of graphic statics applications.
     
     Parameters
     ----------
-    form: compas_ags.forcediagram.ForceDiagram
+    force: compas_ags.diagrams.ForceDiagram
         The force diagram to draw.
-    layer: string, optional
+    form: compas_ags.diagrams.FormDiagram, optional, default is None
+        The dual graph of the force diagram
+    layer: string, optional, default is None
         The name of the layer that will contain the forcediagram.
+    scale_diagram: Boolean, optional, default is True
+        scale the diagram to a proper size for visualization
     """
-    
-    __module__ = 'compas_tna.rhino'
 
-
-    def __init__(self, force, form=None, layer=None):
+    def __init__(self, force, form=None, layer=None, scale_diagram=True):
         super(ForceArtist, self).__init__(force, layer=layer)
 
         self.settings.update({
@@ -38,7 +44,9 @@ class ForceArtist(MeshArtist):
         })
         self.update_edge_force()
         self.form = form
-        self.scale = scale = self.calculate_scale()
+        self.scale_diagram = scale_diagram
+        self.scale = self.calculate_scale()
+
 
     @property
     def force(self):
@@ -60,18 +68,19 @@ class ForceArtist(MeshArtist):
 
     def calculate_scale(self):
         # calculate the scale factor of force diagram
-        if self.form is not None:
-            form_x = self.form.vertices_attribute('x')
-            form_y = self.form.vertices_attribute('y')
-            form_xdim = max(form_x) - min(form_x)
-            form_ydim = max(form_y) - min(form_y)
+        if self.scale_diagram:
+            if self.form is not None:
+                form_x = self.form.vertices_attribute('x')
+                form_y = self.form.vertices_attribute('y')
+                form_xdim = max(form_x) - min(form_x)
+                form_ydim = max(form_y) - min(form_y)
 
-            force_x = self.force.vertices_attribute('x')
-            force_y = self.force.vertices_attribute('y')
-            force_xdim = max(force_x) - min(force_x)
-            force_ydim = max(force_y) - min(force_y)
+                force_x = self.force.vertices_attribute('x')
+                force_y = self.force.vertices_attribute('y')
+                force_xdim = max(force_x) - min(force_x)
+                force_ydim = max(force_y) - min(force_y)
 
-            scale = max([force_xdim / form_xdim, force_ydim / form_ydim])
+                scale = max([force_xdim / form_xdim, force_ydim / form_ydim])
         else:
             scale = 1
 
@@ -200,6 +209,70 @@ class ForceArtist(MeshArtist):
         return compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=True)
 
 
+    def draw_scale_faces(self, keys=None, color=None, join_faces=False):
+        anchor = self.force.anchor()
+        dx = self.force.vertex_coordinates(anchor)[0]
+        dy = self.force.vertex_coordinates(anchor)[1]
+
+        keys = keys or list(self.force.faces())
+
+        colordict = color_to_colordict(color,
+                                       keys,
+                                       default=self.settings.get('color.face'),
+                                       colorformat='rgb',
+                                       normalize=False)
+
+        faces = []
+        for fkey in keys:
+            points = self.force.face_coordinates(fkey)
+            scaled_points = [[dx + (pt[0] - dx) / self.scale, dy + (pt[1] - dy) / self.scale, 0] for pt in points]
+            faces.append({
+                'points': scaled_points,
+                'name': "{}.face.{}".format(self.force.name, fkey),
+                'color': colordict[fkey],
+            })
+
+        guids = compas_rhino.draw_faces(faces, layer=self.layer, clear=False, redraw=True)
+
+        if join_faces:
+            guid = rs.JoinMeshes(guids, delete_input=True)
+            rs.ObjectLayer(guid, self.layer)
+            rs.ObjectName(guid, '{}.mesh'.format(self.force.name))
+            if color:
+                rs.ObjectColor(guid, color)
+
+
+    def draw_scale_facelabels(self, text=None, color=None):
+        anchor = self.force.anchor()
+        dx = self.force.vertex_coordinates(anchor)[0]
+        dy = self.force.vertex_coordinates(anchor)[1]
+        
+        if text is None:
+            textdict = {key: str(key) for key in self.force.faces()}
+        elif isinstance(text, dict):
+            textdict = text
+        else:
+            raise NotImplementedError
+
+        colordict = color_to_colordict(color,
+                                       textdict.keys(),
+                                       default=self.settings.get('color.face'),
+                                       colorformat='rgb',
+                                       normalize=False)
+
+        labels = []
+        for key, text in iter(textdict.items()):
+            cen_pt = self.force.face_center(key)
+            labels.append({
+                'pos': [dx + (cen_pt[0] - dx) / self.scale, dy + (cen_pt[1] - dy) / self.scale, 0], 
+                'name': "{}.face.label.{}".format(self.force.name, key),
+                'color': colordict[key],
+                'text': textdict[key],
+            })
+
+        return compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=True)
+
+
     def scale_diagram(self, scale):
         # TO BE DELETED?
         # be careful to use... this modify the force diagram, instead of just drawing
@@ -235,13 +308,17 @@ class ForceArtist(MeshArtist):
     def update_edge_force(self):
         (u, v) = list(self.force.edges())[0] # get an edge
         # check whether the force diagram is scaled already
-        if self.force.edge_attribute((u, v), 'force') is None:  
+        if self.force.edge_attribute((u, v), 'force') is None:
             self.force.update_default_edge_attributes({'force': 0.0})
             for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):
                 length = self.force.edge_length(u, v)
                 length = round(length, 2)
                 attr['force'] = length
-
+        else:  # TO CHECK???!!
+            for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):
+                length = self.force.edge_length(u, v)
+                length = round(length, 2)
+                attr['force'] = length
 
     def draw_edge_force(self, draw=True):
         force_dict = {}
