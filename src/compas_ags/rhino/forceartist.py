@@ -61,7 +61,8 @@ class ForceArtist(MeshArtist):
         self.draw_scale_vertexlabels()
         self.draw_scale_edges()
         if self.form is not None:
-            self.draw_scale_edgelabels(text=check_edge_pairs(self.form, self.force)[1])
+            # self.draw_scale_edgelabels(text=check_edge_pairs(self.form, self.force)[1])
+            self.draw_edge_force()
 
         self.redraw()
 
@@ -320,23 +321,25 @@ class ForceArtist(MeshArtist):
                 length = round(length, 2)
                 attr['force'] = length
 
+
     def draw_edge_force(self, draw=True):
         force_dict = {}
         c_dict  = {}
         max_length = 0
+        edge_index = check_edge_pairs(self.form, self.force)[1]
 
         for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):
             length = attr['force']
             if length > max_length:
                 max_length = length
-            force_dict[(u, v)] = length
+            force_dict[(u, v)] = [edge_index[(u,v)], length]
         
         for i, (u, v) in enumerate(self.force.edges()):
-            value = force_dict[(u, v)] / max_length
+            value = force_dict[(u, v)][1] / max_length
             c_dict[(u, v)] = i_to_rgb(value)
         
-        if draw is True:
-            self.draw_scale_edgelabels(text=dict((v,"%s kN" % k) for v, k in force_dict.items()), color=c_dict)
+        if draw:
+            self.draw_scale_edgelabels(text=dict((uv,"%s kN {%s}" % (k[1], k[0])) for uv, k in force_dict.items()), color=c_dict)
         return c_dict
 
     

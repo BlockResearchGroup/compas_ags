@@ -109,7 +109,7 @@ class FormDiagram(Diagram):
     def external_edges(self):
         external_edges = []
         leaves = self.leaves()
-        for i, (u, v) in enumerate(self.edges()):
+        for i, (u, v) in enumerate(self.edges_where({'is_edge': True})):
             if u in leaves or v in leaves:
                 external_edges.append((u, v))
                 self.edge_attribute((u, v), 'is_external', True)
