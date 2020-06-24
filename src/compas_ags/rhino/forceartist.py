@@ -308,21 +308,19 @@ class ForceArtist(MeshArtist):
 
     def update_edge_force(self):
         (u, v) = list(self.force.edges())[0] # get an edge
+        
         # check whether the force diagram is scaled already
         if self.force.edge_attribute((u, v), 'force') is None:
             self.force.update_default_edge_attributes({'force': 0.0})
-            for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):
-                length = self.force.edge_length(u, v)
-                length = round(length, 2)
-                attr['force'] = length
-        else:  # TO CHECK???!!
-            for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):
-                length = self.force.edge_length(u, v)
-                length = round(length, 2)
-                attr['force'] = length
+        for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):
+            length = self.force.edge_length(u, v)
+            length = round(length, 2)
+            attr['force'] = length
 
 
     def draw_edge_force(self, draw=True):
+        self.update_edge_force()
+
         force_dict = {}
         c_dict  = {}
         max_length = 0
