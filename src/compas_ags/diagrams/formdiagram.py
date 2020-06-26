@@ -41,7 +41,7 @@ class FormDiagram(Diagram):
             'is_reaction': False,
             'is_load': False,
             'is_edge': True,
-            'is_external': False
+            'is_external': False,
         })
 
     @classmethod

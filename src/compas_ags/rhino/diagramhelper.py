@@ -102,7 +102,7 @@ def set_edge_loads(form):
         if edges == []:
             print('Nothing is selected. End of selection.')
             break
-        force_value = rs.GetReal("Force on Edges", 1.0)
+        force_value = rs.GetReal("Force on Edges (kN)", 1.0)
         for (u, v) in edges: 
             form.set_edge_force(u, v, force_value)
         

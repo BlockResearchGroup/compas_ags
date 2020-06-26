@@ -135,7 +135,9 @@ class FormArtist(MeshArtist):
 
     def draw_internal_edges(self):
         internal_edges = list(self.form.edges_where({'is_external': False}))
-        self.draw_edges(keys=internal_edges)
+        print(internal_edges)
+        if internal_edges:
+            self.draw_edges(keys=internal_edges)
 
 
     def clear_independent_edge(self):
