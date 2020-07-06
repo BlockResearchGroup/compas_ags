@@ -87,10 +87,10 @@ class FormArtist(MeshArtist):
         max_f = 0
 
         for index, ((u, v), attr) in enumerate(self.form.edges_where({'is_edge': True}, True)):
-            f = attr['f']
+            f = abs(attr['f'])
             # sometimes uv is flipped after to_data... 
             if f == 0:
-                f = self.form.edge_attribute((v, u), 'f') 
+                f = abs(self.form.edge_attribute((v, u), 'f'))
             if f > max_f:
                 max_f = f
             f_dict[(u, v)] = f
@@ -102,7 +102,6 @@ class FormArtist(MeshArtist):
         for i, (u, v) in enumerate(self.form.edges()):
             value = f_dict[(u, v)] / max_f
             c_dict[(u, v)] = i_to_rgb(value)
-        print(c_dict)
         return c_dict
 
 
@@ -135,7 +134,8 @@ class FormArtist(MeshArtist):
 
     def draw_internal_edges(self):
         internal_edges = list(self.form.edges_where({'is_external': False}))
-        self.draw_edges(keys=internal_edges)
+        if internal_edges:
+            self.draw_edges(keys=internal_edges)
 
 
     def clear_independent_edge(self):
@@ -339,7 +339,6 @@ class FormArtist(MeshArtist):
             if u not in leaves and v not in leaves:
                 sp, ep = self.form.edge_coordinates(u, v)
                 f = attr['f']
-                print(f, 'f')
 
                 if f != 0:
                     radius = abs(scale * f)
@@ -349,7 +348,6 @@ class FormArtist(MeshArtist):
 
                 if radius ** 2 < tol2:
                     continue
-                print(radius, 'radius')
                 
                 lines.append({
                     'start': sp,

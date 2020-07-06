@@ -337,6 +337,7 @@ def move_force_vertice(forcediagram, diagramartist):
         ip = get_initial_point()
 
         gp = Rhino.Input.Custom.GetPoint()
+        gp.PermitOrthoSnap(True)
         gp.DynamicDraw += OnDynamicDraw
         gp.SetCommandPrompt('Point to move to')
 

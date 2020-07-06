@@ -41,7 +41,7 @@ class FormDiagram(Diagram):
             'is_reaction': False,
             'is_load': False,
             'is_edge': True,
-            'is_external': False
+            'is_external': False,
         })
 
     @classmethod
@@ -139,6 +139,18 @@ class FormDiagram(Diagram):
 
     def ind(self):
         return [key for key, attr in self.edges(True) if attr['is_ind']]
+    
+    def load_path(self):
+        load_path = 0
+        leaves  = set(self.leaves())
+        
+        for (u, v), attr in self.edges_where({'is_edge': True}, True):
+            if u not in leaves and v not in leaves:
+                f = attr['f']
+                if f == 0: f = self.edge_attribute((v, u), 'f') 
+                l = self.edge_length(u, v)
+                load_path += abs(f) * l
+        return round(load_path, 2)
 
     # --------------------------------------------------------------------------
     # Set stuff

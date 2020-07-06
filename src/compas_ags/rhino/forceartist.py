@@ -308,7 +308,7 @@ class ForceArtist(MeshArtist):
 
     def update_edge_force(self):
         (u, v) = list(self.force.edges())[0] # get an edge
-        
+
         # check whether the force diagram is scaled already
         if self.force.edge_attribute((u, v), 'force') is None:
             self.force.update_default_edge_attributes({'force': 0.0})
@@ -348,7 +348,7 @@ class ForceArtist(MeshArtist):
     def draw_independent_edges(self):
         self.clear_independent_edge()
         if self.form is None:
-            raise "form diagram doesn't exist"
+            raise "Form diagram doesn't exist!"
         else:
             indices = find_force_ind(self.form, self.force)
         
