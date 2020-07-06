@@ -71,7 +71,8 @@ def form_identify_dof_rpc(formdata, *args, **kwargs):
 def form_count_dof_rpc(formdata, *args, **kwargs):
     from compas_tna.diagrams import FormDiagram
     form = FormDiagram.from_data(formdata)
-    return form_count_dof(form, *args, **kwargs)
+    k, m = form_count_dof(form, *args, **kwargs)
+    return k
 
 
 def form_update_q_from_qind_rpc(formdata, *args, **kwargs):
@@ -148,13 +149,29 @@ def form_identify_dof(form):
     --------
     >>>
     """
+    # k_i = form.key_index()
+    # xy = form.vertices_attributes('xy')
+    # fixed = [k_i[key] for key in form.fixed()]
+    # free = list(set(range(len(form.vertex))) - set(fixed))
+    # edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    # C = connectivity_matrix(edges)
+    # E = equilibrium_matrix(C, xy, free)
+
     k_i = form.key_index()
-    xy = form.vertices_attributes('xy')
-    fixed = [k_i[key] for key in form.fixed()]
-    free = list(set(range(len(form.vertex))) - set(fixed))
+    uv_index = form.uv_index()
+    vcount = form.number_of_vertices()
+    ecount = form.number_of_edges()
+    fixed = form.leaves()
+    fixed = [k_i[key] for key in fixed]
+    free = list(set(range(vcount)) - set(fixed))
+    ind = [uv_index[key] for key in form.ind()]
+    dep = list(set(range(ecount)) - set(ind))
     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
-    C = connectivity_matrix(edges)
-    E = equilibrium_matrix(C, xy, free)
+    xy = array(form.xy(), dtype=float64).reshape((-1, 2))
+    q = array(form.q(), dtype=float64).reshape((-1, 1))
+    C = connectivity_matrix(edges, 'array')
+    E = equilibrium_matrix(C, xy, free, 'array')
+
     k, m = dof(E)
     ind = nonpivots(rref(E))
     return k, m, [edges[i] for i in ind]
@@ -194,11 +211,22 @@ def form_count_dof(form):
     --------
     >>>
     """
+    # k_i = form.key_index()
+    # xy = form.vertices_attributes('xy')
+    # fixed = [k_i[key] for key in form.fixed()]
+    # free = list(set(range(len(form.vertex))) - set(fixed))
+    # edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    # C = connectivity_matrix(edges)
+    # E = equilibrium_matrix(C, xy, free)
+    # OLD I think is wrong
+
     k_i = form.key_index()
-    xy = form.vertices_attributes('xy')
-    fixed = [k_i[key] for key in form.fixed()]
-    free = list(set(range(len(form.vertex))) - set(fixed))
+    vcount = form.number_of_vertices()
+    fixed = form.leaves()
+    fixed = [k_i[key] for key in fixed]
+    free = list(set(range(vcount)) - set(fixed))
     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    xy = form.vertices_attributes('xy')
     C = connectivity_matrix(edges)
     E = equilibrium_matrix(C, xy, free)
     k, m = dof(E)
@@ -254,6 +282,8 @@ def form_update_q_from_qind(form):
         attr['q'] = q[index, 0]
         attr['f'] = f[index, 0]
         attr['l'] = l[index, 0]
+
+    return E
 
 
 def form_update_from_force(form, force, kmax=100):
