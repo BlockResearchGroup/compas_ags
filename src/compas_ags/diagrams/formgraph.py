@@ -11,11 +11,18 @@ __all__ = ['FormGraph']
 
 
 class FormGraph(Network):
+    """A graph of the lines representing the geometry and connectivity of a form diagram."""
 
     def __init__(self):
         super(FormGraph, self).__init__()
 
     def is_2d(self):
+        """Verify that all nodes of the graph lie in a horizontal plane.
+
+        Returns
+        -------
+        bool
+        """
         z = self.nodes_attribute('z')
         zmin = min(z)
         zmax = max(z)
@@ -23,10 +30,16 @@ class FormGraph(Network):
             return False
         return True
 
-    def make_2d(self):
-        self.nodes_attribute('z', 0.0)
+    # def make_2d(self):
+    #     self.nodes_attribute('z', 0.0)
 
     def is_planar(self):
+        """Verify that the graph has a planar embedding.
+
+        Returns
+        -------
+        bool
+        """
         if compas.IPY:
             from compas.rpc import Proxy
             planarity = Proxy('planarity')
@@ -35,12 +48,25 @@ class FormGraph(Network):
         return planarity.is_planar(list(self.edges()))
 
     def is_crossed(self):
+        """Verify that the current embedding of the graph has crossing edges.
+
+        Returns
+        -------
+        bool
+        """
         return network_is_crossed(self)
 
     def is_planar_embedding(self):
+        """Verify that the current embedding of the graph is planar."""
         return self.is_2d() and self.is_planar() and not self.is_crossed()
 
     def embed(self, fixed=None, straightline=True):
+        """Compute a geometry for the graph that embeds it in the plane.
+
+        Returns
+        -------
+        bool
+        """
         if compas.IPY:
             from compas.rpc import Proxy
             proxy = Proxy('compas.datastructures')

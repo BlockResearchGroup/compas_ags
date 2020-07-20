@@ -66,7 +66,7 @@ class ForceDiagram(Diagram):
 
         Returns
         -------
-        :class:``
+        :class:`compas_ags.diagrams.ForceDiagram`
         """
         forcediagram = mesh_dual(formdiagram, cls)
         forcediagram.dual = formdiagram
@@ -77,12 +77,30 @@ class ForceDiagram(Diagram):
     # --------------------------------------------------------------------------
 
     def xy(self):
+        """The XY coordinates of the vertices.
+
+        Returns
+        -------
+        list
+        """
         return [self.vertex_coordinates(key, 'xy') for key in self.vertices()]
 
     def fixed(self):
-        return [key for key, attr in self.vertices(True) if attr['is_fixed']]
+        """The identifiers of the fixed vertices.
+
+        Returns
+        -------
+        list
+        """
+        return list(self.vertices_where({'is_fixed': True}))
 
     def anchor(self):
+        """Identify the anchor of the force diagram.
+
+        Returns
+        -------
+        int
+        """
         for key, attr in self.vertices(True):
             if attr['is_anchor']:
                 return key
@@ -167,44 +185,44 @@ class ForceDiagram(Diagram):
                 e_v.append(v)
         return list(set(e_v))
 
-    def compute_constraints(self, form, M):
-        r"""Computes the form diagram constraints used
-        in compas_bi_ags.bi_ags.graphstatics.form_update_from_force_direct
+    # def compute_constraints(self, form, M):
+    #     r"""Computes the form diagram constraints used
+    #     in compas_bi_ags.bi_ags.graphstatics.form_update_from_force_direct
 
-        Parameters
-        ----------
-        form : compas_ags.diagrams.formdiagram.FormDiagram
-            The form diagram to update.
-        M
-            The matrix described in compas_bi_ags.bi_ags.graphstatics.form_update_from_force_direct
-        """
-        import numpy as np
-        nr_col_jac = M.shape[1]
-        constraint_rows = np.zeros((0, M.shape[1]))
-        residual = np.zeros((0, 1))
-        vcount = form.number_of_vertices()
+    #     Parameters
+    #     ----------
+    #     form : compas_ags.diagrams.formdiagram.FormDiagram
+    #         The form diagram to update.
+    #     M
+    #         The matrix described in compas_bi_ags.bi_ags.graphstatics.form_update_from_force_direct
+    #     """
+    #     import numpy as np
+    #     nr_col_jac = M.shape[1]
+    #     constraint_rows = np.zeros((0, M.shape[1]))
+    #     residual = np.zeros((0, 1))
+    #     vcount = form.number_of_vertices()
 
-        # Currently this computes two constraints per fixed vertex in the form diagram.
-        for i, (key, attr) in enumerate(form.vertices(True)):
-            if not attr['is_fixed']:
-                continue
+    #     # Currently this computes two constraints per fixed vertex in the form diagram.
+    #     for i, (key, attr) in enumerate(form.vertices(True)):
+    #         if not attr['is_fixed']:
+    #             continue
 
-            # Handle x
-            constraint_jac_row = np.zeros(
-                (1, nr_col_jac))  # Added row for jacobian
-            # Lock horizontal position
-            constraint_jac_row[0, i] = 1
-            constraint_rows = np.vstack((constraint_rows, constraint_jac_row))
-            residual = np.vstack((residual, attr['x']))
+    #         # Handle x
+    #         constraint_jac_row = np.zeros(
+    #             (1, nr_col_jac))  # Added row for jacobian
+    #         # Lock horizontal position
+    #         constraint_jac_row[0, i] = 1
+    #         constraint_rows = np.vstack((constraint_rows, constraint_jac_row))
+    #         residual = np.vstack((residual, attr['x']))
 
-            # Handle y
-            constraint_jac_row = np.zeros(
-                (1, nr_col_jac))  # Added row for jacobian
-            # Lock horizontal position
-            constraint_jac_row[0, i+vcount] = 1
-            constraint_rows = np.vstack((constraint_rows, constraint_jac_row))
-            residual = np.vstack((residual, attr['y']))
-        return constraint_rows, residual
+    #         # Handle y
+    #         constraint_jac_row = np.zeros(
+    #             (1, nr_col_jac))  # Added row for jacobian
+    #         # Lock horizontal position
+    #         constraint_jac_row[0, i+vcount] = 1
+    #         constraint_rows = np.vstack((constraint_rows, constraint_jac_row))
+    #         residual = np.vstack((residual, attr['y']))
+    #     return constraint_rows, residual
 
 
 # ==============================================================================

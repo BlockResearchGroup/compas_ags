@@ -18,8 +18,10 @@ Viewer
 
    
       ~Viewer.__init__
+      ~Viewer.check_edge_pairs
       ~Viewer.draw_force
       ~Viewer.draw_form
+      ~Viewer.find_force_ind
       ~Viewer.save
       ~Viewer.setup
       ~Viewer.show

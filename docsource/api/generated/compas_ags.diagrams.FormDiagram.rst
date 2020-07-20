@@ -23,7 +23,6 @@ FormDiagram
       ~FormDiagram.area
       ~FormDiagram.bounding_box
       ~FormDiagram.bounding_box_xy
-      ~FormDiagram.breakpoints
       ~FormDiagram.centroid
       ~FormDiagram.clear
       ~FormDiagram.collapse_edge
@@ -32,6 +31,7 @@ FormDiagram
       ~FormDiagram.constraints
       ~FormDiagram.copy
       ~FormDiagram.cull_vertices
+      ~FormDiagram.cut
       ~FormDiagram.delete_face
       ~FormDiagram.delete_vertex
       ~FormDiagram.dual
@@ -40,6 +40,8 @@ FormDiagram
       ~FormDiagram.edge_coordinates
       ~FormDiagram.edge_direction
       ~FormDiagram.edge_faces
+      ~FormDiagram.edge_force
+      ~FormDiagram.edge_forcedensity
       ~FormDiagram.edge_length
       ~FormDiagram.edge_midpoint
       ~FormDiagram.edge_point
@@ -47,6 +49,7 @@ FormDiagram
       ~FormDiagram.edges
       ~FormDiagram.edges_attribute
       ~FormDiagram.edges_attributes
+      ~FormDiagram.edges_on_boundaries
       ~FormDiagram.edges_on_boundary
       ~FormDiagram.edges_where
       ~FormDiagram.edges_where_predicate
@@ -129,6 +132,7 @@ FormDiagram
       ~FormDiagram.is_valid
       ~FormDiagram.is_vertex_connected
       ~FormDiagram.is_vertex_on_boundary
+      ~FormDiagram.join
       ~FormDiagram.key_gkey
       ~FormDiagram.key_index
       ~FormDiagram.leaves
@@ -137,9 +141,7 @@ FormDiagram
       ~FormDiagram.number_of_faces
       ~FormDiagram.number_of_vertices
       ~FormDiagram.q
-      ~FormDiagram.set_edge_force
-      ~FormDiagram.set_edge_force_by_index
-      ~FormDiagram.set_edge_forcedensity
+      ~FormDiagram.quads_to_triangles
       ~FormDiagram.set_fixed
       ~FormDiagram.smooth_area
       ~FormDiagram.smooth_centroid
@@ -161,6 +163,7 @@ FormDiagram
       ~FormDiagram.to_trimesh
       ~FormDiagram.to_vertices_and_faces
       ~FormDiagram.transform
+      ~FormDiagram.transform_numpy
       ~FormDiagram.transformed
       ~FormDiagram.unify_cycles
       ~FormDiagram.unset_edge_attribute

@@ -27,10 +27,10 @@ ForceDiagram
       ~ForceDiagram.centroid
       ~ForceDiagram.clear
       ~ForceDiagram.collapse_edge
-      ~ForceDiagram.compute_constraints
       ~ForceDiagram.connected_components
       ~ForceDiagram.copy
       ~ForceDiagram.cull_vertices
+      ~ForceDiagram.cut
       ~ForceDiagram.delete_face
       ~ForceDiagram.delete_vertex
       ~ForceDiagram.dual
@@ -46,6 +46,7 @@ ForceDiagram
       ~ForceDiagram.edges
       ~ForceDiagram.edges_attribute
       ~ForceDiagram.edges_attributes
+      ~ForceDiagram.edges_on_boundaries
       ~ForceDiagram.edges_on_boundary
       ~ForceDiagram.edges_where
       ~ForceDiagram.edges_where_predicate
@@ -125,6 +126,7 @@ ForceDiagram
       ~ForceDiagram.is_valid
       ~ForceDiagram.is_vertex_connected
       ~ForceDiagram.is_vertex_on_boundary
+      ~ForceDiagram.join
       ~ForceDiagram.key_gkey
       ~ForceDiagram.key_index
       ~ForceDiagram.normal
@@ -132,6 +134,7 @@ ForceDiagram
       ~ForceDiagram.number_of_faces
       ~ForceDiagram.number_of_vertices
       ~ForceDiagram.ordered_edges
+      ~ForceDiagram.quads_to_triangles
       ~ForceDiagram.set_anchor
       ~ForceDiagram.set_fixed
       ~ForceDiagram.smooth_area
@@ -154,12 +157,12 @@ ForceDiagram
       ~ForceDiagram.to_trimesh
       ~ForceDiagram.to_vertices_and_faces
       ~ForceDiagram.transform
+      ~ForceDiagram.transform_numpy
       ~ForceDiagram.transformed
       ~ForceDiagram.unify_cycles
       ~ForceDiagram.unset_edge_attribute
       ~ForceDiagram.unset_face_attribute
       ~ForceDiagram.unset_vertex_attribute
-      ~ForceDiagram.update
       ~ForceDiagram.update_default_edge_attributes
       ~ForceDiagram.update_default_face_attributes
       ~ForceDiagram.update_default_vertex_attributes

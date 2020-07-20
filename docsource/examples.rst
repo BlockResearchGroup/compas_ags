@@ -7,4 +7,4 @@ Examples
    :titlesonly:
    :glob:
 
-   examples/*
+   examples/ags/*

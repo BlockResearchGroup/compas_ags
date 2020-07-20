@@ -28,6 +28,7 @@ class FormArtist(MeshArtist):
 
     Attributes
     ----------
+    form : :class:`compas_ags.diagrams.FormDiagram`
     settings : dict
         Visualisation settings.
     guids : dict
@@ -87,13 +88,39 @@ class FormArtist(MeshArtist):
         self.mesh = form
 
     def clear(self):
+        """Clear all objects previously drawn by this artist.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
         for name in list(self.guids.keys()):
             guids = list(self.guids[name].values())
             compas_rhino.delete_objects(guids)
             del self.guids[name]
 
     def draw(self):
-        """Draw the base form diagram."""
+        """Draw the base form diagram.
+
+        The visible components, display properties and visual style of the form diagram
+        drawn by this method can be fully customised using the configuration items
+        in the settings dict: ``FormArtist.settings``.
+
+        The method will clear the scene of any objects it has previously drawn
+        and keep track of any newly created objects using their GUID.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+        """
         self.clear()
         self.clear_layer()
 
