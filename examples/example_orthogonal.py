@@ -1,10 +1,3 @@
-
-"""Calculate optimum solution of an orthogonal grid and visualise the result using a form and force diagram.
-
-author:  
-email:  
-
-"""
 import random
 
 import compas
@@ -33,8 +26,10 @@ force = ForceDiagram.from_formdiagram(form)
 # ------------------------------------------------------------------------------
 # fix boundary vertices
 form.vertices_attribute('is_fixed', True, keys=form.leaves())
+
 # get indices of independent edges
 ind = graphstatics.form_identify_dof(form)[2]
+
 # apply a random force density between 2 and 20 to independent edges
 for u, v in ind:
     form.edge_attributes((u, v), ('is_ind', 'q'), (True, random.choice(range(2, 20))))

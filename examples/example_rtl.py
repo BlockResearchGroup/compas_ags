@@ -82,7 +82,7 @@ for u, v in force.edges():
 #   4. force diagram manipulation and modify the form diagram
 # ------------------------------------------------------------------------------
 # modify the geometry of the force diagram
-force.vertex[4]['x'] -= 5.0
+force.vertex[4]['x'] -= 8.0
 
 # update the formdiagram
 graphstatics.form_update_from_force(form, force, kmax=100)

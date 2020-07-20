@@ -19,6 +19,7 @@ Diagrams
 .. autosummary::
     :toctree: generated/
 
+    Diagram
     FormDiagram
     ForceDiagram
 

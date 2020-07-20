@@ -6,35 +6,50 @@ from compas.datastructures import mesh_dual
 from compas_ags.diagrams import Diagram
 
 
-__author__ = ['Tom Van Mele', 'Vedad Alic']
-__email__ = ['<vanmelet@ethz.ch>', '<vedad.alic@construction.lth.se>']
-
-
-__all__ = ['ForceDiagram', 
-            ]
+__all__ = ['ForceDiagram']
 
 
 class ForceDiagram(Diagram):
-    """"""
+    """Diagram for representing the force diagram in Graphic Statics.
+
+    Parameters
+    ----------
+    None
+
+    Attributes
+    ----------
+    dual : :class:`compas_ags.diagrams.FormDiagram`
+        The dual of the force diagram is a form diagram.
+
+    Notes
+    -----
+    The force diagram has only 1 constructor function: ``ForceDiagram.from_formdiagram``
+
+    Examples
+    --------
+    >>> from compas_ags.diagrams import FormGraph
+    >>> from compas_ags.diagrams import FormDiagram
+    >>> from compas_ags.diagrams import ForceDiagram
+
+    >>> graph = FormGraph.from_lines(...)
+    >>> form = FormDiagram.from_graph(graph)
+    >>> force = ForceDiagram.from_formdiagram(form)
+    >>> force.dual is form
+    True
+    """
 
     def __init__(self):
         super(ForceDiagram, self).__init__()
         self.attributes.update({
-            'name': 'ForceDiagram',
-            'color.vertex': (255, 255, 255),
-            'color.edge': (200, 200, 200),
-            'color.face': (0, 255, 255),
-        })
+            'name': 'ForceDiagram'})
         self.update_default_vertex_attributes({
             'is_fixed': False,
             'is_anchor': False,
-            'is_param': False,
-        })
+            'is_param': False})
         self.update_default_edge_attributes({
             'l': 0.0,
             'lmin': 1e-7,
-            'lmax': 1e+7,
-        })
+            'lmax': 1e+7})
 
     # --------------------------------------------------------------------------
     # Constructors
@@ -42,7 +57,20 @@ class ForceDiagram(Diagram):
 
     @classmethod
     def from_formdiagram(cls, formdiagram):
-        return mesh_dual(formdiagram, cls)
+        """Construct a force diagram from a form diagram.
+
+        Parameters
+        ----------
+        formdiagram : :class:`compas_tna.diagrams.FormDiagram`
+            The form diagram.
+
+        Returns
+        -------
+        :class:``
+        """
+        forcediagram = mesh_dual(formdiagram, cls)
+        forcediagram.dual = formdiagram
+        return forcediagram
 
     # --------------------------------------------------------------------------
     # Convenience functions for retrieving attributes of the force diagram.
@@ -178,19 +206,10 @@ class ForceDiagram(Diagram):
             residual = np.vstack((residual, attr['y']))
         return constraint_rows, residual
 
-    # --------------------------------------------------------------------------
-    # AGS functions
-    # --------------------------------------------------------------------------
-
-    def update(self, formdiagram):
-        from compas_ags.ags import force_update_from_form
-        force_update_from_form(self, formdiagram)
-
 
 # ==============================================================================
-# Debugging
+# Main
 # ==============================================================================
 
 if __name__ == '__main__':
-
     pass

@@ -17,10 +17,6 @@ from scipy.linalg import lstsq
 from compas.numerical import normalizerow
 
 
-__author__ = ['Tom Van Mele']
-__email__ = 'vanmelet@ethz.ch'
-
-
 __all__ = [
     'update_q_from_qind',
     'update_form_from_force'
@@ -152,8 +148,8 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
 
         # in order for the two diagrams to have parallel corresponding edges,
         # each free vertex location of the form diagram is computed as the intersection
-        # of the connected line. each of these lines is based at the corresponding
-        # connected neighbouring vertex and takne parallel to the corresponding
+        # of the connected lines. each of these lines is based at the corresponding
+        # connected neighbouring vertex and taken parallel to the corresponding
         # edge in the force diagram.
         # the intersection is the point that minimises the distance to all connected
         # lines.

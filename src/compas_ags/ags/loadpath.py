@@ -4,25 +4,17 @@ from __future__ import division
 
 import sys
 
-try:
-    from numpy import array
-    from numpy import float64
+from numpy import array
+from numpy import float64
 
-    from scipy.optimize import minimize
-except ImportError:
-    if 'ironpython' not in sys.version.lower():
-        raise
+from scipy.optimize import minimize
 
 from compas.geometry import angle_vectors_xy
 
 from compas.numerical import connectivity_matrix
 from compas.numerical import normrow
 
-from compas_ags.ags import update_form_from_force
-
-
-__author__ = ['Tom Van Mele', 'Andrew Liew']
-__email__ = 'vanmelet@ethz.ch'
+from compas_ags.ags.core import update_form_from_force
 
 
 __all__ = [
@@ -49,17 +41,16 @@ def compute_loadpath(form, force):
     -------
     float
         The internal work done by the structure.
-
-    See Also
-    --------
-    :func:`compute_internal_work`
-
     """
     return compute_internal_work(form, force)
 
 
 def compute_external_work(form, force):
     """Compute the external work of a structure.
+
+    The external work done by a structure is equal to the work done by the external
+    forces. This is equal to the sum of the dot products of the force vectors and
+    the vectors defined by the force application point and a fixed arbitrary point.
 
     Parameters
     ----------
@@ -73,25 +64,9 @@ def compute_external_work(form, force):
     float
         The external work done by the structure.
 
-    Notes
-    -----
-    The external work done by a structure is equal to the work done by the external
-    forces. This is equal to the sum of the dot products of the force vectors and
-    the vectors defined by the force application point and a fixed arbitrary point.
-
-    References
-    ----------
-    ...
-
-    See Also
-    --------
-    :func:`compute_internal_work`
-
     Examples
     --------
-    .. code-block:: python
-
-        #
+    >>>
 
     """
     k_i = form.key_index()
@@ -135,23 +110,9 @@ def compute_internal_work(form, force):
     float
         The internal work done by the structure.
 
-    Notes
-    -----
-    ...
-
-    References
-    ----------
-    ...
-
-    See Also
-    --------
-    :func:`compute_external_work`
-
     Examples
     --------
-    .. code-block:: python
-
-        #
+    >>>
 
     """
     k_i = form.key_index()
@@ -189,23 +150,9 @@ def compute_internal_work_tension(form, force):
     float
         The internal work done by the tensile forces in a structure.
 
-    Notes
-    -----
-    ...
-
-    References
-    ----------
-    ...
-
-    See Also
-    --------
-    :func:`compute_internal_work_compression`
-
     Examples
     --------
-    .. code-block:: python
-
-        #
+    >>>
 
     """
     k_i = form.key_index()
@@ -245,23 +192,9 @@ def compute_internal_work_compression(form, force):
     float
         The internal work done by the compressive forces in a structure.
 
-    Notes
-    -----
-    ...
-
-    References
-    ----------
-    ...
-
-    See Also
-    --------
-    :func:`compute_internal_work_tension`
-
     Examples
     --------
-    .. code-block:: python
-
-        #
+    >>>
 
     """
     k_i = form.key_index()

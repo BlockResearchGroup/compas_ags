@@ -38,7 +38,6 @@ class ForceArtist(MeshArtist):
 
     def __init__(self, force, form=None, layer=None, scale_diagram=True):
         super(ForceArtist, self).__init__(force, layer=layer)
-
         self.settings.update({
             'color.anchor':(255, 0, 0)
         })
@@ -46,7 +45,6 @@ class ForceArtist(MeshArtist):
         self.form = form
         self.scale_diagram = scale_diagram
         self.scale = self.calculate_scale()
-
 
     @property
     def force(self):

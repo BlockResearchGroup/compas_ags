@@ -24,9 +24,7 @@ Artists
     ForceArtist
 
 """
-from __future__ import print_function
 from __future__ import absolute_import
-from __future__ import division
 
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
@@ -39,9 +37,6 @@ from .formobject import FormObject
 from .scene import Scene
 from .scene import SceneObject
 
-# from .diagramhelper import *
-# from .modify_diagram import *
-# from .conduit import *
 
 SceneObject.register(FormDiagram, FormObject, FormArtist)
 

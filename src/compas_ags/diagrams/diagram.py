@@ -32,6 +32,7 @@ class Diagram(Mesh):
 
     def __init__(self):
         super(Diagram, self).__init__()
+        self.dual = None
 
     # --------------------------------------------------------------------------
     # additional accessors

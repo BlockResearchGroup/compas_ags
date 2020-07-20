@@ -15,8 +15,8 @@ class FormGraph(Network):
         self.is_2d()
 
     def is_2d(self):
-        for key in self.nodes():    
-            if self.node_attribute(key, 'z') != 0.0 : 
+        for key in self.nodes():
+            if self.node_attribute(key, 'z') != 0.0 :
                 print('Node %s not in xy plane. It will be projected to xy plane' % key)
                 self.node_attribute(key, 'z', 0.0)
         return True
@@ -27,5 +27,4 @@ class FormGraph(Network):
 # ==============================================================================
 
 if __name__ == '__main__':
-    network = Network()
-    formgraph = FormGraph()
+    pass

@@ -1,10 +1,3 @@
-"""Optimise the loadpath of a truss using the parameters of the force domain and
-visualise the result using a form and force diagram.
-
-author:  
-email:  
-
-"""
 import compas
 import compas_ags
 
@@ -82,15 +75,14 @@ force = ForceDiagram.from_formdiagram(form)
 
 
 # ------------------------------------------------------------------------------
-#   2. assign applied loads
+#   2. assign applied loads to bottom chord
 # ------------------------------------------------------------------------------
-# apply loads to the bottom chord
-index_uv = form.index_uv()
-ind = [4, 7, 10, 13, 16] 
-for index in ind:
-    u, v = index_uv[index]
-    form.edge_attribute((u, v), 'is_ind', True)
-    form.edge_attribute((u, v), 'q', 1.0)
+
+edges = [(8, 1), (9, 2), (10, 3), (11, 4), (12, 5)]
+
+for edge in edges:
+    form.edge_attribute(edge, 'is_ind', True)
+    form.edge_attribute(edge, 'q', 1.0)
 
 # update force densities of form and force diagram
 graphstatics.form_update_q_from_qind(form)
@@ -120,12 +112,11 @@ force.vertex_attributes(7, 'xy', [-2, -2.5])
 
 # forces in members of top chord and connecting struts are force domain parameters
 force.vertices_attribute('is_param', True, keys=[7, 8, 9, 10, 11, 12])
+
 # fix boundary vertices, the nodes of the bottom chord
 form.vertices_attribute('is_fixed', True, keys=[0, 1, 2, 3, 4, 5, 6])
 
-# update force and form diagrams
-graphstatics.form_update_from_force(form, force)
-# optimize the loadpath and output the optimal distribution of forces that 
+# optimize the loadpath and output the optimal distribution of forces that
 # results in overall minimum-volumn solution for given form diagram
 loadpath.optimise_loadpath(form, force)
 
@@ -143,5 +134,4 @@ viewer.draw_force(
     vertexlabel={key: str(key) for key in force.vertices()},
     vertexsize=0.2)
 
-# viewer.save('C:\\Users\\tomvm\\Code\\__temp\\lpopt.png', dpi=300)
 viewer.show()

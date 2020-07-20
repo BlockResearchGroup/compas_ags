@@ -1,18 +1,12 @@
-"""Compute the equilibrium of a simple statically determined system and
-visualise the result using a form and force diagram.
-
-author: Tom Van Mele
-email: vanmelet@ethz.ch
-
-"""
 import compas
 import compas_ags
 
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
-from compas_ags.viewers import Viewer
 from compas_ags.ags import graphstatics
+
+from compas_ags.viewers import Viewer
 
 
 # ------------------------------------------------------------------------------
@@ -40,7 +34,7 @@ graphstatics.force_update_from_form(force, form)
 # ------------------------------------------------------------------------------
 #   3. display force and form diagrams
 # ------------------------------------------------------------------------------
-viewer = Viewer(form, force, delay_setup=False, figsize=(8, 5))
+viewer = Viewer(form, force, delay_setup=False, figsize=(9, 6))
 
 left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]

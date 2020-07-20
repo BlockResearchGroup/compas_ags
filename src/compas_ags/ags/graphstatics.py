@@ -33,10 +33,6 @@ from compas_ags.ags.core import update_q_from_qind
 from compas_ags.ags.core import update_form_from_force
 
 
-__author__ = ['Tom Van Mele']
-__email__ = 'vanmelet@ethz.ch'
-
-
 __all__ = [
     'form_identify_dof',
     'form_count_dof',

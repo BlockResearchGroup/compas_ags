@@ -7,10 +7,6 @@ from compas.datastructures import network_find_cycles
 from compas_ags.diagrams import Diagram
 
 
-__author__ = ['Tom Van Mele']
-__email__ = 'vanmelet@ethz.ch'
-
-
 __all__ = ['FormDiagram']
 
 
@@ -188,36 +184,8 @@ class FormDiagram(Diagram):
 
 
 # ==============================================================================
-# Debugging
+# Main
 # ==============================================================================
 
 if __name__ == '__main__':
-
-    import compas_ags
-
-    from compas_plotters import NetworkPlotter
-
-    form = FormDiagram.from_obj(compas_ags.get('paper/fink.obj'))
-
-    lines = []
-    for u, v in form.edges():
-        lines.append({
-            'start': form.vertex_coordinates(u),
-            'end': form.vertex_coordinates(v),
-            'color': '#cccccc',
-            'width': 0.5,
-        })
-
-    form.identify_fixed()
-
-    vcolor = {key: '#ff0000' for key in form.fixed()}
-    vlabel = {key: key for key in form.vertices()}
-    elabel = {key: str(index) for index, key in enumerate(form.edges())}
-
-    plotter = NetworkPlotter(form, figsize=(10.0, 7.0), fontsize=8)
-
-    plotter.draw_lines(lines)
-    plotter.draw_vertices(facecolor=vcolor, text=vlabel, radius=0.3)
-    plotter.draw_edges(text=elabel)
-
-    plotter.show()
+    pass
