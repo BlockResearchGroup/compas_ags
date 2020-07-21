@@ -164,13 +164,14 @@ def form_identify_dof(form):
     fixed = form.leaves()
     fixed = [k_i[key] for key in fixed]
     free = list(set(range(vcount)) - set(fixed))
-    ind = [uv_index[key] for key in form.ind()]
+    _ind = form.ind()
+    ind = [uv_index[key] for key in _ind]
     dep = list(set(range(ecount)) - set(ind))
     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
     xy = array(form.xy(), dtype=float64).reshape((-1, 2))
     q = array(form.q(), dtype=float64).reshape((-1, 1))
-    C = connectivity_matrix(edges, 'array')
-    E = equilibrium_matrix(C, xy, free, 'array')
+    C = connectivity_matrix(edges, 'csr')
+    E = equilibrium_matrix(C, xy, free, 'csr')
 
     k, m = dof(E)
     ind = nonpivots(rref(E))

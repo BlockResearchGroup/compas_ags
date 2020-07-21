@@ -33,5 +33,6 @@ from .formartist import *
 from .forceartist import *
 from .modify_diagram import *
 from .conduit import *
+from .subd import *
 
 __all__ = [name for name in dir() if not name.startswith('_')]

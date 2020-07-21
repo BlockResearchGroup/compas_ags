@@ -104,14 +104,6 @@ def subdivide_force_tri(form, force):
             force.insert_vertex(fkey)
 
             fkeys_to_del.append(fkey)
-    #         x, y, z = subd.face_centroid(fkey)
-    #         f_cen_key = force.add_vertex(x=x, y=y, z=z)
-    #         for u, v in subd.face_halfedges(fkey):
-    #             force.add_face([u, v, f_cen_key], ori_fkey=fkey)
-    
-    # # delete the original faces
-    # for fkey_to_del in fkeys_to_del:
-    #     force.delete_face(fkey_to_del)
     
     print(list(force.edges()), 'edges')
     return fkeys_to_del
