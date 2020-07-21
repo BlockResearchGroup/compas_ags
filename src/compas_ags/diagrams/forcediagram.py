@@ -41,7 +41,8 @@ class ForceDiagram(Diagram):
     def __init__(self):
         super(ForceDiagram, self).__init__()
         self.attributes.update({
-            'name': 'ForceDiagram'})
+            'name': 'ForceDiagram',
+            'anchor': None})
         self.update_default_vertex_attributes({
             'is_fixed': False,
             'is_anchor': False,
@@ -50,6 +51,16 @@ class ForceDiagram(Diagram):
             'l': 0.0,
             'lmin': 1e-7,
             'lmax': 1e+7})
+
+    @property
+    def anchor(self):
+        self.attributes['anchor'] = next(self.vertices())
+        return self.attributes['anchor']
+
+    @anchor.setter
+    def anchor(self, anchor):
+        if anchor in self.vertices():
+            self.attributes['anchor'] = anchor
 
     # --------------------------------------------------------------------------
     # Constructors
@@ -94,32 +105,32 @@ class ForceDiagram(Diagram):
         """
         return list(self.vertices_where({'is_fixed': True}))
 
-    def anchor(self):
-        """Identify the anchor of the force diagram.
+    # def anchor(self):
+    #     """Identify the anchor of the force diagram.
 
-        Returns
-        -------
-        int
-        """
-        for key, attr in self.vertices(True):
-            if attr['is_anchor']:
-                return key
-        return key
+    #     Returns
+    #     -------
+    #     int
+    #     """
+    #     for key, attr in self.vertices(True):
+    #         if attr['is_anchor']:
+    #             return key
+    #     return key
 
     def set_fixed(self, keys):
         for key, attr in self.vertices(True):
             attr['is_fixed'] = key in keys
 
-    def set_anchor(self, keys):
-        """Set the anchored vertex in the force diagram
+    # def set_anchor(self, keys):
+    #     """Set the anchored vertex in the force diagram
 
-        Parameters
-        ----------
-        keys : list[int]
-            Contains the index of the vertex to anchor.
-        """
-        for key, attr in self.vertices(True):
-            attr['is_anchor'] = key in keys
+    #     Parameters
+    #     ----------
+    #     keys : list[int]
+    #         Contains the index of the vertex to anchor.
+    #     """
+    #     for key, attr in self.vertices(True):
+    #         attr['is_anchor'] = key in keys
 
     # --------------------------------------------------------------------------
     # Helpers

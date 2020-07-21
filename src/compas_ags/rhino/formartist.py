@@ -4,9 +4,9 @@ from __future__ import division
 
 # from math import fabs
 
-import compas_rhino
-# from compas.geometry import scale_vector
-# from compas.geometry import add_vectors
+from compas.geometry import scale_vector
+from compas.geometry import add_vectors
+from compas.geometry import subtract_vectors
 # from compas.utilities import i_to_green
 
 from compas_rhino.artists import MeshArtist
@@ -41,8 +41,12 @@ class FormArtist(MeshArtist):
     The edge generator of the form diagram excludes edges where ``'is_edge' is False``.
     """
 
-    def __init__(self, form, settings=None, **kwargs):
+    def __init__(self, form, scale=None, settings=None, **kwargs):
         super(FormArtist, self).__init__(form, **kwargs)
+        self._anchor_point = None
+        self._anchor_vertex = None
+        self._scale = None
+        self.scale = scale
         self.settings.update({
             'show.vertices': True,
             'show.edges': True,
@@ -76,7 +80,6 @@ class FormArtist(MeshArtist):
         })
         if settings:
             self.settings.update(settings)
-        self.guids = {}
 
     @property
     def form(self):
@@ -87,21 +90,47 @@ class FormArtist(MeshArtist):
     def form(self, form):
         self.mesh = form
 
-    def clear(self):
-        """Clear all objects previously drawn by this artist.
+    @property
+    def anchor_point(self):
+        if not self._anchor_point:
+            return self.form.vertex_attributes(self.anchor_vertex, 'xyz')
+        return self._anchor_point
 
-        Parameters
-        ----------
-        None
+    @anchor_point.setter
+    def anchor_point(self, anchor_point):
+        self._anchor_point = anchor_point
 
-        Returns
-        -------
-        None
-        """
-        for name in list(self.guids.keys()):
-            guids = list(self.guids[name].values())
-            compas_rhino.delete_objects(guids)
-            del self.guids[name]
+    @property
+    def anchor_vertex(self):
+        if self._anchor_vertex is None:
+            self._anchor_vertex = next(self.form.vertices())
+        return self._anchor_vertex
+
+    @anchor_vertex.setter
+    def anchor_vertex(self, anchor_vertex):
+        if anchor_vertex in self.form.vertices():
+            self._anchor_vertex = anchor_vertex
+
+    @property
+    def scale(self):
+        if self._scale is None:
+            return 1.0
+        return self._scale
+
+    @scale.setter
+    def scale(self, scale):
+        self._scale = scale
+
+    @property
+    def vertex_xyz(self):
+        vertex_xyz = {}
+        anchor_xyz = self.form.vertex_attributes(self.anchor_vertex, 'xyz')
+        origin = self.anchor_point
+        for vertex in self.form.vertices():
+            xyz = self.form.vertex_attributes(vertex, 'xyz')
+            vector = subtract_vectors(xyz, anchor_xyz)
+            vertex_xyz[vertex] = add_vectors(origin, scale_vector(vector, self.scale))
+        return vertex_xyz
 
     def draw(self):
         """Draw the form diagram.
@@ -123,32 +152,36 @@ class FormArtist(MeshArtist):
         """
         self.clear()
         self.clear_layer()
-
+        # vertices
         if self.settings['show.vertices']:
             color = {}
             color.update({vertex: self.settings['color.vertices'] for vertex in self.form.vertices()})
-            guids = self.draw_vertices(color=color)
-            self.guids['vertices'] = dict(zip(self.form.vertices(), guids))
-
+            keys = list(self.form.vertices())
+            guids = self.draw_vertices(keys=keys, color=color)
+            self.guid_vertex = zip(guids, keys)
+        # vertex labels
         if self.settings['show.vertexlabels']:
+            keys = list(self.form.vertices())
             guids = self.draw_vertexlabels()
-            self.guids['vertexlabels'] = dict(zip(self.form.vertices(), guids))
-
+            self.guid_vertexlabel = zip(guids, keys)
+        # edges
         if self.settings['show.edges']:
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.form.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.form.external()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.form.edges_where({'is_external': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.form.edges_where({'is_ind': True})})
-            guids = self.draw_edges(color=color)
-            self.guids['edges'] = dict(zip(self.form.edges(), guids))
-
+            keys = list(self.form.edges())
+            guids = self.draw_edges(keys=keys, color=color)
+            self.guid_edge = zip(guids, keys)
+        # edge labels
         if self.settings['show.edgelabels']:
             text = {edge: index for index, edge in enumerate(self.form.edges())}
             color.update({edge: self.settings['color.edges'] for edge in self.form.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.form.external()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.form.edges_where({'is_external': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.form.edges_where({'is_ind': True})})
+            keys = list(self.form.edges())
             guids = self.draw_edgelabels(text=text, color=color)
-            self.guids['edgelabels'] = dict(zip(self.form.edges(), guids))
+            self.guid_edgelabel = zip(guids, keys)
 
     # def draw_external(self, arrow=False, scale=1.0):
     #     """Draw the symbols for the external forces as an overlay of the edges.

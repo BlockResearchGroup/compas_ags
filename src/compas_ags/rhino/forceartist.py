@@ -4,6 +4,10 @@ from __future__ import division
 
 import compas_rhino
 
+from compas.geometry import scale_vector
+from compas.geometry import subtract_vectors
+from compas.geometry import add_vectors
+from compas.geometry import centroid_points
 # from compas.geometry import distance_point_point
 # from compas.utilities import i_to_rgb
 from compas.utilities import color_to_colordict
@@ -32,8 +36,8 @@ class ForceArtist(DiagramArtist):
     form : :class:`compas_ags.diagrams.FormDiagram`
     settings : dict
         Visualisation settings.
-    guids : dict
-        GUIDs of Rhino objects created by the artists.
+    anchor_point : list
+    anchor_vertex : int
     scale : float
         The scale of the diagram.
         The magnitude of force represented by an edge is ``length * scale``.
@@ -42,20 +46,22 @@ class ForceArtist(DiagramArtist):
 
     def __init__(self, force, form=None, scale=None, layer=None):
         super(ForceArtist, self).__init__(force, layer=layer)
+        self._anchor_point = None
+        self._anchor_vertex = None
         self._scale = None
         self._form = None
         self.scale = scale
         self.form = form
         self.settings.update({
             'show.vertices': True,
-            'show.vertices:is_anchor': True,
+            'show.vertices:is_anchor_point': True,
             'show.edges': True,
             'show.faces': False,
             'show.vertexlabels': True,
             'show.edgelabels': False,
             'show.facelabels': False,
             'color.vertices': (255, 255, 255),
-            'color.vertices:is_anchor': (255, 0, 0),
+            'color.vertices:is_anchor_point': (255, 0, 0),
             'color.vertices:is_fixed': (255, 0, 0),
             'color.edges': (0, 0, 0),
             'color.edges:is_ind': (255, 255, 255),
@@ -70,6 +76,25 @@ class ForceArtist(DiagramArtist):
         return self.mesh
 
     @property
+    def anchor_point(self):
+        return self._anchor_point
+
+    @anchor_point.setter
+    def anchor_point(self, anchor_point):
+        self._anchor_point = anchor_point
+
+    @property
+    def anchor_vertex(self):
+        if self._anchor_vertex is None:
+            self._anchor_vertex = next(self.force.vertices())
+        return self._anchor_vertex
+
+    @anchor_vertex.setter
+    def anchor_vertex(self, anchor_vertex):
+        if anchor_vertex in self.force.vertices():
+            self._anchor_vertex = anchor_vertex
+
+    @property
     def scale(self):
         if self._scale is None:
             self._scale = 1.0
@@ -78,6 +103,17 @@ class ForceArtist(DiagramArtist):
     @scale.setter
     def scale(self, scale):
         self._scale = scale
+
+    @property
+    def vertex_xyz(self):
+        vertex_xyz = {}
+        anchor_xyz = self.force.vertex_attributes(self.anchor_vertex, 'xyz')
+        origin = self.anchor_point
+        for vertex in self.force.vertices():
+            xyz = self.force.vertex_attributes(vertex, 'xyz')
+            vector = subtract_vectors(xyz, anchor_xyz)
+            vertex_xyz[vertex] = add_vectors(origin, scale_vector(vector, self.scale))
+        return vertex_xyz
 
     # def update_edge_force(self):
     #     (u, v) = list(self.force.edges())[0] # get an edge
@@ -162,24 +198,22 @@ class ForceArtist(DiagramArtist):
         list
             The GUIDs of the created Rhino objects.
         """
-        keys = keys or list(self.force.vertices())
-        colordict = color_to_colordict(color,
-                                       keys,
-                                       default=self.settings['color.vertices'],
-                                       colorformat='rgb',
-                                       normalize=False)
-        anchor = self.force.anchor()
-        dx, dy = self.force.vertex_coordinates(anchor, 'xy')
+        vertices = keys or list(self.force.vertices())
+        vertex_color = color_to_colordict(color,
+                                          vertices,
+                                          default=self.settings['color.vertices'],
+                                          colorformat='rgb',
+                                          normalize=False)
         points = []
-        for key in keys:
-            x, y = self.force.vertex_attributes(key, 'xy')
+        vertex_xyz = self.vertex_xyz
+        for vertex in vertices:
             points.append({
-                'pos': [dx + (x - dx) / self.scale, dy + (y - dy) / self.scale, 0],
-                'name': "{}.vertex.{}".format(self.force.name, key),
-                'color': colordict[key]
+                'pos': vertex_xyz[vertex],
+                'name': "{}.vertex.{}".format(self.force.name, vertex),
+                'color': vertex_color[vertex]
             })
         guids = compas_rhino.draw_points(points, layer=self.layer, clear=False, redraw=False)
-        self.guid_vertex = zip(guids, keys)
+        self.guid_vertex = zip(guids, vertices)
         return guids
 
     def draw_vertexlabels(self, text=None, color=None):
@@ -199,33 +233,31 @@ class ForceArtist(DiagramArtist):
             The GUIDs of the created Rhino objects.
         """
         if text is None:
-            textdict = {key: str(key) for key in self.force.vertices()}
+            vertex_text = {vertex: str(vertex) for vertex in self.force.vertices()}
         elif isinstance(text, dict):
-            textdict = text
-        elif text == 'key':
-            textdict = {key: str(key) for key in self.force.vertices()}
+            vertex_text = text
+        elif text == 'vertex':
+            vertex_text = {vertex: str(vertex) for vertex in self.force.vertices()}
         elif text == 'index':
-            textdict = {key: str(index) for index, key in enumerate(self.force.vertices())}
+            vertex_text = {vertex: str(index) for index, vertex in enumerate(self.force.vertices())}
         else:
             raise NotImplementedError
-        colordict = color_to_colordict(color,
-                                       textdict.keys(),
-                                       default=self.settings.get('color.vertices'),
-                                       colorformat='rgb',
-                                       normalize=False)
-        anchor = self.force.anchor()
-        dx, dy = self.force.vertex_coordinates(anchor, 'xy')
+        vertex_color = color_to_colordict(color,
+                                          vertex_text.keys(),
+                                          default=self.settings.get('color.vertices'),
+                                          colorformat='rgb',
+                                          normalize=False)
         labels = []
-        for key, text in iter(textdict.items()):
-            x, y = self.force.vertex_attributes(key, 'xy')
+        vertex_xyz = self.vertex_xyz
+        for vertex in vertex_text:
             labels.append({
-                'pos': [dx + (x - dx) / self.scale, dy + (y - dy) / self.scale, 0],
-                'name': "{}.vertex.label.{}".format(self.force.name, key),
-                'color': colordict[key],
-                'text': textdict[key]
+                'pos': vertex_xyz[vertex],
+                'name': "{}.vertex.label.{}".format(self.force.name, vertex),
+                'color': vertex_color[vertex],
+                'text': vertex_text[vertex]
             })
         guids = compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
-        self.guid_vertexlabel = zip(guids, textdict.keys())
+        self.guid_vertexlabel = zip(guids, vertex_text.keys())
         return guids
 
     def draw_edges(self, keys=None, color=None):
@@ -244,26 +276,23 @@ class ForceArtist(DiagramArtist):
         list
             The GUIDs of the created Rhino objects.
         """
-        keys = keys or list(self.force.edges())
-        colordict = color_to_colordict(color,
-                                       keys,
-                                       default=self.settings.get('color.edges'),
-                                       colorformat='rgb',
-                                       normalize=False)
-        anchor = self.force.anchor()
-        dx, dy = self.force.vertex_coordinates(anchor, 'xy')
+        edges = keys or list(self.force.edges())
+        edge_color = color_to_colordict(color,
+                                        edges,
+                                        default=self.settings.get('color.edges'),
+                                        colorformat='rgb',
+                                        normalize=False)
         lines = []
-        for u, v in keys:
-            u_x, u_y = self.force.vertex_attributes(u, 'xy')
-            v_x, v_y = self.force.vertex_attributes(v, 'xy')
+        vertex_xyz = self.vertex_xyz
+        for edge in edges:
             lines.append({
-                'start': [dx + (u_x - dx) / self.scale, dy + (u_y - dy) / self.scale, 0],
-                'end': [dx + (v_x - dx) / self.scale, dy + (v_y - dy) / self.scale, 0],
-                'color': colordict[(u, v)],
-                'name': "{}.edge.{}-{}".format(self.force.name, u, v)
+                'start': vertex_xyz[edge[0]],
+                'end': vertex_xyz[edge[1]],
+                'color': edge_color[edge],
+                'name': "{}.edge.{}-{}".format(self.force.name, *edge)
             })
         guids = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
-        self.guid_edge = zip(guids, keys)
+        self.guid_edge = zip(guids, edges)
         return guids
 
     def draw_edgelabels(self, text=None, color=None):
@@ -283,35 +312,33 @@ class ForceArtist(DiagramArtist):
             The GUIDs of the created Rhino objects.
         """
         if text is None:
-            textdict = {(u, v): "{}-{}".format(u, v) for u, v in self.force.edges()}
+            edge_text = {(u, v): "{}-{}".format(u, v) for u, v in self.force.edges()}
         elif isinstance(text, dict):
-            textdict = text
+            edge_text = text
         else:
             raise NotImplementedError
-        colordict = color_to_colordict(color,
-                                       textdict.keys(),
-                                       default=self.settings.get('color.edges'),
-                                       colorformat='rgb',
-                                       normalize=False)
-        anchor = self.force.anchor()
-        dx, dy = self.force.vertex_coordinates(anchor, 'xy')
+
+        edge_color = color_to_colordict(color,
+                                        edge_text.keys(),
+                                        default=self.settings.get('color.edges'),
+                                        colorformat='rgb',
+                                        normalize=False)
         labels = []
-        for (u, v), text in iter(textdict.items()):
-            u_x, u_y = self.force.vertex_attributes(u, 'xy')
-            v_x, v_y = self.force.vertex_attributes(v, 'xy')
-            s = [dx + (u_x - dx) / self.scale, dy + (u_y - dy) / self.scale, 0]
-            e = [dx + (v_x - dx) / self.scale, dy + (v_y - dy) / self.scale, 0]
+        vertex_xyz = self.vertex_xyz
+        for edge in edge_text:
+            s = vertex_xyz[edge[0]]
+            e = vertex_xyz[edge[1]]
             labels.append({
-                'pos': [(a + b) / 2 for a, b in zip(s, e)],
-                'name': "{}.edge.label.{}-{}".format(self.force.name, u, v),
-                'color': colordict[(u, v)],
-                'text': textdict[(u, v)]
+                'pos': [0.5 * (a + b) for a, b in zip(s, e)],
+                'name': "{}.edge.label.{}-{}".format(self.force.name, *edge),
+                'color': edge_color[edge],
+                'text': edge_text[edge]
             })
         guids = compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
-        self.guid_edgelabel = zip(guids, textdict.keys())
+        self.guid_edgelabel = zip(guids, edge_text.keys())
         return guids
 
-    def draw_faces(self, keys=None, color=None, join_faces=False):
+    def draw_faces(self, keys=None, color=None):
         """Draw the faces of the force diagram according to the drawing scale.
 
         Parameters
@@ -330,32 +357,23 @@ class ForceArtist(DiagramArtist):
         list
             The GUIDs of the created Rhino objects.
         """
-        keys = keys or list(self.force.faces())
-        colordict = color_to_colordict(color,
-                                       keys,
-                                       default=self.settings.get('color.faces'),
-                                       colorformat='rgb',
-                                       normalize=False)
-        anchor = self.force.anchor()
-        dx, dy = self.force.vertex_coordinates(anchor, 'xy')
-        faces = []
-        for fkey in keys:
-            points = self.force.face_coordinates(fkey)
-            scaled_points = [[dx + (pt[0] - dx) / self.scale, dy + (pt[1] - dy) / self.scale, 0] for pt in points]
-            faces.append({
-                'points': scaled_points,
-                'name': "{}.face.{}".format(self.force.name, fkey),
-                'color': colordict[fkey],
+        faces = keys or list(self.force.faces())
+        face_color = color_to_colordict(color,
+                                        faces,
+                                        default=self.settings.get('color.faces'),
+                                        colorformat='rgb',
+                                        normalize=False)
+        faces_ = []
+        vertex_xyz = self.vertex_xyz
+        for face in faces:
+            points = [vertex_xyz[vertex] for vertex in self.force.face_vertices(face)]
+            faces_.append({
+                'points': points,
+                'name': "{}.face.{}".format(self.force.name, face),
+                'color': face_color[face],
             })
-        guids = compas_rhino.draw_faces(faces, layer=self.layer, clear=False, redraw=False)
-        if join_faces:
-            guid = compas_rhino.rs.JoinMeshes(guids, delete_input=True)
-            compas_rhino.rs.ObjectLayer(guid, self.layer)
-            compas_rhino.rs.ObjectName(guid, '{}.mesh'.format(self.force.name))
-            if color:
-                compas_rhino.rs.ObjectColor(guid, color)
-            guids = [guid]
-        self.guid_face = zip(guids, keys)
+        guids = compas_rhino.draw_faces(faces_, layer=self.layer, clear=False, redraw=False)
+        self.guid_face = zip(guids, faces)
         return guids
 
     def draw_facelabels(self, text=None, color=None):
@@ -375,30 +393,28 @@ class ForceArtist(DiagramArtist):
             The GUIDs of the created Rhino objects.
         """
         if text is None:
-            textdict = {key: str(key) for key in self.force.faces()}
+            face_text = {face: str(face) for face in self.force.faces()}
         elif isinstance(text, dict):
-            textdict = text
+            face_text = text
         else:
             raise NotImplementedError
-        colordict = color_to_colordict(color,
-                                       textdict.keys(),
-                                       default=self.settings.get('color.faces'),
-                                       colorformat='rgb',
-                                       normalize=False)
-        anchor = self.force.anchor()
-        dx = self.force.vertex_coordinates(anchor)[0]
-        dy = self.force.vertex_coordinates(anchor)[1]
+        face_color = color_to_colordict(color,
+                                        face_text.keys(),
+                                        default=self.settings.get('color.faces'),
+                                        colorformat='rgb',
+                                        normalize=False)
         labels = []
-        for key, text in iter(textdict.items()):
-            cx, cy, _ = self.force.face_centroid(key)
+        vertex_xyz = self.vertex_xyz
+        for face in face_text:
+            pos = centroid_points([vertex_xyz[vertex] for vertex in self.face_vertices(face)])
             labels.append({
-                'pos': [dx + (cx - dx) / self.scale, dy + (cy - dy) / self.scale, 0],
-                'name': "{}.face.label.{}".format(self.force.name, key),
-                'color': colordict[key],
-                'text': textdict[key],
+                'pos': pos,
+                'name': "{}.face.label.{}".format(self.force.name, face),
+                'color': face_color[face],
+                'text': face_text[face],
             })
         guids = compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
-        self.guid_facelabel = zip(guids, textdict.keys())
+        self.guid_facelabel = zip(guids, face_text.keys())
         return guids
 
     # def scale_diagram(self, scale):
@@ -406,23 +422,23 @@ class ForceArtist(DiagramArtist):
     #     # be careful to use... this modify the force diagram, instead of just drawing
     #     x = self.force.vertices_attribute('x')
     #     y = self.force.vertices_attribute('y')
-    #     anchor = self.force.anchor()
-    #     dx = self.force.vertex_coordinates(anchor)[0]
-    #     dy = self.force.vertex_coordinates(anchor)[1]
+    #     anchor_point = self.force.anchor_point()
+    #     dx = self.force.vertex_coordinates(anchor_point)[0]
+    #     dy = self.force.vertex_coordinates(anchor_point)[1]
     #     for vkey, attr in self.force.vertices(True):
     #         attr['x'] = dx + (attr['x'] - dx) / scale
     #         attr['y'] = dy + (attr['y'] - dy) / scale
 
-    # def draw_anchor_vertex(self, color=None):
-    #     self.clear_anchor_vertex()
-    #     anchor = self.force.anchor()
-    #     self.clear_vertexlabels(keys=[anchor])
+    # def draw_anchor_point_vertex(self, color=None):
+    #     self.clear_anchor_point_vertex()
+    #     anchor_point = self.force.anchor_point()
+    #     self.clear_vertexlabels(keys=[anchor_point])
     #     labels = []
     #     labels.append({
-    #         'pos'  : self.force.vertex_coordinates(anchor),
-    #         'text' : str(anchor),
-    #         'color': color or self.settings.get('color.anchor'),
-    #         'name' : "{}.anchor_vertex.{}".format(self.force.name, anchor)
+    #         'pos'  : self.force.vertex_coordinates(anchor_point),
+    #         'text' : str(anchor_point),
+    #         'color': color or self.settings.get('color.anchor_point'),
+    #         'name' : "{}.anchor_point_vertex.{}".format(self.force.name, anchor_point)
     #     })
     #     compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=True)
 
@@ -452,9 +468,9 @@ class ForceArtist(DiagramArtist):
     #     else:
     #         indices = find_force_ind(self.form, self.force)
 
-    #     anchor = self.force.anchor()
-    #     dx = self.force.vertex_coordinates(anchor)[0]
-    #     dy = self.force.vertex_coordinates(anchor)[1]
+    #     anchor_point = self.force.anchor_point()
+    #     dx = self.force.vertex_coordinates(anchor_point)[0]
+    #     dy = self.force.vertex_coordinates(anchor_point)[1]
 
     #     lines = []
     #     for index, ((u, v), attr) in enumerate(self.force.edges(True)):

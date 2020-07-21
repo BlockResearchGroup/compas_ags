@@ -383,7 +383,7 @@ def force_update_from_form(force, form):
     # force diagram
     # --------------------------------------------------------------------------
     _k_i = force.key_index()
-    _known = [_k_i[force.anchor()]]
+    _known = [_k_i[force.anchor]]
     _xy = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)
     _C = connectivity_matrix(_edges, 'csr')
