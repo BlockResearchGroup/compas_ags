@@ -7,4 +7,5 @@ Examples
    :titlesonly:
    :glob:
 
-   examples/ags/*
+   examples/00_graphstatics
+   examples/01_rtl
