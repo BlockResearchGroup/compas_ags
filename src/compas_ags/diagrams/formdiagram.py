@@ -12,7 +12,7 @@ __all__ = ['FormDiagram']
 
 
 class FormDiagram(Diagram):
-    """Class representing a form diagram in (algebraic) graphic statics."""
+    """Mesh-based data structure for form diagrams in AGS."""
 
     def __init__(self):
         super(FormDiagram, self).__init__()

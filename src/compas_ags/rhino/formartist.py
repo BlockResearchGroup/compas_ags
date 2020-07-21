@@ -16,7 +16,7 @@ __all__ = ['FormArtist']
 
 
 class FormArtist(MeshArtist):
-    """Extends :class:`MeshArtist` with functionality for the visualisation of form diagrams in GS applications.
+    """Artist for form diagram in AGS.
 
     Parameters
     ----------
@@ -51,10 +51,11 @@ class FormArtist(MeshArtist):
             'show.edgelabels': False,
             'show.facelabels': False,
             'color.vertices': (255, 255, 255),
+            'color.vertices:is_fixed': (255, 0, 0),
             'color.edges': (0, 0, 0),
-            'color.faces': (210, 210, 210),
             'color.edges:is_ind': (255, 255, 255),
             'color.edges:is_external': (0, 255, 0),
+            'color.faces': (210, 210, 210),
             'color.reactions': (0, 255, 0),
             'color.residuals': (0, 255, 255),
             'color.loads': (0, 255, 0),
@@ -62,7 +63,6 @@ class FormArtist(MeshArtist):
             'color.forces': (0, 0, 255),
             'color.compression': (0, 0, 255),
             'color.tension': (255, 0, 0),
-            'color.vertices:is_fixed': (255, 0, 0),
             'scale.reaction': 1.0,
             'scale.residual': 1.0,
             'scale.load': 1.0,
@@ -104,7 +104,7 @@ class FormArtist(MeshArtist):
             del self.guids[name]
 
     def draw(self):
-        """Draw the base form diagram.
+        """Draw the form diagram.
 
         The visible components, display properties and visual style of the form diagram
         drawn by this method can be fully customised using the configuration items

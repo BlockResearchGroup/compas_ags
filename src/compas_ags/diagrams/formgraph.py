@@ -11,7 +11,7 @@ __all__ = ['FormGraph']
 
 
 class FormGraph(Network):
-    """A graph of the lines representing the geometry and connectivity of a form diagram."""
+    """A graph representing the geometry and connectivity of the lines of a form diagram."""
 
     def __init__(self):
         super(FormGraph, self).__init__()

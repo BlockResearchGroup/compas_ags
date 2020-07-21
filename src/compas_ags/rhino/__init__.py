@@ -1,9 +1,9 @@
 """
 ********************************************************************************
-compas_tna.rhino
+compas_ags.rhino
 ********************************************************************************
 
-.. currentmodule:: compas_tna.rhino
+.. currentmodule:: compas_ags.rhino
 
 Artists
 =======
@@ -12,6 +12,7 @@ Artists
     :toctree: generated/
     :nosignatures:
 
+    DiagramArtist
     FormArtist
     ForceArtist
 
@@ -37,6 +38,7 @@ from __future__ import absolute_import
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
+from .diagramartist import DiagramArtist
 from .formartist import FormArtist
 from .forceartist import ForceArtist
 

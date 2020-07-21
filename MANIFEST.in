@@ -1,8 +1,8 @@
 graft src
 
+prune .github
 prune data
 prune docs
-prune docsource
 prune examples
 prune temp
 prune tests
@@ -11,10 +11,13 @@ prune ui
 include LICENSE
 include README.md
 include AUTHORS.md
+include CHANGELOG.md
 include requirements.txt
 
 exclude requirements-dev.txt
 exclude pytest.ini .bumpversion.cfg .editorconfig
 exclude tasks.py
+exclude CONTRIBUTING.md
+exclude .gitpod.yml
 
 global-exclude *.py[cod] __pycache__ *.dylib *.nb[ic] .DS_Store

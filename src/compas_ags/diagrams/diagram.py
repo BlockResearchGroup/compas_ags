@@ -27,7 +27,7 @@ __all__ = ['Diagram']
 
 
 class Diagram(Mesh):
-    """Definition of a face network.
+    """Basic mesh-based data structure for diagrams in AGS.
     """
 
     def __init__(self):

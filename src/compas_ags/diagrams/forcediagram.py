@@ -10,7 +10,7 @@ __all__ = ['ForceDiagram']
 
 
 class ForceDiagram(Diagram):
-    """Diagram for representing the force diagram in Graphic Statics.
+    """Mesh-based data structure for force diagrams in AGS.
 
     Parameters
     ----------
