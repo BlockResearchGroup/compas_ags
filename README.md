@@ -1,5 +1,8 @@
 # compas_ags
 
+![build](https://github.com/blockresearchgroup/compas_ags/workflows/build/badge.svg)
+[![GitHub - License](https://img.shields.io/github/license/blockresearchgroup/compas_ags.svg)](https://github.com/blockresearchgroup/compas_ags)
+
 **compas_ags** is a COMPAS package for Computational Graphic Statics.
 It combines implementations of the following papers:
 
