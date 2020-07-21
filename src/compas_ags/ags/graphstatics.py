@@ -3,16 +3,10 @@ from __future__ import absolute_import
 from __future__ import division
 
 import sys
-import compas
 
 from numpy import array
-from numpy import eye
-from numpy import zeros
 from numpy import float64
-from numpy.linalg import cond
 
-from scipy.linalg import solve
-from scipy.linalg import lstsq
 from scipy.sparse import diags
 
 from compas.geometry import angle_vectors_xy
@@ -21,7 +15,6 @@ from compas.numerical import connectivity_matrix
 from compas.numerical import equilibrium_matrix
 from compas.numerical import spsolve_with_known
 from compas.numerical import normrow
-from compas.numerical import normalizerow
 from compas.numerical import dof
 from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
@@ -75,8 +68,8 @@ def form_update_q_from_qind_proxy(formdata, *args, **kwargs):
 
 
 def form_update_from_force_proxy(formdata, forcedata, *args, **kwargs):
-    form = FormDiagram.from_data(form)
-    force = ForceDiagram.from_data(force)
+    form = FormDiagram.from_data(formdata)
+    force = ForceDiagram.from_data(forcedata)
     form_update_from_force(form, force, *args, **kwargs)
     return form.to_data()
 
@@ -240,14 +233,14 @@ def form_update_q_from_qind(form):
     update_q_from_qind(E, q, dep, ind)
 
     uv = C.dot(xy)
-    l = normrow(uv)
-    f = q * l
+    lengths = normrow(uv)
+    forces = q * lengths
 
     for key, attr in form.edges_where({'is_edge': True}, True):
         index = uv_index[key]
         attr['q'] = q[index, 0]
-        attr['f'] = f[index, 0]
-        attr['l'] = l[index, 0]
+        attr['f'] = forces[index, 0]
+        attr['l'] = lengths[index, 0]
 
 
 def form_update_from_force(form, force, kmax=100):
@@ -326,10 +319,10 @@ def form_update_from_force(form, force, kmax=100):
     # --------------------------------------------------------------------------
     uv = C.dot(xy)
     _uv = _C.dot(_xy)
-    a = [angle_vectors_xy(uv[i], _uv[i], deg=True) for i in range(len(edges))]
-    l = normrow(uv)
-    _l = normrow(_uv)
-    q = _l / l
+    angles = [angle_vectors_xy(uv[i], _uv[i], deg=True) for i in range(len(edges))]
+    lengths = normrow(uv)
+    forces = normrow(_uv)
+    q = forces / lengths
     # --------------------------------------------------------------------------
     # update form diagram
     # --------------------------------------------------------------------------
@@ -339,21 +332,21 @@ def form_update_from_force(form, force, kmax=100):
         attr['y'] = xy[index, 1]
     for key, attr in form.edges(True):
         e = uv_e[key]
-        attr['l'] = l[e, 0]
-        attr['a'] = a[e]
-        if a[e] < 90:
-            attr['f'] = _l[e, 0]
+        attr['l'] = lengths[e, 0]
+        attr['a'] = angles[e]
+        if angles[e] < 90:
+            attr['f'] = forces[e, 0]
             attr['q'] = q[e, 0]
         else:
-            attr['f'] = - _l[e, 0]
+            attr['f'] = - forces[e, 0]
             attr['q'] = - q[e, 0]
     # --------------------------------------------------------------------------
     # update force diagram
     # --------------------------------------------------------------------------
     for key, attr in force.edges(True):
         e = _uv_e[key]
-        attr['a'] = a[e]
-        attr['l'] = _l[e, 0]
+        attr['a'] = angles[e]
+        attr['l'] = forces[e, 0]
 
 
 # ==============================================================================

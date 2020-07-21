@@ -70,8 +70,10 @@ class FormGraph(Network):
         if compas.IPY:
             from compas.rpc import Proxy
             proxy = Proxy('compas.datastructures')
+
             def network_embed_in_plane(network, fixed, straightline):
                 network.data = proxy.network_embed_in_plane_proxy(network.data, fixed, straightline)
+
         else:
             from compas.datastructures import network_embed_in_plane
         return network_embed_in_plane(self, fixed, straightline)

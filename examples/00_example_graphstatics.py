@@ -1,4 +1,3 @@
-import compas
 import compas_ags
 
 from compas_ags.diagrams import FormGraph
@@ -36,7 +35,7 @@ graphstatics.force_update_from_form(force, form)
 
 viewer = Viewer(form, force, delay_setup=False, figsize=(12, 7.5))
 
-left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
+left = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 
 viewer.draw_form(

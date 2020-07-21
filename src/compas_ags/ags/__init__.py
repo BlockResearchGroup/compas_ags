@@ -48,8 +48,8 @@ from __future__ import absolute_import
 import compas
 
 if not compas.IPY:
-    from .core import *
-    from .graphstatics import *
-    from .loadpath import *
+    from .core import *  # noqa: F401 F403
+    from .graphstatics import *  # noqa: F401 F403
+    from .loadpath import *  # noqa: F401 F403
 
 __all__ = [name for name in dir() if not name.startswith('_')]

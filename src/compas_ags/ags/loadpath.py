@@ -2,8 +2,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import sys
-
 from numpy import array
 from numpy import float64
 
@@ -79,8 +77,8 @@ def compute_external_work(form, force):
     external = [i for i, (u, v) in enumerate(form.edges()) if u in leaves or v in leaves]
     leaves = [k_i[key] for key in leaves]
 
-    l = normrow(C.dot(xy))
-    f = q * l
+    lengths = normrow(C.dot(xy))
+    forces = q * lengths
     w = 0
 
     for e in external:
@@ -89,7 +87,7 @@ def compute_external_work(form, force):
             sp, ep = xy[i], xy[j]
         else:
             sp, ep = xy[j], xy[i]
-        v = f[e, 0] * (ep - sp) / l[e]
+        v = forces[e, 0] * (ep - sp) / lengths[e]
         w += sp.dot(v)
 
     return w
@@ -127,12 +125,10 @@ def compute_internal_work(form, force):
     leaves = set(form.leaves())
     internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
 
-    l = normrow(C.dot(xy))
-    _l = normrow(_C.dot(_xy))
-    li = l[internal]
-    _li = _l[internal]
+    lengths = normrow(C.dot(xy))
+    forces = normrow(_C.dot(_xy))
 
-    return li.T.dot(_li)[0, 0]
+    return lengths[internal].T.dot(forces[internal])[0, 0]
 
 
 def compute_internal_work_tension(form, force):
@@ -169,12 +165,10 @@ def compute_internal_work_tension(form, force):
     internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
     tension = [i for i in internal if q[i, 0] > 0]
 
-    l = normrow(C.dot(xy))
-    _l = normrow(_C.dot(_xy))
-    li = l[tension]
-    _li = _l[tension]
+    lengths = normrow(C.dot(xy))
+    forces = normrow(_C.dot(_xy))
 
-    return li.T.dot(_li)[0, 0]
+    return lengths[tension].T.dot(forces[tension])[0, 0]
 
 
 def compute_internal_work_compression(form, force):
@@ -211,12 +205,10 @@ def compute_internal_work_compression(form, force):
     internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
     compression = [i for i in internal if q[i, 0] < 0]
 
-    l = normrow(C.dot(xy))
-    _l = normrow(_C.dot(_xy))
-    li = l[compression]
-    _li = _l[compression]
+    lengths = normrow(C.dot(xy))
+    forces = normrow(_C.dot(_xy))
 
-    return li.T.dot(_li)[0, 0]
+    return lengths[compression].T.dot(forces[compression])[0, 0]
 
 
 def optimise_loadpath(form, force, algo='COBYLA'):
@@ -287,33 +279,23 @@ def optimise_loadpath(form, force, algo='COBYLA'):
 
         update_form_from_force(xy, _xy, free, leaves, i_j, ij_e, _C)
 
-        l = normrow(C.dot(xy))
-        _l = normrow(_C.dot(_xy))
-        li = l[internal]
-        _li = _l[internal]
-        lp = li.T.dot(_li)[0, 0]
+        length = normrow(C.dot(xy))
+        force = normrow(_C.dot(_xy))
+        lp = length[internal].T.dot(force[internal])[0, 0]
 
         print(lp)
-
         return(lp)
 
     x0 = _xy[_free, 0]
-    # bounds = [(None, 0) for i in range(len(_free))]
-    res = minimize(
-        objfunc,
-        x0,
-        method=algo,
-        tol=1e-12,
-        # bounds=bounds,
-        options={'maxiter': 1000}
-    )
+
+    result = minimize(objfunc, x0, method=algo, tol=1e-12, options={'maxiter': 1000})  # noqa: F841
 
     uv = C.dot(xy)
     _uv = _C.dot(_xy)
-    a = [angle_vectors_xy(uv[i], _uv[i]) for i in range(len(edges))]
-    l = normrow(uv)
-    _l = normrow(_uv)
-    q = _l / l
+    angles = [angle_vectors_xy(uv[i], _uv[i]) for i in range(len(edges))]
+    lengths = normrow(uv)
+    forces = normrow(_uv)
+    q = forces / lengths
 
     for key, attr in form.vertices(True):
         index = k_i[key]
@@ -322,13 +304,13 @@ def optimise_loadpath(form, force, algo='COBYLA'):
 
     for (u, v), attr in form.edges(True):
         e = uv_e[(u, v)]
-        attr['l'] = l[e, 0]
-        attr['a'] = a[e]
-        if (a[e] - 3.14159) ** 2 < 0.25 * 3.14159:
-            attr['f'] = - _l[e, 0]
+        attr['l'] = lengths[e, 0]
+        attr['a'] = angles[e]
+        if (angles[e] - 3.14159) ** 2 < 0.25 * 3.14159:
+            attr['f'] = - forces[e, 0]
             attr['q'] = - q[e, 0]
         else:
-            attr['f'] = _l[e, 0]
+            attr['f'] = forces[e, 0]
             attr['q'] = q[e, 0]
 
     for key, attr in force.vertices(True):
@@ -338,8 +320,8 @@ def optimise_loadpath(form, force, algo='COBYLA'):
 
     for (u, v), attr in force.edges(True):
         e = _uv_e[(u, v)]
-        attr['a'] = a[e]
-        attr['l'] = _l[e, 0]
+        attr['a'] = angles[e]
+        attr['l'] = forces[e, 0]
 
 
 # ==============================================================================

@@ -2,12 +2,12 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-from math import fabs
+# from math import fabs
 
 import compas_rhino
-from compas.geometry import scale_vector
-from compas.geometry import add_vectors
-from compas.utilities import i_to_green
+# from compas.geometry import scale_vector
+# from compas.geometry import add_vectors
+# from compas.utilities import i_to_green
 
 from compas_rhino.artists import MeshArtist
 
@@ -84,7 +84,7 @@ class FormArtist(MeshArtist):
         return self.mesh
 
     @form.setter
-    def form(self, value):
+    def form(self, form):
         self.mesh = form
 
     def clear(self):

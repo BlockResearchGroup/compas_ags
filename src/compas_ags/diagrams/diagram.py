@@ -2,23 +2,23 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-from ast import literal_eval
+# from ast import literal_eval
 
-import compas
+# import compas
 
-from compas.files import OBJ
+# from compas.files import OBJ
 
-from compas.utilities import pairwise
-from compas.utilities import window
+# from compas.utilities import pairwise
+# from compas.utilities import window
 
-from compas.geometry import normalize_vector
-from compas.geometry import centroid_points
-from compas.geometry import centroid_polygon
-from compas.geometry import cross_vectors
-from compas.geometry import length_vector
-from compas.geometry import subtract_vectors
-from compas.geometry import normal_polygon
-from compas.geometry import area_polygon
+# from compas.geometry import normalize_vector
+# from compas.geometry import centroid_points
+# from compas.geometry import centroid_polygon
+# from compas.geometry import cross_vectors
+# from compas.geometry import length_vector
+# from compas.geometry import subtract_vectors
+# from compas.geometry import normal_polygon
+# from compas.geometry import area_polygon
 
 from compas.datastructures import Mesh
 
@@ -113,11 +113,9 @@ class Diagram(Mesh):
     # vertex geometry
     # --------------------------------------------------------------------------
 
-
     # --------------------------------------------------------------------------
     # face geometry
     # --------------------------------------------------------------------------
-
 
     # --------------------------------------------------------------------------
     # boundary

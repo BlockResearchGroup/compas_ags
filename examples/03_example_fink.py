@@ -1,7 +1,5 @@
-import compas
 import compas_ags
 
-from compas.geometry import add_vectors
 from compas.geometry import subtract_vectors
 from compas.geometry import sum_vectors
 from compas.geometry import normalize_vector
@@ -11,9 +9,6 @@ from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 
 from compas_plotters import MeshPlotter
-
-from networkx import Graph
-from networkx.drawing.layout import spring_layout
 
 # ==============================================================================
 # Construct the graph of a Fink truss.

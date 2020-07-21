@@ -1,7 +1,5 @@
 import random
-
 import compas
-import compas_ags
 
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram

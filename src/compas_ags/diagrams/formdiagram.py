@@ -181,7 +181,6 @@ class FormDiagram(Diagram):
         """
         if type(edge) is int:
             edge = next(islice(self.edges(), edge, None))
-        length = self.edge_length(*edge)
         if q is None:
             return self.edge_attribute(edge, 'q')
         self.edge_attribute(edge, 'q', q)

@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 
 import sys
-import compas
 
 from numpy import array
 from numpy import eye
@@ -137,7 +136,7 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
     """
     _uv = _C.dot(_xy)
     _t = normalizerow(_uv)
-    I = eye(2, dtype=float64)
+    I = eye(2, dtype=float64)  # noqa: E741
     xy0 = array(xy, copy=True)
     A = zeros((2 * len(free), 2 * len(free)), dtype=float64)
     b = zeros((2 * len(free), 1), dtype=float64)

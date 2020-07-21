@@ -4,8 +4,8 @@ from __future__ import division
 
 import compas_rhino
 
-from compas.geometry import distance_point_point
-from compas.utilities import i_to_rgb
+# from compas.geometry import distance_point_point
+# from compas.utilities import i_to_rgb
 from compas.utilities import color_to_colordict
 
 from compas_ags.rhino.diagramartist import DiagramArtist
@@ -55,7 +55,7 @@ class ForceArtist(DiagramArtist):
             'show.edgelabels': False,
             'show.facelabels': False,
             'color.vertices': (255, 255, 255),
-            'color.vertices:is_anchor':(255, 0, 0),
+            'color.vertices:is_anchor': (255, 0, 0),
             'color.vertices:is_fixed': (255, 0, 0),
             'color.edges': (0, 0, 0),
             'color.edges:is_ind': (255, 255, 255),
@@ -349,11 +349,11 @@ class ForceArtist(DiagramArtist):
             })
         guids = compas_rhino.draw_faces(faces, layer=self.layer, clear=False, redraw=False)
         if join_faces:
-            guid = rs.JoinMeshes(guids, delete_input=True)
-            rs.ObjectLayer(guid, self.layer)
-            rs.ObjectName(guid, '{}.mesh'.format(self.force.name))
+            guid = compas_rhino.rs.JoinMeshes(guids, delete_input=True)
+            compas_rhino.rs.ObjectLayer(guid, self.layer)
+            compas_rhino.rs.ObjectName(guid, '{}.mesh'.format(self.force.name))
             if color:
-                rs.ObjectColor(guid, color)
+                compas_rhino.rs.ObjectColor(guid, color)
             guids = [guid]
         self.guid_face = zip(guids, keys)
         return guids
