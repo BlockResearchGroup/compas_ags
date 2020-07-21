@@ -116,7 +116,8 @@
 <div class="viewcode-block" id="ForceDiagram.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.__init__.html#compas_ags.diagrams.ForceDiagram.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ForceDiagram</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;ForceDiagram&#39;</span><span class="p">})</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;ForceDiagram&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;anchor&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_default_vertex_attributes</span><span class="p">({</span>
             <span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s1">&#39;is_anchor&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -125,6 +126,16 @@
             <span class="s1">&#39;l&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
             <span class="s1">&#39;lmin&#39;</span><span class="p">:</span> <span class="mf">1e-7</span><span class="p">,</span>
             <span class="s1">&#39;lmax&#39;</span><span class="p">:</span> <span class="mf">1e+7</span><span class="p">})</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;anchor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">())</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;anchor&#39;</span><span class="p">]</span>
+
+    <span class="nd">@anchor</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anchor</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">anchor</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s1">&#39;anchor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">anchor</span>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Constructors</span>
@@ -169,32 +180,32 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span></div>
 
-<div class="viewcode-block" id="ForceDiagram.anchor"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.anchor.html#compas_ags.diagrams.ForceDiagram.anchor">[docs]</a>    <span class="k">def</span> <span class="nf">anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Identify the anchor of the force diagram.</span>
+    <span class="c1"># def anchor(self):</span>
+    <span class="c1">#     &quot;&quot;&quot;Identify the anchor of the force diagram.</span>
 
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        int</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_anchor&#39;</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="n">key</span>
-        <span class="k">return</span> <span class="n">key</span></div>
+    <span class="c1">#     Returns</span>
+    <span class="c1">#     -------</span>
+    <span class="c1">#     int</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     for key, attr in self.vertices(True):</span>
+    <span class="c1">#         if attr[&#39;is_anchor&#39;]:</span>
+    <span class="c1">#             return key</span>
+    <span class="c1">#     return key</span>
 
 <div class="viewcode-block" id="ForceDiagram.set_fixed"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.set_fixed.html#compas_ags.diagrams.ForceDiagram.set_fixed">[docs]</a>    <span class="k">def</span> <span class="nf">set_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
             <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span></div>
 
-<div class="viewcode-block" id="ForceDiagram.set_anchor"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.set_anchor.html#compas_ags.diagrams.ForceDiagram.set_anchor">[docs]</a>    <span class="k">def</span> <span class="nf">set_anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Set the anchored vertex in the force diagram</span>
+    <span class="c1"># def set_anchor(self, keys):</span>
+    <span class="c1">#     &quot;&quot;&quot;Set the anchored vertex in the force diagram</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        keys : list[int]</span>
-<span class="sd">            Contains the index of the vertex to anchor.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-            <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_anchor&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span></div>
+    <span class="c1">#     Parameters</span>
+    <span class="c1">#     ----------</span>
+    <span class="c1">#     keys : list[int]</span>
+    <span class="c1">#         Contains the index of the vertex to anchor.</span>
+    <span class="c1">#     &quot;&quot;&quot;</span>
+    <span class="c1">#     for key, attr in self.vertices(True):</span>
+    <span class="c1">#         attr[&#39;is_anchor&#39;] = key in keys</span>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Helpers</span>

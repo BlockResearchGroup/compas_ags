@@ -80,7 +80,7 @@
 <h1 class="display-4 p-0 mb-5">FormArtist</h1>
 <dl class="class">
 <dt id="compas_ags.rhino.FormArtist">
-<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">FormArtist</code><span class="sig-paren">(</span><em class="sig-param">form</em>, <em class="sig-param">settings=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/formartist.html#FormArtist"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">FormArtist</code><span class="sig-paren">(</span><em class="sig-param">form</em>, <em class="sig-param">scale=None</em>, <em class="sig-param">settings=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/formartist.html#FormArtist"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_rhino.artists.meshartist.MeshArtist</span></code></p>
 <p>Artist for form diagram in AGS.</p>
 <dl class="field-list simple">
@@ -110,14 +110,14 @@ The edge generator of the form diagram excludes edges where <code class="docutil
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.__init__.html#compas_ags.rhino.FormArtist.__init__" title="compas_ags.rhino.FormArtist.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(form[, settings])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.__init__.html#compas_ags.rhino.FormArtist.__init__" title="compas_ags.rhino.FormArtist.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(form[, scale, settings])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.build.html#compas_ags.rhino.FormArtist.build" title="compas_ags.rhino.FormArtist.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code></a>(item, **kwargs)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.clear.html#compas_ags.rhino.FormArtist.clear" title="compas_ags.rhino.FormArtist.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a>()</p></td>
-<td><p>Clear all objects previously drawn by this artist.</p></td>
+<td><p>Clear the vertices, faces and edges of the mesh, without clearing the other elements in the layer.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.clear_edgelabels.html#compas_ags.rhino.FormArtist.clear_edgelabels" title="compas_ags.rhino.FormArtist.clear_edgelabels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_edgelabels</span></code></a>([keys])</p></td>
 <td><p>Clear all previously drawn edge labels.</p></td>
@@ -200,8 +200,20 @@ The edge generator of the form diagram excludes edges where <code class="docutil
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchor_point</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchor_vertex</span></code></p></td>
+<td><p></p></td>
+</tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">form</span></code></p></td>
 <td><p>The form diagram assigned to the artist.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_xyz</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>

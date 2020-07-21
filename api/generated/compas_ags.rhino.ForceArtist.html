@@ -96,7 +96,8 @@
 <li><p><strong>force (read-only)</strong> (<a class="reference internal" href="compas_ags.diagrams.ForceDiagram.html#compas_ags.diagrams.ForceDiagram" title="compas_ags.diagrams.ForceDiagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.ForceDiagram</span></code></a>)</p></li>
 <li><p><strong>form</strong> (<a class="reference internal" href="compas_ags.diagrams.FormDiagram.html#compas_ags.diagrams.FormDiagram" title="compas_ags.diagrams.FormDiagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.FormDiagram</span></code></a>)</p></li>
 <li><p><strong>settings</strong> (<em>dict</em>) – Visualisation settings.</p></li>
-<li><p><strong>guids</strong> (<em>dict</em>) – GUIDs of Rhino objects created by the artists.</p></li>
+<li><p><strong>anchor_point</strong> (<em>list</em>)</p></li>
+<li><p><strong>anchor_vertex</strong> (<em>int</em>)</p></li>
 <li><p><strong>scale</strong> (<em>float</em>) – The scale of the diagram.
 The magnitude of force represented by an edge is <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">*</span> <span class="pre">scale</span></code>.</p></li>
 </ul>
@@ -163,7 +164,7 @@ The magnitude of force represented by an edge is <code class="docutils literal n
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.draw_facenormals.html#compas_ags.rhino.ForceArtist.draw_facenormals" title="compas_ags.rhino.ForceArtist.draw_facenormals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_facenormals</span></code></a>([keys, color, scale])</p></td>
 <td><p>Draw the normals of the faces.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.draw_faces.html#compas_ags.rhino.ForceArtist.draw_faces" title="compas_ags.rhino.ForceArtist.draw_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_faces</span></code></a>([keys, color, join_faces])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.draw_faces.html#compas_ags.rhino.ForceArtist.draw_faces" title="compas_ags.rhino.ForceArtist.draw_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_faces</span></code></a>([keys, color])</p></td>
 <td><p>Draw the faces of the force diagram according to the drawing scale.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.draw_mesh.html#compas_ags.rhino.ForceArtist.draw_mesh" title="compas_ags.rhino.ForceArtist.draw_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_mesh</span></code></a>([color, disjoint])</p></td>
@@ -202,6 +203,12 @@ The magnitude of force represented by an edge is <code class="docutils literal n
 <col style="width: 90%" />
 </colgroup>
 <tbody>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchor_point</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchor_vertex</span></code></p></td>
+<td><p></p></td>
+</tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">force</span></code></p></td>
 <td><p></p></td>
 </tr>
@@ -224,6 +231,9 @@ The magnitude of force represented by an edge is <code class="docutils literal n
 <td><p>Map between Rhino object GUIDs and force diagram vertex label identifiers.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_xyz</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
