@@ -35,7 +35,7 @@ jobs:
           invoke lint
       - name: Test import
         run: |
-          python -m compas_ags
+          python -c "import compas_ags"
 
   build-docs:
     needs: build-packages
