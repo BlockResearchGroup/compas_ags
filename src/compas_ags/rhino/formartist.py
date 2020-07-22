@@ -90,6 +90,7 @@ class FormArtist(MeshArtist):
         Returns
         -------
         None
+
         """
         self.clear()
         self.clear_layer()

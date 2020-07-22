@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 
 from itertools import islice
-from compas.utilities import geometric_key_xy
 from compas.datastructures import network_find_cycles
 from compas_ags.diagrams import Diagram
 
@@ -33,7 +32,7 @@ class FormDiagram(Diagram):
             'f': 0.0,
             'l': 0.0,
             'is_ind': False,
-            'is_element': False,
+            'is_external': False,
             'is_reaction': False,
             'is_load': False,
             'is_edge': True,
@@ -55,6 +54,7 @@ class FormDiagram(Diagram):
         cycles = network_find_cycles(graph, breakpoints=graph.leaves())
         form = cls.from_vertices_and_faces(points, cycles)
         form.edges_attribute('is_edge', False, keys=list(form.edges_on_boundary()))
+        form.edges_attribute('is_external', True, keys=form.leaf_edges())
         return form
 
     # --------------------------------------------------------------------------
@@ -108,6 +108,14 @@ class FormDiagram(Diagram):
                 keys.append(key)
         return keys
 
+    def leaf_edges(self):
+        edges = []
+        leaves = set(self.leaves())
+        for u, v in self.edges():
+            if u in leaves or v in leaves:
+                edges.append((u, v))
+        return edges
+
     def face_adjacency_edge(self, f1, f2):
         edges = list(self.edges())
         for u, v in self.face_halfedges(f1):
@@ -121,14 +129,6 @@ class FormDiagram(Diagram):
 
     def index_uv(self):
         return {index: key for index, key in enumerate(self.edges())}
-
-    # def external(self):
-    #     external = []
-    #     leaves = set(self.leaves())
-    #     for u, v in self.edges():
-    #         if u in leaves or v in leaves:
-    #             external.append((u, v))
-    #     return external
 
     # --------------------------------------------------------------------------
     # Convenience functions for retrieving the attributes of the formdiagram.
@@ -158,8 +158,8 @@ class FormDiagram(Diagram):
     # Set stuff
     # --------------------------------------------------------------------------
 
-    def set_fixed(self, keys):
-        self.vertices_attribute('is_fixed', True, keys=keys)
+    # def set_fixed(self, keys):
+    #     self.vertices_attribute('is_fixed', True, keys=keys)
 
     def edge_forcedensity(self, edge, q=None):
         """Get or set the forcedensity in an edge.
@@ -216,32 +216,32 @@ class FormDiagram(Diagram):
     # Identify features of the formdiagram based on geometrical inputs.
     # --------------------------------------------------------------------------
 
-    def identify_fixed(self, points=None, fix_degree=1):
-        for key, attr in self.vertices(True):
-            attr['is_fixed'] = self.vertex_degree(key) <= fix_degree
-        if points:
-            xy_key = {}
-            for key in self.vertices():
-                gkey = geometric_key_xy(self.vertex_attributes(key, 'xy'))
-                xy_key[gkey] = key
-            for xy in points:
-                gkey = geometric_key_xy(xy)
-                if gkey in xy_key:
-                    key = xy_key[gkey]
-                    self.vertex[key]['is_fixed'] = True
+    # def identify_fixed(self, points=None, fix_degree=1):
+    #     for key, attr in self.vertices(True):
+    #         attr['is_fixed'] = self.vertex_degree(key) <= fix_degree
+    #     if points:
+    #         xy_key = {}
+    #         for key in self.vertices():
+    #             gkey = geometric_key_xy(self.vertex_attributes(key, 'xy'))
+    #             xy_key[gkey] = key
+    #         for xy in points:
+    #             gkey = geometric_key_xy(xy)
+    #             if gkey in xy_key:
+    #                 key = xy_key[gkey]
+    #                 self.vertex[key]['is_fixed'] = True
 
-    def identify_constraints(self, points=None):
-        if points:
-            xy_key = {}
-            for key in self.vertices():
-                gkey = geometric_key_xy(self.vertex_attributes(key, 'xy'))
-                xy_key[gkey] = key
-            for xy in points:
-                gkey = geometric_key_xy(xy)
-                if gkey in xy_key:
-                    key = xy_key[gkey]
-                    self.vertex[key]['cx'] = 1.0
-                    self.vertex[key]['cy'] = 1.0
+    # def identify_constraints(self, points=None):
+    #     if points:
+    #         xy_key = {}
+    #         for key in self.vertices():
+    #             gkey = geometric_key_xy(self.vertex_attributes(key, 'xy'))
+    #             xy_key[gkey] = key
+    #         for xy in points:
+    #             gkey = geometric_key_xy(xy)
+    #             if gkey in xy_key:
+    #                 key = xy_key[gkey]
+    #                 self.vertex[key]['cx'] = 1.0
+    #                 self.vertex[key]['cy'] = 1.0
 
 
 # ==============================================================================

@@ -34,14 +34,12 @@ class ForceArtist(DiagramArtist):
 
     """
 
-    def __init__(self, force, form=None, scale=None, layer=None):
+    def __init__(self, force, scale=None, layer=None):
         super(ForceArtist, self).__init__(force, layer=layer)
         self._anchor_point = None
         self._anchor_vertex = None
         self._scale = None
-        self._form = None
         self.scale = scale
-        self.form = form
         self.settings.update({
             'show.vertices': True,
             'show.edges': True,
@@ -67,42 +65,6 @@ class ForceArtist(DiagramArtist):
     def force(self, force):
         self.mesh = force
 
-    @property
-    def form(self):
-        return self._form
-
-    @form.setter
-    def form(self, form):
-        self._form = form
-
-    # def update_edge_force(self):
-    #     (u, v) = list(self.force.edges())[0] # get an edge
-    #     # check whether the force diagram is scaled already
-    #     if self.force.edge_attribute((u, v), 'force') is None:
-    #         self.force.update_default_edge_attributes({'force': 0.0})
-    #         for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):
-    #             length = self.force.edge_length(u, v)
-    #             length = round(length, 2)
-    #             attr['force'] = length
-    #     else:  # TO CHECK???!!
-    #         for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):
-    #             length = self.force.edge_length(u, v)
-    #             length = round(length, 2)
-    #             attr['force'] = length
-
-    # def rescale(self):
-    #     form_x = self.form.vertices_attribute('x')
-    #     form_y = self.form.vertices_attribute('y')
-    #     form_xdim = max(form_x) - min(form_x)
-    #     form_ydim = max(form_y) - min(form_y)
-    #     force_x = self.force.vertices_attribute('x')
-    #     force_y = self.force.vertices_attribute('y')
-    #     force_xdim = max(force_x) - min(force_x)
-    #     force_ydim = max(force_y) - min(force_y)
-    #     scale = max([force_xdim / form_xdim, force_ydim / form_ydim])
-    #     self._scale = scale
-    #     return scale
-
     def draw(self):
         """Draw the diagram.
 
@@ -119,6 +81,7 @@ class ForceArtist(DiagramArtist):
         Returns
         -------
         None
+
         """
         self.clear()
         self.clear_layer()
@@ -131,8 +94,8 @@ class ForceArtist(DiagramArtist):
         if self.settings['show.edges']:
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.force.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.force.edges_where({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.force.edges_where({'is_ind': True})})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.force.edges() if self.force.is_dual_edge_external(edge)})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.force.edges() if self.force.is_dual_edge_ind(edge)})
             self.draw_edges(color=color)
         # vertex labels
         if self.settings['show.vertexlabels']:
@@ -145,8 +108,8 @@ class ForceArtist(DiagramArtist):
             text = {edge: index for index, edge in enumerate(self.force.edges())}
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.force.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.force.edges_where({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.force.edges_where({'is_ind': True})})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.force.edges() if self.force.is_dual_edge_external(edge)})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.force.edges() if self.force.is_dual_edge_ind(edge)})
             self.draw_edgelabels(text=text, color=color)
 
 

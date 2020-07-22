@@ -38,9 +38,9 @@ class Diagram(Mesh):
     # additional accessors
     # --------------------------------------------------------------------------
 
-    def indexed_face_vertices(self):
-        k_i = self.key_index()
-        return [[k_i[key] for key in self.face_vertices(fkey)] for fkey in self.faces()]
+    # def indexed_face_vertices(self):
+    #     k_i = self.key_index()
+    #     return [[k_i[key] for key in self.face_vertices(fkey)] for fkey in self.faces()]
 
     # --------------------------------------------------------------------------
     # vertex topology

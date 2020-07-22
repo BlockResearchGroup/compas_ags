@@ -23,11 +23,9 @@ force = ForceDiagram.from_formdiagram(form)
 
 left = next(form.vertices_where({'x': 0.0, 'y': 0.0}))
 right = next(form.vertices_where({'x': 6.0, 'y': 0.0}))
-
 fixed = [left, right]
 
-form.set_fixed(fixed)
-force.set_fixed([0])
+form.vertices_attribute('is_fixed', True, keys=fixed)
 
 # ==============================================================================
 # Set the magnitude of the load.
