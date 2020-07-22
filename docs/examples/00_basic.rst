@@ -1,13 +1,11 @@
 ********************************************************************************
-Examples
+Basic example
 ********************************************************************************
 
-.. toctree::
-   :maxdepth: 1
-   :titlesonly:
-   :glob:
+.. figure:: /_images/example_basic.png
+    :figclass: figure
+    :class: figure-img img-fluid
 
-   examples/00_basic
-   examples/01_rtl
-   examples/02_lpopt
-   examples/03_fink
+
+.. literalinclude:: 00_basic.py
+    :language: python

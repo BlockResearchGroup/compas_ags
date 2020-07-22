@@ -1,11 +1,12 @@
 ********************************************************************************
-Graph Statics
+Optimise the load path
 ********************************************************************************
 
-.. figure:: /_images/example_graphstatics.png
+.. figure:: /_images/example_lpopt.png
     :figclass: figure
     :class: figure-img img-fluid
 
 
-.. literalinclude:: 00_graphstatics.py
+.. literalinclude:: 02_lpopt.py
     :language: python
+

@@ -1,13 +1,12 @@
 ********************************************************************************
-Examples
+Fink Truss
 ********************************************************************************
 
-.. toctree::
-   :maxdepth: 1
-   :titlesonly:
-   :glob:
+.. figure:: /_images/example_fink.png
+    :figclass: figure
+    :class: figure-img img-fluid
 
-   examples/00_basic
-   examples/01_rtl
-   examples/02_lpopt
-   examples/03_fink
+
+.. literalinclude:: 03_fink.py
+    :language: python
+
