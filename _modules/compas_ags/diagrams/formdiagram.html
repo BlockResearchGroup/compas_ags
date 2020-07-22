@@ -78,7 +78,6 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
-<span class="kn">from</span> <span class="nn">compas.utilities</span> <span class="kn">import</span> <span class="n">geometric_key_xy</span>
 <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">network_find_cycles</span>
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">Diagram</span>
 
@@ -108,7 +107,7 @@
             <span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
             <span class="s1">&#39;l&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
             <span class="s1">&#39;is_ind&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;is_element&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;is_external&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s1">&#39;is_reaction&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s1">&#39;is_load&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s1">&#39;is_edge&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -130,6 +129,7 @@
         <span class="n">cycles</span> <span class="o">=</span> <span class="n">network_find_cycles</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">breakpoints</span><span class="o">=</span><span class="n">graph</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
         <span class="n">form</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_vertices_and_faces</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">cycles</span><span class="p">)</span>
         <span class="n">form</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;is_edge&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges_on_boundary</span><span class="p">()))</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;is_external&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">leaf_edges</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">form</span></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
@@ -183,6 +183,14 @@
                 <span class="n">keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">keys</span></div>
 
+<div class="viewcode-block" id="FormDiagram.leaf_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.leaf_edges.html#compas_ags.diagrams.FormDiagram.leaf_edges">[docs]</a>    <span class="k">def</span> <span class="nf">leaf_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">leaves</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
+        <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">leaves</span> <span class="ow">or</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>
+                <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">edges</span></div>
+
 <div class="viewcode-block" id="FormDiagram.face_adjacency_edge"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.face_adjacency_edge.html#compas_ags.diagrams.FormDiagram.face_adjacency_edge">[docs]</a>    <span class="k">def</span> <span class="nf">face_adjacency_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">):</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
         <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">face_halfedges</span><span class="p">(</span><span class="n">f1</span><span class="p">):</span>
@@ -196,14 +204,6 @@
 
 <div class="viewcode-block" id="FormDiagram.index_uv"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.index_uv.html#compas_ags.diagrams.FormDiagram.index_uv">[docs]</a>    <span class="k">def</span> <span class="nf">index_uv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">index</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span></div>
-
-    <span class="c1"># def external(self):</span>
-    <span class="c1">#     external = []</span>
-    <span class="c1">#     leaves = set(self.leaves())</span>
-    <span class="c1">#     for u, v in self.edges():</span>
-    <span class="c1">#         if u in leaves or v in leaves:</span>
-    <span class="c1">#             external.append((u, v))</span>
-    <span class="c1">#     return external</span>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Convenience functions for retrieving the attributes of the formdiagram.</span>
@@ -233,8 +233,8 @@
     <span class="c1"># Set stuff</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="FormDiagram.set_fixed"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.set_fixed.html#compas_ags.diagrams.FormDiagram.set_fixed">[docs]</a>    <span class="k">def</span> <span class="nf">set_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">keys</span><span class="p">)</span></div>
+    <span class="c1"># def set_fixed(self, keys):</span>
+    <span class="c1">#     self.vertices_attribute(&#39;is_fixed&#39;, True, keys=keys)</span>
 
 <div class="viewcode-block" id="FormDiagram.edge_forcedensity"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.edge_forcedensity.html#compas_ags.diagrams.FormDiagram.edge_forcedensity">[docs]</a>    <span class="k">def</span> <span class="nf">edge_forcedensity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get or set the forcedensity in an edge.</span>
@@ -285,38 +285,38 @@
         <span class="k">if</span> <span class="n">force</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">q</span> <span class="o">*</span> <span class="n">length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;is_ind&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="n">force</span> <span class="o">/</span> <span class="n">length</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="n">force</span> <span class="o">/</span> <span class="n">length</span><span class="p">)</span></div></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Identify features of the formdiagram based on geometrical inputs.</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="FormDiagram.identify_fixed"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.identify_fixed.html#compas_ags.diagrams.FormDiagram.identify_fixed">[docs]</a>    <span class="k">def</span> <span class="nf">identify_fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fix_degree</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-            <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_degree</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">fix_degree</span>
-        <span class="k">if</span> <span class="n">points</span><span class="p">:</span>
-            <span class="n">xy_key</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
-                <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key_xy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">))</span>
-                <span class="n">xy_key</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
-            <span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
-                <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key_xy</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">gkey</span> <span class="ow">in</span> <span class="n">xy_key</span><span class="p">:</span>
-                    <span class="n">key</span> <span class="o">=</span> <span class="n">xy_key</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">vertex</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">True</span></div>
+    <span class="c1"># def identify_fixed(self, points=None, fix_degree=1):</span>
+    <span class="c1">#     for key, attr in self.vertices(True):</span>
+    <span class="c1">#         attr[&#39;is_fixed&#39;] = self.vertex_degree(key) &lt;= fix_degree</span>
+    <span class="c1">#     if points:</span>
+    <span class="c1">#         xy_key = {}</span>
+    <span class="c1">#         for key in self.vertices():</span>
+    <span class="c1">#             gkey = geometric_key_xy(self.vertex_attributes(key, &#39;xy&#39;))</span>
+    <span class="c1">#             xy_key[gkey] = key</span>
+    <span class="c1">#         for xy in points:</span>
+    <span class="c1">#             gkey = geometric_key_xy(xy)</span>
+    <span class="c1">#             if gkey in xy_key:</span>
+    <span class="c1">#                 key = xy_key[gkey]</span>
+    <span class="c1">#                 self.vertex[key][&#39;is_fixed&#39;] = True</span>
 
-<div class="viewcode-block" id="FormDiagram.identify_constraints"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.identify_constraints.html#compas_ags.diagrams.FormDiagram.identify_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">identify_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">points</span><span class="p">:</span>
-            <span class="n">xy_key</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
-                <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key_xy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">))</span>
-                <span class="n">xy_key</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">key</span>
-            <span class="k">for</span> <span class="n">xy</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
-                <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key_xy</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">gkey</span> <span class="ow">in</span> <span class="n">xy_key</span><span class="p">:</span>
-                    <span class="n">key</span> <span class="o">=</span> <span class="n">xy_key</span><span class="p">[</span><span class="n">gkey</span><span class="p">]</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">vertex</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;cx&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">vertex</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="s1">&#39;cy&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span></div></div>
+    <span class="c1"># def identify_constraints(self, points=None):</span>
+    <span class="c1">#     if points:</span>
+    <span class="c1">#         xy_key = {}</span>
+    <span class="c1">#         for key in self.vertices():</span>
+    <span class="c1">#             gkey = geometric_key_xy(self.vertex_attributes(key, &#39;xy&#39;))</span>
+    <span class="c1">#             xy_key[gkey] = key</span>
+    <span class="c1">#         for xy in points:</span>
+    <span class="c1">#             gkey = geometric_key_xy(xy)</span>
+    <span class="c1">#             if gkey in xy_key:</span>
+    <span class="c1">#                 key = xy_key[gkey]</span>
+    <span class="c1">#                 self.vertex[key][&#39;cx&#39;] = 1.0</span>
+    <span class="c1">#                 self.vertex[key][&#39;cy&#39;] = 1.0</span>
 
 
 <span class="c1"># ==============================================================================</span>

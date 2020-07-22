@@ -106,11 +106,9 @@
 
 <span class="n">left</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}))</span>
 <span class="n">right</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}))</span>
-
 <span class="n">fixed</span> <span class="o">=</span> <span class="p">[</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">]</span>
 
-<span class="n">form</span><span class="o">.</span><span class="n">set_fixed</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span>
-<span class="n">force</span><span class="o">.</span><span class="n">set_fixed</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">form</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">fixed</span><span class="p">)</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Set the magnitude of the load.</span>
