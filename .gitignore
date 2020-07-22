@@ -113,3 +113,6 @@ docsource/api/generated
 .DS_Store
 
 .vscode/
+
+docs/api/generated
+dist/docs
