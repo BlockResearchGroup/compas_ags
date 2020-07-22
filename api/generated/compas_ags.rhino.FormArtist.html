@@ -95,14 +95,9 @@ Default is <code class="docutils literal notranslate"><span class="pre">None</sp
 <dd class="field-even"><ul class="simple">
 <li><p><strong>form</strong> (<a class="reference internal" href="compas_ags.diagrams.FormDiagram.html#compas_ags.diagrams.FormDiagram" title="compas_ags.diagrams.FormDiagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.FormDiagram</span></code></a>)</p></li>
 <li><p><strong>settings</strong> (<em>dict</em>) – Visualisation settings.</p></li>
-<li><p><strong>guids</strong> (<em>dict</em>) – GUIDs of Rhino objects created by the artists.</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The artist keeps track of the Rhino objects it creates in <code class="docutils literal notranslate"><span class="pre">self.guids</span></code>.
-The artist iterates over the edges of the form diagram to collect drawing information.
-The edge generator of the form diagram excludes edges where <code class="docutils literal notranslate"><span class="pre">'is_edge'</span> <span class="pre">is</span> <span class="pre">False</span></code>.</p>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -200,20 +195,8 @@ The edge generator of the form diagram excludes edges where <code class="docutil
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchor_point</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchor_vertex</span></code></p></td>
-<td><p></p></td>
-</tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">form</span></code></p></td>
 <td><p>The form diagram assigned to the artist.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_xyz</span></code></p></td>
-<td><p></p></td>
 </tr>
 </tbody>
 </table>

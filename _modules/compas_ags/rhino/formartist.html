@@ -77,13 +77,6 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
-<span class="c1"># from math import fabs</span>
-
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">scale_vector</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">add_vectors</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">subtract_vectors</span>
-<span class="c1"># from compas.utilities import i_to_green</span>
-
 <span class="kn">from</span> <span class="nn">compas_rhino.artists</span> <span class="kn">import</span> <span class="n">MeshArtist</span>
 
 
@@ -106,21 +99,11 @@
 <span class="sd">    form : :class:`compas_ags.diagrams.FormDiagram`</span>
 <span class="sd">    settings : dict</span>
 <span class="sd">        Visualisation settings.</span>
-<span class="sd">    guids : dict</span>
-<span class="sd">        GUIDs of Rhino objects created by the artists.</span>
 
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    The artist keeps track of the Rhino objects it creates in ``self.guids``.</span>
-<span class="sd">    The artist iterates over the edges of the form diagram to collect drawing information.</span>
-<span class="sd">    The edge generator of the form diagram excludes edges where ``&#39;is_edge&#39; is False``.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FormArtist.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormArtist.__init__.html#compas_ags.rhino.FormArtist.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FormArtist</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_point</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_vertex</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">scale</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
             <span class="s1">&#39;show.vertices&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
@@ -165,48 +148,6 @@
     <span class="k">def</span> <span class="nf">form</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">form</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">anchor_point</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_point</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anchor_vertex</span><span class="p">,</span> <span class="s1">&#39;xyz&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_point</span>
-
-    <span class="nd">@anchor_point</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">anchor_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anchor_point</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_point</span> <span class="o">=</span> <span class="n">anchor_point</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">anchor_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_vertex</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_vertex</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">())</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_vertex</span>
-
-    <span class="nd">@anchor_vertex</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">anchor_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anchor_vertex</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">anchor_vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_vertex</span> <span class="o">=</span> <span class="n">anchor_vertex</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mf">1.0</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span>
-
-    <span class="nd">@scale</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span> <span class="o">=</span> <span class="n">scale</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">vertex_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">anchor_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anchor_vertex</span><span class="p">,</span> <span class="s1">&#39;xyz&#39;</span><span class="p">)</span>
-        <span class="n">origin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor_point</span>
-        <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
-            <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s1">&#39;xyz&#39;</span><span class="p">)</span>
-            <span class="n">vector</span> <span class="o">=</span> <span class="n">subtract_vectors</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">anchor_xyz</span><span class="p">)</span>
-            <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="o">=</span> <span class="n">add_vectors</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">scale_vector</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">vertex_xyz</span>
-
 <div class="viewcode-block" id="FormArtist.draw"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormArtist.draw.html#compas_ags.rhino.FormArtist.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Draw the form diagram.</span>
 
@@ -231,304 +172,28 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;show.vertices&#39;</span><span class="p">]:</span>
             <span class="n">color</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">color</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">vertex</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.vertices&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">()})</span>
-            <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">())</span>
-            <span class="n">guids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw_vertices</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="n">keys</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">guid_vertex</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">keys</span><span class="p">)</span>
-        <span class="c1"># vertex labels</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;show.vertexlabels&#39;</span><span class="p">]:</span>
-            <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">())</span>
-            <span class="n">guids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw_vertexlabels</span><span class="p">()</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">guid_vertexlabel</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">keys</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_vertices</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
         <span class="c1"># edges</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;show.edges&#39;</span><span class="p">]:</span>
             <span class="n">color</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">color</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">edge</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.edges&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()})</span>
             <span class="n">color</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">edge</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.edges:is_external&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_external&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})})</span>
             <span class="n">color</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">edge</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.edges:is_ind&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_ind&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})})</span>
-            <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
-            <span class="n">guids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw_edges</span><span class="p">(</span><span class="n">keys</span><span class="o">=</span><span class="n">keys</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">guid_edge</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">keys</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_edges</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
+        <span class="c1"># vertex labels</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;show.vertexlabels&#39;</span><span class="p">]:</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="p">{</span><span class="n">vertex</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">())}</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">color</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">vertex</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.vertices&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">()})</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_vertexlabels</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
         <span class="c1"># edge labels</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;show.edgelabels&#39;</span><span class="p">]:</span>
             <span class="n">text</span> <span class="o">=</span> <span class="p">{</span><span class="n">edge</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">edge</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span>
+            <span class="n">color</span> <span class="o">=</span> <span class="p">{}</span>
             <span class="n">color</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">edge</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.edges&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()})</span>
             <span class="n">color</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">edge</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.edges:is_external&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_external&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})})</span>
             <span class="n">color</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">edge</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.edges:is_ind&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_ind&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})})</span>
-            <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
-            <span class="n">guids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">draw_edgelabels</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">guid_edgelabel</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">keys</span><span class="p">)</span></div></div>
-
-    <span class="c1"># def draw_external(self, arrow=False, scale=1.0):</span>
-    <span class="c1">#     &quot;&quot;&quot;Draw the symbols for the external forces as an overlay of the edges.</span>
-
-    <span class="c1">#     An external force has a point of application,</span>
-    <span class="c1">#     a line of action, direction, and magnitude.</span>
-
-    <span class="c1">#     Parameters</span>
-    <span class="c1">#     ----------</span>
-    <span class="c1">#     color : rgb color, optional</span>
-    <span class="c1">#         RGB color specification.</span>
-    <span class="c1">#         The default value is in ``FormArtist.settings[&#39;color.external&#39;]``.</span>
-    <span class="c1">#     arrow : bool, optional</span>
-    <span class="c1">#         Add an arrow.</span>
-    <span class="c1">#         Default is ``False``.</span>
-    <span class="c1">#     scale : float, optional</span>
-    <span class="c1">#         The length of the line representing the force symbol.</span>
-    <span class="c1">#         Default is ``1.0``.</span>
-
-    <span class="c1">#     Returns</span>
-    <span class="c1">#     -------</span>
-    <span class="c1">#     None</span>
-
-    <span class="c1">#     Notes</span>
-    <span class="c1">#     -----</span>
-    <span class="c1">#     The GUIDs of the Rhino objects created by this method</span>
-    <span class="c1">#     are stored in ``FormArtist.guids[&#39;external&#39;]``.</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     compas_rhino.delete_objects(self.guids.setdefault(&#39;external&#39;))</span>
-    <span class="c1">#     leaves = set(self.form.leaves())</span>
-    <span class="c1">#     lines = []</span>
-    <span class="c1">#     for u, v in self.form.edges():</span>
-    <span class="c1">#         if u not in leaves and v not in leaves:</span>
-    <span class="c1">#             continue</span>
-    <span class="c1">#         lines.append({</span>
-    <span class="c1">#             &#39;start&#39;: self.form.vertex_coordinates(u),</span>
-    <span class="c1">#             &#39;end&#39;: self.form.vertex_coordinates(v),</span>
-    <span class="c1">#             &#39;arrow&#39;: &#39;end&#39; if arrow else None,</span>
-    <span class="c1">#             &#39;color&#39;: color or self.settings.get(&#39;color.external&#39;),</span>
-    <span class="c1">#             &#39;name&#39;: &quot;{}.external.{}-{}&quot;.format(self.form.name, u, v),</span>
-    <span class="c1">#             &#39;width&#39;: 0.5</span>
-    <span class="c1">#         })</span>
-    <span class="c1">#     self.guids[&#39;external&#39;] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)</span>
-
-    <span class="c1"># def draw_loads(self, scale=None, color=None):</span>
-    <span class="c1">#     &quot;&quot;&quot;Draw the symbols for the loads as an overlay of the edges.</span>
-
-    <span class="c1">#     A load has a point of application, a line of action, direction, and magnitude.</span>
-    <span class="c1">#     The magnitude of the symbol is controlled by the scale factor.</span>
-    <span class="c1">#     The magnitude of the actual load is stored as an editable edge attribute.</span>
-
-    <span class="c1">#     Parameters</span>
-    <span class="c1">#     ----------</span>
-    <span class="c1">#     color : rgb color, optional</span>
-    <span class="c1">#         RGB color specification.</span>
-    <span class="c1">#         The default value is in ``FormArtist.settings[&#39;color.external&#39;]``.</span>
-    <span class="c1">#     arrow : bool, optional</span>
-    <span class="c1">#         Add an arrow.</span>
-    <span class="c1">#         Default is ``False``.</span>
-    <span class="c1">#     scale : float, optional</span>
-    <span class="c1">#         The length of the line representing the force symbol.</span>
-    <span class="c1">#         Default is ``1.0``.</span>
-
-    <span class="c1">#     Returns</span>
-    <span class="c1">#     -------</span>
-    <span class="c1">#     None</span>
-
-    <span class="c1">#     Notes</span>
-    <span class="c1">#     -----</span>
-    <span class="c1">#     The GUIDs of the Rhino objects created by this method</span>
-    <span class="c1">#     are stored in ``FormArtist.guids[&#39;external&#39;]``.</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     compas_rhino.delete_objects(self.guids.setdefault(&#39;loads&#39;))</span>
-    <span class="c1">#     lines = []</span>
-    <span class="c1">#     color = color or self.settings[&#39;color.load&#39;]</span>
-    <span class="c1">#     scale = scale or self.settings[&#39;scale.load&#39;]</span>
-    <span class="c1">#     tol = self.settings[&#39;tol.load&#39;]</span>
-    <span class="c1">#     tol2 = tol ** 2</span>
-    <span class="c1">#     for key, attr in self.form.vertices_where({&#39;is_anchor&#39;: False, &#39;is_external&#39;: False}, True):</span>
-    <span class="c1">#         px = scale * attr[&#39;px&#39;]</span>
-    <span class="c1">#         py = scale * attr[&#39;py&#39;]</span>
-    <span class="c1">#         pz = scale * attr[&#39;pz&#39;]</span>
-    <span class="c1">#         if px ** 2 + py ** 2 + pz ** 2 &lt; tol2:</span>
-    <span class="c1">#             continue</span>
-    <span class="c1">#         sp = self.form.vertex_coordinates(key)</span>
-    <span class="c1">#         ep = sp[0] + px, sp[1] + py, sp[2] + pz</span>
-    <span class="c1">#         lines.append({</span>
-    <span class="c1">#             &#39;start&#39;: sp,</span>
-    <span class="c1">#             &#39;end&#39;: ep,</span>
-    <span class="c1">#             &#39;color&#39;: color,</span>
-    <span class="c1">#             &#39;arrow&#39;: &#39;end&#39;,</span>
-    <span class="c1">#             &#39;name&#39;: &quot;{}.load.{}&quot;.format(self.form.name, key)</span>
-    <span class="c1">#         })</span>
-    <span class="c1">#     self.guids[&#39;loads&#39;] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)</span>
-
-    <span class="c1"># # def draw_independent_edges(self):</span>
-    <span class="c1"># #     compas_rhino.delete_objects(self.guids.setdefault(&#39;independent_edges&#39;))</span>
-    <span class="c1"># #     lines = []</span>
-    <span class="c1"># #     for index, (u, v) in enumerate(self.form.edges_where({&#39;is_ind&#39;: True})):</span>
-    <span class="c1"># #         lines.append({</span>
-    <span class="c1"># #             &#39;start&#39;: self.form.vertex_coordinates(u),</span>
-    <span class="c1"># #             &#39;end&#39;: self.form.vertex_coordinates(v),</span>
-    <span class="c1"># #             &#39;name&#39;: &quot;{}.independent_edge.{}&quot;.format(self.form.name, index),</span>
-    <span class="c1"># #             &#39;width&#39;: 1.0</span>
-    <span class="c1"># #         })</span>
-    <span class="c1"># #     self.guids[&#39;independent_edges&#39;] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)</span>
-
-    <span class="c1"># # def draw_fixed_vertices(self, color=None):</span>
-    <span class="c1"># #     compas_rhino.delete_objects(self.guids.setdefault(&#39;fixed_vertices&#39;))</span>
-    <span class="c1"># #     labels = []</span>
-    <span class="c1"># #     for vkey in self.form.fixed():</span>
-    <span class="c1"># #         labels.append({</span>
-    <span class="c1"># #             &#39;pos&#39;  : self.form.vertex_coordinates(vkey),</span>
-    <span class="c1"># #             &#39;text&#39; : str(vkey),</span>
-    <span class="c1"># #             &#39;color&#39;: color or self.settings.get(&#39;color.fix&#39;),</span>
-    <span class="c1"># #             &#39;name&#39; : &quot;{}.fixed_vertex.{}&quot;.format(self.form.name, vkey)</span>
-    <span class="c1"># #         })</span>
-    <span class="c1"># #     self.guids[&#39;fixed_vertices&#39;] = compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)</span>
-
-    <span class="c1"># def draw_selfweight(self, scale=None, color=None):</span>
-    <span class="c1">#     compas_rhino.delete_objects(self.guids.setdefault(&#39;selfweight&#39;))</span>
-    <span class="c1">#     lines = []</span>
-    <span class="c1">#     color = color or self.settings[&#39;color.selfweight&#39;]</span>
-    <span class="c1">#     scale = scale or self.settings[&#39;scale.selfweight&#39;]</span>
-    <span class="c1">#     tol = self.settings[&#39;tol.selfweight&#39;]</span>
-    <span class="c1">#     tol2 = tol ** 2</span>
-    <span class="c1">#     for key, attr in self.form.vertices_where({&#39;is_anchor&#39;: False, &#39;is_external&#39;: False}, True):</span>
-    <span class="c1">#         t = attr[&#39;t&#39;]</span>
-    <span class="c1">#         a = self.form.vertex_area(key)</span>
-    <span class="c1">#         sp = self.form.vertex_coordinates(key)</span>
-    <span class="c1">#         dz = scale * t * a</span>
-    <span class="c1">#         if dz ** 2 &lt; tol2:</span>
-    <span class="c1">#             continue</span>
-    <span class="c1">#         ep = sp[0], sp[1], sp[2] - dz</span>
-    <span class="c1">#         lines.append({</span>
-    <span class="c1">#             &#39;start&#39;: sp,</span>
-    <span class="c1">#             &#39;end&#39;: ep,</span>
-    <span class="c1">#             &#39;color&#39;: color,</span>
-    <span class="c1">#             &#39;arrow&#39;: &#39;end&#39;,</span>
-    <span class="c1">#             &#39;name&#39;: &quot;{}.selfweight.{}&quot;.format(self.form.name, key)</span>
-    <span class="c1">#         })</span>
-    <span class="c1">#     self.guids[&#39;selfweight&#39;] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)</span>
-
-    <span class="c1"># def draw_reactions(self, scale=None, color=None):</span>
-    <span class="c1">#     &quot;&quot;&quot;Draw the resultant of the external forces at an anchored node.</span>
-
-    <span class="c1">#     No arrows are added to the lines.</span>
-    <span class="c1">#     GUIDs of the Rhino objects created by this method are stored in ``FormArtist.guids[&#39;reactions&#39;]``.</span>
-
-    <span class="c1">#     Parameters</span>
-    <span class="c1">#     ----------</span>
-    <span class="c1">#     scale : float, optional</span>
-    <span class="c1">#         The scale factor for the resultant.</span>
-    <span class="c1">#         Default is in ``FormArtist.settings[&#39;scale.reaction&#39;]``.</span>
-    <span class="c1">#     color : rgb color, optional</span>
-    <span class="c1">#         RGB color specification.</span>
-    <span class="c1">#         The default value is in ``FormArtist.settings[&#39;color.external&#39;]``.</span>
-
-    <span class="c1">#     Returns</span>
-    <span class="c1">#     -------</span>
-    <span class="c1">#     None</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     compas_rhino.delete_objects(self.guids.setdefault(&#39;reactions&#39;))</span>
-    <span class="c1">#     lines = []</span>
-    <span class="c1">#     color = color or self.settings[&#39;color.reaction&#39;]</span>
-    <span class="c1">#     scale = scale or self.settings[&#39;scale.reaction&#39;]</span>
-    <span class="c1">#     tol = self.settings[&#39;tol.reaction&#39;]</span>
-    <span class="c1">#     tol2 = tol ** 2</span>
-    <span class="c1">#     for key in self.form.vertices_where({&#39;is_anchor&#39;: True}):</span>
-    <span class="c1">#         rx = 0</span>
-    <span class="c1">#         ry = 0</span>
-    <span class="c1">#         for nbr in self.form.vertex_neighbors(key):</span>
-    <span class="c1">#             if not self.form.edge_attribute((key, nbr), &#39;is_external&#39;):</span>
-    <span class="c1">#                 continue</span>
-    <span class="c1">#             f = self.form.edge_attribute((key, nbr), &#39;f&#39;)</span>
-    <span class="c1">#             u = self.form.edge_direction(key, nbr)</span>
-    <span class="c1">#             rx += u[0] * f</span>
-    <span class="c1">#             ry += u[1] * f</span>
-    <span class="c1">#         rx = scale * rx</span>
-    <span class="c1">#         ry = scale * ry</span>
-    <span class="c1">#         sp = self.form.vertex_coordinates(key)</span>
-    <span class="c1">#         if rx ** 2 + ry ** 2 &gt; tol2:</span>
-    <span class="c1">#             ep = sp[0] + rx, sp[1] + ry, sp[2]</span>
-    <span class="c1">#             lines.append({</span>
-    <span class="c1">#                 &#39;start&#39;: sp,</span>
-    <span class="c1">#                 &#39;end&#39;: ep,</span>
-    <span class="c1">#                 &#39;color&#39;: color,</span>
-    <span class="c1">#                 &#39;arrow&#39;: None,</span>
-    <span class="c1">#                 &#39;name&#39;: &quot;{}.reaction.{}&quot;.format(self.form.name, key)</span>
-    <span class="c1">#             })</span>
-    <span class="c1">#     self.guids[&#39;reactions&#39;] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)</span>
-
-    <span class="c1"># def draw_forces(self, scale=None, color=None):</span>
-    <span class="c1">#     compas_rhino.delete_objects(self.guids.setdefault(&#39;forces&#39;))</span>
-    <span class="c1">#     lines = []</span>
-    <span class="c1">#     color_compression = color or self.settings[&#39;color.compression&#39;]</span>
-    <span class="c1">#     color_tension = color or self.settings[&#39;color.tension&#39;]</span>
-    <span class="c1">#     scale = scale or self.settings[&#39;scale.force&#39;]</span>
-    <span class="c1">#     tol = self.settings[&#39;tol.force&#39;]</span>
-    <span class="c1">#     leaves = set(self.form.leaves())</span>
-    <span class="c1">#     for (u, v) in self.form.edges():</span>
-    <span class="c1">#         if u not in leaves and v not in leaves:</span>
-    <span class="c1">#             sp, ep = self.form.edge_coordinates(u, v)</span>
-    <span class="c1">#             f = self.form.edge_attribute((u, v), &#39;f&#39;)</span>
-    <span class="c1">#             radius = fabs(scale * f)</span>
-    <span class="c1">#             if radius &lt; tol:</span>
-    <span class="c1">#                 continue</span>
-    <span class="c1">#             color = color_compression if f &gt; 0 else color_tension</span>
-    <span class="c1">#             lines.append({</span>
-    <span class="c1">#                 &#39;start&#39;: sp,</span>
-    <span class="c1">#                 &#39;end&#39;: ep,</span>
-    <span class="c1">#                 &#39;radius&#39;: radius,</span>
-    <span class="c1">#                 &#39;color&#39;: color,</span>
-    <span class="c1">#                 &#39;name&#39;: &quot;{}.force.{}-{}&quot;.format(self.form.name, u, v)</span>
-    <span class="c1">#             })</span>
-    <span class="c1">#     self.guids[&#39;forces&#39;] = compas_rhino.draw_cylinders(lines, layer=self.layer, clear=False, redraw=True)</span>
-
-    <span class="c1"># def draw_residuals(self, scale=None, color=None):</span>
-    <span class="c1">#     compas_rhino.delete_objects(self.guids.setdefault(&#39;residuals&#39;))</span>
-    <span class="c1">#     lines = []</span>
-    <span class="c1">#     color = color or self.settings[&#39;color.residual&#39;]</span>
-    <span class="c1">#     scale = scale or self.settings[&#39;scale.residual&#39;]</span>
-    <span class="c1">#     tol = self.settings[&#39;tol.residual&#39;]</span>
-    <span class="c1">#     for key in self.form.vertices_where({&#39;is_anchor&#39;: False, &#39;is_external&#39;: False}):</span>
-    <span class="c1">#         r = self.form.vertex_attributes(key, [&#39;_rx&#39;, &#39;_ry&#39;, &#39;_rz&#39;])</span>
-    <span class="c1">#         r[:] = scale_vector(r, scale)</span>
-    <span class="c1">#         if length_vector(r) &lt; tol:</span>
-    <span class="c1">#             continue</span>
-    <span class="c1">#         sp = self.form.vertex_coordinates(key)</span>
-    <span class="c1">#         ep = add_vectors(sp, r)</span>
-    <span class="c1">#         lines.append({</span>
-    <span class="c1">#             &#39;start&#39;: sp,</span>
-    <span class="c1">#             &#39;end&#39;: ep,</span>
-    <span class="c1">#             &#39;color&#39;: color,</span>
-    <span class="c1">#             &#39;arrow&#39;: &#39;start&#39;,</span>
-    <span class="c1">#             &#39;name&#39;: &quot;{}.residual.{}&quot;.format(self.form.name, key)</span>
-    <span class="c1">#         })</span>
-    <span class="c1">#     self.guids[&#39;residuals&#39;] = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)</span>
-
-    <span class="c1"># def draw_angles(self, tol=5.0):</span>
-    <span class="c1">#     &quot;&quot;&quot;Draw labels with the angle deviation between corresponding edges of form and force.</span>
-
-    <span class="c1">#     The label is drawn at the midpoint of the form diagram edges.</span>
-    <span class="c1">#     GUIDs of Rhino objects created by this method are stored in ``FormArtist.guids[&#39;angles&#39;]``.</span>
-
-    <span class="c1">#     Parameters</span>
-    <span class="c1">#     ----------</span>
-    <span class="c1">#     tol : float, optional</span>
-    <span class="c1">#         Angles below this value are excluded from the labels.</span>
-    <span class="c1">#         Default is ``5.0``.</span>
-
-    <span class="c1">#     Returns</span>
-    <span class="c1">#     -------</span>
-    <span class="c1">#     None</span>
-    <span class="c1">#     &quot;&quot;&quot;</span>
-    <span class="c1">#     compas_rhino.delete_objects(self.guids.setdefault(&#39;angles&#39;))</span>
-    <span class="c1">#     a_max = tol if tol else max(self.form.edges_attribute(&#39;a&#39;))</span>
-    <span class="c1">#     a_min = 0</span>
-    <span class="c1">#     a_range = a_max - a_min</span>
-    <span class="c1">#     if a_range:</span>
-    <span class="c1">#         labels = []</span>
-    <span class="c1">#         for (u, v) in self.form.edges():</span>
-    <span class="c1">#             a = self.form.edge_attribute((u, v), &#39;a&#39;)</span>
-    <span class="c1">#             a_deg = 180 * a / 3.14159</span>
-    <span class="c1">#             if a_deg &gt; tol:</span>
-    <span class="c1">#                 labels.append({</span>
-    <span class="c1">#                     &#39;pos&#39;: self.form.edge_midpoint(u, v),</span>
-    <span class="c1">#                     &#39;text&#39;: &quot;{:.0f}&quot;.format(a_deg),</span>
-    <span class="c1">#                     &#39;color&#39;: i_to_green((a - a_min) / a_range),</span>
-    <span class="c1">#                     &#39;name&#39;: &quot;{}.angle.{}-{}&quot;.format(self.form.name, u, v)</span>
-    <span class="c1">#                 })</span>
-    <span class="c1">#         self.guids[&#39;angles&#39;] = compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_edgelabels</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># ==============================================================================</span>

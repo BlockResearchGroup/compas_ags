@@ -150,7 +150,7 @@ The magnitude of force represented by an edge is <code class="docutils literal n
 <td><p>Clear all previously drawn vertices.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.draw.html#compas_ags.rhino.ForceArtist.draw" title="compas_ags.rhino.ForceArtist.draw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw</span></code></a>()</p></td>
-<td><p>Draw the force diagram.</p></td>
+<td><p>Draw the diagram.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.draw_edgelabels.html#compas_ags.rhino.ForceArtist.draw_edgelabels" title="compas_ags.rhino.ForceArtist.draw_edgelabels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_edgelabels</span></code></a>([text, color])</p></td>
 <td><p>Draw the labels of the edges of the force diagram according to the drawing scale.</p></td>
@@ -171,13 +171,13 @@ The magnitude of force represented by an edge is <code class="docutils literal n
 <td><p>Draw the mesh as a consolidated RhinoMesh.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.draw_vertexlabels.html#compas_ags.rhino.ForceArtist.draw_vertexlabels" title="compas_ags.rhino.ForceArtist.draw_vertexlabels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_vertexlabels</span></code></a>([text, color])</p></td>
-<td><p>Draw the labels of the vertices of the force diagram according to the drawing scale.</p></td>
+<td><p>Draw the labels of the vertices of the diagram according to the drawing scale.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.draw_vertexnormals.html#compas_ags.rhino.ForceArtist.draw_vertexnormals" title="compas_ags.rhino.ForceArtist.draw_vertexnormals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_vertexnormals</span></code></a>([keys, color, scale])</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.draw_vertices.html#compas_ags.rhino.ForceArtist.draw_vertices" title="compas_ags.rhino.ForceArtist.draw_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_vertices</span></code></a>([keys, color])</p></td>
-<td><p>Draw the vertices of the force diagram according to the drawing scale.</p></td>
+<td><p>Draw the vertices of the diagram according to the drawing scale.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.from_data.html#compas_ags.rhino.ForceArtist.from_data" title="compas_ags.rhino.ForceArtist.from_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_data</span></code></a>(data)</p></td>
 <td><p></p></td>
@@ -188,10 +188,7 @@ The magnitude of force represented by an edge is <code class="docutils literal n
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.register.html#compas_ags.rhino.ForceArtist.register" title="compas_ags.rhino.ForceArtist.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a>(item_type, artist_type)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.rescale.html#compas_ags.rhino.ForceArtist.rescale" title="compas_ags.rhino.ForceArtist.rescale"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rescale</span></code></a>()</p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.to_data.html#compas_ags.rhino.ForceArtist.to_data" title="compas_ags.rhino.ForceArtist.to_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_data</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.to_data.html#compas_ags.rhino.ForceArtist.to_data" title="compas_ags.rhino.ForceArtist.to_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_data</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -204,12 +201,18 @@ The magnitude of force represented by an edge is <code class="docutils literal n
 </colgroup>
 <tbody>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchor_point</span></code></p></td>
-<td><p></p></td>
+<td><p>Location of the anchor point for the drawing of the diagram.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchor_vertex</span></code></p></td>
+<td><p>Identifier of the anchored vertex.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">diagram</span></code></p></td>
+<td><p>The diagram assigned to the artist.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">force</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">force</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">form</span></code></p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edge</span></code></p></td>
@@ -231,10 +234,10 @@ The magnitude of force represented by an edge is <code class="docutils literal n
 <td><p>Map between Rhino object GUIDs and force diagram vertex label identifiers.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></p></td>
-<td><p></p></td>
+<td><p>The drawing scale.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_xyz</span></code></p></td>
-<td><p></p></td>
+<td><p>Map between diagram vertices and drawing locations.</p></td>
 </tr>
 </tbody>
 </table>
