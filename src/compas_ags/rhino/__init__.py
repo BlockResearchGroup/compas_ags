@@ -27,6 +27,16 @@ Objects
     FormObject
     ForceObject
 
+
+Scene
+=====
+
+.. autosummary::
+    :toctree: generated/
+    :nosignatures:
+
+    Scene
+
 """
 from __future__ import absolute_import
 
