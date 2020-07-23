@@ -139,6 +139,28 @@
 
 <div class="viewcode-block" id="DiagramArtist.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramArtist.__init__.html#compas_ags.rhino.DiagramArtist.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">DiagramArtist</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;show.vertices&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;show.edges&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;show.faces&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;show.vertexlabels&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;show.edgelabels&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+            <span class="s1">&#39;show.facelabels&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;show.forces&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;color.vertices&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+            <span class="s1">&#39;color.vertices:is_fixed&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+            <span class="s1">&#39;color.edges&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s1">&#39;color.edges:is_ind&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+            <span class="s1">&#39;color.edges:is_external&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s1">&#39;color.edges:is_reaction&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s1">&#39;color.edges:is_load&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s1">&#39;color.faces&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">210</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">210</span><span class="p">),</span>
+            <span class="s1">&#39;color.compression&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
+            <span class="s1">&#39;color.tension&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s1">&#39;color.anchor&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s1">&#39;scale.forces&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
+            <span class="s1">&#39;tol.forces&#39;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span>
+        <span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_point</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_vertex</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span> <span class="o">=</span> <span class="kc">None</span>
@@ -310,7 +332,9 @@
         <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_xyz</span>
         <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">:</span>
-            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">vertex_color</span><span class="p">[</span><span class="n">vertex</span><span class="p">]})</span>
+            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span>
+                           <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">vertex_color</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span>
+                           <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.vertex.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">vertex</span><span class="p">)})</span>
         <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_points</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">guid_vertex</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">vertices</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">guids</span></div>
@@ -336,7 +360,10 @@
         <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_xyz</span>
         <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">vertex_text</span><span class="p">:</span>
-            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">vertex_color</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">vertex_text</span><span class="p">[</span><span class="n">vertex</span><span class="p">]})</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span>
+                           <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">vertex_color</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span>
+                           <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">vertex_text</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span>
+                           <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.vertexlabel.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">vertex</span><span class="p">)})</span>
         <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_labels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">guid_vertexlabel</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">vertex_text</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">guids</span></div>
@@ -362,7 +389,10 @@
         <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_xyz</span>
         <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
-            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">edge_color</span><span class="p">[</span><span class="n">edge</span><span class="p">]})</span>
+            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+                          <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span>
+                          <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">edge_color</span><span class="p">[</span><span class="n">edge</span><span class="p">],</span>
+                          <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.edge.</span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">edge</span><span class="p">)})</span>
         <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">guid_edge</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">guids</span></div>
@@ -397,7 +427,10 @@
             <span class="n">start</span> <span class="o">=</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
             <span class="n">end</span> <span class="o">=</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)]</span>
-            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">pos</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">edge_color</span><span class="p">[</span><span class="n">edge</span><span class="p">],</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">edge_text</span><span class="p">[</span><span class="n">edge</span><span class="p">]})</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">pos</span><span class="p">,</span>
+                           <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">edge_color</span><span class="p">[</span><span class="n">edge</span><span class="p">],</span>
+                           <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">edge_text</span><span class="p">[</span><span class="n">edge</span><span class="p">],</span>
+                           <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.edgelabel.</span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">edge</span><span class="p">)})</span>
         <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_labels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">guid_edgelabel</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">edge_text</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">guids</span></div>
@@ -427,7 +460,9 @@
         <span class="n">faces_</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">faces</span><span class="p">:</span>
             <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">face_vertices</span><span class="p">(</span><span class="n">face</span><span class="p">)]</span>
-            <span class="n">faces_</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;points&#39;</span><span class="p">:</span> <span class="n">points</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">face_color</span><span class="p">[</span><span class="n">face</span><span class="p">]})</span>
+            <span class="n">faces_</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;points&#39;</span><span class="p">:</span> <span class="n">points</span><span class="p">,</span>
+                           <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">face_color</span><span class="p">[</span><span class="n">face</span><span class="p">],</span>
+                           <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.face.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">face</span><span class="p">)})</span>
         <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_faces</span><span class="p">(</span><span class="n">faces_</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">guid_face</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">faces</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">guids</span></div>
@@ -454,68 +489,13 @@
         <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">face_text</span><span class="p">:</span>
             <span class="n">pos</span> <span class="o">=</span> <span class="n">centroid_points</span><span class="p">([</span><span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">face_vertices</span><span class="p">(</span><span class="n">face</span><span class="p">)])</span>
-            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">pos</span><span class="p">,</span> <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">face_color</span><span class="p">[</span><span class="n">face</span><span class="p">],</span> <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">face_text</span><span class="p">[</span><span class="n">face</span><span class="p">]})</span>
+            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">pos</span><span class="p">,</span>
+                           <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">face_color</span><span class="p">[</span><span class="n">face</span><span class="p">],</span>
+                           <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">face_text</span><span class="p">[</span><span class="n">face</span><span class="p">],</span>
+                           <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.facelabel.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">face</span><span class="p">)})</span>
         <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_labels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">guid_facelabel</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">face_text</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">guids</span></div></div>
-
-    <span class="c1"># def draw_anchor_point_vertex(self, color=None):</span>
-    <span class="c1">#     self.clear_anchor_point_vertex()</span>
-    <span class="c1">#     anchor_point = self.force.anchor_point()</span>
-    <span class="c1">#     self.clear_vertexlabels(keys=[anchor_point])</span>
-    <span class="c1">#     labels = []</span>
-    <span class="c1">#     labels.append({</span>
-    <span class="c1">#         &#39;pos&#39;  : self.force.vertex_coordinates(anchor_point),</span>
-    <span class="c1">#         &#39;text&#39; : str(anchor_point),</span>
-    <span class="c1">#         &#39;color&#39;: color or self.settings.get(&#39;color.anchor_point&#39;),</span>
-    <span class="c1">#         &#39;name&#39; : &quot;{}.anchor_point_vertex.{}&quot;.format(self.force.name, anchor_point)</span>
-    <span class="c1">#     })</span>
-    <span class="c1">#     compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=True)</span>
-
-    <span class="c1"># def draw_edge_force(self, draw=True):</span>
-    <span class="c1">#     force_dict = {}</span>
-    <span class="c1">#     c_dict  = {}</span>
-    <span class="c1">#     max_length = 0</span>
-
-    <span class="c1">#     for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):</span>
-    <span class="c1">#         length = attr[&#39;force&#39;]</span>
-    <span class="c1">#         if length &gt; max_length:</span>
-    <span class="c1">#             max_length = length</span>
-    <span class="c1">#         force_dict[(u, v)] = length</span>
-
-    <span class="c1">#     for i, (u, v) in enumerate(self.force.edges()):</span>
-    <span class="c1">#         value = force_dict[(u, v)] / max_length</span>
-    <span class="c1">#         c_dict[(u, v)] = i_to_rgb(value)</span>
-
-    <span class="c1">#     if draw is True:</span>
-    <span class="c1">#         self.draw_scale_edgelabels(text=dict((v,&quot;%s kN&quot; % k) for v, k in force_dict.items()), color=c_dict)</span>
-    <span class="c1">#     return c_dict</span>
-
-    <span class="c1"># def draw_independent_edges(self):</span>
-    <span class="c1">#     self.clear_independent_edge()</span>
-    <span class="c1">#     if self.form is None:</span>
-    <span class="c1">#         raise &quot;form diagram doesn&#39;t exist&quot;</span>
-    <span class="c1">#     else:</span>
-    <span class="c1">#         indices = find_force_ind(self.form, self.force)</span>
-
-    <span class="c1">#     anchor_point = self.force.anchor_point()</span>
-    <span class="c1">#     dx = self.force.vertex_coordinates(anchor_point)[0]</span>
-    <span class="c1">#     dy = self.force.vertex_coordinates(anchor_point)[1]</span>
-
-    <span class="c1">#     lines = []</span>
-    <span class="c1">#     for index, ((u, v), attr) in enumerate(self.force.edges(True)):</span>
-    <span class="c1">#         if (u, v) in indices:</span>
-    <span class="c1">#             u_x = self.force.vertex_coordinates(u)[0]</span>
-    <span class="c1">#             u_y = self.force.vertex_coordinates(u)[1]</span>
-    <span class="c1">#             v_x = self.force.vertex_coordinates(v)[0]</span>
-    <span class="c1">#             v_y = self.force.vertex_coordinates(v)[1]</span>
-    <span class="c1">#             lines.append({</span>
-    <span class="c1">#                 &#39;start&#39;: [dx + (u_x - dx) / self.scale, dy + (u_y - dy) / self.scale, 0],</span>
-    <span class="c1">#                 &#39;end&#39;: [dx + (v_x - dx) / self.scale, dy + (v_y - dy) / self.scale, 0],</span>
-    <span class="c1">#                 &#39;name&#39;: &quot;{}.independent_edge.{}&quot;.format(self.force.name, index),</span>
-    <span class="c1">#                 &#39;width&#39;: 1.0</span>
-    <span class="c1">#             })</span>
-    <span class="c1">#     return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=True)</span>
 
 
 <span class="c1"># ==============================================================================</span>

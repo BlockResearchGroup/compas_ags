@@ -91,11 +91,7 @@
 <div class="viewcode-block" id="FormDiagram.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.__init__.html#compas_ags.diagrams.FormDiagram.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FormDiagram</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;FormDiagram&#39;</span><span class="p">,</span>
-            <span class="s1">&#39;color.vertex&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
-            <span class="s1">&#39;color.edge&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="s1">&#39;color.face&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
-            <span class="s1">&#39;color.vertex:is_fixed&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Form&#39;</span><span class="p">,</span>
         <span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_default_vertex_attributes</span><span class="p">({</span>
             <span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
@@ -103,6 +99,8 @@
             <span class="s1">&#39;cy&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_default_edge_attributes</span><span class="p">({</span>
+            <span class="s1">&#39;_is_edge&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
+
             <span class="s1">&#39;q&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
             <span class="s1">&#39;f&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
             <span class="s1">&#39;l&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -110,12 +108,15 @@
             <span class="s1">&#39;is_external&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s1">&#39;is_reaction&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s1">&#39;is_load&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;is_edge&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
         <span class="p">})</span></div>
 
 <div class="viewcode-block" id="FormDiagram.from_graph"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.from_graph.html#compas_ags.diagrams.FormDiagram.from_graph">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_graph</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Construct a form diagram from a form graph.</span>
+
+<span class="sd">        This constructor converts the form graph into a mesh by finding the cycles of its planar embedding.</span>
+<span class="sd">        Note that tt doesn&#39;t check if the graph actually is a planar embedding.</span>
+<span class="sd">        The outside face of the mesh is automatically split into smaller faces at the leaves.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -128,12 +129,35 @@
         <span class="n">points</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">to_points</span><span class="p">()</span>
         <span class="n">cycles</span> <span class="o">=</span> <span class="n">network_find_cycles</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">breakpoints</span><span class="o">=</span><span class="n">graph</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
         <span class="n">form</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_vertices_and_faces</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">cycles</span><span class="p">)</span>
-        <span class="n">form</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;is_edge&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges_on_boundary</span><span class="p">()))</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;_is_edge&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges_on_boundary</span><span class="p">()))</span>
         <span class="n">form</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;is_external&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">leaf_edges</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">form</span></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="c1"># Topology</span>
+    <span class="c1"># vertices</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="FormDiagram.leaves"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.leaves.html#compas_ags.diagrams.FormDiagram.leaves">[docs]</a>    <span class="k">def</span> <span class="nf">leaves</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Identify the leaves of the form diagram.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list</span>
+<span class="sd">            The identifiers of vertices with only one connected edge.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
+            <span class="n">edges</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">nbrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="n">nbrs</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">((</span><span class="n">key</span><span class="p">,</span> <span class="n">nbr</span><span class="p">),</span> <span class="s1">&#39;_is_edge&#39;</span><span class="p">):</span>
+                    <span class="n">edges</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="n">edges</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">keys</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># edges</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
 <div class="viewcode-block" id="FormDiagram.edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.edges.html#compas_ags.diagrams.FormDiagram.edges">[docs]</a>    <span class="k">def</span> <span class="nf">edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
@@ -157,84 +181,27 @@
                     <span class="k">continue</span>
                 <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
                 <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">((</span><span class="n">v</span><span class="p">,</span> <span class="n">u</span><span class="p">))</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span> <span class="s1">&#39;is_edge&#39;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span> <span class="s1">&#39;_is_edge&#39;</span><span class="p">):</span>
                     <span class="k">continue</span>
                 <span class="k">if</span> <span class="ow">not</span> <span class="n">data</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_attributes</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="FormDiagram.leaves"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.leaves.html#compas_ags.diagrams.FormDiagram.leaves">[docs]</a>    <span class="k">def</span> <span class="nf">leaves</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Identify the leaves of the form diagram.</span>
+<div class="viewcode-block" id="FormDiagram.leaf_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.leaf_edges.html#compas_ags.diagrams.FormDiagram.leaf_edges">[docs]</a>    <span class="k">def</span> <span class="nf">leaf_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Identify the edges connecting leaf vertices to the diagram.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list</span>
-<span class="sd">            The identifiers of vertices with only one connected edge.</span>
+<span class="sd">            The identifiers of the edges.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">keys</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
-            <span class="n">edges</span> <span class="o">=</span> <span class="mi">0</span>
-            <span class="n">nbrs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="n">nbrs</span><span class="p">:</span>
-                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">((</span><span class="n">key</span><span class="p">,</span> <span class="n">nbr</span><span class="p">),</span> <span class="s1">&#39;is_edge&#39;</span><span class="p">):</span>
-                    <span class="n">edges</span> <span class="o">+=</span> <span class="mi">1</span>
-            <span class="k">if</span> <span class="n">edges</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="n">keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">keys</span></div>
-
-<div class="viewcode-block" id="FormDiagram.leaf_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.leaf_edges.html#compas_ags.diagrams.FormDiagram.leaf_edges">[docs]</a>    <span class="k">def</span> <span class="nf">leaf_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">leaves</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
         <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">leaves</span> <span class="ow">or</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>
                 <span class="n">edges</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">edges</span></div>
-
-<div class="viewcode-block" id="FormDiagram.face_adjacency_edge"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.face_adjacency_edge.html#compas_ags.diagrams.FormDiagram.face_adjacency_edge">[docs]</a>    <span class="k">def</span> <span class="nf">face_adjacency_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">):</span>
-        <span class="n">edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
-        <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">face_halfedges</span><span class="p">(</span><span class="n">f1</span><span class="p">):</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">u</span><span class="p">]</span> <span class="o">==</span> <span class="n">f2</span><span class="p">:</span>
-                <span class="k">if</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
-                    <span class="k">return</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
-                <span class="k">return</span> <span class="n">v</span><span class="p">,</span> <span class="n">u</span></div>
-
-<div class="viewcode-block" id="FormDiagram.uv_index"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.uv_index.html#compas_ags.diagrams.FormDiagram.uv_index">[docs]</a>    <span class="k">def</span> <span class="nf">uv_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span></div>
-
-<div class="viewcode-block" id="FormDiagram.index_uv"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.index_uv.html#compas_ags.diagrams.FormDiagram.index_uv">[docs]</a>    <span class="k">def</span> <span class="nf">index_uv</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="n">index</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">())}</span></div>
-
-    <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="c1"># Convenience functions for retrieving the attributes of the formdiagram.</span>
-    <span class="c1"># --------------------------------------------------------------------------</span>
-
-<div class="viewcode-block" id="FormDiagram.q"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.q.html#compas_ags.diagrams.FormDiagram.q">[docs]</a>    <span class="k">def</span> <span class="nf">q</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="FormDiagram.xy"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.xy.html#compas_ags.diagrams.FormDiagram.xy">[docs]</a>    <span class="k">def</span> <span class="nf">xy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attributes</span><span class="p">(</span><span class="s1">&#39;xy&#39;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="FormDiagram.fixed"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.fixed.html#compas_ags.diagrams.FormDiagram.fixed">[docs]</a>    <span class="k">def</span> <span class="nf">fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span></div>
-
-<div class="viewcode-block" id="FormDiagram.constrained"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.constrained.html#compas_ags.diagrams.FormDiagram.constrained">[docs]</a>    <span class="k">def</span> <span class="nf">constrained</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;cx&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;cy&#39;</span><span class="p">]]</span></div>
-
-<div class="viewcode-block" id="FormDiagram.constraints"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.constraints.html#compas_ags.diagrams.FormDiagram.constraints">[docs]</a>    <span class="k">def</span> <span class="nf">constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">cx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;cx&#39;</span><span class="p">)</span>
-        <span class="n">cy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;cy&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span></div>
-
-<div class="viewcode-block" id="FormDiagram.ind"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.ind.html#compas_ags.diagrams.FormDiagram.ind">[docs]</a>    <span class="k">def</span> <span class="nf">ind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_ind&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span></div>
-
-    <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="c1"># Set stuff</span>
-    <span class="c1"># --------------------------------------------------------------------------</span>
-
-    <span class="c1"># def set_fixed(self, keys):</span>
-    <span class="c1">#     self.vertices_attribute(&#39;is_fixed&#39;, True, keys=keys)</span>
 
 <div class="viewcode-block" id="FormDiagram.edge_forcedensity"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.edge_forcedensity.html#compas_ags.diagrams.FormDiagram.edge_forcedensity">[docs]</a>    <span class="k">def</span> <span class="nf">edge_forcedensity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">,</span> <span class="n">q</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get or set the forcedensity in an edge.</span>
@@ -285,7 +252,31 @@
         <span class="k">if</span> <span class="n">force</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">q</span> <span class="o">*</span> <span class="n">length</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;is_ind&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="n">force</span> <span class="o">/</span> <span class="n">length</span><span class="p">)</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">,</span> <span class="n">force</span> <span class="o">/</span> <span class="n">length</span><span class="p">)</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># Convenience functions for retrieving the attributes of the formdiagram.</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="FormDiagram.q"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.q.html#compas_ags.diagrams.FormDiagram.q">[docs]</a>    <span class="k">def</span> <span class="nf">q</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;q&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FormDiagram.xy"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.xy.html#compas_ags.diagrams.FormDiagram.xy">[docs]</a>    <span class="k">def</span> <span class="nf">xy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attributes</span><span class="p">(</span><span class="s1">&#39;xy&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FormDiagram.fixed"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.fixed.html#compas_ags.diagrams.FormDiagram.fixed">[docs]</a>    <span class="k">def</span> <span class="nf">fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span></div>
+
+<div class="viewcode-block" id="FormDiagram.constrained"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.constrained.html#compas_ags.diagrams.FormDiagram.constrained">[docs]</a>    <span class="k">def</span> <span class="nf">constrained</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;cx&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;cy&#39;</span><span class="p">]]</span></div>
+
+<div class="viewcode-block" id="FormDiagram.constraints"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.constraints.html#compas_ags.diagrams.FormDiagram.constraints">[docs]</a>    <span class="k">def</span> <span class="nf">constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;cx&#39;</span><span class="p">)</span>
+        <span class="n">cy</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;cy&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span></div>
+
+<div class="viewcode-block" id="FormDiagram.ind"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.ind.html#compas_ags.diagrams.FormDiagram.ind">[docs]</a>    <span class="k">def</span> <span class="nf">ind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_ind&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span></div></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Identify features of the formdiagram based on geometrical inputs.</span>

@@ -81,7 +81,7 @@
 <dl class="class">
 <dt id="compas_ags.rhino.FormArtist">
 <em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">FormArtist</code><span class="sig-paren">(</span><em class="sig-param">form</em>, <em class="sig-param">scale=None</em>, <em class="sig-param">settings=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/formartist.html#FormArtist"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_rhino.artists.meshartist.MeshArtist</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.rhino.diagramartist.DiagramArtist</span></code></p>
 <p>Artist for form diagram in AGS.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -112,7 +112,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">None</sp
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.clear.html#compas_ags.rhino.FormArtist.clear" title="compas_ags.rhino.FormArtist.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a>()</p></td>
-<td><p>Clear the vertices, faces and edges of the mesh, without clearing the other elements in the layer.</p></td>
+<td><p>Clear all objects previously drawn by this artist.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.clear_edgelabels.html#compas_ags.rhino.FormArtist.clear_edgelabels" title="compas_ags.rhino.FormArtist.clear_edgelabels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_edgelabels</span></code></a>([keys])</p></td>
 <td><p>Clear all previously drawn edge labels.</p></td>
@@ -148,42 +148,45 @@ Default is <code class="docutils literal notranslate"><span class="pre">None</sp
 <td><p>Draw the form diagram.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_edgelabels.html#compas_ags.rhino.FormArtist.draw_edgelabels" title="compas_ags.rhino.FormArtist.draw_edgelabels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_edgelabels</span></code></a>([text, color])</p></td>
-<td><p>Draw labels for a selection of edges.</p></td>
+<td><p>Draw the labels of the edges of the force diagram according to the drawing scale.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_edges.html#compas_ags.rhino.FormArtist.draw_edges" title="compas_ags.rhino.FormArtist.draw_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_edges</span></code></a>([keys, color])</p></td>
-<td><p>Draw a selection of edges.</p></td>
+<td><p>Draw the edges of the force diagram according to the drawing scale.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_facelabels.html#compas_ags.rhino.FormArtist.draw_facelabels" title="compas_ags.rhino.FormArtist.draw_facelabels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_facelabels</span></code></a>([text, color])</p></td>
-<td><p>Draw labels for a selection of faces.</p></td>
+<td><p>Draw the labels of the faces of the force diagram according to the drawing scale.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_facenormals.html#compas_ags.rhino.FormArtist.draw_facenormals" title="compas_ags.rhino.FormArtist.draw_facenormals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_facenormals</span></code></a>([keys, color, scale])</p></td>
 <td><p>Draw the normals of the faces.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_faces.html#compas_ags.rhino.FormArtist.draw_faces" title="compas_ags.rhino.FormArtist.draw_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_faces</span></code></a>([keys, color, join_faces])</p></td>
-<td><p>Draw a selection of faces.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_faces.html#compas_ags.rhino.FormArtist.draw_faces" title="compas_ags.rhino.FormArtist.draw_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_faces</span></code></a>([keys, color])</p></td>
+<td><p>Draw the faces of the force diagram according to the drawing scale.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_mesh.html#compas_ags.rhino.FormArtist.draw_mesh" title="compas_ags.rhino.FormArtist.draw_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_mesh</span></code></a>([color, disjoint])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_forces.html#compas_ags.rhino.FormArtist.draw_forces" title="compas_ags.rhino.FormArtist.draw_forces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_forces</span></code></a>()</p></td>
+<td><p>Draw the forces in the internal edges as pipes with color and thickness matching the force value.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_mesh.html#compas_ags.rhino.FormArtist.draw_mesh" title="compas_ags.rhino.FormArtist.draw_mesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_mesh</span></code></a>([color, disjoint])</p></td>
 <td><p>Draw the mesh as a consolidated RhinoMesh.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_vertexlabels.html#compas_ags.rhino.FormArtist.draw_vertexlabels" title="compas_ags.rhino.FormArtist.draw_vertexlabels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_vertexlabels</span></code></a>([text, color])</p></td>
-<td><p>Draw labels for a selection vertices.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_vertexlabels.html#compas_ags.rhino.FormArtist.draw_vertexlabels" title="compas_ags.rhino.FormArtist.draw_vertexlabels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_vertexlabels</span></code></a>([text, color])</p></td>
+<td><p>Draw the labels of the vertices of the diagram according to the drawing scale.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_vertexnormals.html#compas_ags.rhino.FormArtist.draw_vertexnormals" title="compas_ags.rhino.FormArtist.draw_vertexnormals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_vertexnormals</span></code></a>([keys, color, scale])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_vertexnormals.html#compas_ags.rhino.FormArtist.draw_vertexnormals" title="compas_ags.rhino.FormArtist.draw_vertexnormals"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_vertexnormals</span></code></a>([keys, color, scale])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_vertices.html#compas_ags.rhino.FormArtist.draw_vertices" title="compas_ags.rhino.FormArtist.draw_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_vertices</span></code></a>([keys, color])</p></td>
-<td><p>Draw a selection of vertices.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.draw_vertices.html#compas_ags.rhino.FormArtist.draw_vertices" title="compas_ags.rhino.FormArtist.draw_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw_vertices</span></code></a>([keys, color])</p></td>
+<td><p>Draw the vertices of the diagram according to the drawing scale.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.from_data.html#compas_ags.rhino.FormArtist.from_data" title="compas_ags.rhino.FormArtist.from_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_data</span></code></a>(data)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.from_data.html#compas_ags.rhino.FormArtist.from_data" title="compas_ags.rhino.FormArtist.from_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_data</span></code></a>(data)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.redraw.html#compas_ags.rhino.FormArtist.redraw" title="compas_ags.rhino.FormArtist.redraw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redraw</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.redraw.html#compas_ags.rhino.FormArtist.redraw" title="compas_ags.rhino.FormArtist.redraw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redraw</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.register.html#compas_ags.rhino.FormArtist.register" title="compas_ags.rhino.FormArtist.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a>(item_type, artist_type)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.register.html#compas_ags.rhino.FormArtist.register" title="compas_ags.rhino.FormArtist.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a>(item_type, artist_type)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.to_data.html#compas_ags.rhino.FormArtist.to_data" title="compas_ags.rhino.FormArtist.to_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_data</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormArtist.to_data.html#compas_ags.rhino.FormArtist.to_data" title="compas_ags.rhino.FormArtist.to_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_data</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -195,8 +198,44 @@ Default is <code class="docutils literal notranslate"><span class="pre">None</sp
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">form</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchor_point</span></code></p></td>
+<td><p>Location of the anchor point for the drawing of the diagram.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchor_vertex</span></code></p></td>
+<td><p>Identifier of the anchored vertex.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">diagram</span></code></p></td>
+<td><p>The diagram assigned to the artist.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">form</span></code></p></td>
 <td><p>The form diagram assigned to the artist.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edge</span></code></p></td>
+<td><p>Map between Rhino object GUIDs and force diagram edge identifiers.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edgelabel</span></code></p></td>
+<td><p>Map between Rhino object GUIDs and force diagram edge label identifiers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_face</span></code></p></td>
+<td><p>Map between Rhino object GUIDs and force diagram face identifiers.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_facelabel</span></code></p></td>
+<td><p>Map between Rhino object GUIDs and force diagram face label identifiers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_force</span></code></p></td>
+<td><p>Map between Rhino object GUIDs and form diagram edge force identifiers.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertex</span></code></p></td>
+<td><p>Map between Rhino object GUIDs and force diagram vertex identifiers.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertexlabel</span></code></p></td>
+<td><p>Map between Rhino object GUIDs and force diagram vertex label identifiers.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></p></td>
+<td><p>The drawing scale.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_xyz</span></code></p></td>
+<td><p>Map between diagram vertices and drawing locations.</p></td>
 </tr>
 </tbody>
 </table>

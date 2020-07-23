@@ -83,6 +83,11 @@
 <em class="property">class </em><code class="sig-prename descclassname">compas_ags.diagrams.</code><code class="sig-name descname">Diagram</code><a class="reference internal" href="../../_modules/compas_ags/diagrams/diagram.html#Diagram"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">compas.datastructures.mesh._mesh.Mesh</span></code></p>
 <p>Basic mesh-based data structure for diagrams in AGS.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><p><strong>dual</strong> (<a class="reference internal" href="#compas_ags.diagrams.Diagram" title="compas_ags.diagrams.Diagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.Diagram</span></code></a>) – The dual diagram of this diagram.</p>
+</dd>
+</dl>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -135,23 +140,23 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.delete_vertex.html#compas_ags.diagrams.Diagram.delete_vertex" title="compas_ags.diagrams.Diagram.delete_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_vertex</span></code></a>(key)</p></td>
 <td><p>Delete a vertex from the mesh and everything that is attached to it.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.dual.html#compas_ags.diagrams.Diagram.dual" title="compas_ags.diagrams.Diagram.dual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dual</span></code></a>([cls])</p></td>
-<td><p>Construct the dual of a mesh.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_attribute.html#compas_ags.diagrams.Diagram.edge_attribute" title="compas_ags.diagrams.Diagram.edge_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_attribute</span></code></a>(key, name[, value])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_attribute.html#compas_ags.diagrams.Diagram.edge_attribute" title="compas_ags.diagrams.Diagram.edge_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_attribute</span></code></a>(key, name[, value])</p></td>
 <td><p>Get or set an attribute of an edge.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_attributes.html#compas_ags.diagrams.Diagram.edge_attributes" title="compas_ags.diagrams.Diagram.edge_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_attributes</span></code></a>(key[, names, values])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_attributes.html#compas_ags.diagrams.Diagram.edge_attributes" title="compas_ags.diagrams.Diagram.edge_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_attributes</span></code></a>(key[, names, values])</p></td>
 <td><p>Get or set multiple attributes of an edge.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_coordinates.html#compas_ags.diagrams.Diagram.edge_coordinates" title="compas_ags.diagrams.Diagram.edge_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_coordinates</span></code></a>(u, v[, axes])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_coordinates.html#compas_ags.diagrams.Diagram.edge_coordinates" title="compas_ags.diagrams.Diagram.edge_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_coordinates</span></code></a>(u, v[, axes])</p></td>
 <td><p>Return the coordinates of the start and end point of an edge.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_direction.html#compas_ags.diagrams.Diagram.edge_direction" title="compas_ags.diagrams.Diagram.edge_direction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_direction</span></code></a>(u, v)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_direction.html#compas_ags.diagrams.Diagram.edge_direction" title="compas_ags.diagrams.Diagram.edge_direction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_direction</span></code></a>(u, v)</p></td>
 <td><p>Return the direction vector of an edge.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_faces.html#compas_ags.diagrams.Diagram.edge_faces" title="compas_ags.diagrams.Diagram.edge_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_faces</span></code></a>(u, v)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_faces.html#compas_ags.diagrams.Diagram.edge_faces" title="compas_ags.diagrams.Diagram.edge_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_faces</span></code></a>(u, v)</p></td>
 <td><p>Find the two faces adjacent to an edge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_index.html#compas_ags.diagrams.Diagram.edge_index" title="compas_ags.diagrams.Diagram.edge_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code></a>()</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.edge_length.html#compas_ags.diagrams.Diagram.edge_length" title="compas_ags.diagrams.Diagram.edge_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_length</span></code></a>(u, v)</p></td>
 <td><p>Return the length of an edge.</p></td>
@@ -357,8 +362,14 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.has_vertex.html#compas_ags.diagrams.Diagram.has_vertex" title="compas_ags.diagrams.Diagram.has_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_vertex</span></code></a>(key)</p></td>
 <td><p>Verify that a vertex is in the mesh.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.index_key.html#compas_ags.diagrams.Diagram.index_key" title="compas_ags.diagrams.Diagram.index_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index_key</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.index_edge.html#compas_ags.diagrams.Diagram.index_edge" title="compas_ags.diagrams.Diagram.index_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index_edge</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.index_key.html#compas_ags.diagrams.Diagram.index_key" title="compas_ags.diagrams.Diagram.index_key"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index_key</span></code></a>()</p></td>
 <td><p>Returns a dictionary that maps the indices of a vertex list to keys in a vertex dictionary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.index_vertex.html#compas_ags.diagrams.Diagram.index_vertex" title="compas_ags.diagrams.Diagram.index_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index_vertex</span></code></a>()</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.insert_vertex.html#compas_ags.diagrams.Diagram.insert_vertex" title="compas_ags.diagrams.Diagram.insert_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert_vertex</span></code></a>(fkey[, key, xyz, return_fkeys])</p></td>
 <td><p>Insert a vertex in the specified face.</p></td>
@@ -528,46 +539,49 @@
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_faces.html#compas_ags.diagrams.Diagram.vertex_faces" title="compas_ags.diagrams.Diagram.vertex_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_faces</span></code></a>(key[, ordered, include_none])</p></td>
 <td><p>The faces connected to a vertex.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_laplacian.html#compas_ags.diagrams.Diagram.vertex_laplacian" title="compas_ags.diagrams.Diagram.vertex_laplacian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_laplacian</span></code></a>(key)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_index.html#compas_ags.diagrams.Diagram.vertex_index" title="compas_ags.diagrams.Diagram.vertex_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_index</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_laplacian.html#compas_ags.diagrams.Diagram.vertex_laplacian" title="compas_ags.diagrams.Diagram.vertex_laplacian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_laplacian</span></code></a>(key)</p></td>
 <td><p>Compute the vector from a vertex to the centroid of its neighbors.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_max_degree.html#compas_ags.diagrams.Diagram.vertex_max_degree" title="compas_ags.diagrams.Diagram.vertex_max_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_max_degree</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_max_degree.html#compas_ags.diagrams.Diagram.vertex_max_degree" title="compas_ags.diagrams.Diagram.vertex_max_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_max_degree</span></code></a>()</p></td>
 <td><p>Compute the maximum degree of all vertices.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_min_degree.html#compas_ags.diagrams.Diagram.vertex_min_degree" title="compas_ags.diagrams.Diagram.vertex_min_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_min_degree</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_min_degree.html#compas_ags.diagrams.Diagram.vertex_min_degree" title="compas_ags.diagrams.Diagram.vertex_min_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_min_degree</span></code></a>()</p></td>
 <td><p>Compute the minimum degree of all vertices.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_neighborhood.html#compas_ags.diagrams.Diagram.vertex_neighborhood" title="compas_ags.diagrams.Diagram.vertex_neighborhood"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_neighborhood</span></code></a>(key[, ring])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_neighborhood.html#compas_ags.diagrams.Diagram.vertex_neighborhood" title="compas_ags.diagrams.Diagram.vertex_neighborhood"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_neighborhood</span></code></a>(key[, ring])</p></td>
 <td><p>Return the vertices in the neighborhood of a vertex.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_neighborhood_centroid.html#compas_ags.diagrams.Diagram.vertex_neighborhood_centroid" title="compas_ags.diagrams.Diagram.vertex_neighborhood_centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_neighborhood_centroid</span></code></a>(key)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_neighborhood_centroid.html#compas_ags.diagrams.Diagram.vertex_neighborhood_centroid" title="compas_ags.diagrams.Diagram.vertex_neighborhood_centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_neighborhood_centroid</span></code></a>(key)</p></td>
 <td><p>Compute the centroid of the neighbors of a vertex.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_neighbors.html#compas_ags.diagrams.Diagram.vertex_neighbors" title="compas_ags.diagrams.Diagram.vertex_neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_neighbors</span></code></a>(key[, ordered])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_neighbors.html#compas_ags.diagrams.Diagram.vertex_neighbors" title="compas_ags.diagrams.Diagram.vertex_neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_neighbors</span></code></a>(key[, ordered])</p></td>
 <td><p>Return the neighbors of a vertex.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_normal.html#compas_ags.diagrams.Diagram.vertex_normal" title="compas_ags.diagrams.Diagram.vertex_normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_normal</span></code></a>(key)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertex_normal.html#compas_ags.diagrams.Diagram.vertex_normal" title="compas_ags.diagrams.Diagram.vertex_normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_normal</span></code></a>(key)</p></td>
 <td><p>Return the normal vector at the vertex as the weighted average of the normals of the neighboring faces.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices.html#compas_ags.diagrams.Diagram.vertices" title="compas_ags.diagrams.Diagram.vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices</span></code></a>([data])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices.html#compas_ags.diagrams.Diagram.vertices" title="compas_ags.diagrams.Diagram.vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices</span></code></a>([data])</p></td>
 <td><p>Iterate over the vertices of the mesh.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_attribute.html#compas_ags.diagrams.Diagram.vertices_attribute" title="compas_ags.diagrams.Diagram.vertices_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_attribute</span></code></a>(name[, value, keys])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_attribute.html#compas_ags.diagrams.Diagram.vertices_attribute" title="compas_ags.diagrams.Diagram.vertices_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_attribute</span></code></a>(name[, value, keys])</p></td>
 <td><p>Get or set an attribute of multiple vertices.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_attributes.html#compas_ags.diagrams.Diagram.vertices_attributes" title="compas_ags.diagrams.Diagram.vertices_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_attributes</span></code></a>([names, values, keys])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_attributes.html#compas_ags.diagrams.Diagram.vertices_attributes" title="compas_ags.diagrams.Diagram.vertices_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_attributes</span></code></a>([names, values, keys])</p></td>
 <td><p>Get or set multiple attributes of multiple vertices.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_on_boundaries.html#compas_ags.diagrams.Diagram.vertices_on_boundaries" title="compas_ags.diagrams.Diagram.vertices_on_boundaries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_on_boundaries</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_on_boundaries.html#compas_ags.diagrams.Diagram.vertices_on_boundaries" title="compas_ags.diagrams.Diagram.vertices_on_boundaries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_on_boundaries</span></code></a>()</p></td>
 <td><p>Find the vertices on all boundaries of the mesh.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_on_boundary.html#compas_ags.diagrams.Diagram.vertices_on_boundary" title="compas_ags.diagrams.Diagram.vertices_on_boundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_on_boundary</span></code></a>([ordered])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_on_boundary.html#compas_ags.diagrams.Diagram.vertices_on_boundary" title="compas_ags.diagrams.Diagram.vertices_on_boundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_on_boundary</span></code></a>([ordered])</p></td>
 <td><p>Find the vertices on the boundary.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_where.html#compas_ags.diagrams.Diagram.vertices_where" title="compas_ags.diagrams.Diagram.vertices_where"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_where</span></code></a>(conditions[, data])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_where.html#compas_ags.diagrams.Diagram.vertices_where" title="compas_ags.diagrams.Diagram.vertices_where"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_where</span></code></a>(conditions[, data])</p></td>
 <td><p>Get vertices for which a certain condition or set of conditions is true.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_where_predicate.html#compas_ags.diagrams.Diagram.vertices_where_predicate" title="compas_ags.diagrams.Diagram.vertices_where_predicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_where_predicate</span></code></a>(predicate[, data])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.Diagram.vertices_where_predicate.html#compas_ags.diagrams.Diagram.vertices_where_predicate" title="compas_ags.diagrams.Diagram.vertices_where_predicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_where_predicate</span></code></a>(predicate[, data])</p></td>
 <td><p>Get vertices for which a certain condition or set of conditions is true using a lambda function.</p></td>
 </tr>
 </tbody>
@@ -585,7 +599,10 @@
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></p></td>
 <td><p>A data dict representing the mesh data structure for serialisation.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dual</span></code></p></td>
+<td><p>The dual of this diagram.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
 <td><p>The name of the data structure.</p></td>
 </tr>
 </tbody>
