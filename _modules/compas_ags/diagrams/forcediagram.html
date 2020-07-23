@@ -86,31 +86,6 @@
 
 <div class="viewcode-block" id="ForceDiagram"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.html#compas_ags.diagrams.ForceDiagram">[docs]</a><span class="k">class</span> <span class="nc">ForceDiagram</span><span class="p">(</span><span class="n">Diagram</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Mesh-based data structure for force diagrams in AGS.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    None</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    dual : :class:`compas_ags.diagrams.FormDiagram`</span>
-<span class="sd">        The dual of the force diagram is a form diagram.</span>
-
-<span class="sd">    Notes</span>
-<span class="sd">    -----</span>
-<span class="sd">    The force diagram has only 1 constructor function: ``ForceDiagram.from_formdiagram``</span>
-
-<span class="sd">    Examples</span>
-<span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; from compas_ags.diagrams import FormGraph</span>
-<span class="sd">    &gt;&gt;&gt; from compas_ags.diagrams import FormDiagram</span>
-<span class="sd">    &gt;&gt;&gt; from compas_ags.diagrams import ForceDiagram</span>
-
-<span class="sd">    &gt;&gt;&gt; graph = FormGraph.from_lines(...)</span>
-<span class="sd">    &gt;&gt;&gt; form = FormDiagram.from_graph(graph)</span>
-<span class="sd">    &gt;&gt;&gt; force = ForceDiagram.from_formdiagram(form)</span>
-<span class="sd">    &gt;&gt;&gt; force.dual is form</span>
-<span class="sd">    True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="ForceDiagram.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.__init__.html#compas_ags.diagrams.ForceDiagram.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

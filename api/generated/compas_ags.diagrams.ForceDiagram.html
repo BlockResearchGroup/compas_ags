@@ -83,29 +83,6 @@
 <em class="property">class </em><code class="sig-prename descclassname">compas_ags.diagrams.</code><code class="sig-name descname">ForceDiagram</code><a class="reference internal" href="../../_modules/compas_ags/diagrams/forcediagram.html#ForceDiagram"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.diagram.Diagram</span></code></p>
 <p>Mesh-based data structure for force diagrams in AGS.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>None</strong></p>
-</dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><p><strong>dual</strong> (<a class="reference internal" href="compas_ags.diagrams.FormDiagram.html#compas_ags.diagrams.FormDiagram" title="compas_ags.diagrams.FormDiagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.FormDiagram</span></code></a>) – The dual of the force diagram is a form diagram.</p>
-</dd>
-</dl>
-<p class="rubric">Notes</p>
-<p>The force diagram has only 1 constructor function: <code class="docutils literal notranslate"><span class="pre">ForceDiagram.from_formdiagram</span></code></p>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">FormGraph</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">FormDiagram</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">ForceDiagram</span>
-</code></pre></div>
-</div>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">graph</span> <span class="o">=</span> <span class="n">FormGraph</span><span class="o">.</span><span class="n">from_lines</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_formdiagram</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">force</span><span class="o">.</span><span class="n">dual</span> <span class="ow">is</span> <span class="n">form</span>
-<span class="go">True</span>
-</code></pre></div>
-</div>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
