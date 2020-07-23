@@ -35,8 +35,8 @@ force.data = graphstatics.force_update_from_form_proxy(force.data, form.data)
 # Visualize and Interact
 # ==============================================================================
 
-form_object = FormObject(None, form, name="Form", layer="AGS::FormDiagram")
-force_object = ForceObject(None, force, name="Force", layer="AGS::ForceDiagram")
+form_object = FormObject(form, name="Form", layer="AGS::FormDiagram")
+force_object = ForceObject(force, name="Force", layer="AGS::ForceDiagram")
 
 form_object.artist.anchor_vertex = 9
 
