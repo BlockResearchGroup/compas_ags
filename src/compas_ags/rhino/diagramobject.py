@@ -7,17 +7,13 @@ import compas_rhino
 from compas_rhino.objects.modifiers import VertexModifier
 from compas_rhino.objects.modifiers import EdgeModifier
 
-from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import ForceDiagram
-
-from compas_ags.rhino.formartist import FormArtist
-from compas_ags.rhino.forceartist import ForceArtist
+from compas_rhino.objects import MeshObject
 
 
 __all__ = ['DiagramObject']
 
 
-class DiagramObject(object):
+class DiagramObject(MeshObject):
     """A diagram object represents a form or force diagram in the Rhino view.
 
     Parameters
@@ -36,29 +32,17 @@ class DiagramObject(object):
         Instance of a diagram artist.
     """
 
-    def __init__(self, diagram, settings=None, **kwargs):
-        self._diagram = None
-        self._artist = None
-        self.diagram = diagram
+    def __init__(self, scene, diagram, name=None, layer=None, visible=True, settings=None):
+        super(DiagramObject, self).__init__(scene, diagram, name, layer, visible, settings)
 
     @property
     def diagram(self):
         """The diagram associated with the object."""
-        return self._diagram
+        return self._item
 
     @diagram.setter
     def diagram(self, diagram):
-        self._diagram = diagram
-        if isinstance(self._diagram, FormDiagram):
-            self._artist = FormArtist(self._diagram)
-        elif isinstance(self._diagram, ForceDiagram):
-            self._artist = ForceArtist(self._diagram)
-        else:
-            raise NotImplementedError
-
-    @property
-    def artist(self):
-        return self._artist
+        self._item = diagram
 
     def draw(self):
         """Draw the diagram using the artist."""
@@ -89,7 +73,7 @@ class DiagramObject(object):
             The identifier of the selected vertex.
         """
         pointfilter = compas_rhino.rs.filter.point
-        guid = compas_rhino.rs.GetObject(message="Select Form Vertex.", preselect=True, select=True, filter=pointfilter)
+        guid = compas_rhino.rs.GetObject(message="Select Vertex.", preselect=True, select=True, filter=pointfilter)
         if guid and guid in self.artist.guid_vertex:
             return self.artist.guid_vertex[guid]
 
@@ -102,7 +86,7 @@ class DiagramObject(object):
             The identifiers of the selected vertices.
         """
         pointfilter = compas_rhino.rs.filter.point
-        guids = compas_rhino.rs.GetObjects(message="Select Form Vertices.", preselect=True, select=True, group=False, filter=pointfilter)
+        guids = compas_rhino.rs.GetObjects(message="Select Vertices.", preselect=True, select=True, group=False, filter=pointfilter)
         if not guids:
             return []
         return [self.artist.guid_vertex[guid] for guid in guids if guid in self.artist.guid_vertex]
@@ -116,7 +100,7 @@ class DiagramObject(object):
             The identifier of the selected edge.
         """
         curvefilter = compas_rhino.rs.filter.curve
-        guid = compas_rhino.rs.GetObject(message="Select Form Edge.", preselect=True, select=True, filter=curvefilter)
+        guid = compas_rhino.rs.GetObject(message="Select Edge.", preselect=True, select=True, filter=curvefilter)
         if guid and guid in self.artist.guid_edge:
             return self.artist.guid_edge[guid]
 
@@ -129,7 +113,7 @@ class DiagramObject(object):
             The identifiers of the selected edges.
         """
         curvefilter = compas_rhino.rs.filter.curve
-        guids = compas_rhino.rs.GetObjects(message="Select Form Edges.", preselect=True, select=True, group=False, filter=curvefilter)
+        guids = compas_rhino.rs.GetObjects(message="Select Edges.", preselect=True, select=True, group=False, filter=curvefilter)
         if not guids:
             return []
         return [self.artist.guid_edge[guid] for guid in guids if guid in self.artist.guid_edge]

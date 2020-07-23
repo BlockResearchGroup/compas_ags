@@ -11,6 +11,7 @@ from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
 from compas_ags.rhino import FormObject
+from compas_ags.rhino import ForceObject
 
 graphstatics = Proxy('compas_ags.ags.graphstatics')
 
@@ -30,28 +31,35 @@ form.edge_force((4, 5), -1.0)
 form.data = graphstatics.form_update_q_from_qind_proxy(form.data)
 force.data = graphstatics.force_update_from_form_proxy(force.data, form.data)
 
-formobject = FormObject(form, layer="AGS::FormDiagram")
+form_object = FormObject(None, form, name="Form", layer="AGS::FormDiagram")
+force_object = ForceObject(None, force, name="Force", layer="AGS::ForceDiagram")
 
-formobject.artist.anchor_vertex = 9
-formobject.artist.draw()
-formobject.artist.redraw()
+form_object.artist.anchor_vertex = 9
 
-vertex = formobject.select_vertex()
-print(vertex)
+force_object.artist.anchor_vertex = 5
+force_object.artist.anchor_point = [35, 0, 0]
+force_object.artist.scale = 5.0
 
-if formobject.move_vertex(vertex):
-    formobject.artist.draw()
-    formobject.artist.redraw()
+form_object.draw()
+form_object.redraw()
 
-formobject.unselect()
+force_object.draw()
+force_object.redraw()
 
-vertices = formobject.select_vertices()
+vertices = form_object.select_vertices()
 print(vertices)
 
-if formobject.move_vertices(vertices):
-    formobject.artist.draw()
-    formobject.artist.redraw()
+if form_object.move_vertices(vertices):
+    form_object.draw()
+    form_object.redraw()
 
-formobject.unselect()
+form_object.unselect()
 
-formobject.modify_edges()
+vertices = force_object.select_vertices()
+print(vertices)
+
+if force_object.move_vertices(vertices):
+    force_object.draw()
+    force_object.redraw()
+
+force_object.unselect()
