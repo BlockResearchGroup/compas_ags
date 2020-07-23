@@ -51,3 +51,7 @@ print(vertices)
 if formobject.move_vertices(vertices):
     formobject.artist.draw()
     formobject.artist.redraw()
+
+formobject.unselect()
+
+formobject.modify_edges()

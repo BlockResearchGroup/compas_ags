@@ -5,6 +5,7 @@ from __future__ import division
 import compas_rhino
 
 from compas_rhino.objects.modifiers import VertexModifier
+from compas_rhino.objects.modifiers import EdgeModifier
 from compas_ags.rhino.formartist import FormArtist
 
 
@@ -131,7 +132,7 @@ class FormObject(object):
         Returns
         -------
         bool
-            True if the execution was successful.
+            True if the operation was successful.
             False otherwise.
         """
         return VertexModifier.move_vertex(self.diagram, vertex)
@@ -147,16 +148,52 @@ class FormObject(object):
         Returns
         -------
         bool
-            True if the execution was successful.
+            True if the operation was successful.
             False otherwise.
         """
         return VertexModifier.move_vertices(self.diagram, vertices)
 
-    def modify_vertices(self):
-        pass
+    def modify_vertices(self, vertices=None, names=None):
+        """Modify the attributes of a selection of diagram vertices.
 
-    def modify_edges(self):
-        pass
+        Parameters
+        ----------
+        vertices : list, optional
+            The identifiers of selected vertices.
+            Default is ``None``.
+        names : list, optional
+            The names of the attributes that should be modified.
+
+        Returns
+        -------
+        bool
+            True if the operation was successful.
+            False otherwise.
+        """
+        vertices = vertices or list(self.diagram.vertices())
+        names = [name for name in sorted(self.diagram.default_vertex_attributes.keys()) if not name.startswith('_')]
+        return VertexModifier.update_vertex_attributes(self.diagram, vertices, names)
+
+    def modify_edges(self, edges=None, names=None):
+        """Modify the attributes of a selection of diagram edges.
+
+        Parameters
+        ----------
+        edges : list, optional
+            The identifiers of selected edges.
+            Default is ``None``.
+        names : list, optional
+            The names of the attributes that should be modified.
+
+        Returns
+        -------
+        bool
+            True if the operation was successful.
+            False otherwise.
+        """
+        edges = edges or list(self.diagram.edges())
+        names = [name for name in sorted(self.diagram.default_edge_attributes.keys()) if not name.startswith('_')]
+        return EdgeModifier.update_edge_attributes(self.diagram, edges, names)
 
 
 # ==============================================================================
