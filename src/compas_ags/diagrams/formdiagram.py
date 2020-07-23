@@ -11,7 +11,8 @@ __all__ = ['FormDiagram']
 
 
 class FormDiagram(Diagram):
-    """Mesh-based data structure for form diagrams in AGS."""
+    """Mesh-based data structure for form diagrams in AGS.
+    """
 
     def __init__(self):
         super(FormDiagram, self).__init__()

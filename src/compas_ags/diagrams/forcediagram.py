@@ -11,31 +11,6 @@ __all__ = ['ForceDiagram']
 
 class ForceDiagram(Diagram):
     """Mesh-based data structure for force diagrams in AGS.
-
-    Parameters
-    ----------
-    None
-
-    Attributes
-    ----------
-    dual : :class:`compas_ags.diagrams.FormDiagram`
-        The dual of the force diagram is a form diagram.
-
-    Notes
-    -----
-    The force diagram has only 1 constructor function: ``ForceDiagram.from_formdiagram``
-
-    Examples
-    --------
-    >>> from compas_ags.diagrams import FormGraph
-    >>> from compas_ags.diagrams import FormDiagram
-    >>> from compas_ags.diagrams import ForceDiagram
-
-    >>> graph = FormGraph.from_lines(...)
-    >>> form = FormDiagram.from_graph(graph)
-    >>> force = ForceDiagram.from_formdiagram(form)
-    >>> force.dual is form
-    True
     """
 
     def __init__(self):
