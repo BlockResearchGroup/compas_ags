@@ -86,16 +86,17 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>form</strong> (<a class="reference internal" href="compas_ags.diagrams.FormDiagram.html#compas_ags.diagrams.FormDiagram" title="compas_ags.diagrams.FormDiagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.FormDiagram</span></code></a>) – The form diagram to draw.</p></li>
-<li><p><strong>layer</strong> (<em>string, optional</em>) – The name of the layer that will contain the formdiagram.
-Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>form</strong> (<em>compas_ags.diagrams.FormDiagram</em>) – The form diagram to draw.</p></li>
+<li><p><strong>scale</strong> (<em>float, optional</em>) – The drawing scale.
+Default is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p></li>
+<li><p><strong>settings</strong> (<em>dict, optional</em>) – Customisation of the artist settings.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>form</strong> (<a class="reference internal" href="compas_ags.diagrams.FormDiagram.html#compas_ags.diagrams.FormDiagram" title="compas_ags.diagrams.FormDiagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.FormDiagram</span></code></a>)</p></li>
-<li><p><strong>settings</strong> (<em>dict</em>) – Visualisation settings.</p></li>
-</ul>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><p><strong>See the parent artists for other parameters.</strong></p>
+</dd>
+<dt class="field-odd">Attributes</dt>
+<dd class="field-odd"><p><strong>guid_force</strong> (<em>dict</em>) – Map between Rhino object GUIDs and force diagram force identifiers.</p>
 </dd>
 </dl>
 <p class="rubric">Methods</p>
@@ -207,34 +208,31 @@ Default is <code class="docutils literal notranslate"><span class="pre">None</sp
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">diagram</span></code></p></td>
 <td><p>The diagram assigned to the artist.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">form</span></code></p></td>
-<td><p>The form diagram assigned to the artist.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edge</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edge</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram edge identifiers.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edgelabel</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edgelabel</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram edge label identifiers.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_face</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_face</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram face identifiers.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_facelabel</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_facelabel</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram face label identifiers.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_force</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_force</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and form diagram edge force identifiers.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertex</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertex</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram vertex identifiers.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertexlabel</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertexlabel</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram vertex label identifiers.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></p></td>
 <td><p>The drawing scale.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_xyz</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_xyz</span></code></p></td>
 <td><p>Map between diagram vertices and drawing locations.</p></td>
 </tr>
 </tbody>

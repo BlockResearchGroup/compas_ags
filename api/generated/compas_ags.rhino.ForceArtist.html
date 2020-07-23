@@ -80,27 +80,20 @@
 <h1 class="display-4 p-0 mb-5">ForceArtist</h1>
 <dl class="class">
 <dt id="compas_ags.rhino.ForceArtist">
-<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">ForceArtist</code><span class="sig-paren">(</span><em class="sig-param">force</em>, <em class="sig-param">scale=None</em>, <em class="sig-param">layer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/forceartist.html#ForceArtist"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">ForceArtist</code><span class="sig-paren">(</span><em class="sig-param">force</em>, <em class="sig-param">scale=None</em>, <em class="sig-param">settings=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/forceartist.html#ForceArtist"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.rhino.diagramartist.DiagramArtist</span></code></p>
 <p>Artist for force diagrams in AGS.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>force</strong> (<em>compas_ags.diagrams.ForceDiagram</em>) – The force diagram to draw.</p></li>
-<li><p><strong>form</strong> (<em>compas_ags.diagrams.FormDiagram, optional, default is None</em>) – The dual graph of the force diagram</p></li>
-<li><p><strong>layer</strong> (<em>string, optional, default is None</em>) – The name of the layer that will contain the forcediagram.</p></li>
+<li><p><strong>scale</strong> (<em>float, optional</em>) – The drawing scale.
+Default is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p></li>
+<li><p><strong>settings</strong> (<em>dict, optional</em>) – Customisation of the artist settings.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>force (read-only)</strong> (<a class="reference internal" href="compas_ags.diagrams.ForceDiagram.html#compas_ags.diagrams.ForceDiagram" title="compas_ags.diagrams.ForceDiagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.ForceDiagram</span></code></a>)</p></li>
-<li><p><strong>form</strong> (<a class="reference internal" href="compas_ags.diagrams.FormDiagram.html#compas_ags.diagrams.FormDiagram" title="compas_ags.diagrams.FormDiagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.FormDiagram</span></code></a>)</p></li>
-<li><p><strong>settings</strong> (<em>dict</em>) – Visualisation settings.</p></li>
-<li><p><strong>anchor_point</strong> (<em>list</em>)</p></li>
-<li><p><strong>anchor_vertex</strong> (<em>int</em>)</p></li>
-<li><p><strong>scale</strong> (<em>float</em>) – The scale of the diagram.
-The magnitude of force represented by an edge is <code class="docutils literal notranslate"><span class="pre">length</span> <span class="pre">*</span> <span class="pre">scale</span></code>.</p></li>
-</ul>
+<dt class="field-even">Other Parameters</dt>
+<dd class="field-even"><p><strong>See the parent artists for other parameters.</strong></p>
 </dd>
 </dl>
 <p class="rubric">Methods</p>
@@ -110,7 +103,7 @@ The magnitude of force represented by an edge is <code class="docutils literal n
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.__init__.html#compas_ags.rhino.ForceArtist.__init__" title="compas_ags.rhino.ForceArtist.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(force[, scale, layer])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.__init__.html#compas_ags.rhino.ForceArtist.__init__" title="compas_ags.rhino.ForceArtist.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(force[, scale, settings])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceArtist.build.html#compas_ags.rhino.ForceArtist.build" title="compas_ags.rhino.ForceArtist.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code></a>(item, **kwargs)</p></td>
@@ -209,31 +202,28 @@ The magnitude of force represented by an edge is <code class="docutils literal n
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">diagram</span></code></p></td>
 <td><p>The diagram assigned to the artist.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">force</span></code></p></td>
-<td><p></p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edge</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edge</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram edge identifiers.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edgelabel</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edgelabel</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram edge label identifiers.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_face</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_face</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram face identifiers.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_facelabel</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_facelabel</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram face label identifiers.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertex</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertex</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram vertex identifiers.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertexlabel</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertexlabel</span></code></p></td>
 <td><p>Map between Rhino object GUIDs and force diagram vertex label identifiers.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></p></td>
 <td><p>The drawing scale.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_xyz</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_xyz</span></code></p></td>
 <td><p>Map between diagram vertices and drawing locations.</p></td>
 </tr>
 </tbody>
