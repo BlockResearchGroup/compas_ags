@@ -64,6 +64,28 @@ class DiagramArtist(MeshArtist):
 
     def __init__(self, diagram, *args, **kwargs):
         super(DiagramArtist, self).__init__(diagram, *args, **kwargs)
+        self.settings.update({
+            'show.vertices': True,
+            'show.edges': True,
+            'show.faces': False,
+            'show.vertexlabels': True,
+            'show.edgelabels': True,
+            'show.facelabels': False,
+            'show.forces': False,
+            'color.vertices': (255, 255, 255),
+            'color.vertices:is_fixed': (0, 255, 255),
+            'color.edges': (0, 0, 0),
+            'color.edges:is_ind': (0, 255, 255),
+            'color.edges:is_external': (0, 255, 0),
+            'color.edges:is_reaction': (0, 255, 0),
+            'color.edges:is_load': (0, 255, 0),
+            'color.faces': (210, 210, 210),
+            'color.compression': (0, 0, 255),
+            'color.tension': (255, 0, 0),
+            'color.anchor': (255, 0, 0),
+            'scale.forces': 0.1,
+            'tol.forces': 1e-3,
+        })
         self._anchor_point = None
         self._anchor_vertex = None
         self._scale = None
@@ -235,7 +257,9 @@ class DiagramArtist(MeshArtist):
         vertex_xyz = self.vertex_xyz
         points = []
         for vertex in vertices:
-            points.append({'pos': vertex_xyz[vertex], 'color': vertex_color[vertex]})
+            points.append({'pos': vertex_xyz[vertex],
+                           'color': vertex_color[vertex],
+                           'name': "{}.vertex.{}".format(self.diagram.name, vertex)})
         guids = compas_rhino.draw_points(points, layer=self.layer, clear=False, redraw=False)
         self.guid_vertex = zip(guids, vertices)
         return guids
@@ -261,7 +285,10 @@ class DiagramArtist(MeshArtist):
         vertex_xyz = self.vertex_xyz
         labels = []
         for vertex in vertex_text:
-            labels.append({'pos': vertex_xyz[vertex], 'color': vertex_color[vertex], 'text': vertex_text[vertex]})
+            labels.append({'pos': vertex_xyz[vertex],
+                           'color': vertex_color[vertex],
+                           'text': vertex_text[vertex],
+                           'name': "{}.vertexlabel.{}".format(self.diagram.name, vertex)})
         guids = compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
         self.guid_vertexlabel = zip(guids, vertex_text.keys())
         return guids
@@ -287,7 +314,10 @@ class DiagramArtist(MeshArtist):
         vertex_xyz = self.vertex_xyz
         lines = []
         for edge in edges:
-            lines.append({'start': vertex_xyz[edge[0]], 'end': vertex_xyz[edge[1]], 'color': edge_color[edge]})
+            lines.append({'start': vertex_xyz[edge[0]],
+                          'end': vertex_xyz[edge[1]],
+                          'color': edge_color[edge],
+                          'name': "{}.edge.{}-{}".format(self.diagram.name, *edge)})
         guids = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
         self.guid_edge = zip(guids, edges)
         return guids
@@ -322,7 +352,10 @@ class DiagramArtist(MeshArtist):
             start = vertex_xyz[edge[0]]
             end = vertex_xyz[edge[1]]
             pos = [0.5 * (a + b) for a, b in zip(start, end)]
-            labels.append({'pos': pos, 'color': edge_color[edge], 'text': edge_text[edge]})
+            labels.append({'pos': pos,
+                           'color': edge_color[edge],
+                           'text': edge_text[edge],
+                           'name': "{}.edgelabel.{}-{}".format(self.diagram.name, *edge)})
         guids = compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
         self.guid_edgelabel = zip(guids, edge_text.keys())
         return guids
@@ -352,7 +385,9 @@ class DiagramArtist(MeshArtist):
         faces_ = []
         for face in faces:
             points = [vertex_xyz[vertex] for vertex in self.diagram.face_vertices(face)]
-            faces_.append({'points': points, 'color': face_color[face]})
+            faces_.append({'points': points,
+                           'color': face_color[face],
+                           'name': "{}.face.{}".format(self.diagram.name, face)})
         guids = compas_rhino.draw_faces(faces_, layer=self.layer, clear=False, redraw=False)
         self.guid_face = zip(guids, faces)
         return guids
@@ -379,68 +414,13 @@ class DiagramArtist(MeshArtist):
         labels = []
         for face in face_text:
             pos = centroid_points([vertex_xyz[vertex] for vertex in self.diagram.face_vertices(face)])
-            labels.append({'pos': pos, 'color': face_color[face], 'text': face_text[face]})
+            labels.append({'pos': pos,
+                           'color': face_color[face],
+                           'text': face_text[face],
+                           'name': "{}.facelabel.{}".format(self.diagram.name, face)})
         guids = compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=False)
         self.guid_facelabel = zip(guids, face_text.keys())
         return guids
-
-    # def draw_anchor_point_vertex(self, color=None):
-    #     self.clear_anchor_point_vertex()
-    #     anchor_point = self.force.anchor_point()
-    #     self.clear_vertexlabels(keys=[anchor_point])
-    #     labels = []
-    #     labels.append({
-    #         'pos'  : self.force.vertex_coordinates(anchor_point),
-    #         'text' : str(anchor_point),
-    #         'color': color or self.settings.get('color.anchor_point'),
-    #         'name' : "{}.anchor_point_vertex.{}".format(self.force.name, anchor_point)
-    #     })
-    #     compas_rhino.draw_labels(labels, layer=self.layer, clear=False, redraw=True)
-
-    # def draw_edge_force(self, draw=True):
-    #     force_dict = {}
-    #     c_dict  = {}
-    #     max_length = 0
-
-    #     for i, ((u, v), attr) in enumerate(self.force.edges(data=True)):
-    #         length = attr['force']
-    #         if length > max_length:
-    #             max_length = length
-    #         force_dict[(u, v)] = length
-
-    #     for i, (u, v) in enumerate(self.force.edges()):
-    #         value = force_dict[(u, v)] / max_length
-    #         c_dict[(u, v)] = i_to_rgb(value)
-
-    #     if draw is True:
-    #         self.draw_scale_edgelabels(text=dict((v,"%s kN" % k) for v, k in force_dict.items()), color=c_dict)
-    #     return c_dict
-
-    # def draw_independent_edges(self):
-    #     self.clear_independent_edge()
-    #     if self.form is None:
-    #         raise "form diagram doesn't exist"
-    #     else:
-    #         indices = find_force_ind(self.form, self.force)
-
-    #     anchor_point = self.force.anchor_point()
-    #     dx = self.force.vertex_coordinates(anchor_point)[0]
-    #     dy = self.force.vertex_coordinates(anchor_point)[1]
-
-    #     lines = []
-    #     for index, ((u, v), attr) in enumerate(self.force.edges(True)):
-    #         if (u, v) in indices:
-    #             u_x = self.force.vertex_coordinates(u)[0]
-    #             u_y = self.force.vertex_coordinates(u)[1]
-    #             v_x = self.force.vertex_coordinates(v)[0]
-    #             v_y = self.force.vertex_coordinates(v)[1]
-    #             lines.append({
-    #                 'start': [dx + (u_x - dx) / self.scale, dy + (u_y - dy) / self.scale, 0],
-    #                 'end': [dx + (v_x - dx) / self.scale, dy + (v_y - dy) / self.scale, 0],
-    #                 'name': "{}.independent_edge.{}".format(self.force.name, index),
-    #                 'width': 1.0
-    #             })
-    #     return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=True)
 
 
 # ==============================================================================

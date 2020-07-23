@@ -40,22 +40,6 @@ class ForceArtist(DiagramArtist):
         self._anchor_vertex = None
         self._scale = None
         self.scale = scale
-        self.settings.update({
-            'show.vertices': True,
-            'show.edges': True,
-            'show.faces': False,
-            'show.vertexlabels': True,
-            'show.edgelabels': False,
-            'show.facelabels': False,
-            'color.vertices': (255, 255, 255),
-            'color.vertices:is_fixed': (255, 0, 0),
-            'color.edges': (0, 0, 0),
-            'color.edges:is_ind': (255, 255, 255),
-            'color.edges:is_external': (0, 255, 0),
-            'color.faces': (210, 210, 210),
-            'color.compression': (0, 0, 255),
-            'color.tension': (255, 0, 0)
-        })
 
     @property
     def force(self):
@@ -89,12 +73,16 @@ class ForceArtist(DiagramArtist):
         if self.settings['show.vertices']:
             color = {}
             color.update({vertex: self.settings['color.vertices'] for vertex in self.force.vertices()})
+            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.force.vertices_where({'is_fixed': True})})
+            color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertices(color=color)
         # edges
         if self.settings['show.edges']:
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.force.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.force.edges() if self.force.is_dual_edge_external(edge)})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.force.edges() if self.force.is_dual_edge_load(edge)})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.force.edges() if self.force.is_dual_edge_reaction(edge)})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.force.edges() if self.force.is_dual_edge_ind(edge)})
             self.draw_edges(color=color)
         # vertex labels
@@ -102,13 +90,17 @@ class ForceArtist(DiagramArtist):
             text = {vertex: index for index, vertex in enumerate(self.force.vertices())}
             color = {}
             color.update({vertex: self.settings['color.vertices'] for vertex in self.force.vertices()})
+            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.force.vertices_where({'is_fixed': True})})
+            color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertexlabels(text=text, color=color)
         # edge labels
         if self.settings['show.edgelabels']:
-            text = {edge: index for index, edge in enumerate(self.force.edges())}
+            text = {edge: index for index, edge in enumerate(self.force.ordered_edges(self.force.dual))}
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.force.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.force.edges() if self.force.is_dual_edge_external(edge)})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.force.edges() if self.force.is_dual_edge_load(edge)})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.force.edges() if self.force.is_dual_edge_reaction(edge)})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.force.edges() if self.force.is_dual_edge_ind(edge)})
             self.draw_edgelabels(text=text, color=color)
 

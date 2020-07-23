@@ -29,9 +29,13 @@ force.data = graphstatics.force_update_from_form_proxy(force.data, form.data)
 formartist = FormArtist(form, layer="AGS::FormDiagram")
 forceartist = ForceArtist(force, layer="AGS::ForceDiagram")
 
+formartist.anchor_vertex = 9
+
 forceartist.anchor_vertex = 5
 forceartist.anchor_point = [35, 0, 0]
 forceartist.scale = 5.0
+
+formartist.settings['show.forces'] = True
 
 formartist.draw()
 forceartist.draw()

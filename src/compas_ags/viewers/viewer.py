@@ -7,10 +7,7 @@ from math import fabs
 from compas_plotters.core import draw_xpoints_xy
 from compas_plotters.core import draw_xlines_xy
 from compas_plotters.core import draw_xarrows_xy
-# from compas_plotters.core import draw_xlabels_xy
 from compas_plotters.core import draw_xpolygons_xy
-
-from compas.geometry import dot_vectors
 
 from compas.utilities import color_to_colordict
 from compas.utilities import is_color_light
@@ -90,7 +87,7 @@ class Viewer(object):
                   faces_on=False,
                   forces_on=True,
                   external_on=True,
-                  arrows_on=True,
+                  arrows_on=False,
                   vertexcolor=None,
                   edgecolor=None,
                   facecolor=None,
@@ -154,7 +151,7 @@ class Viewer(object):
             _lines = []
             _arrows = []
 
-            for (u, v), attr in self.form.edges_where({'is_edge': True}, True):
+            for (u, v), attr in self.form.edges(True):
                 sp, ep = self.form.edge_coordinates(u, v, 'xy')
                 sp = ((sp[0] + dx) / scale, (sp[1] + dy) / scale)
                 ep = ((ep[0] + dx) / scale, (ep[1] + dy) / scale)
@@ -277,54 +274,12 @@ class Viewer(object):
             for style in _lines:
                 draw_xlines_xy(_lines[style], self.ax1, linestyle=style)
 
-    def check_edge_pairs(self):
-        # check the uv direction in force diagrams
-        # return edge uv that need to be flipped in force digram
-        # and edge index corresponding to the form diagram
-        edges_to_flip = []
-        form_edges = {uv: index for index, uv in enumerate(self.form.edges())}
-        force_edgelabel_pairs = {}
-        for i, (u, v) in enumerate(self.force.edges()):
-            force_vector = self.force.edge_vector(u, v)
-            half_edge = self.form.face_adjacency_halfedge(u, v)
-
-            if half_edge in form_edges:
-                form_vector = self.form.edge_vector(half_edge[0], half_edge[1])
-                dot_product = dot_vectors(form_vector, force_vector)
-                force_in_form = self.form.edge_attribute(half_edge, 'f')
-                if force_in_form * dot_product < 0:
-                    edges_to_flip.append((u, v))
-
-            else:
-                half_edge = self.form.face_adjacency_halfedge(v, u)
-                form_vector = self.form.edge_vector(half_edge[0], half_edge[1])
-                dot_product = dot_vectors(form_vector, force_vector)
-                force_in_form = self.form.edge_attribute(half_edge, 'f')
-                if force_in_form * dot_product < 0:
-                    edges_to_flip.append((u, v))
-
-            force_edgelabel_pairs[u, v] = form_edges[half_edge]
-
-        return edges_to_flip, force_edgelabel_pairs
-
-    def find_force_ind(self):
-        # check the corresponding independent edges in the force diagram
-        force_idx_uv = {idx: uv for uv, idx in self.check_edge_pairs()[1].items()}
-        form_index_uv = self.form.index_uv()
-
-        force_ind = []
-        for idx in list(force_idx_uv.keys()):
-            u, v = form_index_uv[idx]
-            if (u, v) in self.form.ind():
-                force_ind.append(force_idx_uv[idx])
-        return force_ind
-
     def draw_force(self,
                    vertices_on=True,
                    edges_on=True,
                    faces_on=False,
                    forces_on=True,
-                   arrows_on=True,
+                   arrows_on=False,
                    vertexcolor=None,
                    edgecolor=None,
                    facecolor=None,
@@ -379,22 +334,18 @@ class Viewer(object):
         if edges_on:
             leaves = set(self.form.leaves())
             _arrows = []
-            edges_to_flip, force_edgelabel_pairs = self.check_edge_pairs()
             for (u, v), attr in self.force.edges(True):
-                if (u, v) in edges_to_flip:
-                    ep, sp = self.force.edge_coordinates(u, v, 'xy')
-                else:
-                    sp, ep = self.force.edge_coordinates(u, v, 'xy')
+                sp, ep = self.force.edge_coordinates(u, v, 'xy')
                 sp = ((sp[0] + dx) / scale, (sp[1] + dy) / scale)
                 ep = ((ep[0] + dx) / scale, (ep[1] + dy) / scale)
-                form_u, form_v = self.form.face_adjacency_edge(u, v)
+                form_u, form_v = self.force.dual_edge((u, v))
                 text = None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
                 if form_u in leaves or form_v in leaves:
                     _arrows.append({
                         'start': sp,
                         'end': ep,
-                        'color': self.default_externalforcecolor if (u, v) not in self.find_force_ind() else '#000000',
-                        'width': self.default_externalforcewidth if (u, v) not in self.find_force_ind() else self.default_edgewidth * 3,
+                        'color': self.default_externalforcecolor if not self.form.edge_attribute((form_u, form_v), 'is_ind') else '#000000',
+                        'width': self.default_externalforcewidth if not self.form.edge_attribute((form_u, form_v), 'is_ind') else self.default_edgewidth * 3,
                         'text': text,
                         'fontsize': self.default_fontsize,
                     })
@@ -485,37 +436,4 @@ class Viewer(object):
 # ==============================================================================
 
 if __name__ == '__main__':
-
-    import compas_ags
-    from compas_ags.diagrams import FormGraph
-    from compas_ags.diagrams import FormDiagram
-    from compas_ags.diagrams import ForceDiagram
-
-    graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
-    form = FormDiagram.from_graph(graph)
-
-    # form = FormDiagram.from_obj(compas_ags.get('paper/grid_irregular.obj'))
-    # form.identify_fixed()
-
-    force = ForceDiagram.from_formdiagram(form)
-
-    form.set_edge_force_by_index(0, -30.0)
-
-    # update force densities of form and force diagrams
-    from compas_ags.ags import graphstatics
-    graphstatics.form_update_q_from_qind(form)
-    graphstatics.force_update_from_form(force, form)
-
-    viewer = Viewer(form, force, delay_setup=False)
-    print(viewer.check_edge_pairs())
-
-    viewer.draw_form(
-        edgelabel={(u, v): '{:.1f}'.format(form.edge_length(u, v)) for u, v in form.edges()},
-        vertexlabel={key: key for key in form.vertices()},)
-    # viewer.draw_force()
-    viewer.draw_force(
-        vertexsize=0.15,
-        vertexlabel={key: key for key in force.vertices()},
-        edgelabel={uv: index for index, uv in enumerate(force.edges())},)
-
-    viewer.show()
+    pass

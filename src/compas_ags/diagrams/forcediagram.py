@@ -41,19 +41,14 @@ class ForceDiagram(Diagram):
     def __init__(self):
         super(ForceDiagram, self).__init__()
         self.attributes.update({
-            'name': 'ForceDiagram'})
+            'name': 'Force'})
         self.update_default_vertex_attributes({
             'is_fixed': False,
-            'is_anchor': False,
             'is_param': False})
         self.update_default_edge_attributes({
             'l': 0.0,
             'lmin': 1e-7,
             'lmax': 1e+7})
-
-    @property
-    def anchor(self):
-        return next(self.vertices())
 
     # --------------------------------------------------------------------------
     # Constructors
@@ -103,37 +98,37 @@ class ForceDiagram(Diagram):
     # --------------------------------------------------------------------------
 
     def dual_edge(self, edge):
-        u, v = edge
-        for a, b in self.dual.edges():
-            left = self.dual.halfedge[a][b]
-            right = self.dual.halfedge[b][a]
-            if (u == left and v == right) or (v == left and u == right):
-                return a, b
+        for u, v in self.dual.face_halfedges(edge[0]):
+            if self.dual.halfedge[v][u] == edge[1]:
+                return u, v
 
     def is_dual_edge_external(self, edge):
         return self.dual.edge_attribute(self.dual_edge(edge), 'is_external')
 
+    def is_dual_edge_reaction(self, edge):
+        return self.dual.edge_attribute(self.dual_edge(edge), 'is_reaction')
+
+    def is_dual_edge_load(self, edge):
+        return self.dual.edge_attribute(self.dual_edge(edge), 'is_load')
+
     def is_dual_edge_ind(self, edge):
         return self.dual.edge_attribute(self.dual_edge(edge), 'is_ind')
 
-    def uv_index(self, form=None):
+    def edge_index(self, form=None):
         if not form:
-            return {(u, v): index for index, (u, v) in enumerate(self.edges())}
-        uv_index = dict()
+            return {edge: index for index, edge in enumerate(self.edges())}
+        edge_index = dict()
         for index, (u, v) in enumerate(form.edges()):
             f1 = form.halfedge[u][v]
             f2 = form.halfedge[v][u]
-            uv_index[(f1, f2)] = index
-        return uv_index
+            edge_index[f1, f2] = index
+        return edge_index
 
-    def ordered_edges(self, form, index=True):
-        key_index = self.key_index()
-        uv_index = self.uv_index(form=form)
-        index_uv = dict((i, uv) for uv, i in uv_index.items())
-        edges = [index_uv[i] for i in range(self.number_of_edges())]
-        if not index:
-            return edges
-        return [[key_index[u], key_index[v]] for u, v in edges]
+    def ordered_edges(self, form):
+        edge_index = self.edge_index(form=form)
+        index_edge = {index: edge for edge, index in edge_index.items()}
+        edges = [index_edge[index] for index in range(self.number_of_edges())]
+        return edges
 
     # def compute_constraints(self, form, M):
     #     r"""Computes the form diagram constraints used

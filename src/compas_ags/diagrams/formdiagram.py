@@ -16,11 +16,7 @@ class FormDiagram(Diagram):
     def __init__(self):
         super(FormDiagram, self).__init__()
         self.attributes.update({
-            'name': 'FormDiagram',
-            'color.vertex': (255, 255, 255),
-            'color.edge': (0, 0, 0),
-            'color.face': (0, 255, 255),
-            'color.vertex:is_fixed': (255, 0, 0),
+            'name': 'Form',
         })
         self.update_default_vertex_attributes({
             'is_fixed': False,
@@ -28,6 +24,8 @@ class FormDiagram(Diagram):
             'cy': 0.0,
         })
         self.update_default_edge_attributes({
+            '_is_edge': True,
+
             'q': 1.0,
             'f': 0.0,
             'l': 0.0,
@@ -35,12 +33,15 @@ class FormDiagram(Diagram):
             'is_external': False,
             'is_reaction': False,
             'is_load': False,
-            'is_edge': True,
         })
 
     @classmethod
     def from_graph(cls, graph):
         """Construct a form diagram from a form graph.
+
+        This constructor converts the form graph into a mesh by finding the cycles of its planar embedding.
+        Note that tt doesn't check if the graph actually is a planar embedding.
+        The outside face of the mesh is automatically split into smaller faces at the leaves.
 
         Parameters
         ----------
@@ -53,12 +54,35 @@ class FormDiagram(Diagram):
         points = graph.to_points()
         cycles = network_find_cycles(graph, breakpoints=graph.leaves())
         form = cls.from_vertices_and_faces(points, cycles)
-        form.edges_attribute('is_edge', False, keys=list(form.edges_on_boundary()))
+        form.edges_attribute('_is_edge', False, keys=list(form.edges_on_boundary()))
         form.edges_attribute('is_external', True, keys=form.leaf_edges())
         return form
 
     # --------------------------------------------------------------------------
-    # Topology
+    # vertices
+    # --------------------------------------------------------------------------
+
+    def leaves(self):
+        """Identify the leaves of the form diagram.
+
+        Returns
+        -------
+        list
+            The identifiers of vertices with only one connected edge.
+        """
+        keys = []
+        for key in self.vertices():
+            edges = 0
+            nbrs = self.vertex_neighbors(key)
+            for nbr in nbrs:
+                if self.edge_attribute((key, nbr), '_is_edge'):
+                    edges += 1
+            if edges == 1:
+                keys.append(key)
+        return keys
+
+    # --------------------------------------------------------------------------
+    # edges
     # --------------------------------------------------------------------------
 
     def edges(self, data=False):
@@ -82,84 +106,27 @@ class FormDiagram(Diagram):
                     continue
                 seen.add((u, v))
                 seen.add((v, u))
-                if not self.edge_attribute((u, v), 'is_edge'):
+                if not self.edge_attribute((u, v), '_is_edge'):
                     continue
                 if not data:
                     yield u, v
                 else:
                     yield (u, v), self.edge_attributes((u, v))
 
-    def leaves(self):
-        """Identify the leaves of the form diagram.
+    def leaf_edges(self):
+        """Identify the edges connecting leaf vertices to the diagram.
 
         Returns
         -------
         list
-            The identifiers of vertices with only one connected edge.
+            The identifiers of the edges.
         """
-        keys = []
-        for key in self.vertices():
-            edges = 0
-            nbrs = self.vertex_neighbors(key)
-            for nbr in nbrs:
-                if self.edge_attribute((key, nbr), 'is_edge'):
-                    edges += 1
-            if edges == 1:
-                keys.append(key)
-        return keys
-
-    def leaf_edges(self):
         edges = []
         leaves = set(self.leaves())
         for u, v in self.edges():
             if u in leaves or v in leaves:
                 edges.append((u, v))
         return edges
-
-    def face_adjacency_edge(self, f1, f2):
-        edges = list(self.edges())
-        for u, v in self.face_halfedges(f1):
-            if self.halfedge[v][u] == f2:
-                if (u, v) in edges:
-                    return u, v
-                return v, u
-
-    def uv_index(self):
-        return {key: index for index, key in enumerate(self.edges())}
-
-    def index_uv(self):
-        return {index: key for index, key in enumerate(self.edges())}
-
-    # --------------------------------------------------------------------------
-    # Convenience functions for retrieving the attributes of the formdiagram.
-    # --------------------------------------------------------------------------
-
-    def q(self):
-        return self.edges_attribute('q')
-
-    def xy(self):
-        return self.vertices_attributes('xy')
-
-    def fixed(self):
-        return list(self.vertices_where({'is_fixed': True}))
-
-    def constrained(self):
-        return [key for key, attr in self.vertices(True) if attr['cx'] or attr['cy']]
-
-    def constraints(self):
-        cx = self.vertices_attribute('cx')
-        cy = self.vertices_attribute('cy')
-        return cx, cy
-
-    def ind(self):
-        return list(self.edges_where({'is_ind': True}))
-
-    # --------------------------------------------------------------------------
-    # Set stuff
-    # --------------------------------------------------------------------------
-
-    # def set_fixed(self, keys):
-    #     self.vertices_attribute('is_fixed', True, keys=keys)
 
     def edge_forcedensity(self, edge, q=None):
         """Get or set the forcedensity in an edge.
@@ -211,6 +178,30 @@ class FormDiagram(Diagram):
             return q * length
         self.edge_attribute(edge, 'is_ind', True)
         self.edge_attribute(edge, 'q', force / length)
+
+    # --------------------------------------------------------------------------
+    # Convenience functions for retrieving the attributes of the formdiagram.
+    # --------------------------------------------------------------------------
+
+    def q(self):
+        return self.edges_attribute('q')
+
+    def xy(self):
+        return self.vertices_attributes('xy')
+
+    def fixed(self):
+        return list(self.vertices_where({'is_fixed': True}))
+
+    def constrained(self):
+        return [key for key, attr in self.vertices(True) if attr['cx'] or attr['cy']]
+
+    def constraints(self):
+        cx = self.vertices_attribute('cx')
+        cy = self.vertices_attribute('cy')
+        return cx, cy
+
+    def ind(self):
+        return list(self.edges_where({'is_ind': True}))
 
     # --------------------------------------------------------------------------
     # Identify features of the formdiagram based on geometrical inputs.

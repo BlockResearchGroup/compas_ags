@@ -2,13 +2,16 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-from compas_rhino.artists import MeshArtist
+import compas_rhino
+
+from math import fabs
+from compas_ags.rhino.diagramartist import DiagramArtist
 
 
 __all__ = ['FormArtist']
 
 
-class FormArtist(MeshArtist):
+class FormArtist(DiagramArtist):
     """Artist for form diagram in AGS.
 
     Parameters
@@ -29,38 +32,8 @@ class FormArtist(MeshArtist):
 
     def __init__(self, form, scale=None, settings=None, **kwargs):
         super(FormArtist, self).__init__(form, **kwargs)
+        self._guid_force = {}
         self.scale = scale
-        self.settings.update({
-            'show.vertices': True,
-            'show.edges': True,
-            'show.faces': False,
-            'show.vertexlabels': True,
-            'show.edgelabels': False,
-            'show.facelabels': False,
-            'color.vertices': (255, 255, 255),
-            'color.vertices:is_fixed': (255, 0, 0),
-            'color.edges': (0, 0, 0),
-            'color.edges:is_ind': (255, 255, 255),
-            'color.edges:is_external': (0, 255, 0),
-            'color.faces': (210, 210, 210),
-            'color.reactions': (0, 255, 0),
-            'color.residuals': (0, 255, 255),
-            'color.loads': (0, 255, 0),
-            'color.selfweight': (0, 0, 255),
-            'color.forces': (0, 0, 255),
-            'color.compression': (0, 0, 255),
-            'color.tension': (255, 0, 0),
-            'scale.reaction': 1.0,
-            'scale.residual': 1.0,
-            'scale.load': 1.0,
-            'scale.force': 1.0,
-            'scale.selfweight': 1.0,
-            'tol.reaction': 1e-3,
-            'tol.residual': 1e-3,
-            'tol.load': 1e-3,
-            'tol.force': 1e-3,
-            'tol.selfweight': 1e-3,
-        })
         if settings:
             self.settings.update(settings)
 
@@ -72,6 +45,22 @@ class FormArtist(MeshArtist):
     @form.setter
     def form(self, form):
         self.mesh = form
+
+    @property
+    def guid_force(self):
+        """Map between Rhino object GUIDs and form diagram edge force identifiers."""
+        return self._guid_force
+
+    @guid_force.setter
+    def guid_force(self, values):
+        self._guid_force = dict(values)
+
+    def clear(self):
+        super(FormArtist, self).clear()
+        guids = []
+        guids += list(self.guid_force.keys())
+        compas_rhino.delete_objects(guids, purge=True)
+        self._guid_force = {}
 
     def draw(self):
         """Draw the form diagram.
@@ -98,12 +87,16 @@ class FormArtist(MeshArtist):
         if self.settings['show.vertices']:
             color = {}
             color.update({vertex: self.settings['color.vertices'] for vertex in self.form.vertices()})
+            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.form.vertices_where({'is_fixed': True})})
+            color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertices(color=color)
         # edges
         if self.settings['show.edges']:
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.form.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.form.edges_where({'is_external': True})})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.form.edges_where({'is_load': True})})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.form.edges_where({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.form.edges_where({'is_ind': True})})
             self.draw_edges(color=color)
         # vertex labels
@@ -111,6 +104,8 @@ class FormArtist(MeshArtist):
             text = {vertex: index for index, vertex in enumerate(self.form.vertices())}
             color = {}
             color.update({vertex: self.settings['color.vertices'] for vertex in self.form.vertices()})
+            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.form.vertices_where({'is_fixed': True})})
+            color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertexlabels(text=text, color=color)
         # edge labels
         if self.settings['show.edgelabels']:
@@ -118,8 +113,48 @@ class FormArtist(MeshArtist):
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.form.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.form.edges_where({'is_external': True})})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.form.edges_where({'is_load': True})})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.form.edges_where({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.form.edges_where({'is_ind': True})})
             self.draw_edgelabels(text=text, color=color)
+        # forces
+        if self.settings['show.forces']:
+            self.draw_forces()
+
+    def draw_forces(self):
+        """Draw the forces in the internal edges as pipes with color and thickness matching the force value.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        list
+            The GUIDs of the created Rhino objects.
+        """
+        color_compression = self.settings['color.compression']
+        color_tension = self.settings['color.tension']
+        scale = self.settings['scale.forces']
+        tol = self.settings['tol.forces']
+        edges = []
+        pipes = []
+        for edge in self.form.edges_where({'is_external': False}):
+            force = self.form.edge_attribute(edge, 'f')
+            if not force:
+                continue
+            radius = fabs(scale * force)
+            if radius < tol:
+                continue
+            edges.append(edge)
+            color = color_tension if force > 0 else color_compression
+            pipes.append({'points': self.form.vertices_attributes('xyz', keys=edge),
+                          'color': color,
+                          'radius': radius,
+                          'name': "{}.force.{}-{}".format(self.diagram.name, *edge)})
+        guids = compas_rhino.draw_pipes(pipes, layer=self.layer, clear=False, redraw=False)
+        self.guid_force = zip(guids, edges)
+        return guids
 
 
 # ==============================================================================
