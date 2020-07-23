@@ -16,17 +16,22 @@ class FormArtist(DiagramArtist):
 
     Parameters
     ----------
-    form : :class:`compas_ags.diagrams.FormDiagram`
+    form: compas_ags.diagrams.FormDiagram
         The form diagram to draw.
-    layer: string, optional
-        The name of the layer that will contain the formdiagram.
-        Default is ``None``.
+    scale : float, optional
+        The drawing scale.
+        Default is ``1.0``.
+    settings : dict, optional
+        Customisation of the artist settings.
+
+    Other Parameters
+    ----------------
+    See the parent artists for other parameters.
 
     Attributes
     ----------
-    form : :class:`compas_ags.diagrams.FormDiagram`
-    settings : dict
-        Visualisation settings.
+    guid_force : dict
+        Map between Rhino object GUIDs and force diagram force identifiers.
 
     """
 
@@ -36,15 +41,6 @@ class FormArtist(DiagramArtist):
         self.scale = scale
         if settings:
             self.settings.update(settings)
-
-    @property
-    def form(self):
-        """The form diagram assigned to the artist."""
-        return self.mesh
-
-    @form.setter
-    def form(self, form):
-        self.mesh = form
 
     @property
     def guid_force(self):
@@ -86,36 +82,36 @@ class FormArtist(DiagramArtist):
         # vertices
         if self.settings['show.vertices']:
             color = {}
-            color.update({vertex: self.settings['color.vertices'] for vertex in self.form.vertices()})
-            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.form.vertices_where({'is_fixed': True})})
+            color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
+            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
             color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertices(color=color)
         # edges
         if self.settings['show.edges']:
             color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.form.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.form.edges_where({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.form.edges_where({'is_load': True})})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.form.edges_where({'is_reaction': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.form.edges_where({'is_ind': True})})
+            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
             self.draw_edges(color=color)
         # vertex labels
         if self.settings['show.vertexlabels']:
-            text = {vertex: index for index, vertex in enumerate(self.form.vertices())}
+            text = {vertex: index for index, vertex in enumerate(self.diagram.vertices())}
             color = {}
-            color.update({vertex: self.settings['color.vertices'] for vertex in self.form.vertices()})
-            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.form.vertices_where({'is_fixed': True})})
+            color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
+            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
             color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertexlabels(text=text, color=color)
         # edge labels
         if self.settings['show.edgelabels']:
-            text = {edge: index for index, edge in enumerate(self.form.edges())}
+            text = {edge: index for index, edge in enumerate(self.diagram.edges())}
             color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.form.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.form.edges_where({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.form.edges_where({'is_load': True})})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.form.edges_where({'is_reaction': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.form.edges_where({'is_ind': True})})
+            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
             self.draw_edgelabels(text=text, color=color)
         # forces
         if self.settings['show.forces']:
@@ -139,8 +135,8 @@ class FormArtist(DiagramArtist):
         tol = self.settings['tol.forces']
         edges = []
         pipes = []
-        for edge in self.form.edges_where({'is_external': False}):
-            force = self.form.edge_attribute(edge, 'f')
+        for edge in self.diagram.edges_where({'is_external': False}):
+            force = self.diagram.edge_attribute(edge, 'f')
             if not force:
                 continue
             radius = fabs(scale * force)
@@ -148,7 +144,7 @@ class FormArtist(DiagramArtist):
                 continue
             edges.append(edge)
             color = color_tension if force > 0 else color_compression
-            pipes.append({'points': self.form.vertices_attributes('xyz', keys=edge),
+            pipes.append({'points': self.diagram.vertices_attributes('xyz', keys=edge),
                           'color': color,
                           'radius': radius,
                           'name': "{}.force.{}-{}".format(self.diagram.name, *edge)})

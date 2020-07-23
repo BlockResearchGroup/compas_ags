@@ -15,39 +15,23 @@ class ForceArtist(DiagramArtist):
     ----------
     force: compas_ags.diagrams.ForceDiagram
         The force diagram to draw.
-    form: compas_ags.diagrams.FormDiagram, optional, default is None
-        The dual graph of the force diagram
-    layer: string, optional, default is None
-        The name of the layer that will contain the forcediagram.
+    scale : float, optional
+        The drawing scale.
+        Default is ``1.0``.
+    settings : dict, optional
+        Customisation of the artist settings.
 
-    Attributes
-    ----------
-    force (read-only): :class:`compas_ags.diagrams.ForceDiagram`
-    form : :class:`compas_ags.diagrams.FormDiagram`
-    settings : dict
-        Visualisation settings.
-    anchor_point : list
-    anchor_vertex : int
-    scale : float
-        The scale of the diagram.
-        The magnitude of force represented by an edge is ``length * scale``.
+    Other Parameters
+    ----------------
+    See the parent artists for other parameters.
 
     """
 
-    def __init__(self, force, scale=None, layer=None):
-        super(ForceArtist, self).__init__(force, layer=layer)
-        self._anchor_point = None
-        self._anchor_vertex = None
-        self._scale = None
+    def __init__(self, force, scale=None, settings=None, **kwargs):
+        super(ForceArtist, self).__init__(force, **kwargs)
         self.scale = scale
-
-    @property
-    def force(self):
-        return self.mesh
-
-    @force.setter
-    def force(self, force):
-        self.mesh = force
+        if settings:
+            self.settings.update(settings)
 
     def draw(self):
         """Draw the diagram.
@@ -72,36 +56,36 @@ class ForceArtist(DiagramArtist):
         # vertices
         if self.settings['show.vertices']:
             color = {}
-            color.update({vertex: self.settings['color.vertices'] for vertex in self.force.vertices()})
-            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.force.vertices_where({'is_fixed': True})})
+            color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
+            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
             color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertices(color=color)
         # edges
         if self.settings['show.edges']:
             color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.force.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.force.edges() if self.force.is_dual_edge_external(edge)})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.force.edges() if self.force.is_dual_edge_load(edge)})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.force.edges() if self.force.is_dual_edge_reaction(edge)})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.force.edges() if self.force.is_dual_edge_ind(edge)})
+            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_external(edge)})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_load(edge)})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_reaction(edge)})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_ind(edge)})
             self.draw_edges(color=color)
         # vertex labels
         if self.settings['show.vertexlabels']:
-            text = {vertex: index for index, vertex in enumerate(self.force.vertices())}
+            text = {vertex: index for index, vertex in enumerate(self.diagram.vertices())}
             color = {}
-            color.update({vertex: self.settings['color.vertices'] for vertex in self.force.vertices()})
-            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.force.vertices_where({'is_fixed': True})})
+            color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
+            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
             color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertexlabels(text=text, color=color)
         # edge labels
         if self.settings['show.edgelabels']:
-            text = {edge: index for index, edge in enumerate(self.force.ordered_edges(self.force.dual))}
+            text = {edge: index for index, edge in enumerate(self.diagram.ordered_edges(self.diagram.dual))}
             color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.force.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.force.edges() if self.force.is_dual_edge_external(edge)})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.force.edges() if self.force.is_dual_edge_load(edge)})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.force.edges() if self.force.is_dual_edge_reaction(edge)})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.force.edges() if self.force.is_dual_edge_ind(edge)})
+            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_external(edge)})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_load(edge)})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_reaction(edge)})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_ind(edge)})
             self.draw_edgelabels(text=text, color=color)
 
 
