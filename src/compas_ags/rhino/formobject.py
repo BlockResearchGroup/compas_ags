@@ -3,6 +3,8 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_rhino
+
+from compas_rhino.objects.modifiers import VertexModifier
 from compas_ags.rhino.formartist import FormArtist
 
 
@@ -65,7 +67,7 @@ class FormObject(object):
         compas_rhino.rs.UnselectObjects(guids)
 
     def select_vertex(self):
-        """Manually select one vertex in the Rhino model view.
+        """Manually select one vertex in the Rhino view.
 
         Returns
         -------
@@ -73,12 +75,12 @@ class FormObject(object):
             The identifier of the selected vertex.
         """
         pointfilter = compas_rhino.rs.filter.point
-        guid = compas_rhino.rs.GetObject(message="Select Vertex.", preselect=True, select=True, filter=pointfilter)
+        guid = compas_rhino.rs.GetObject(message="Select Form Vertex.", preselect=True, select=True, filter=pointfilter)
         if guid and guid in self.artist.guid_vertex:
             return self.artist.guid_vertex[guid]
 
     def select_vertices(self):
-        """Manually select vertices in the Rhino model view.
+        """Manually select vertices in the Rhino view.
 
         Returns
         -------
@@ -86,22 +88,69 @@ class FormObject(object):
             The identifiers of the selected vertices.
         """
         pointfilter = compas_rhino.rs.filter.point
-        guids = compas_rhino.rs.GetObjects(message="Select Vertices.", preselect=True, select=True, group=False, filter=pointfilter)
+        guids = compas_rhino.rs.GetObjects(message="Select Form Vertices.", preselect=True, select=True, group=False, filter=pointfilter)
         if not guids:
             return []
         return [self.artist.guid_vertex[guid] for guid in guids if guid in self.artist.guid_vertex]
 
     def select_edge(self):
-        pass
+        """Manually select one edge in the Rhino view.
+
+        Returns
+        -------
+        tuple of int
+            The identifier of the selected edge.
+        """
+        curvefilter = compas_rhino.rs.filter.curve
+        guid = compas_rhino.rs.GetObject(message="Select Form Edge.", preselect=True, select=True, filter=curvefilter)
+        if guid and guid in self.artist.guid_edge:
+            return self.artist.guid_edge[guid]
 
     def select_edges(self):
-        pass
+        """Manually select edges in the Rhino view.
 
-    def move_vertex(self):
-        pass
+        Returns
+        -------
+        list
+            The identifiers of the selected edges.
+        """
+        curvefilter = compas_rhino.rs.filter.curve
+        guids = compas_rhino.rs.GetObjects(message="Select Form Edges.", preselect=True, select=True, group=False, filter=curvefilter)
+        if not guids:
+            return []
+        return [self.artist.guid_edge[guid] for guid in guids if guid in self.artist.guid_edge]
 
-    def move_vertices(self):
-        pass
+    def move_vertex(self, vertex):
+        """Move one selected vertex.
+
+        Parameters
+        ----------
+        vertex : int
+            The identifier of the vertex.
+
+        Returns
+        -------
+        bool
+            True if the execution was successful.
+            False otherwise.
+        """
+        return VertexModifier.move_vertex(self.diagram, vertex)
+
+    def move_vertices(self, vertices):
+        """Move selected vertices.
+
+        Parameters
+        ----------
+        vertices : list
+            The identifiers of the vertices.
+
+        Returns
+        -------
+        bool
+            True if the execution was successful.
+            False otherwise.
+        """
+        return VertexModifier.move_vertices(self.diagram, vertices)
 
     def modify_vertices(self):
         pass

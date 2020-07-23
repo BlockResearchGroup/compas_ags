@@ -39,7 +39,15 @@ formobject.artist.redraw()
 vertex = formobject.select_vertex()
 print(vertex)
 
+if formobject.move_vertex(vertex):
+    formobject.artist.draw()
+    formobject.artist.redraw()
+
 formobject.unselect()
 
 vertices = formobject.select_vertices()
 print(vertices)
+
+if formobject.move_vertices(vertices):
+    formobject.artist.draw()
+    formobject.artist.redraw()
