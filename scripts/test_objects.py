@@ -44,15 +44,18 @@ force_object.artist.anchor_vertex = 5
 force_object.artist.anchor_point = [35, 0, 0]
 force_object.artist.scale = 5.0
 
+form_object.clear()
 form_object.draw()
 form_object.redraw()
 
+force_object.clear()
 force_object.draw()
 force_object.redraw()
 
 vertices = form_object.select_vertices()
 print(vertices)
 if form_object.move_vertices(vertices):
+    form_object.clear()
     form_object.draw()
     form_object.redraw()
 
@@ -61,6 +64,7 @@ form_object.unselect()
 vertices = force_object.select_vertices()
 print(vertices)
 if force_object.move_vertices(vertices):
+    force_object.clear()
     force_object.draw()
     force_object.redraw()
 

@@ -39,6 +39,8 @@ scene = Scene()
 form_id = scene.add(form, name="Form", layer="AGS::FormDiagram")
 force_id = scene.add(force, name="Force", layer="AGS::ForceDiagram")
 
+scene.clear()
+
 form_obj = scene.find(form_id)
 force_obj = scene.find(force_id)
 
@@ -51,4 +53,5 @@ scene.update()
 
 vertices = form_obj.select_vertices()
 if form_obj.move_vertices(vertices):
+    scene.clear()
     scene.update()
