@@ -41,13 +41,13 @@ from .diagramobject import DiagramObject  # noqa: F401
 from .formobject import FormObject  # noqa: F401
 from .forceobject import ForceObject  # noqa: F401
 
+from .scene import Scene  # noqa: F401
+
 DiagramArtist.register(FormDiagram, FormArtist)
 DiagramArtist.register(ForceDiagram, ForceArtist)
 
 DiagramObject.register(FormDiagram, FormObject)
 DiagramObject.register(ForceDiagram, ForceObject)
-
-from .scene import Scene  # noqa: F401
 
 
 __all__ = [name for name in dir() if not name.startswith('_')]
