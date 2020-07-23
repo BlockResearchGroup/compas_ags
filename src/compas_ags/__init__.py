@@ -10,7 +10,6 @@ compas_ags
 
     compas_ags.ags
     compas_ags.diagrams
-    compas_ags.exceptions
     compas_ags.rhino
     compas_ags.viewers
 
