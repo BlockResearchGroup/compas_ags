@@ -10,8 +10,7 @@ from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
-from compas_ags.rhino import FormObject
-from compas_ags.rhino import ForceObject
+from compas_ags.rhino import Scene
 
 graphstatics = Proxy('compas_ags.ags.graphstatics')
 
@@ -35,33 +34,21 @@ force.data = graphstatics.force_update_from_form_proxy(force.data, form.data)
 # Visualize and Interact
 # ==============================================================================
 
-form_object = FormObject(None, form, name="Form", layer="AGS::FormDiagram")
-force_object = ForceObject(None, force, name="Force", layer="AGS::ForceDiagram")
+scene = Scene()
 
-form_object.artist.anchor_vertex = 9
+form_id = scene.add(form, name="Form", layer="AGS::FormDiagram")
+force_id = scene.add(force, name="Force", layer="AGS::ForceDiagram")
 
-force_object.artist.anchor_vertex = 5
-force_object.artist.anchor_point = [35, 0, 0]
-force_object.artist.scale = 5.0
+form_obj = scene.find(form_id)
+force_obj = scene.find(force_id)
 
-form_object.draw()
-form_object.redraw()
+# this should become part of "add"
+force_obj.artist.anchor_vertex = 5
+force_obj.artist.anchor_point = [35, 0, 0]
+force_obj.artist.scale = 5.0
 
-force_object.draw()
-force_object.redraw()
+scene.update()
 
-vertices = form_object.select_vertices()
-print(vertices)
-if form_object.move_vertices(vertices):
-    form_object.draw()
-    form_object.redraw()
-
-form_object.unselect()
-
-vertices = force_object.select_vertices()
-print(vertices)
-if force_object.move_vertices(vertices):
-    force_object.draw()
-    force_object.redraw()
-
-force_object.unselect()
+vertices = form_obj.select_vertices()
+if form_obj.move_vertices(vertices):
+    scene.update()

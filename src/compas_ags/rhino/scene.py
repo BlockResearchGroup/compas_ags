@@ -2,27 +2,13 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+from uuid import uuid4
 
-__all__ = ['SceneObject', 'Scene']
-
-
-ITEM_OBJECT = {}
-ITEM_ARTIST = {}
+import compas_rhino
+from compas_ags.rhino.diagramobject import DiagramObject
 
 
-class SceneObject(object):
-
-    def __init__(self, item):
-        self.item = item
-        self.artist = ITEM_ARTIST[type(item)](item)
-
-    @staticmethod
-    def register(itemtype, objecttype, artisttype):
-        ITEM_OBJECT[itemtype] = objecttype
-        ITEM_ARTIST[itemtype] = artisttype
-
-    def draw(self):
-        self.artist.draw()
+__all__ = ['Scene']
 
 
 class Scene(object):
@@ -30,16 +16,24 @@ class Scene(object):
     def __init__(self):
         self.objects = {}
 
-    def add(self, item, name=None, layer=None, settings=None):
-        self.objects[name] = ITEM_OBJECT[type(item)](item, layer=layer, settings=settings)
+    def add(self, item, name=None, layer=None, visible=None, settings=None):
+        guid = uuid4()
+        obj = DiagramObject.build(item, scene=self, name=name, layer=layer, visible=visible, settings=settings)
+        self.objects[guid] = obj
+        return guid
 
-    def update(self):
-        for name in self.objects:
-            self.objects[name].draw()
+    def find(self, guid):
+        if guid in self.objects:
+            return self.objects[guid]
 
     def clear(self):
-        for name in self.objects:
-            self.objects[name].clear()
+        for guid in self.objects:
+            self.objects[guid].clear()
+
+    def update(self):
+        for guid in self.objects:
+            self.objects[guid].draw()
+        compas_rhino.rs.EnableRedraw(True)
 
 
 # ==============================================================================

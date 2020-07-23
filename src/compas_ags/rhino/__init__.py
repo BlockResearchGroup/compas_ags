@@ -47,10 +47,7 @@ DiagramArtist.register(ForceDiagram, ForceArtist)
 DiagramObject.register(FormDiagram, FormObject)
 DiagramObject.register(ForceDiagram, ForceObject)
 
-# from .scene import Scene  # noqa: F401
-# from .scene import SceneObject
-
-# SceneObject.register(FormDiagram, FormObject, FormArtist)
+from .scene import Scene  # noqa: F401
 
 
 __all__ = [name for name in dir() if not name.startswith('_')]

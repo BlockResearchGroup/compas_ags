@@ -32,8 +32,8 @@ class DiagramObject(MeshObject):
         Instance of a diagram artist.
     """
 
-    def __init__(self, scene, diagram, name=None, layer=None, visible=True, settings=None):
-        super(DiagramObject, self).__init__(scene, diagram, name, layer, visible, settings)
+    def __init__(self, diagram, scene=None, name=None, layer=None, visible=True, settings=None):
+        super(DiagramObject, self).__init__(diagram, scene, name, layer, visible, settings)
 
     @property
     def diagram(self):
