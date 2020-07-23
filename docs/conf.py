@@ -4,31 +4,28 @@
 #
 # needs_sphinx = '1.0'
 
-import sys
-import os
-
 from sphinx.ext.napoleon.docstring import NumpyDocstring
 
 import sphinx_compas_theme
 
 # -- General configuration ------------------------------------------------
 
-project          = 'COMPAS AGS'
-copyright        = '2017, Block Research Group - ETH Zurich'
-author           = 'Tom Van Mele'
-release          = '0.1.0'
+project = 'COMPAS AGS'
+copyright = '2017, Block Research Group - ETH Zurich'
+author = 'Tom Van Mele'
+release = '0.1.0'
 
 version = '.'.join(release.split('.')[0:2])
 
-master_doc       = 'index'
-source_suffix    = ['.rst', ]
-templates_path   = ['_templates']
+master_doc = 'index'
+source_suffix = ['.rst', ]
+templates_path = ['_templates']
 exclude_patterns = []
 
-pygments_style   = 'sphinx'
-show_authors     = True
+pygments_style = 'sphinx'
+show_authors = True
 add_module_names = True
-language         = None
+language = None
 
 
 # -- Extension configuration ------------------------------------------------
@@ -134,13 +131,13 @@ intersphinx_mapping = {'python': ('https://docs.python.org/', None)}
 html_theme = 'compaspkg'
 html_theme_path = sphinx_compas_theme.get_html_theme_path()
 html_theme_options = {
-    "package_name"       : "compas_ags",
-    "package_title"      : project,
-    "package_version"    : release,
-    "package_author"     : "Tom Van Mele",
+    "package_name": "compas_ags",
+    "package_title": project,
+    "package_version": release,
+    "package_author": "Tom Van Mele",
     "package_description": "COMPAS package for Algebraic Graph Statics",
-    "package_repo"       : "https://github.com/BlockResearchGroup/compas_ags",
-    "package_docs"       : "https://blockresearchgroup.github.io/compas_ags"
+    "package_repo": "https://github.com/BlockResearchGroup/compas_ags",
+    "package_docs": "https://blockresearchgroup.github.io/compas_ags"
 }
 html_context = {}
 html_static_path = []
