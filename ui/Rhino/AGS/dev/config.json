@@ -1,0 +1,54 @@
+{
+    "plugin":
+    {
+        "id": "{6971119f-8b5a-4cd2-aad8-edad37a243c9}",
+        "version": "0.1.0",
+        "title": "AGS"
+    },
+    "ui":
+    {
+        "icons":
+        {
+            "bitmap": "",
+            "images":
+            [
+            ]
+        },
+
+        "commands":
+        [
+        ],
+
+        "menus":
+        [
+            {
+                "name" : "AGS",
+                "items":
+                [
+                ]
+            }
+        ],
+        "toolbars":
+        [
+            {
+                "name": "AGS",
+                "items":
+                [
+                ]
+            }
+        ],
+        "toolbargroups":
+        [
+            {
+                "name": "AGS",
+                "toolbars":
+                [
+                    "AGS"
+                ]
+            }
+        ]
+    },
+    "settings":
+    {
+    }
+}
