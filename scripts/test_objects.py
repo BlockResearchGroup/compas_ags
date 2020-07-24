@@ -53,8 +53,7 @@ force_object.draw()
 force_object.redraw()
 
 vertices = form_object.select_vertices()
-print(vertices)
-if form_object.move_vertices(vertices):
+if vertices and form_object.move_vertices(vertices):
     form_object.clear()
     form_object.draw()
     form_object.redraw()
@@ -62,8 +61,7 @@ if form_object.move_vertices(vertices):
 form_object.unselect()
 
 vertices = force_object.select_vertices()
-print(vertices)
-if force_object.move_vertices(vertices):
+if vertices and force_object.move_vertices(vertices):
     force_object.clear()
     force_object.draw()
     force_object.redraw()

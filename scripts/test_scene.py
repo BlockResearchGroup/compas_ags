@@ -50,8 +50,3 @@ force_obj.artist.anchor_point = [35, 0, 0]
 force_obj.artist.scale = 5.0
 
 scene.update()
-
-vertices = form_obj.select_vertices()
-if form_obj.move_vertices(vertices):
-    scene.clear()
-    scene.update()
