@@ -79,6 +79,23 @@ class Scene(object):
         if guid in self.objects:
             return self.objects[guid]
 
+    def find_by_name(self,  name):
+        """Find an object using its name.
+
+        Parameters
+        ----------
+        name : str
+
+        Returns
+        -------
+        list of :class:`compas_ags.rhino.DiagramObject`
+        """
+        objects = []
+        for obj in self.objects.values():
+            if obj.name == name:
+                objects.append(obj)
+        return objects
+
     def clear(self):
         """Clear all objects from the scene."""
         for guid in self.objects:
