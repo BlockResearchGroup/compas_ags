@@ -31,6 +31,10 @@ force = ForceDiagram.from_formdiagram(form)
 # Boundary conditions
 # ==============================================================================
 
+fixed = [7, 9, 11, 13, 15]
+
+form.vertices_attribute('is_fixed', True, keys=fixed)
+
 form.edge_force((0, 1), -1.0)
 form.edge_force((2, 3), -1.0)
 form.edge_force((4, 5), -1.0)
@@ -68,14 +72,12 @@ scene.update()
 # ==============================================================================
 
 while True:
-    vertices = form_obj.select_vertices()
+    vertices = force_obj.select_vertices()
     if not vertices:
         break
-
-    if form_obj.move_vertices(vertices):
-        # update force diagram
-        form.data = graphstatics.form_update_q_from_qind_proxy(form.data)
-        force.data = graphstatics.force_update_from_form_proxy(force.data, form.data)
+    if force_obj.move_vertices(vertices):
+        # update form diagram
+        form.data = graphstatics.form_update_from_force_proxy(form.data, force.data, kmax=100)
         # update the scene
         scene.clear()
         scene.update()
