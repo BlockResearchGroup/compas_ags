@@ -16,7 +16,7 @@ graphstatics = Proxy('compas_ags.ags.graphstatics')
 
 HERE = os.path.dirname(__file__)
 DATA = os.path.join(HERE, '../data')
-FILE = os.path.join(DATA, 'debugging', 'truss.obj')
+FILE = os.path.join(DATA, 'paper', 'gs_form_force.obj')
 
 # ==============================================================================
 # Init
@@ -31,13 +31,12 @@ force = ForceDiagram.from_formdiagram(form)
 # Boundary conditions
 # ==============================================================================
 
-fixed = [7, 9, 11, 13, 15]
+left = next(form.vertices_where({'x': 0.0, 'y': 0.0}))
+right = next(form.vertices_where({'x': 6.0, 'y': 0.0}))
 
-form.vertices_attribute('is_fixed', True, keys=fixed)
+form.vertices_attribute('is_fixed', True, keys=[left, right])
 
-form.edge_force((0, 1), -1.0)
-form.edge_force((2, 3), -1.0)
-form.edge_force((4, 5), -1.0)
+form.edge_force(1, -10.0)
 
 # ==============================================================================
 # Equilibrium
@@ -61,9 +60,9 @@ form_obj = scene.find(form_id)
 force_obj = scene.find(force_id)
 
 # this should become part of "add"
-force_obj.artist.anchor_vertex = 5
-force_obj.artist.anchor_point = [35, 0, 0]
-force_obj.artist.scale = 5.0
+force_obj.artist.anchor_vertex = 3
+force_obj.artist.anchor_point = [15, 0, 0]
+force_obj.artist.scale = 0.3
 
 scene.update()
 
