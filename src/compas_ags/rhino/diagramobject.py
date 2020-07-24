@@ -2,12 +2,21 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import compas
 import compas_rhino
 
+from compas.geometry import scale_vector
+from compas.geometry import add_vectors
+from compas.geometry import subtract_vectors
 from compas_rhino.objects.modifiers import VertexModifier
 from compas_rhino.objects.modifiers import EdgeModifier
 
 from compas_rhino.objects import MeshObject
+
+if compas.IPY:
+    if compas.RHINO:
+        import Rhino
+        from Rhino.Geometry import Point3d
 
 
 __all__ = ['DiagramObject']
@@ -118,13 +127,18 @@ class DiagramObject(MeshObject):
             return []
         return [self.artist.guid_edge[guid] for guid in guids if guid in self.artist.guid_edge]
 
-    def move_vertex(self, vertex):
-        """Move one selected vertex.
+    def move_vertex(self, vertex, constraint=None, allow_off=None):
+        """Move one vertex of the diagram and update the data structure to the new geometry.
 
         Parameters
         ----------
         vertex : int
             The identifier of the vertex.
+
+        Other Parameters
+        ----------------
+        constraint : :class:`Rhino.Geometry.GeometryBase`, optional
+        allow_off : bool, optional
 
         Returns
         -------
@@ -132,10 +146,37 @@ class DiagramObject(MeshObject):
             True if the operation was successful.
             False otherwise.
         """
-        return VertexModifier.move_vertex(self.diagram, vertex)
+        def OnDynamicDraw(sender, e):
+            sp = e.CurrentPoint
+            for ep in nbrs:
+                e.Display.DrawDottedLine(sp, ep, color)
+
+        diagram = self.diagram
+        vertex_xyz = self.artist.vertex_xyz
+        scale = 1 / self.artist.scale
+        color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+        if '_is_edge' in diagram.default_edge_attributes:
+            nbrs = [vertex_xyz[nbr] for nbr in diagram.vertex_neighbors(vertex) if diagram.edge_attribute((vertex, nbr), '_is_edge')]
+        else:
+            nbrs = [vertex_xyz[nbr] for nbr in diagram.vertex_neighbors(vertex)]
+        nbrs = [Point3d(*xyz) for xyz in nbrs]
+        gp = Rhino.Input.Custom.GetPoint()
+        gp.SetCommandPrompt('Point to move to?')
+        gp.DynamicDraw += OnDynamicDraw
+        if constraint:
+            gp.Constrain(constraint, allow_off)
+        gp.Get()
+        if gp.CommandResult() != Rhino.Commands.Result.Success:
+            return False
+        pos1 = vertex_xyz[vertex]
+        pos2 = list(gp.Point())
+        vector = scale_vector(subtract_vectors(pos2, pos1), scale)
+        xyz = diagram.vertex_attributes(vertex, 'xyz')
+        diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, vector))
+        return True
 
     def move_vertices(self, vertices):
-        """Move selected vertices.
+        """Move a selection of vertices of the diagram and update the data structure to the new geometry.
 
         Parameters
         ----------
@@ -148,7 +189,58 @@ class DiagramObject(MeshObject):
             True if the operation was successful.
             False otherwise.
         """
-        return VertexModifier.move_vertices(self.diagram, vertices)
+        def OnDynamicDraw(sender, e):
+            end = e.CurrentPoint
+            vector = end - start
+            for a, b in lines:
+                a = a + vector
+                b = b + vector
+                e.Display.DrawDottedLine(a, b, color)
+            for a, b in connectors:
+                a = a + vector
+                e.Display.DrawDottedLine(a, b, color)
+
+        diagram = self.diagram
+        vertex_xyz = self.artist.vertex_xyz
+        scale = 1 / self.artist.scale
+        color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+        lines = []
+        connectors = []
+        for vertex in vertices:
+            a = vertex_xyz[vertex]
+            nbrs = diagram.vertex_neighbors(vertex)
+            for nbr in nbrs:
+                if '_is_edge' in diagram.default_edge_attributes and not diagram.edge_attribute((vertex, nbr), '_is_edge'):
+                    continue
+                b = vertex_xyz[nbr]
+                line = [Point3d(* a), Point3d(* b)]
+                if nbr in vertices:
+                    lines.append(line)
+                else:
+                    connectors.append(line)
+        gp = Rhino.Input.Custom.GetPoint()
+        gp.SetCommandPrompt('Point to move from?')
+        gp.Get()
+
+        if gp.CommandResult() != Rhino.Commands.Result.Success:
+            return False
+
+        start = gp.Point()
+        gp.SetCommandPrompt('Point to move to?')
+        gp.SetBasePoint(start, False)
+        gp.DrawLineFromPoint(start, True)
+        gp.DynamicDraw += OnDynamicDraw
+        gp.Get()
+
+        if gp.CommandResult() != Rhino.Commands.Result.Success:
+            return False
+
+        end = gp.Point()
+        vector = scale_vector(list(end - start), scale)
+        for vertex in vertices:
+            xyz = diagram.vertex_attributes(vertex, 'xyz')
+            diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, vector))
+        return True
 
     def modify_vertices(self, vertices=None, names=None):
         """Modify the attributes of a selection of diagram vertices.

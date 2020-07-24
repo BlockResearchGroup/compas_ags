@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 
 import compas_rhino
-
 from compas_ags.rhino.diagramobject import DiagramObject
 
 
@@ -27,5 +26,4 @@ class FormObject(DiagramObject):
 # ==============================================================================
 
 if __name__ == '__main__':
-
     pass
