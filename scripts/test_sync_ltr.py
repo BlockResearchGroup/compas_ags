@@ -44,7 +44,7 @@ scene.clear()
 form_obj = scene.find(form_id)
 force_obj = scene.find(force_id)
 
-form_obj.artist.scale = 2.0
+form_obj.artist.scale = 1.0
 
 # this should become part of "add"
 force_obj.artist.anchor_vertex = 5
@@ -55,10 +55,18 @@ scene.update()
 
 vertex = form_obj.select_vertex()
 if form_obj.move_vertex(vertex):
+    # update force diagram
+    form.data = graphstatics.form_update_q_from_qind_proxy(form.data)
+    force.data = graphstatics.force_update_from_form_proxy(force.data, form.data)
+    # update the scene
     scene.clear()
     scene.update()
 
 vertices = form_obj.select_vertices()
 if form_obj.move_vertices(vertices):
+    # update force diagram
+    form.data = graphstatics.form_update_q_from_qind_proxy(form.data)
+    force.data = graphstatics.force_update_from_form_proxy(force.data, form.data)
+    # update the scene
     scene.clear()
     scene.update()
