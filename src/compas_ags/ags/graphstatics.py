@@ -50,13 +50,11 @@ EPS = 1 / sys.float_info.epsilon
 
 
 def form_identify_dof_proxy(formdata, *args, **kwargs):
-    from compas_tna.diagrams import FormDiagram
     form = FormDiagram.from_data(formdata)
     return form_identify_dof(form, *args, **kwargs)
 
 
 def form_count_dof_proxy(formdata, *args, **kwargs):
-    from compas_tna.diagrams import FormDiagram
     form = FormDiagram.from_data(formdata)
     return form_count_dof(form, *args, **kwargs)
 
