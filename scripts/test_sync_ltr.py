@@ -69,6 +69,7 @@ scene.update()
 
 while True:
     vertices = form_obj.select_vertices()
+    print(vertices)
     if not vertices:
         break
 
