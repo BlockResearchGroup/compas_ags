@@ -135,18 +135,20 @@ def form_identify_dof(form):
     --------
     >>>
     """
-    vertex_index = form.vertex_index()
-
-    xy = form.vertices_attributes('xy')
-    fixed = [vertex_index[vertex] for vertex in form.fixed()]
-    free = list(set(range(form.number_of_vertices())) - set(fixed))
-    edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
-    C = connectivity_matrix(edges)
-    E = equilibrium_matrix(C, xy, free)
+    k_i = form.key_index()
+    uv_index = {(u, v): index for index, (u, v) in enumerate(form.edges())}
+    vcount = form.number_of_vertices()
+    fixed = form.leaves()
+    fixed = [k_i[key] for key in fixed]
+    free = list(set(range(vcount)) - set(fixed))
+    ind = [uv_index[key] for key in list(form.edges_where({'is_ind': True}))]
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    xy = array(form.vertices_attributes('xy'), dtype=float64).reshape((-1, 2))
+    C = connectivity_matrix(edges, 'array')
+    E = equilibrium_matrix(C, xy, free, 'array')
 
     k, m = dof(E)
     ind = nonpivots(rref(E))
-
     return k, m, [edges[i] for i in ind]
 
 
@@ -184,17 +186,16 @@ def form_count_dof(form):
     --------
     >>>
     """
-    vertex_index = form.vertex_index()
-
+    k_i = form.key_index()
+    vcount = form.number_of_vertices()
+    fixed = form.leaves()
+    fixed = [k_i[key] for key in fixed]
+    free = list(set(range(vcount)) - set(fixed))
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
     xy = form.vertices_attributes('xy')
-    fixed = [vertex_index[vertex] for vertex in form.fixed()]
-    free = list(set(range(len(form.vertex))) - set(fixed))
-    edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
     C = connectivity_matrix(edges)
     E = equilibrium_matrix(C, xy, free)
-
     k, m = dof(E)
-
     return k, m
 
 
@@ -416,4 +417,38 @@ def force_update_from_form(force, form):
 # ==============================================================================
 
 if __name__ == "__main__":
-    pass
+    import compas_ags
+    from compas_ags.diagrams import FormGraph
+    from compas_ags.diagrams import FormDiagram
+    from compas_ags.diagrams import ForceDiagram
+    from compas_ags.viewers import Viewer
+
+
+    graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
+    form = FormDiagram.from_graph(graph)
+    force = ForceDiagram.from_formdiagram(form) 
+    form.edge_force((0, 1), -1.0)
+
+    form.data = form_update_q_from_qind_proxy(form.data)
+    force.data = force_update_from_form_proxy(force.data, form.data)
+
+    print(form_count_dof_proxy(form.data))
+    print(form_identify_dof_proxy(form.data))
+
+    viewer = Viewer(form, force, delay_setup=False, figsize=(8, 5))
+
+    left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
+    right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
+
+    viewer.draw_form(
+        vertexsize=0.15,
+        vertexcolor={key: '#000000' for key in (left, right)},
+        vertexlabel={key: key for key in form.vertices()},
+        edgelabel={uv: index for index, uv in enumerate(form.edges())})
+
+    viewer.draw_force(
+        vertexsize=0.15,
+        vertexlabel={key: key for key in force.vertices()})
+
+    viewer.show()
+
