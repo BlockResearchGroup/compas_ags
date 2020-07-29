@@ -26,11 +26,38 @@ def RunCommand(is_interactive):
 
     if filepath:
         graph = FormGraph.from_obj(filepath)
+        
+        # check planarity
+        if not graph.is_planar_embedding():
+            raise ValueError("The graph is not planar. Check your graph!")
+        # check L-nodes
+        from compas.geometry import Line
+        from compas.geometry import is_point_on_line
+
+        nodes_to_del = []
+        # check the node that can never achieve equilibrium
+        for key in graph.nodes():
+            if graph.degree(key) == 2:
+                nbrs = graph.neighborhood(key)
+                line = Line(graph.node_coordinates(nbrs[0]), graph.node_coordinates(nbrs[1]))
+                node = graph.node_coordinates(key)
+                if not is_point_on_line(node, line):
+                    print("this node %s can never achieve equilibrium" % key)
+                    nodes_to_del.append(key)
+
+        if len(nodes_to_del) != 0:
+            print('The form diagram is reconstructed.....')
+            for key in nodes_to_del:
+                graph.delete_node(key)
+            # reconstrcut the network for new keys, new keys don't correspond in cycle faces.
+            lines = graph.to_lines()
+            graph = FormGraph.from_lines(lines)
+
         form = FormDiagram.from_graph(graph)
-        force = ForceDiagram.from_formdiagram(form)
+        # force = ForceDiagram.from_formdiagram(form)
 
         scene.add(form, name='Form', layer='AGS::FormDiagram')
-        scene.add(force, name='Force', layer='AGS::ForceDiagram')
+        # scene.add(force, name='Force', layer='AGS::ForceDiagram')
 
         scene.clear()
         scene.update()
