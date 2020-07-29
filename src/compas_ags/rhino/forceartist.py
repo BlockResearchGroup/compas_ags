@@ -68,6 +68,10 @@ class ForceArtist(DiagramArtist):
             color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_load(edge)})
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_reaction(edge)})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_ind(edge)})
+            # forces of the structure
+            if self.settings['show.forces']:
+                color.update({edge: self.settings['color.tension'] for edge in self.diagram.edges() if self.diagram.dual_edge_f(edge) > 0 and not self.diagram.is_dual_edge_external(edge)})
+                color.update({edge: self.settings['color.compression'] for edge in self.diagram.edges() if self.diagram.dual_edge_f(edge) < 0 and not self.diagram.is_dual_edge_external(edge)})
             self.draw_edges(color=color)
         # vertex labels
         if self.settings['show.vertexlabels']:
@@ -79,7 +83,14 @@ class ForceArtist(DiagramArtist):
             self.draw_vertexlabels(text=text, color=color)
         # edge labels
         if self.settings['show.edgelabels']:
-            text = {edge: index for index, edge in enumerate(self.diagram.ordered_edges(self.diagram.dual))}
+            if self.settings['show.edgelabels_force']:
+                text = {}
+                dual_edges = list(self.diagram.dual.edges())
+                for index, edge in enumerate(self.diagram.ordered_edges(self.diagram.dual)):
+                    f = self.diagram.dual.edge_attribute(dual_edges[index], 'f')
+                    text[edge] = "%s kN {%s}" % (round(f), index)
+            else:
+                text = {edge: index for index, edge in enumerate(self.diagram.ordered_edges(self.diagram.dual))}
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_external(edge)})
