@@ -24,12 +24,13 @@ def RunCommand(is_interactive):
     system = sc.sticky['AGS']['system']
     scene = sc.sticky['AGS']['scene']
 
-    filepath = compas_rhino.browse_for_file('Select an input file.', folder=system['session.dirname'], filter='obj')
+    guids = compas_rhino.select_lines(message='Select Form Diagram Lines')
+    
+    if not guids:
+        return
 
-    if not filepath:
-        return 
-
-    graph = FormGraph.from_obj(filepath)
+    lines = compas_rhino.get_line_coordinates(guids)
+    graph = FormGraph.from_lines(lines)
     
     # check planarity
     if not graph.is_planar_embedding():
