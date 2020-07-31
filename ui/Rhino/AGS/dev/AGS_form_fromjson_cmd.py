@@ -12,7 +12,7 @@ from compas_ags.diagrams import ForceDiagram
 from compas.geometry import Line
 from compas.geometry import is_point_on_line
 
-__commandname__ = "AGS_form_fromobj"
+__commandname__ = "AGS_form_fromjson"
 
 
 def RunCommand(is_interactive):
@@ -27,10 +27,10 @@ def RunCommand(is_interactive):
     filepath = compas_rhino.browse_for_file('Select an input file.', folder=system['session.dirname'], filter='json')
 
     if not filepath:
-        return 
+        return
 
     graph = FormGraph.from_json(filepath)
-    
+
     form = FormDiagram.from_graph(graph)
     # force = ForceDiagram.from_formdiagram(form)
 

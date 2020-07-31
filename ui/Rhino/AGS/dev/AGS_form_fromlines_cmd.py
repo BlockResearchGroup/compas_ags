@@ -3,8 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-import rhinoscriptsyntax as r
-s
+import rhinoscriptsyntax as rs
 import compas_rhino
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
@@ -12,8 +11,9 @@ from compas_ags.diagrams import ForceDiagram
 
 from compas.geometry import Line
 from compas.geometry import is_point_on_line
+from compas_rhino.utilities import get_object_layers
 
-__commandname__ = "AGS_form_fromobj"
+__commandname__ = "AGS_form_fromlines"
 
 
 def RunCommand(is_interactive):
@@ -26,14 +26,12 @@ def RunCommand(is_interactive):
     scene = sc.sticky['AGS']['scene']
 
     guids = compas_rhino.select_lines(message='Select Form Diagram Lines')
-    
+
     if not guids:
         return
 
     lines = compas_rhino.get_line_coordinates(guids)
     graph = FormGraph.from_lines(lines)
-    
-    rs.HideObjects(guids)
 
     # check planarity
     if not graph.is_planar_embedding():
@@ -58,10 +56,13 @@ def RunCommand(is_interactive):
         graph = FormGraph.from_lines(lines)
 
     form = FormDiagram.from_graph(graph)
-    # force = ForceDiagram.from_formdiagram(form)
 
     scene.add(form, name='Form', layer='AGS::FormDiagram')
-    # scene.add(force, name='Force', layer='AGS::ForceDiagram')
+
+    input_layers = set(get_object_layers(guids))
+    for layer in input_layers:
+        if not rs.IsLayerCurrent(layer):
+            rs.LayerVisible(layer, False)
 
     scene.clear()
     scene.update()
