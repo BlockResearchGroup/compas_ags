@@ -13,7 +13,7 @@ from compas.utilities import DataEncoder
 __commandname__ = "AGS_save"
 
 
-# TODO... HASN'T WORKED YET
+# save form and force diagram to .json
 def RunCommand(is_interactive):
     
     if 'AGS' not in sc.sticky:
@@ -23,11 +23,13 @@ def RunCommand(is_interactive):
     system = sc.sticky['AGS']['system']
     scene = sc.sticky['AGS']['scene']
     
-    filepath = compas_rhino.rs.SaveFileName('save', filter=system['session.dirname'])
+    filepath = compas_rhino.rs.SaveFileName('save', filter=system['session.extension'] , folder=system['session.dirname'])
 
     if not filepath:
         return 
-
+    if filepath.split('.')[-1] != system['session.extension']:
+        filepath = "%s.%s" % (filepath, system['session.extension'])
+        
     dirname, basename = os.path.split(filepath)
     filename, _ = os.path.splitext(basename)
 
