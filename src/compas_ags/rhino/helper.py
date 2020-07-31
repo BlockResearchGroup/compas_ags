@@ -4,7 +4,8 @@ from __future__ import division
 
 
 __all__ = ['calculate_scale',
-            'calculate_anchor']
+            'calculate_anchor',
+            'calculate_pipe_scale']
 
 
 def calculate_scale(form, force):
@@ -33,4 +34,9 @@ def calculate_anchor(form, force):
 
     return [form_xdim + form_xmax, form_ymid, 0]
 
-    
+
+def calculate_pipe_scale(form):
+    # calculate a maximum scale for pipes in the diagram.
+    q = [abs(form.edge_attribute(uv, 'q')) for uv in form.edges_where({'is_external': False})]
+    scale = 0.1/max(q)  # highest force/length radio equals 10% of length
+    return scale
