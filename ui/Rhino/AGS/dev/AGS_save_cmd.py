@@ -10,7 +10,7 @@ import scriptcontext as sc
 import compas_rhino
 from compas.utilities import DataEncoder
 
-__commandname__ = "AGS_file_save"
+__commandname__ = "AGS_save"
 
 
 # TODO... HASN'T WORKED YET
@@ -24,7 +24,6 @@ def RunCommand(is_interactive):
     scene = sc.sticky['AGS']['scene']
     
     filepath = compas_rhino.rs.SaveFileName('save', filter=system['session.dirname'])
-
 
     if not filepath:
         return 

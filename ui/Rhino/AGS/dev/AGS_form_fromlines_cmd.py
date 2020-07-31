@@ -3,7 +3,8 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-
+import rhinoscriptsyntax as r
+s
 import compas_rhino
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
@@ -32,6 +33,8 @@ def RunCommand(is_interactive):
     lines = compas_rhino.get_line_coordinates(guids)
     graph = FormGraph.from_lines(lines)
     
+    rs.HideObjects(guids)
+
     # check planarity
     if not graph.is_planar_embedding():
         raise ValueError("The graph is not planar. Check your graph!")

@@ -8,7 +8,7 @@ import rhinoscriptsyntax as rs
 import compas_rhino
 
 
-__commandname__ = "AGS_assign_loads"
+__commandname__ = "AGS_assign_forces"
 
 
 def RunCommand(is_interactive):

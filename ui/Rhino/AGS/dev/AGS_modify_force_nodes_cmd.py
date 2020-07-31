@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_force_update"
+__commandname__ = "AGS_modify_force_nodes"
 
 
 def RunCommand(is_interactive):
@@ -23,11 +23,17 @@ def RunCommand(is_interactive):
 
     proxy.package = 'compas_ags.ags.graphstatics'
 
-    form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
-    force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
+    while True:
+        vertices = force.select_vertices()
+        if not vertices:
+            break
 
-    scene.clear()
-    scene.update()
+        if force.move_vertices(vertices):
+            # update form diagram
+            form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data, kmax=100)
+            # update the scene
+            scene.clear()
+            scene.update()
 
 
 # ==============================================================================
