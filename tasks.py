@@ -1,12 +1,9 @@
-from __future__ import print_function
-
-import contextlib
 import glob
 import os
 import sys
 from shutil import rmtree
 
-from invoke import Collection, Exit, task
+from invoke import Exit, task
 
 try:
     input = raw_input
