@@ -50,15 +50,15 @@ EPS = 1 / sys.float_info.epsilon
 
 
 def form_identify_dof_proxy(formdata, *args, **kwargs):
-    from compas_tna.diagrams import FormDiagram
     form = FormDiagram.from_data(formdata)
-    return form_identify_dof(form, *args, **kwargs)
+    k, m, ind = form_identify_dof(form, *args, **kwargs)
+    return int(k), int(m), ind
 
 
 def form_count_dof_proxy(formdata, *args, **kwargs):
-    from compas_tna.diagrams import FormDiagram
     form = FormDiagram.from_data(formdata)
-    return form_count_dof(form, *args, **kwargs)
+    k, m = form_count_dof(form, *args, **kwargs)
+    return int(k), int(m)
 
 
 def form_update_q_from_qind_proxy(formdata, *args, **kwargs):
@@ -187,8 +187,8 @@ def form_count_dof(form):
     vertex_index = form.vertex_index()
 
     xy = form.vertices_attributes('xy')
-    fixed = [vertex_index[vertex] for vertex in form.fixed()]
-    free = list(set(range(len(form.vertex))) - set(fixed))
+    fixed = [vertex_index[vertex] for vertex in form.leaves()]
+    free = list(set(range(form.number_of_vertices())) - set(fixed))
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
     C = connectivity_matrix(edges)
     E = equilibrium_matrix(C, xy, free)
