@@ -261,73 +261,76 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.node_coordinates.html#compas_ags.diagrams.FormGraph.node_coordinates" title="compas_ags.diagrams.FormGraph.node_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_coordinates</span></code></a>(key[, axes])</p></td>
 <td><p>Return the coordinates of a node.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.node_laplacian.html#compas_ags.diagrams.FormGraph.node_laplacian" title="compas_ags.diagrams.FormGraph.node_laplacian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_laplacian</span></code></a>(key)</p></td>
-<td><p>Return the vector from the node to the centroid of its 1-ring neighborhood.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.node_neighborhood_centroid.html#compas_ags.diagrams.FormGraph.node_neighborhood_centroid" title="compas_ags.diagrams.FormGraph.node_neighborhood_centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_neighborhood_centroid</span></code></a>(key)</p></td>
-<td><p>Compute the centroid of the neighboring nodes.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.nodes.html#compas_ags.diagrams.FormGraph.nodes" title="compas_ags.diagrams.FormGraph.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a>([data])</p></td>
-<td><p>Iterate over the nodes of the network.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.nodes_attribute.html#compas_ags.diagrams.FormGraph.nodes_attribute" title="compas_ags.diagrams.FormGraph.nodes_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes_attribute</span></code></a>(name[, value, keys])</p></td>
-<td><p>Get or set an attribute of multiple nodes.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.nodes_attributes.html#compas_ags.diagrams.FormGraph.nodes_attributes" title="compas_ags.diagrams.FormGraph.nodes_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes_attributes</span></code></a>([names, values, keys])</p></td>
-<td><p>Get or set multiple attributes of multiple nodes.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.nodes_where.html#compas_ags.diagrams.FormGraph.nodes_where" title="compas_ags.diagrams.FormGraph.nodes_where"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes_where</span></code></a>(conditions[, data])</p></td>
-<td><p>Get nodes for which a certain condition or set of conditions is true.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.nodes_where_predicate.html#compas_ags.diagrams.FormGraph.nodes_where_predicate" title="compas_ags.diagrams.FormGraph.nodes_where_predicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes_where_predicate</span></code></a>(predicate[, data])</p></td>
-<td><p>Get nodes for which a certain condition or set of conditions is true using a lambda function.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.number_of_edges.html#compas_ags.diagrams.FormGraph.number_of_edges" title="compas_ags.diagrams.FormGraph.number_of_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_edges</span></code></a>()</p></td>
-<td><p>Compute the number of edges of the network.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.number_of_nodes.html#compas_ags.diagrams.FormGraph.number_of_nodes" title="compas_ags.diagrams.FormGraph.number_of_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_nodes</span></code></a>()</p></td>
-<td><p>Compute the number of nodes of the network.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.split_edge.html#compas_ags.diagrams.FormGraph.split_edge" title="compas_ags.diagrams.FormGraph.split_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_edge</span></code></a>(u, v[, t])</p></td>
-<td><p>Split and edge by inserting a node along its length.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.summary.html#compas_ags.diagrams.FormGraph.summary" title="compas_ags.diagrams.FormGraph.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a>()</p></td>
-<td><p>Print a summary of the graph.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_data.html#compas_ags.diagrams.FormGraph.to_data" title="compas_ags.diagrams.FormGraph.to_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_data</span></code></a>()</p></td>
-<td><p>Returns a dictionary of structured data representing the graph.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_json.html#compas_ags.diagrams.FormGraph.to_json" title="compas_ags.diagrams.FormGraph.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>(filepath[, pretty])</p></td>
-<td><p>Serialise the structured data representing the data structure to json.</p></td>
-</tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_lines.html#compas_ags.diagrams.FormGraph.to_lines" title="compas_ags.diagrams.FormGraph.to_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_lines</span></code></a>()</p></td>
-<td><p>Return the lines of the network as pairs of start and end point coordinates.</p></td>
-</tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_networkx.html#compas_ags.diagrams.FormGraph.to_networkx" title="compas_ags.diagrams.FormGraph.to_networkx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_networkx</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.node_index.html#compas_ags.diagrams.FormGraph.node_index" title="compas_ags.diagrams.FormGraph.node_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_index</span></code></a>()</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_nodes_and_edges.html#compas_ags.diagrams.FormGraph.to_nodes_and_edges" title="compas_ags.diagrams.FormGraph.to_nodes_and_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_nodes_and_edges</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.node_laplacian.html#compas_ags.diagrams.FormGraph.node_laplacian" title="compas_ags.diagrams.FormGraph.node_laplacian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_laplacian</span></code></a>(key)</p></td>
+<td><p>Return the vector from the node to the centroid of its 1-ring neighborhood.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.node_neighborhood_centroid.html#compas_ags.diagrams.FormGraph.node_neighborhood_centroid" title="compas_ags.diagrams.FormGraph.node_neighborhood_centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">node_neighborhood_centroid</span></code></a>(key)</p></td>
+<td><p>Compute the centroid of the neighboring nodes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.nodes.html#compas_ags.diagrams.FormGraph.nodes" title="compas_ags.diagrams.FormGraph.nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes</span></code></a>([data])</p></td>
+<td><p>Iterate over the nodes of the network.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.nodes_attribute.html#compas_ags.diagrams.FormGraph.nodes_attribute" title="compas_ags.diagrams.FormGraph.nodes_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes_attribute</span></code></a>(name[, value, keys])</p></td>
+<td><p>Get or set an attribute of multiple nodes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.nodes_attributes.html#compas_ags.diagrams.FormGraph.nodes_attributes" title="compas_ags.diagrams.FormGraph.nodes_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes_attributes</span></code></a>([names, values, keys])</p></td>
+<td><p>Get or set multiple attributes of multiple nodes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.nodes_where.html#compas_ags.diagrams.FormGraph.nodes_where" title="compas_ags.diagrams.FormGraph.nodes_where"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes_where</span></code></a>(conditions[, data])</p></td>
+<td><p>Get nodes for which a certain condition or set of conditions is true.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.nodes_where_predicate.html#compas_ags.diagrams.FormGraph.nodes_where_predicate" title="compas_ags.diagrams.FormGraph.nodes_where_predicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nodes_where_predicate</span></code></a>(predicate[, data])</p></td>
+<td><p>Get nodes for which a certain condition or set of conditions is true using a lambda function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.number_of_edges.html#compas_ags.diagrams.FormGraph.number_of_edges" title="compas_ags.diagrams.FormGraph.number_of_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_edges</span></code></a>()</p></td>
+<td><p>Compute the number of edges of the network.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.number_of_nodes.html#compas_ags.diagrams.FormGraph.number_of_nodes" title="compas_ags.diagrams.FormGraph.number_of_nodes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_nodes</span></code></a>()</p></td>
+<td><p>Compute the number of nodes of the network.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.split_edge.html#compas_ags.diagrams.FormGraph.split_edge" title="compas_ags.diagrams.FormGraph.split_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_edge</span></code></a>(u, v[, t])</p></td>
+<td><p>Split and edge by inserting a node along its length.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.summary.html#compas_ags.diagrams.FormGraph.summary" title="compas_ags.diagrams.FormGraph.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a>()</p></td>
+<td><p>Print a summary of the graph.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_data.html#compas_ags.diagrams.FormGraph.to_data" title="compas_ags.diagrams.FormGraph.to_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_data</span></code></a>()</p></td>
+<td><p>Returns a dictionary of structured data representing the graph.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_json.html#compas_ags.diagrams.FormGraph.to_json" title="compas_ags.diagrams.FormGraph.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a>(filepath[, pretty])</p></td>
+<td><p>Serialise the structured data representing the data structure to json.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_lines.html#compas_ags.diagrams.FormGraph.to_lines" title="compas_ags.diagrams.FormGraph.to_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_lines</span></code></a>()</p></td>
+<td><p>Return the lines of the network as pairs of start and end point coordinates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_networkx.html#compas_ags.diagrams.FormGraph.to_networkx" title="compas_ags.diagrams.FormGraph.to_networkx"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_networkx</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_nodes_and_edges.html#compas_ags.diagrams.FormGraph.to_nodes_and_edges" title="compas_ags.diagrams.FormGraph.to_nodes_and_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_nodes_and_edges</span></code></a>()</p></td>
 <td><p>Return the nodes and edges of a network.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_obj.html#compas_ags.diagrams.FormGraph.to_obj" title="compas_ags.diagrams.FormGraph.to_obj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_obj</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_obj.html#compas_ags.diagrams.FormGraph.to_obj" title="compas_ags.diagrams.FormGraph.to_obj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_obj</span></code></a>()</p></td>
 <td><p>Write the network to an OBJ file.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_points.html#compas_ags.diagrams.FormGraph.to_points" title="compas_ags.diagrams.FormGraph.to_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_points</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.to_points.html#compas_ags.diagrams.FormGraph.to_points" title="compas_ags.diagrams.FormGraph.to_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_points</span></code></a>()</p></td>
 <td><p>Return the coordinates of the network.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.unset_edge_attribute.html#compas_ags.diagrams.FormGraph.unset_edge_attribute" title="compas_ags.diagrams.FormGraph.unset_edge_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unset_edge_attribute</span></code></a>(key, name)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.unset_edge_attribute.html#compas_ags.diagrams.FormGraph.unset_edge_attribute" title="compas_ags.diagrams.FormGraph.unset_edge_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unset_edge_attribute</span></code></a>(key, name)</p></td>
 <td><p>Unset the attribute of an edge.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.unset_node_attribute.html#compas_ags.diagrams.FormGraph.unset_node_attribute" title="compas_ags.diagrams.FormGraph.unset_node_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unset_node_attribute</span></code></a>(key, name)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.unset_node_attribute.html#compas_ags.diagrams.FormGraph.unset_node_attribute" title="compas_ags.diagrams.FormGraph.unset_node_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unset_node_attribute</span></code></a>(key, name)</p></td>
 <td><p>Unset the attribute of a node.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.update_default_edge_attributes.html#compas_ags.diagrams.FormGraph.update_default_edge_attributes" title="compas_ags.diagrams.FormGraph.update_default_edge_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_default_edge_attributes</span></code></a>([attr_dict])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.update_default_edge_attributes.html#compas_ags.diagrams.FormGraph.update_default_edge_attributes" title="compas_ags.diagrams.FormGraph.update_default_edge_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_default_edge_attributes</span></code></a>([attr_dict])</p></td>
 <td><p>Update the default edge attributes.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.update_default_node_attributes.html#compas_ags.diagrams.FormGraph.update_default_node_attributes" title="compas_ags.diagrams.FormGraph.update_default_node_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_default_node_attributes</span></code></a>([attr_dict])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.update_default_node_attributes.html#compas_ags.diagrams.FormGraph.update_default_node_attributes" title="compas_ags.diagrams.FormGraph.update_default_node_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_default_node_attributes</span></code></a>([attr_dict])</p></td>
 <td><p>Update the default node attributes.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.uv_index.html#compas_ags.diagrams.FormGraph.uv_index" title="compas_ags.diagrams.FormGraph.uv_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uv_index</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormGraph.uv_index.html#compas_ags.diagrams.FormGraph.uv_index" title="compas_ags.diagrams.FormGraph.uv_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">uv_index</span></code></a>()</p></td>
 <td><p>Returns a dictionary that maps edge keys (i.e.</p></td>
 </tr>
 </tbody>

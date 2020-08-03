@@ -91,6 +91,7 @@
 
 <div class="viewcode-block" id="FormDiagram.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.__init__.html#compas_ags.diagrams.FormDiagram.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FormDiagram</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
             <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Form&#39;</span><span class="p">,</span>
         <span class="p">})</span>
@@ -111,6 +112,14 @@
             <span class="s1">&#39;is_load&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
         <span class="p">})</span></div>
 
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">graph</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span>
+
+    <span class="nd">@graph</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span> <span class="nf">graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_graph</span> <span class="o">=</span> <span class="n">graph</span>
+
 <div class="viewcode-block" id="FormDiagram.from_graph"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.from_graph.html#compas_ags.diagrams.FormDiagram.from_graph">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_graph</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">graph</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Construct a form diagram from a form graph.</span>
@@ -127,11 +136,17 @@
 <span class="sd">        -------</span>
 <span class="sd">        :class:`compas_ags.diagrams.FormDiagram`</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">points</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">to_points</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">graph</span><span class="o">.</span><span class="n">degree</span><span class="p">(</span><span class="n">node</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">graph</span><span class="o">.</span><span class="n">delete_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
+        <span class="n">node_index</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">node_index</span><span class="p">()</span>
         <span class="n">cycles</span> <span class="o">=</span> <span class="n">network_find_cycles</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">breakpoints</span><span class="o">=</span><span class="n">graph</span><span class="o">.</span><span class="n">leaves</span><span class="p">())</span>
+        <span class="n">points</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes_attributes</span><span class="p">(</span><span class="s1">&#39;xyz&#39;</span><span class="p">)</span>
+        <span class="n">cycles</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[[</span><span class="n">node_index</span><span class="p">[</span><span class="n">node</span><span class="p">]</span> <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">cycle</span><span class="p">]</span> <span class="k">for</span> <span class="n">cycle</span> <span class="ow">in</span> <span class="n">cycles</span><span class="p">]</span>
         <span class="n">form</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">from_vertices_and_faces</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">cycles</span><span class="p">)</span>
         <span class="n">form</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;_is_edge&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges_on_boundary</span><span class="p">()))</span>
         <span class="n">form</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;is_external&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">form</span><span class="o">.</span><span class="n">leaf_edges</span><span class="p">())</span>
+        <span class="n">form</span><span class="o">.</span><span class="n">graph</span> <span class="o">=</span> <span class="n">graph</span>
         <span class="k">return</span> <span class="n">form</span></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>

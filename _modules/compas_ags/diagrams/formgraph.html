@@ -92,6 +92,9 @@
 <div class="viewcode-block" id="FormGraph.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.__init__.html#compas_ags.diagrams.FormGraph.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FormGraph</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="FormGraph.node_index"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.node_index.html#compas_ags.diagrams.FormGraph.node_index">[docs]</a>    <span class="k">def</span> <span class="nf">node_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">())}</span></div>
+
 <div class="viewcode-block" id="FormGraph.is_2d"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.is_2d.html#compas_ags.diagrams.FormGraph.is_2d">[docs]</a>    <span class="k">def</span> <span class="nf">is_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Verify that all nodes of the graph lie in a horizontal plane.</span>
 
