@@ -1,0 +1,135 @@
+# Rhino
+
+v 15 0 0
+v 15 -2 0
+cstype bspline
+deg 1
+curv 0 2 1 2
+parm u 0 0 2 2
+end
+v 10 0 0
+v 10 -2 0
+cstype bspline
+deg 1
+curv 0 2 3 4
+parm u 0 0 2 2
+end
+v 5 -2 0
+v 5 0 0
+cstype bspline
+deg 1
+curv 0 2 5 6
+parm u 0 0 2 2
+end
+v 20 -2 0
+v 20 0 0
+cstype bspline
+deg 1
+curv 0 2 7 8
+parm u 0 0 2 2
+end
+v 0 0 0
+v -2 0 0
+cstype bspline
+deg 1
+curv 0 2 9 10
+parm u 0 0 2 2
+end
+v 0 -2 0
+v 0 0 0
+cstype bspline
+deg 1
+curv 0 2 11 12
+parm u 0 0 2 2
+end
+v 10 5 0
+v 10 0 0
+cstype bspline
+deg 1
+curv 0 5 13 14
+parm u 0 0 5 5
+end
+v 5 0 0
+v 0 0 0
+cstype bspline
+deg 1
+curv 0 5 15 16
+parm u 0 0 5 5
+end
+v 10 0 0
+v 5 0 0
+cstype bspline
+deg 1
+curv 0 5 17 18
+parm u 0 0 5 5
+end
+v 15 0 0
+v 10 0 0
+cstype bspline
+deg 1
+curv 0 5 19 20
+parm u 0 0 5 5
+end
+v 20 0 0
+v 15 0 0
+cstype bspline
+deg 1
+curv 0 5 21 22
+parm u 0 0 5 5
+end
+v 10 5 0
+v 15 5 0
+cstype bspline
+deg 1
+curv 0 5 23 24
+parm u 0 0 5 5
+end
+v 5 5 0
+v 10 5 0
+cstype bspline
+deg 1
+curv 0 5 25 26
+parm u 0 0 5 5
+end
+v 15 5 0
+v 20 0 0
+cstype bspline
+deg 1
+curv 0 7.07107 27 28
+parm u 0 0 7.07107 7.07107
+end
+v 15 0 0
+v 15 5 0
+cstype bspline
+deg 1
+curv 0 5 29 30
+parm u 0 0 5 5
+end
+v 10 5 0
+v 15 0 0
+cstype bspline
+deg 1
+curv 0 7.07107 31 32
+parm u 0 0 7.07107 7.07107
+end
+v 5 0 0
+v 10 5 0
+cstype bspline
+deg 1
+curv 0 7.07107 33 34
+parm u 0 0 7.07107 7.07107
+end
+v 5 5 0
+v 5 0 0
+cstype bspline
+deg 1
+curv 0 5 35 36
+parm u 0 0 5 5
+end
+v 0 0 0
+v 5 5 0
+cstype bspline
+deg 1
+curv 0 7.07107 37 38
+parm u 0 0 7.07107 7.07107
+end
