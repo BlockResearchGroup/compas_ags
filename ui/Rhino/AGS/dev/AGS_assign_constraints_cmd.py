@@ -8,7 +8,7 @@ import rhinoscriptsyntax as rs
 import compas_rhino
 
 
-__commandname__ = "AGS_assign_constraintss"
+__commandname__ = "AGS_assign_constraints"
 
 
 def RunCommand(is_interactive):
@@ -25,7 +25,7 @@ def RunCommand(is_interactive):
         vertices = form.select_vertices()
         if not vertices:
             break
-        for vertex in vertices: 
+        for vertex in vertices:
             form.diagram.vertex_attribute(vertex, 'is_fixed', True)
         scene.update()
 
