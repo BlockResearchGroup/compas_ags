@@ -34,8 +34,8 @@ force.vertex_attribute(9, 'x', force.vertex_attribute(10, 'x'))
 force.vertex_attributes(7, 'xyz', force.vertex_attributes(6, 'xyz'))
 force.vertex_attributes(11, 'xyz', force.vertex_attributes(9, 'xyz'))
 
-# change the depth of the structure
-force.vertices_attribute('x', 20, [6, 7, 8, 9, 10, 11])
+# # change the depth of the structure
+# force.vertices_attribute('x', 20, [6, 7, 8, 9, 10, 11])
 
 # fix some of the nodes in the from diagram
 # to constraint the problem to a single solution
@@ -53,8 +53,7 @@ viewer = Viewer(form, force, delay_setup=False, figsize=(12, 7.5))
 viewer.draw_form(
     vertexsize=0.15,
     vertexcolor={key: '#000000' for key in (8, 7)},
-    vertexlabel={key: key for key in form.vertices()},
-    edgelabel={uv: index for index, uv in enumerate(form.edges())})
+    vertexlabel={key: key for key in form.vertices()})
 
 viewer.draw_force(
     vertexsize=0.15,
