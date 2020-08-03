@@ -97,7 +97,7 @@ class ForceArtist(DiagramArtist):
             dual_edges = list(self.diagram.dual.edges())
             for index, edge in enumerate(self.diagram.ordered_edges(self.diagram.dual)):
                 f = self.diagram.dual.edge_attribute(dual_edges[index], 'f')
-                text[edge] = "%s kN {%s}" % (round(f), index)
+                text[edge] = "%s kN {%s}" % (round(f, 2), index)
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_external(edge)})
