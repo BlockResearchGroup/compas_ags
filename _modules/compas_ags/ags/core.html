@@ -88,6 +88,7 @@
 <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">solve</span>
 <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">lstsq</span>
 
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">normrow</span>
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">normalizerow</span>
 
 
@@ -237,8 +238,12 @@
                     <span class="k">continue</span>
 
                 <span class="n">n</span> <span class="o">=</span> <span class="n">_t</span><span class="p">[</span><span class="n">ij_e</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)],</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># the direction of the line (the line parallel to the corresponding line in the force diagram)</span>
-                <span class="n">a</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>             <span class="c1"># a point on the line (the neighbour of the vertex)</span>
+
+                <span class="k">if</span> <span class="n">normrow</span><span class="p">(</span><span class="n">n</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.0001</span><span class="p">:</span>
+                    <span class="k">continue</span>
+
                 <span class="n">r</span> <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="n">n</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>          <span class="c1"># projection into the orthogonal space of the direction vector</span>
+                <span class="n">a</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>             <span class="c1"># a point on the line (the neighbour of the vertex)</span>
                 <span class="n">R</span> <span class="o">+=</span> <span class="n">r</span>
                 <span class="n">q</span> <span class="o">+=</span> <span class="n">r</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
