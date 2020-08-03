@@ -16,6 +16,7 @@ class FormDiagram(Diagram):
 
     def __init__(self):
         super(FormDiagram, self).__init__()
+        self._graph = None
         self.attributes.update({
             'name': 'Form',
         })
@@ -36,6 +37,14 @@ class FormDiagram(Diagram):
             'is_load': False,
         })
 
+    @property
+    def graph(self):
+        return self._graph
+
+    @graph.setter
+    def graph(self, graph):
+        self._graph = graph
+
     @classmethod
     def from_graph(cls, graph):
         """Construct a form diagram from a form graph.
@@ -52,11 +61,17 @@ class FormDiagram(Diagram):
         -------
         :class:`compas_ags.diagrams.FormDiagram`
         """
-        points = graph.to_points()
+        for node in list(graph.nodes()):
+            if graph.degree(node) == 2:
+                graph.delete_node(node)
+        node_index = graph.node_index()
         cycles = network_find_cycles(graph, breakpoints=graph.leaves())
+        points = graph.nodes_attributes('xyz')
+        cycles[:] = [[node_index[node] for node in cycle] for cycle in cycles]
         form = cls.from_vertices_and_faces(points, cycles)
         form.edges_attribute('_is_edge', False, keys=list(form.edges_on_boundary()))
         form.edges_attribute('is_external', True, keys=form.leaf_edges())
+        form.graph = graph
         return form
 
     # --------------------------------------------------------------------------

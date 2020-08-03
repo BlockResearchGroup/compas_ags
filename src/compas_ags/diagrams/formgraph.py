@@ -17,6 +17,9 @@ class FormGraph(Network):
     def __init__(self):
         super(FormGraph, self).__init__()
 
+    def node_index(self):
+        return {node: index for index, node in enumerate(self.nodes())}
+
     def is_2d(self):
         """Verify that all nodes of the graph lie in a horizontal plane.
 
