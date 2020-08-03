@@ -13,6 +13,7 @@ from numpy.linalg import cond
 from scipy.linalg import solve
 from scipy.linalg import lstsq
 
+from compas.numerical import normrow
 from compas.numerical import normalizerow
 
 
@@ -162,8 +163,12 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
                     continue
 
                 n = _t[ij_e[(i, j)], None]  # the direction of the line (the line parallel to the corresponding line in the force diagram)
-                a = xy[j, None]             # a point on the line (the neighbour of the vertex)
+
+                if normrow(n)[0, 0] < 0.0001:
+                    continue
+
                 r = I - n.T.dot(n)          # projection into the orthogonal space of the direction vector
+                a = xy[j, None]             # a point on the line (the neighbour of the vertex)
                 R += r
                 q += r.dot(a.T)
 
