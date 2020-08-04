@@ -64,26 +64,9 @@ def RunCommand(is_interactive):
         graph = FormGraph.from_json(filepath)
 
      # check planarity
+     
     if not graph.is_planar_embedding():
         raise ValueError("The graph is not planar. Check your graph!")
-    # check L-nodes
-    nodes_to_del = []
-    # check the node that can never achieve equilibrium
-    for key in graph.nodes():
-        if graph.degree(key) == 2:
-            nbrs = graph.neighborhood(key)
-            line = Line(graph.node_coordinates(nbrs[0]), graph.node_coordinates(nbrs[1]))
-            node = graph.node_coordinates(key)
-            if not is_point_on_line(node, line):
-                nodes_to_del.append(key)
-
-    if len(nodes_to_del) != 0:
-        print('The form diagram is reconstructed..... L-nodes %s are deleted' % nodes_to_del)
-        for key in nodes_to_del:
-            graph.delete_node(key)
-        # reconstrcut the network for new keys, new keys don't correspond in cycle faces.
-        lines = graph.to_lines()
-        graph = FormGraph.from_lines(lines)
 
     form = FormDiagram.from_graph(graph)
 
