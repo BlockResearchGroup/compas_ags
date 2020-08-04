@@ -71,7 +71,7 @@ class DiagramArtist(MeshArtist):
             'show.vertexlabels': True,
             'show.edgelabels': True,
             'show.facelabels': False,
-            'show.forces': False,
+            'show.forces': True,
             'show.edgelabels_force':False, 
             'color.vertices': (255, 255, 255),
             'color.vertices:is_fixed': (0, 255, 255),

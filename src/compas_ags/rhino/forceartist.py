@@ -30,6 +30,7 @@ class ForceArtist(DiagramArtist):
     def __init__(self, force, scale=None, settings=None, **kwargs):
         super(ForceArtist, self).__init__(force, **kwargs)
         self.scale = scale
+        self.settings['show.vertexlabels'] = False  # hide vertices in the ForceDiagram 
         if settings:
             self.settings.update(settings)
 
