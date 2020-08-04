@@ -24,7 +24,9 @@ def RunCommand(is_interactive):
 
     proxy.package = 'compas_ags.ags.graphstatics'
 
-    k, m = proxy.form_count_dof_proxy(form.diagram.data)
+    dof = proxy.form_count_dof_proxy(form.diagram.data)
+    k = dof[0]
+    m = dof[1]
 
     if k == 0 and m == 0: 
         compas_rhino.display_message('the system is statically determined.')

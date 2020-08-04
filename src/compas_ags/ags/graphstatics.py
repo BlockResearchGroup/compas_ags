@@ -116,7 +116,7 @@ def form_identify_dof(form):
     is statically determined.
     If ``k > 0`` and ``m == 0``, the system is statically indetermined with `k`
     idependent states of stress.
-    If ``k == 0`` asnd ``m > 0``, the system is unstable, with `m` independent
+    If ``k == 0`` and ``m > 0``, the system is unstable, with `m` independent
     mechanisms.
     The dimension of a vector space (such as the null space) is the number of
     vectors of a basis of that vector space. A set of vectors forms a basis of a
