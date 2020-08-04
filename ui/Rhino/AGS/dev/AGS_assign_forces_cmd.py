@@ -26,15 +26,14 @@ def RunCommand(is_interactive):
         if not edges:
             break
         force_value = rs.GetReal("Force on Edges (kN)", 1.0)
-        for (u, v) in edges: 
+        for (u, v) in edges:
             form.diagram.edge_force((u, v), force_value)
-        scene.update() 
+        scene.update()
 
     edge_index = form.diagram.edge_index()
 
-    # edges = list(form.diagram.edges_where({'is_load': True}))
     edges = list(form.diagram.edges_where({'is_ind': True}))
-    
+
     names = [str(edge_index[edge]) for edge in edges]
     values = ["{:.3f}".format(form.diagram.edge_force(edge)) for edge in edges]
     values = compas_rhino.update_named_values(names, values)

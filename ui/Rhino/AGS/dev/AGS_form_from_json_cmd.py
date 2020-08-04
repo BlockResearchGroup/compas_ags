@@ -31,8 +31,8 @@ def RunCommand(is_interactive):
         return
     graph = FormGraph.from_json(filepath)
 
-     # check planarity
-     
+    # check planarity
+
     if not graph.is_planar_embedding():
         raise ValueError("The graph is not planar. Check your graph!")
 

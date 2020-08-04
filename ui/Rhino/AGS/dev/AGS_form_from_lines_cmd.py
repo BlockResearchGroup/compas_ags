@@ -23,10 +23,8 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    system = sc.sticky['AGS']['system']
     scene = sc.sticky['AGS']['scene']
 
-    
     guids = compas_rhino.select_lines(message='Select Form Diagram Lines')
     if not guids:
         return
@@ -34,9 +32,7 @@ def RunCommand(is_interactive):
     lines = compas_rhino.get_line_coordinates(guids)
     graph = FormGraph.from_lines(lines)
 
-
-     # check planarity
-     
+    # check planarity
     if not graph.is_planar_embedding():
         raise ValueError("The graph is not planar. Check your graph!")
 
