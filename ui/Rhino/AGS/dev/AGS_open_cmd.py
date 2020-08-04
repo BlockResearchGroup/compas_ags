@@ -55,8 +55,6 @@ def RunCommand(is_interactive):
 
         if 'force' in data and data['force']:
             force = ForceDiagram.from_data(data['force'])
-            # form.dual = force
-            # force.primal = form
             force.dual = form
             scene.add(force, name='Force', layer='AGS::ForceDiagram')
 
