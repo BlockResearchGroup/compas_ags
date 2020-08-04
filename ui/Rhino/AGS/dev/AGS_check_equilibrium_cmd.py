@@ -26,14 +26,14 @@ def RunCommand(is_interactive):
 
     dof = proxy.form_count_dof_proxy(form.diagram.data)
     k = dof[0]
-    m = dof[1]
+    inds = len(list(form.diagram.edges_where({'is_ind': True})))
 
-    if k == 0 and m == 0: 
-        compas_rhino.display_message('the system is statically determined.')
-    elif k > 0 and m == 0:
-        compas_rhino.display_message('the system is statically indetermined with %s independent states of stress.' % k)
-    elif k ==0 and m > 0:
-        compas_rhino.display_message('the system is unstable with %s independent mechanisms.' % m)
+    if k == inds:
+        print('Correct number of loaded edges (%s) selected.' % k)
+    elif k > inds:
+        compas_rhino.display_message('Warning: Insuficient number of loaded edges selected (%s required and %s selected), solution is not unique.' % (k, inds))
+    elif k < inds:
+        compas_rhino.display_message('Warning: Too many loaded edges selected (%s required and %s selected), some will be ignored.' % (k, inds))
 
 
 # ==============================================================================

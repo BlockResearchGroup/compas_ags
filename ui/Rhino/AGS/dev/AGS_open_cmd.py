@@ -18,7 +18,7 @@ __commandname__ = "AGS_open"
 
 
 def RunCommand(is_interactive):
-    
+
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
@@ -29,14 +29,14 @@ def RunCommand(is_interactive):
     filepath = compas_rhino.select_file(folder=system['session.dirname'], filter=system['session.extension'])
 
     if not filepath:
-        return 
+        return
     if not os.path.exists(filepath):
-        return 
+        return
     if not os.path.isfile(filepath):
-        return 
+        return
     if not filepath.endswith(".{}".format(system['session.extension'])):
-        return 
-    
+        return
+
     dirname, basename = os.path.split(filepath)
     filename, extension = os.path.splitext(basename)
 
@@ -56,9 +56,10 @@ def RunCommand(is_interactive):
         if 'force' in data and data['force']:
             force = ForceDiagram.from_data(data['force'])
             force.dual = form
-            scene.add(force, name='Forcd', layer='AGS::FormDiagram')
+            scene.add(force, name='Force', layer='AGS::ForceDiagram')
 
-        
+    print('test')
+    print(force)
     scene.clear()
     scene.update()
 

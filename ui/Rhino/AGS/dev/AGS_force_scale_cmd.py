@@ -20,7 +20,7 @@ def RunCommand(is_interactive):
     scene = sc.sticky['AGS']['scene']
     force = scene.find_by_name('Force')[0]
 
-    scale_factor = rs.GetReal("Force on Edges (kN)", force.artist.scale)
+    scale_factor = rs.GetReal("Scale factor", force.artist.scale)
     force.artist.scale = scale_factor
 
     scene.clear()

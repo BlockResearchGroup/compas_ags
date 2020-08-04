@@ -26,14 +26,12 @@ def RunCommand(is_interactive):
     system = sc.sticky['AGS']['system']
     scene = sc.sticky['AGS']['scene']
 
-
     filepath = compas_rhino.browse_for_file('Select an input file.', folder=system['session.dirname'], filter='obj')
     if not filepath:
         return
     graph = FormGraph.from_obj(filepath)
 
-    
-     # check planarity
+    # check planarity
     if not graph.is_planar_embedding():
         raise ValueError("The graph is not planar. Check your graph!")
 
