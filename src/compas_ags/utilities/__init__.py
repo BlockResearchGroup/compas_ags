@@ -11,7 +11,7 @@ compas_ags.utilities
 
     calculate_drawingscale
     find_anchor_point
-    calculate_force_scale
+    calculate_drawingscale_forces
 
 """
 

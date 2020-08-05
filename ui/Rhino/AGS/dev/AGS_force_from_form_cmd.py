@@ -5,7 +5,7 @@ from __future__ import division
 import scriptcontext as sc
 
 from compas_ags.utilities import calculate_drawingscale
-from compas_ags.utilities import calculate_force_scale
+from compas_ags.utilities import calculate_drawingscale_forces
 
 import compas_rhino
 
@@ -36,7 +36,7 @@ def RunCommand(is_interactive):
 
     # calculate the scale factor for force diagram
     scale_factor = calculate_drawingscale(form.diagram, force.diagram)
-    drawingscale_forces = calculate_force_scale(form.diagram)
+    drawingscale_forces = calculate_drawingscale_forces(form.diagram)
 
     print("scale factor of the ForceDiagram is %s" % scale_factor)
 

@@ -6,7 +6,7 @@ from __future__ import division
 __all__ = [
     'calculate_drawingscale',
     'find_anchor_point',
-    'calculate_force_scale',
+    'calculate_drawingscale_forces',
 ]
 
 
@@ -68,7 +68,7 @@ def find_anchor_point(form, force):
     return [form_xdim + form_xmax, form_ymid, 0]
 
 
-def calculate_force_scale(form):
+def calculate_drawingscale_forces(form):
     """Calculate an appropriate scale to the thickness of the forces in the form diagram.
 
     Parameters
