@@ -123,7 +123,10 @@ plot_html_show_formats = False
 
 # intersphinx options
 
-intersphinx_mapping = {'python': ('https://docs.python.org/', None)}
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/', None),
+    'compas': ('https://compas-dev.github.io/compas', 'https://compas-dev.github.io/compas/objects.inv'),
+}
 
 
 # -- Options for HTML output ----------------------------------------------

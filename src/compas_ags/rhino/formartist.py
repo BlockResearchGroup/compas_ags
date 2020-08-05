@@ -99,7 +99,7 @@ class FormArtist(DiagramArtist):
         if self.settings['show.vertexlabels']:
             text = {vertex: index for index, vertex in enumerate(self.diagram.vertices())}
             color = {}
-            color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
+            color.update({vertex: self.settings['color.vertexlabels'] for vertex in self.diagram.vertices()})
             color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
             color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertexlabels(text=text, color=color)
@@ -114,11 +114,11 @@ class FormArtist(DiagramArtist):
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
             self.draw_edgelabels(text=text, color=color)
         # force magnitude labels
-        if self.settings['show.edgelabels_force']:
+        if self.settings['show.forcelabels']:
             text = {}
             for index, edge in enumerate(self.diagram.edges()):
                 f = self.diagram.edge_attribute(edge, 'f')
-                text[edge] = "%s kN {%s}" % (round(f), index)
+                text[edge] = "%s kN {%s}" % (round(f, 2), index)
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
@@ -129,7 +129,7 @@ class FormArtist(DiagramArtist):
         # forces
         if self.settings['show.forces']:
             self.draw_forces()
-        
+
 
     def draw_forces(self):
         """Draw the forces in the internal edges as pipes with color and thickness matching the force value.

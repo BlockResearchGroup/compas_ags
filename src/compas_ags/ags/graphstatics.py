@@ -51,12 +51,14 @@ EPS = 1 / sys.float_info.epsilon
 
 def form_identify_dof_proxy(formdata, *args, **kwargs):
     form = FormDiagram.from_data(formdata)
-    return form_identify_dof(form, *args, **kwargs)
+    k, m, ind = form_identify_dof(form, *args, **kwargs)
+    return int(k), int(m), ind
 
 
 def form_count_dof_proxy(formdata, *args, **kwargs):
     form = FormDiagram.from_data(formdata)
-    return form_count_dof(form, *args, **kwargs)
+    k, m = form_count_dof(form, *args, **kwargs)
+    return int(k), int(m)
 
 
 def form_update_q_from_qind_proxy(formdata, *args, **kwargs):
@@ -86,12 +88,10 @@ def force_update_from_form_proxy(forcedata, formdata, *args, **kwargs):
 
 def form_identify_dof(form):
     r"""Identify the DOF of a form diagram.
-
     Parameters
     ----------
     form : FormDiagram
         The form diagram.
-
     Returns
     -------
     k : int
@@ -102,62 +102,51 @@ def form_identify_dof(form):
         Number of (infenitesimal) mechanisms.
     ind : list
         Indices of the independent edges.
-
     Notes
     -----
     The equilibrium matrix of the form diagram is
-
     .. math::
-
         \mathbf{E}
         =
         \begin{bmatrix}
         \mathbf{C}_{i}^{t}\mathbf{U} \\
         \mathbf{C}_{i}^{t}\mathbf{V}
         \end{bmatrix}
-
-
     If ``k == 0`` and ``m == 0``, the system described by the equilibrium matrix
     is statically determined.
     If ``k > 0`` and ``m == 0``, the system is statically indetermined with `k`
     idependent states of stress.
-    If ``k == 0`` asnd ``m > 0``, the system is unstable, with `m` independent
+    If ``k == 0`` and ``m > 0``, the system is unstable, with `m` independent
     mechanisms.
-
     The dimension of a vector space (such as the null space) is the number of
     vectors of a basis of that vector space. A set of vectors forms a basis of a
     vector space if they are linearly independent vectors and every vector of the
     space is a linear combination of this set.
-
     Examples
     --------
     >>>
     """
-    k_i = form.key_index()
-    uv_index = {(u, v): index for index, (u, v) in enumerate(form.edges())}
-    vcount = form.number_of_vertices()
-    fixed = form.leaves()
-    fixed = [k_i[key] for key in fixed]
-    free = list(set(range(vcount)) - set(fixed))
-    ind = [uv_index[key] for key in list(form.edges_where({'is_ind': True}))]
-    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
-    xy = array(form.vertices_attributes('xy'), dtype=float64).reshape((-1, 2))
-    C = connectivity_matrix(edges, 'array')
-    E = equilibrium_matrix(C, xy, free, 'array')
+    vertex_index = form.vertex_index()
+
+    xy = form.vertices_attributes('xy')
+    fixed = [vertex_index[vertex] for vertex in form.fixed()]
+    free = list(set(range(form.number_of_vertices())) - set(fixed))
+    edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
+    C = connectivity_matrix(edges)
+    E = equilibrium_matrix(C, xy, free)
 
     k, m = dof(E)
     ind = nonpivots(rref(E))
+
     return k, m, [edges[i] for i in ind]
 
 
 def form_count_dof(form):
     r"""Count the number of degrees of freedom of a form diagram.
-
     Parameters
     ----------
     form : FormDiagram
         The form diagram.
-
     Returns
     -------
     k : int
@@ -166,34 +155,31 @@ def form_count_dof(form):
     m : int
         Dimension of the left null space of the equilibrium matrix of the form
         diagram.
-
     Notes
     -----
     The equilibrium matrix of the form diagram is
-
     .. math::
-
         \mathbf{E}
         =
         \begin{bmatrix}
         \mathbf{C}_{i}^{t}\mathbf{U} \\
         \mathbf{C}_{i}^{t}\mathbf{V}
         \end{bmatrix}
-
     Examples
     --------
     >>>
     """
-    k_i = form.key_index()
-    vcount = form.number_of_vertices()
-    fixed = form.leaves()
-    fixed = [k_i[key] for key in fixed]
-    free = list(set(range(vcount)) - set(fixed))
-    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    vertex_index = form.vertex_index()
+
     xy = form.vertices_attributes('xy')
+    fixed = [vertex_index[vertex] for vertex in form.leaves()]
+    free = list(set(range(form.number_of_vertices())) - set(fixed))
+    edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
     C = connectivity_matrix(edges)
     E = equilibrium_matrix(C, xy, free)
+
     k, m = dof(E)
+
     return k, m
 
 
@@ -205,17 +191,14 @@ def form_count_dof(form):
 def form_update_q_from_qind(form):
     """Update the force densities of the dependent edges of a form diagram using
     the values of the independent ones.
-
     Parameters
     ----------
     form : FormDiagram
         The form diagram.
-
     Returns
     -------
     None
         The updated force densities are stored as attributes of the edges of the form diagram.
-
     Examples
     --------
     >>>
@@ -249,19 +232,16 @@ def form_update_q_from_qind(form):
 
 def form_update_from_force(form, force, kmax=100):
     r"""Update the form diagram after a modification of the force diagram.
-
     Parameters
     ----------
     form : FormDiagram
         The form diagram to update.
     force : ForceDiagram
         The force diagram on which the update is based.
-
     Returns
     -------
     None
         The form and force diagram are updated in-place.
-
     Notes
     -----
     Compute the geometry of the form diagram from the geometry of the form diagram
@@ -269,18 +249,13 @@ def form_update_from_force(form, force, kmax=100):
     Since both diagrams are reciprocal, the coordinates of each vertex of the form
     diagram can be expressed as the intersection of three or more lines parallel
     to the corresponding edges of the force diagram.
-
     Essentially, this boils down to solving the following problem:
-
     .. math::
-
         \mathbf{A}\mathbf{x} = \mathbf{b}
-
     with :math:`\mathbf{A}` the coefficients of the x and y-coordinate of the  ,
     :math:`\mathbf{x}` the coordinates of the vertices of the form diagram,
     in *Fortran* order (first all x-coordinates, then all y-coordinates),
     and  :math:`\mathbf{b}` ....
-
     Examples
     --------
     >>>
@@ -362,19 +337,16 @@ def form_update_from_force(form, force, kmax=100):
 
 def force_update_from_form(force, form):
     """Update the force diagram after modifying the (force densities of) the form diagram.
-
     Parameters
     ----------
     force : ForceDiagram
         The force diagram on which the update is based.
     form : FormDiagram
         The form diagram to update.
-
     Returns
     -------
     None
         The form and force diagram are updated in-place.
-
     """
     # --------------------------------------------------------------------------
     # form diagram
@@ -413,40 +385,3 @@ def force_update_from_form(force, form):
 # ==============================================================================
 # Main
 # ==============================================================================
-
-if __name__ == "__main__":
-    import compas_ags
-    from compas_ags.diagrams import FormGraph
-    from compas_ags.diagrams import FormDiagram
-    from compas_ags.diagrams import ForceDiagram
-    from compas_ags.viewers import Viewer
-
-
-    graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
-    form = FormDiagram.from_graph(graph)
-    force = ForceDiagram.from_formdiagram(form) 
-    form.edge_force((0, 1), -1.0)
-
-    form.data = form_update_q_from_qind_proxy(form.data)
-    force.data = force_update_from_form_proxy(force.data, form.data)
-
-    print(form_count_dof_proxy(form.data))
-    print(form_identify_dof_proxy(form.data))
-
-    viewer = Viewer(form, force, delay_setup=False, figsize=(8, 5))
-
-    left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
-    right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
-
-    viewer.draw_form(
-        vertexsize=0.15,
-        vertexcolor={key: '#000000' for key in (left, right)},
-        vertexlabel={key: key for key in form.vertices()},
-        edgelabel={uv: index for index, uv in enumerate(form.edges())})
-
-    viewer.draw_force(
-        vertexsize=0.15,
-        vertexlabel={key: key for key in force.vertices()})
-
-    viewer.show()
-

@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_identify_supports"
+__commandname__ = "AGS_force_move_nodes"
 
 
 def RunCommand(is_interactive):
@@ -16,23 +16,24 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
+    proxy = sc.sticky['AGS']['proxy']
     scene = sc.sticky['AGS']['scene']
     form = scene.find_by_name('Form')[0]
+    force = scene.find_by_name('Force')[0]
 
-    vertices = form.select_vertices()
-    if not vertices:
-        return
+    proxy.package = 'compas_ags.ags.graphstatics'
 
-    # check that the selection makes sense
-    # potentially update all connected leaf edges to become "is_support"
-    # or at least remove "is_load"
+    while True:
+        vertices = force.select_vertices()
+        if not vertices:
+            break
 
-    # rename this attribute to "is_support"
-    # is_support != is_fixed
-    form.diagram.vertices_attribute('is_fixed', True, keys=vertices)
-
-    scene.clear()
-    scene.update()
+        if force.move_vertices(vertices):
+            # update form diagram
+            form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data, kmax=100)
+            # update the scene
+            scene.clear()
+            scene.update()
 
 
 # ==============================================================================
