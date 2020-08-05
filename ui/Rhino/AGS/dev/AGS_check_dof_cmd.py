@@ -27,11 +27,11 @@ def RunCommand(is_interactive):
     inds = len(list(form.diagram.edges_where({'is_ind': True})))
 
     if k == inds:
-        print('Correct number of loads selected. The system is statically determined')
+        print('Success: You have identified the correct number of externally applied loads.')
     elif k > inds:
-        compas_rhino.display_message('Warning: Insuficient number of loads selected (%s required and %s selected). The system is statically indetermined.' % (k, inds))
+        compas_rhino.display_message('Warning: You have not yet identified all external loads. (%s required and %s selected)' % (k, inds))
     else:
-        compas_rhino.display_message('Warning: Too many loads selected (%s required and %s selected). The system is unstable.' % (k, inds))
+        compas_rhino.display_message('Warning: You have identified too many external forces as loads. (%s required and %s selected)' % (k, inds))
 
 
 # ==============================================================================
