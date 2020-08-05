@@ -3,13 +3,11 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-import rhinoscriptsyntax as rs
+
 import compas_rhino
 
-from compas_ags.diagrams import FormDiagram
 
-
-__commandname__ = "AGS_form_from_json"
+__commandname__ = "AGS_form_fix_nodes"
 
 
 def RunCommand(is_interactive):
@@ -18,24 +16,24 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    system = sc.sticky['AGS']['system']
     scene = sc.sticky['AGS']['scene']
+    form = scene.find_by_name('Form')[0]
 
-    filepath = compas_rhino.browse_for_file('Select an input file.', folder=system['session.dirname'], filter='json')
-    if not filepath:
-        return
-
-    form = FormDiagram.from_json(filepath)
-
-    scene.add(form, name='Form', layer='AGS::FormDiagram')
-
-    scene.clear()
-    scene.update()
+    # select fixed vertices
+    while True:
+        vertices = form.select_vertices()
+        if not vertices:
+            break
+        for vertex in vertices:
+            form.diagram.vertex_attribute(vertex, 'is_fixed', True)
+        scene.clear()
+        scene.update()
 
 
 # ==============================================================================
 # Main
 # ==============================================================================
+
 if __name__ == '__main__':
 
     RunCommand(True)

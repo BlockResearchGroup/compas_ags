@@ -14,7 +14,7 @@ from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
 
-__commandname__ = "AGS_load_session"
+__commandname__ = "AGS_session_load"
 
 
 def RunCommand(is_interactive):

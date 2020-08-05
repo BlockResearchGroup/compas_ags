@@ -9,7 +9,7 @@ compas_ags.utilities
 .. autosummary::
     :toctree: generated/
 
-    calculate_drawing_scale
+    calculate_drawingscale
     find_anchor_point
     calculate_force_scale
 

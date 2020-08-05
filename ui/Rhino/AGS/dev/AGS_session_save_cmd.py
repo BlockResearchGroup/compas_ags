@@ -11,7 +11,7 @@ import compas_rhino
 from compas.utilities import DataEncoder
 
 
-__commandname__ = "AGS_save_session"
+__commandname__ = "AGS_session_save"
 
 
 def RunCommand(is_interactive):

@@ -4,13 +4,13 @@ from __future__ import division
 
 
 __all__ = [
-    'calculate_drawing_scale',
+    'calculate_drawingscale',
     'find_anchor_point',
     'calculate_force_scale',
 ]
 
 
-def calculate_drawing_scale(form, force):
+def calculate_drawingscale(form, force):
     """Calculate an appropriate scale factor to create the force diagram.
 
     Parameters
