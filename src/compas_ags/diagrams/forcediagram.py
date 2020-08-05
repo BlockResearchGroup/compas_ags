@@ -202,6 +202,9 @@ class ForceDiagram(Diagram):
         """
         return self.dual.edge_attribute(self.dual_edge(edge), 'is_ind')
 
+    def dual_edge_f(self, edge):
+        return self.dual.edge_attribute(self.dual_edge(edge), 'f')
+
     def edge_index(self, form=None):
         if not form:
             return {edge: index for index, edge in enumerate(self.edges())}
