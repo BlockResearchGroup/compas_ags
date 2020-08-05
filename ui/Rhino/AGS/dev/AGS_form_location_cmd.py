@@ -3,30 +3,32 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-import rhinoscriptsyntax as rs
 
 import compas_rhino
 
+from compas.geometry import subtract_vectors
+from compas.geometry import add_vectors
 
-__commandname__ = "AGS_force_scale"
+
+__commandname__ = "AGS_form_location"
 
 
 def RunCommand(is_interactive):
-
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
     scene = sc.sticky['AGS']['scene']
-    force = scene.find_by_name('Force')[0]
+    form = scene.find_by_name('Form')[0]
 
-    vertex = force.select_vertex(message="Pick base node.")
-    if vertex:
-        force.artist.anchor_point = force.artist.vertex_xyz[vertex]
-        force.artist.anchor_vertex = vertex
-
-        scale_factor = rs.GetReal("Scale factor", force.artist.scale)
-        force.artist.scale = scale_factor
+    start = compas_rhino.pick_point('Pick a point to move from.')
+    if start:
+        end = compas_rhino.pick_point('Pick a point to move to.')
+        if end:
+            vector = subtract_vectors(end, start)
+            xyz = form.artist.anchor_point
+            new_xyz = add_vectors(xyz, vector)
+            form.artist.anchor_point = new_xyz
 
     scene.update()
 
