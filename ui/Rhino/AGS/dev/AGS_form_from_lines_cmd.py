@@ -8,7 +8,6 @@ import compas_rhino
 
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import ForceDiagram
 
 
 __commandname__ = "AGS_form_from_lines"

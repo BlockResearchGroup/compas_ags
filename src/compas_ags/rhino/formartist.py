@@ -130,7 +130,6 @@ class FormArtist(DiagramArtist):
         if self.settings['show.forces']:
             self.draw_forces()
 
-
     def draw_forces(self):
         """Draw the forces in the internal edges as pipes with color and thickness matching the force value.
 
