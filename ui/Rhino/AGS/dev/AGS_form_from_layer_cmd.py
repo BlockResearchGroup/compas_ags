@@ -10,9 +10,6 @@ from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
-from compas.geometry import Line
-from compas.geometry import is_point_on_line
-from compas_rhino.utilities import get_object_layers
 
 __commandname__ = "AGS_form_from_layer"
 
@@ -30,14 +27,16 @@ def RunCommand(is_interactive):
     guids = compas_rhino.get_lines(layer=layer_name)
     if not guids:
         return
+
     rs.HideObjects(guids)
+
     lines = compas_rhino.get_line_coordinates(guids)
     graph = FormGraph.from_lines(lines)
 
     # check planarity
-
     if not graph.is_planar_embedding():
-        raise ValueError("The graph is not planar. Check your graph!")
+        compas_rhino.display_message('The graph is not planar. Check your graph!')
+        return
 
     form = FormDiagram.from_graph(graph)
 

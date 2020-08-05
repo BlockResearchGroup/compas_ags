@@ -3,7 +3,9 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-import rhinoscriptsyntax as rs
+
+from compas_ags.utilities import calculate_drawing_scale
+from compas_ags.utilities import calculate_force_scale
 
 import compas_rhino
 
@@ -33,15 +35,14 @@ def RunCommand(is_interactive):
     force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
 
     # calculate the scale factor for force diagram
-    from compas_ags.rhino import calculate_scale, calculate_anchor, calculate_pipe_scale
-    scale_factor = calculate_scale(form.diagram, force.diagram)
-    scale_pipes = calculate_pipe_scale(form.diagram)
+    scale_factor = calculate_drawing_scale(form.diagram, force.diagram)
+    scale_pipes = calculate_force_scale(form.diagram)
 
     print("scale factor of the ForceDiagram is %s" % scale_factor)
 
     # this should become part of "add"
     force.artist.anchor_vertex = 0
-    force.artist.anchor_point = rs.GetPoint("Set Force Diagram Location")
+    force.artist.anchor_point = compas_rhino.rs.GetPoint("Set Force Diagram Location")
     force.artist.scale = scale_factor
     form.artist.settings['scale.forces'] = scale_pipes
 

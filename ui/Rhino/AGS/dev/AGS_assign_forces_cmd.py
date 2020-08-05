@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-import rhinoscriptsyntax as rs
 
 import compas_rhino
 
@@ -25,9 +24,9 @@ def RunCommand(is_interactive):
         edges = form.select_edges()
         if not edges:
             break
-        force_value = rs.GetReal("Force on Edges (kN)", 1.0)
-        for (u, v) in edges:
-            form.diagram.edge_force((u, v), force_value)
+        force_value = compas_rhino.rs.GetReal("Force on Edges (kN)", 1.0)
+        for edge in edges:
+            form.diagram.edge_force(edge, force_value)
         scene.update()
 
     edge_index = form.diagram.edge_index()

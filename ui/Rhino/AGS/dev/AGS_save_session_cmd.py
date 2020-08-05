@@ -10,26 +10,26 @@ import scriptcontext as sc
 import compas_rhino
 from compas.utilities import DataEncoder
 
-__commandname__ = "AGS_save"
+
+__commandname__ = "AGS_save_session"
 
 
-# save form and force diagram to .json
 def RunCommand(is_interactive):
-    
+
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
     system = sc.sticky['AGS']['system']
     scene = sc.sticky['AGS']['scene']
-    
-    filepath = compas_rhino.rs.SaveFileName('save', filter=system['session.extension'] , folder=system['session.dirname'])
+
+    filepath = compas_rhino.rs.SaveFileName('save', filter=system['session.extension'], folder=system['session.dirname'])
 
     if not filepath:
-        return 
+        return
     if filepath.split('.')[-1] != system['session.extension']:
         filepath = "%s.%s" % (filepath, system['session.extension'])
-        
+
     dirname, basename = os.path.split(filepath)
     filename, _ = os.path.splitext(basename)
 
@@ -44,13 +44,12 @@ def RunCommand(is_interactive):
 
     if form:
         session['data']['form'] = form.diagram.to_data()
-    
+
     if force:
         session['data']['force'] = force.diagram.to_data()
-    
+
     with open(filepath, 'w+') as f:
         json.dump(session, f, cls=DataEncoder)
-
 
 
 # ==============================================================================

@@ -14,7 +14,7 @@ from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
 
-__commandname__ = "AGS_open"
+__commandname__ = "AGS_load_session"
 
 
 def RunCommand(is_interactive):
@@ -58,8 +58,6 @@ def RunCommand(is_interactive):
             force.dual = form
             scene.add(force, name='Force', layer='AGS::ForceDiagram')
 
-    print('test')
-    print(force)
     scene.clear()
     scene.update()
 

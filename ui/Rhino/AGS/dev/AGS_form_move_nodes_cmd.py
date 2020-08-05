@@ -3,13 +3,11 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-import rhinoscriptsyntax as rs
 
 import compas_rhino
 
-# check the degree of freedom
 
-__commandname__ = "AGS_check_equilibrium"
+__commandname__ = "AGS_form_move_nodes"
 
 
 def RunCommand(is_interactive):
@@ -21,19 +19,22 @@ def RunCommand(is_interactive):
     proxy = sc.sticky['AGS']['proxy']
     scene = sc.sticky['AGS']['scene']
     form = scene.find_by_name('Form')[0]
+    force = scene.find_by_name('Force')[0]
 
     proxy.package = 'compas_ags.ags.graphstatics'
 
-    dof = proxy.form_count_dof_proxy(form.diagram.data)
-    k = dof[0]
-    inds = len(list(form.diagram.edges_where({'is_ind': True})))
+    while True:
+        vertices = form.select_vertices()
+        if not vertices:
+            break
 
-    if k == inds:
-        print('Correct number of loaded edges (%s) selected.' % k)
-    elif k > inds:
-        compas_rhino.display_message('Warning: Insuficient number of loaded edges selected (%s required and %s selected), solution is not unique.' % (k, inds))
-    elif k < inds:
-        compas_rhino.display_message('Warning: Too many loaded edges selected (%s required and %s selected), some will be ignored.' % (k, inds))
+        if form.move_vertices(vertices):
+            # update force diagram
+            form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
+            force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
+            # update the scene
+            scene.clear()
+            scene.update()
 
 
 # ==============================================================================

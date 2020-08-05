@@ -3,12 +3,11 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-import rhinoscriptsyntax as rs
 
 import compas_rhino
 
 
-__commandname__ = "AGS_display_force"
+__commandname__ = "AGS_force_displaysettings"
 
 
 def RunCommand(is_interactive):
@@ -21,7 +20,7 @@ def RunCommand(is_interactive):
 
     force = scene.find_by_name('Force')[0]
 
-    options = ["Vertexlabels", "Edgelabels", "ForceMagnitude", "CompressionTension", ]
+    options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", ]
 
     while True:
         option = compas_rhino.rs.GetString("FormDiagram Display", strings=options)
@@ -31,7 +30,7 @@ def RunCommand(is_interactive):
 
         if option == "Vertexlabels":
             current = str(force.artist.settings['show.vertexlabels'])
-            show = compas_rhino.rs.GetString("Vertexlabels", defaultString=current, strings=["True", "False"])
+            show = compas_rhino.rs.GetString("Vertex labels", defaultString=current, strings=["True", "False"])
             if show == "True":
                 force.artist.settings['show.vertexlabels'] = True
             elif show == "False":
@@ -39,25 +38,25 @@ def RunCommand(is_interactive):
 
         elif option == "Edgelabels":
             current = str(force.artist.settings['show.edgelabels'])
-            show = compas_rhino.rs.GetString("Edgelabels", defaultString=current, strings=["True", "False"])
+            show = compas_rhino.rs.GetString("Edge labels", defaultString=current, strings=["True", "False"])
             if show == "True":
                 force.artist.settings['show.edgelabels'] = True
-                force.artist.settings['show.edgelabels_force'] = False
+                force.artist.settings['show.forcelabels'] = False
             elif show == "False":
                 force.artist.settings['show.edgelabels'] = False
 
-        elif option == "ForceMagnitude":
-            current = str(force.artist.settings['show.edgelabels_force'])
-            show = compas_rhino.rs.GetString("Force Magnitude", defaultString=current, strings=["True", "False"])
+        elif option == "Forcelabels":
+            current = str(force.artist.settings['show.forcelabels'])
+            show = compas_rhino.rs.GetString("Force labels", defaultString=current, strings=["True", "False"])
             if show == "True":
-                force.artist.settings['show.edgelabels_force'] = True
+                force.artist.settings['show.forcelabels'] = True
                 force.artist.settings['show.edgelabels'] = False
             elif show == "False":
-                force.artist.settings['show.edgelabels_force'] = False
+                force.artist.settings['show.forcelabels'] = False
 
         elif option == "CompressionTension":
             current = str(force.artist.settings['show.forces'])
-            show = compas_rhino.rs.GetString("Show Compression / Tension", defaultString=current, strings=["True", "False"])
+            show = compas_rhino.rs.GetString("Compression / Tension", defaultString=current, strings=["True", "False"])
             if show == "True":
                 force.artist.settings['show.forces'] = True
             elif show == "False":

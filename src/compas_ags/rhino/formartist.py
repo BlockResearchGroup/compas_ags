@@ -114,7 +114,7 @@ class FormArtist(DiagramArtist):
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
             self.draw_edgelabels(text=text, color=color)
         # force magnitude labels
-        if self.settings['show.edgelabels_force']:
+        if self.settings['show.forcelabels']:
             text = {}
             for index, edge in enumerate(self.diagram.edges()):
                 f = self.diagram.edge_attribute(edge, 'f')
@@ -129,7 +129,7 @@ class FormArtist(DiagramArtist):
         # forces
         if self.settings['show.forces']:
             self.draw_forces()
-        
+
 
     def draw_forces(self):
         """Draw the forces in the internal edges as pipes with color and thickness matching the force value.

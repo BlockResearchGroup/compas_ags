@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_modify_force_nodes"
+__commandname__ = "AGS_form_fix_vertices"
 
 
 def RunCommand(is_interactive):
@@ -16,24 +16,18 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    proxy = sc.sticky['AGS']['proxy']
     scene = sc.sticky['AGS']['scene']
     form = scene.find_by_name('Form')[0]
-    force = scene.find_by_name('Force')[0]
 
-    proxy.package = 'compas_ags.ags.graphstatics'
-
+    # select fixed vertices
     while True:
-        vertices = force.select_vertices()
+        vertices = form.select_vertices()
         if not vertices:
             break
-
-        if force.move_vertices(vertices):
-            # update form diagram
-            form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data, kmax=100)
-            # update the scene
-            scene.clear()
-            scene.update()
+        for vertex in vertices:
+            form.diagram.vertex_attribute(vertex, 'is_fixed', True)
+        scene.clear()
+        scene.update()
 
 
 # ==============================================================================

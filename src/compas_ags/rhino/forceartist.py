@@ -30,7 +30,7 @@ class ForceArtist(DiagramArtist):
     def __init__(self, force, scale=None, settings=None, **kwargs):
         super(ForceArtist, self).__init__(force, **kwargs)
         self.scale = scale
-        self.settings['show.vertexlabels'] = False  # hide vertices in the ForceDiagram 
+        self.settings['show.vertexlabels'] = False  # hide vertices in the ForceDiagram
         if settings:
             self.settings.update(settings)
 
@@ -93,7 +93,7 @@ class ForceArtist(DiagramArtist):
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_ind(edge)})
             self.draw_edgelabels(text=text, color=color)
         # force magnitude labels
-        if self.settings['show.edgelabels_force']:
+        if self.settings['show.forcelabels']:
             text = {}
             dual_edges = list(self.diagram.dual.edges())
             for index, edge in enumerate(self.diagram.ordered_edges(self.diagram.dual)):
@@ -106,9 +106,9 @@ class ForceArtist(DiagramArtist):
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_reaction(edge)})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges() if self.diagram.is_dual_edge_ind(edge)})
             self.draw_edgelabels(text=text, color=color)
-        
 
-            
+
+
 
 # ==============================================================================
 # Main
