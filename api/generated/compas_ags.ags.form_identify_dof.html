@@ -81,11 +81,13 @@
 <dl class="function">
 <dt id="compas_ags.ags.form_identify_dof">
 <code class="sig-prename descclassname">compas_ags.ags.</code><code class="sig-name descname">form_identify_dof</code><span class="sig-paren">(</span><em class="sig-param">form</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/ags/graphstatics.html#form_identify_dof"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Identify the DOF of a form diagram.
-:Parameters: <strong>form</strong> (<em>FormDiagram</em>) – The form diagram.</p>
+<dd><p>Identify the DOF of a form diagram.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p><ul class="simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>form</strong> (<em>FormDiagram</em>) – The form diagram.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p><strong>k</strong> (<em>int</em>) – Dimension of the null space (nullity) of the equilibrium matrix.
 Number of independent states of self-stress.</p></li>
 <li><p><strong>m</strong> (<em>int</em>) – Size of the left null space of the equilibrium matrix.
@@ -96,23 +98,18 @@ Number of (infenitesimal) mechanisms.</p></li>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
-<p>The equilibrium matrix of the form diagram is
-.. math:</p>
-<div class="language-python notranslate"><div class="highlight"><pre><code><span></span>\<span class="n">mathbf</span><span class="p">{</span><span class="n">E</span><span class="p">}</span>
-<span class="o">=</span>
-\<span class="n">begin</span><span class="p">{</span><span class="n">bmatrix</span><span class="p">}</span>
-\<span class="n">mathbf</span><span class="p">{</span><span class="n">C</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">i</span><span class="p">}</span><span class="o">^</span><span class="p">{</span><span class="n">t</span><span class="p">}</span>\<span class="n">mathbf</span><span class="p">{</span><span class="n">U</span><span class="p">}</span> \\
-\<span class="n">mathbf</span><span class="p">{</span><span class="n">C</span><span class="p">}</span><span class="n">_</span><span class="p">{</span><span class="n">i</span><span class="p">}</span><span class="o">^</span><span class="p">{</span><span class="n">t</span><span class="p">}</span>\<span class="n">mathbf</span><span class="p">{</span><span class="n">V</span><span class="p">}</span>
-\<span class="n">end</span><span class="p">{</span><span class="n">bmatrix</span><span class="p">}</span>
-</code></pre></div>
-</div>
-<p>If <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">==</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">==</span> <span class="pre">0</span></code>, the system described by the equilibrium matrix
-is statically determined.
-If <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">==</span> <span class="pre">0</span></code>, the system is statically indetermined with <cite>k</cite>
-idependent states of stress.
-If <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">==</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>, the system is unstable, with <cite>m</cite> independent
-mechanisms.
-The dimension of a vector space (such as the null space) is the number of
+<p>The equilibrium matrix of the form diagram is</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{E}
+=
+\begin{bmatrix}
+\mathbf{C}_{i}^{t}\mathbf{U} \\
+\mathbf{C}_{i}^{t}\mathbf{V}
+\end{bmatrix}\end{split}\]</div>
+<p>If <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">==</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">==</span> <span class="pre">0</span></code>, the system described by the equilibrium matrix is statically determined.
+If <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">==</span> <span class="pre">0</span></code>, the system is statically indetermined with <cite>k</cite> idependent states of stress.
+If <code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">==</span> <span class="pre">0</span></code> and <code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>, the system is unstable, with <cite>m</cite> independent mechanisms.</p>
+<p>The dimension of a vector space (such as the null space) is the number of
 vectors of a basis of that vector space. A set of vectors forms a basis of a
 vector space if they are linearly independent vectors and every vector of the
 space is a linear combination of this set.</p>
@@ -149,6 +146,7 @@ space is a linear combination of this set.</p>
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.diagrams.html">compas_ags.diagrams</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.viewers.html">compas_ags.viewers</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.utilities.html">compas_ags.utilities</a></li>
 </ul>
 </li>
 </ul>
