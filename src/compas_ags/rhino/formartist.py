@@ -146,6 +146,7 @@ class FormArtist(DiagramArtist):
         color_tension = self.settings['color.tension']
         scale = self.settings['scale.forces']
         tol = self.settings['tol.forces']
+        vertex_xyz = self.vertex_xyz
         edges = []
         pipes = []
         for edge in self.diagram.edges_where({'is_external': False}):
@@ -157,7 +158,7 @@ class FormArtist(DiagramArtist):
                 continue
             edges.append(edge)
             color = color_tension if force > 0 else color_compression
-            pipes.append({'points': self.diagram.vertices_attributes('xyz', keys=edge),
+            pipes.append({'points': [vertex_xyz[edge[0], vertex_xyz[edge[1]]]],
                           'color': color,
                           'radius': radius,
                           'name': "{}.force.{}-{}".format(self.diagram.name, *edge)})
