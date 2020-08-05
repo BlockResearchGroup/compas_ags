@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_force_update"
+__commandname__ = "AGS_check_dof"
 
 
 def RunCommand(is_interactive):
@@ -19,15 +19,19 @@ def RunCommand(is_interactive):
     proxy = sc.sticky['AGS']['proxy']
     scene = sc.sticky['AGS']['scene']
     form = scene.find_by_name('Form')[0]
-    force = scene.find_by_name('Force')[0]
 
     proxy.package = 'compas_ags.ags.graphstatics'
 
-    form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
-    force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
+    dof = proxy.form_count_dof_proxy(form.diagram.data)
+    k = dof[0]
+    inds = len(list(form.diagram.edges_where({'is_ind': True})))
 
-    scene.clear()
-    scene.update()
+    if k == inds:
+        print('Success: You have identified the correct number of externally applied loads.')
+    elif k > inds:
+        compas_rhino.display_message('Warning: You have not yet identified all external loads. (%s required and %s selected)' % (k, inds))
+    else:
+        compas_rhino.display_message('Warning: You have identified too many external forces as loads. (%s required and %s selected)' % (k, inds))
 
 
 # ==============================================================================

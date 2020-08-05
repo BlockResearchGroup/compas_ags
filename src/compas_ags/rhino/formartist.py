@@ -99,13 +99,26 @@ class FormArtist(DiagramArtist):
         if self.settings['show.vertexlabels']:
             text = {vertex: index for index, vertex in enumerate(self.diagram.vertices())}
             color = {}
-            color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
+            color.update({vertex: self.settings['color.vertexlabels'] for vertex in self.diagram.vertices()})
             color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
             color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertexlabels(text=text, color=color)
         # edge labels
         if self.settings['show.edgelabels']:
             text = {edge: index for index, edge in enumerate(self.diagram.edges())}
+            color = {}
+            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
+            self.draw_edgelabels(text=text, color=color)
+        # force magnitude labels
+        if self.settings['show.forcelabels']:
+            text = {}
+            for index, edge in enumerate(self.diagram.edges()):
+                f = self.diagram.edge_attribute(edge, 'f')
+                text[edge] = "%s kN {%s}" % (round(f, 2), index)
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
@@ -133,6 +146,7 @@ class FormArtist(DiagramArtist):
         color_tension = self.settings['color.tension']
         scale = self.settings['scale.forces']
         tol = self.settings['tol.forces']
+        vertex_xyz = self.vertex_xyz
         edges = []
         pipes = []
         for edge in self.diagram.edges_where({'is_external': False}):
@@ -144,7 +158,7 @@ class FormArtist(DiagramArtist):
                 continue
             edges.append(edge)
             color = color_tension if force > 0 else color_compression
-            pipes.append({'points': self.diagram.vertices_attributes('xyz', keys=edge),
+            pipes.append({'points': [vertex_xyz[edge[0], vertex_xyz[edge[1]]]],
                           'color': color,
                           'radius': radius,
                           'name': "{}.force.{}-{}".format(self.diagram.name, *edge)})

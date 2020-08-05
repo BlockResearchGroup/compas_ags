@@ -3,11 +3,13 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-
 import compas_rhino
 
+from compas_ags.diagrams import FormGraph
+from compas_ags.diagrams import FormDiagram
 
-__commandname__ = "AGS_identify_supports"
+
+__commandname__ = "AGS_form_from_obj"
 
 
 def RunCommand(is_interactive):
@@ -16,20 +18,23 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
+    system = sc.sticky['AGS']['system']
     scene = sc.sticky['AGS']['scene']
-    form = scene.find_by_name('Form')[0]
 
-    vertices = form.select_vertices()
-    if not vertices:
+    filepath = compas_rhino.browse_for_file('Select an input file.', folder=system['session.dirname'], filter='obj')
+    if not filepath:
         return
 
-    # check that the selection makes sense
-    # potentially update all connected leaf edges to become "is_support"
-    # or at least remove "is_load"
+    graph = FormGraph.from_obj(filepath)
 
-    # rename this attribute to "is_support"
-    # is_support != is_fixed
-    form.diagram.vertices_attribute('is_fixed', True, keys=vertices)
+    # check planarity
+    if not graph.is_planar_embedding():
+        compas_rhino.display_message('The graph is not planar. Check your graph!')
+        return
+
+    form = FormDiagram.from_graph(graph)
+
+    scene.add(form, name='Form', layer='AGS::FormDiagram')
 
     scene.clear()
     scene.update()
@@ -38,7 +43,6 @@ def RunCommand(is_interactive):
 # ==============================================================================
 # Main
 # ==============================================================================
-
 if __name__ == '__main__':
 
     RunCommand(True)

@@ -3,14 +3,14 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-
+import rhinoscriptsyntax as rs
 import compas_rhino
+
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import ForceDiagram
 
 
-__commandname__ = "AGS_form_fromobj"
+__commandname__ = "AGS_form_from_lines"
 
 
 def RunCommand(is_interactive):
@@ -19,27 +19,33 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    system = sc.sticky['AGS']['system']
     scene = sc.sticky['AGS']['scene']
 
-    filepath = compas_rhino.browse_for_file('Select an input file.', folder=system['session.dirname'], filter='obj')
+    guids = compas_rhino.select_lines(message='Select Form Diagram Lines')
+    if not guids:
+        return
 
-    if filepath:
-        graph = FormGraph.from_obj(filepath)
-        form = FormDiagram.from_graph(graph)
-        force = ForceDiagram.from_formdiagram(form)
+    rs.HideObjects(guids)
 
-        scene.add(form, name='Form', layer='AGS::FormDiagram')
-        scene.add(force, name='Force', layer='AGS::ForceDiagram')
+    lines = compas_rhino.get_line_coordinates(guids)
+    graph = FormGraph.from_lines(lines)
 
-        scene.clear()
-        scene.update()
+    # check planarity
+    if not graph.is_planar_embedding():
+        compas_rhino.display_message('The graph is not planar. Check your graph!')
+        return
+
+    form = FormDiagram.from_graph(graph)
+
+    scene.add(form, name='Form', layer='AGS::FormDiagram')
+
+    scene.clear()
+    scene.update()
 
 
 # ==============================================================================
 # Main
 # ==============================================================================
-
 if __name__ == '__main__':
 
     RunCommand(True)
