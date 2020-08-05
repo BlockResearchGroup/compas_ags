@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_form_fix_vertices"
+__commandname__ = "AGS_form_fix_nodes"
 
 
 def RunCommand(is_interactive):

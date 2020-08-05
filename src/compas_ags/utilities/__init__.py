@@ -9,12 +9,13 @@ compas_ags.utilities
 .. autosummary::
     :toctree: generated/
 
-    calculate_drawing_scale
+    calculate_drawingscale
     find_anchor_point
-    calculate_force_scale
+    calculate_drawingscale_forces
 
 """
+from __future__ import absolute_import
 
-from .displaysettings import *  # noqa: F401
+from .displaysettings import *  # noqa: F401 F403
 
 __all__ = [name for name in dir() if not name.startswith('_')]
