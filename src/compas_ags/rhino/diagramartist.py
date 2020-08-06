@@ -85,7 +85,7 @@ class DiagramArtist(MeshArtist):
             'color.compression': (0, 0, 255),
             'color.tension': (255, 0, 0),
             'color.anchor': (255, 0, 0),
-            'color.basegraph': (100, 100, 100),
+            'color.basediagram': (100, 100, 100),
             'scale.forces': 0.1,
             'tol.forces': 1e-3,
         })

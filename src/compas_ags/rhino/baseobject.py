@@ -5,16 +5,16 @@ from __future__ import division
 from compas_ags.rhino.diagramobject import DiagramObject
 
 
-__all__ = ['GraphObject']
+__all__ = ['BaseObject']
 
 
-class GraphObject(DiagramObject):
-    """A graph object represents an input graph in the Rhino view.
+class BaseObject(DiagramObject):
+    """A base object represents an input graph in the Rhino view.
     """
 
     def unselect(self):
         """Unselect all Rhino objects associated with this diagram object."""
-        super(GraphObject, self).unselect()
+        super(BaseObject, self).unselect()
 
 
 # ==============================================================================

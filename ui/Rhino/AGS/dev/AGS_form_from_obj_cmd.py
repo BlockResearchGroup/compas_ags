@@ -7,7 +7,7 @@ import compas_rhino
 
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import BaseGraph
+from compas_ags.diagrams import BaseDiagram
 
 
 __commandname__ = "AGS_form_from_obj"
@@ -34,10 +34,10 @@ def RunCommand(is_interactive):
         return
 
     form = FormDiagram.from_graph(graph)
-    base_graph = BaseGraph.from_graph(graph)
+    base = BaseDiagram.from_graph(graph)
 
     scene.add(form, name='Form', layer='AGS::FormDiagram')
-    scene.add(base_graph, name='BaseGraph', layer='AGS::BaseGraph')
+    scene.add(base, name='BaseGraph', layer='AGS::BaseGraph')
 
     scene.clear()
     scene.update()

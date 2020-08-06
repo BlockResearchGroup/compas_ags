@@ -18,9 +18,9 @@ def RunCommand(is_interactive):
     scene = sc.sticky['AGS']['scene']
 
     form = scene.find_by_name('Form')[0]
-    graph = scene.find_by_name('BaseGraph')[0]
+    base = scene.find_by_name('BaseDiagram')[0]
 
-    options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", "BaseGraph", ]
+    options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", "BaseDiagram", ]
 
     while True:
         option = compas_rhino.rs.GetString("FormDiagram Display", strings=options)
@@ -62,15 +62,15 @@ def RunCommand(is_interactive):
             elif show == "False":
                 form.artist.settings['show.forces'] = False
 
-        elif option == "BaseGraph":
-            current = str(graph.artist.settings['show.vertices'])
-            show = compas_rhino.rs.GetString("Show Basegraph", defaultString=current, strings=["True", "False"])
+        elif option == "BaseDiagram":
+            current = str(base.artist.settings['show.vertices'])
+            show = compas_rhino.rs.GetString("Show BaseDiagram", defaultString=current, strings=["True", "False"])
             if show == "True":
-                graph.artist.settings['show.vertices'] = True
-                graph.artist.settings['show.edges'] = True
+                base.artist.settings['show.vertices'] = True
+                base.artist.settings['show.edges'] = True
             elif show == "False":
-                graph.artist.settings['show.vertices'] = False
-                graph.artist.settings['show.edges'] = False
+                base.artist.settings['show.vertices'] = False
+                base.artist.settings['show.edges'] = False
         scene.update()
 
 

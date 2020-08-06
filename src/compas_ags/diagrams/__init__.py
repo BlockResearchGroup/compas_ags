@@ -22,6 +22,7 @@ Diagrams
     Diagram
     FormDiagram
     ForceDiagram
+    BaseDiagram
 
 """
 from __future__ import absolute_import
@@ -30,7 +31,7 @@ from .formgraph import *  # noqa: F401 F403
 from .diagram import *  # noqa: F401 F403
 from .formdiagram import *  # noqa: F401 F403
 from .forcediagram import *  # noqa: F401 F403
-from .basegraph import *  # noqa: F401 F403
+from .basediagram import *  # noqa: F401 F403
 
 
 __all__ = [name for name in dir() if not name.startswith('_')]
