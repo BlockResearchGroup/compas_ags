@@ -37,7 +37,7 @@ def RunCommand(is_interactive):
     base = BaseDiagram.from_graph(graph)
 
     scene.add(form, name='Form', layer='AGS::FormDiagram')
-    scene.add(base, name='BaseGraph', layer='AGS::BaseGraph')
+    scene.add(base, name='Base', layer='AGS::BaseDiagram')
 
     scene.clear()
     scene.update()

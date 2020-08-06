@@ -18,7 +18,7 @@ def RunCommand(is_interactive):
     scene = sc.sticky['AGS']['scene']
 
     form = scene.find_by_name('Form')[0]
-    base = scene.find_by_name('BaseDiagram')[0]
+    base = scene.find_by_name('Base')[0]
 
     options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", "BaseDiagram", ]
 
