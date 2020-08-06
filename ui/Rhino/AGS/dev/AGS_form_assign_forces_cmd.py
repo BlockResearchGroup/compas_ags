@@ -26,10 +26,10 @@ def RunCommand(is_interactive):
             break
         if form.diagram.edge_attribute(edges[0], 'is_ind'):
             current = str(form.diagram.edge_attribute(edges[0], 'is_ind'))  # display T/F based on first selected
-            show = compas_rhino.rs.GetString("Assign Forces to selection", defaultString=current, strings=["True", "False"])
+            show = compas_rhino.rs.GetString("Modify Forces on selection", defaultString=current, strings=["True", "False"])
             if show == "True":
+                force_value = compas_rhino.rs.GetReal("Force on Edges (kN)", form.diagram.edge_force(edges[0]))
                 for edge in edges:
-                    force_value = compas_rhino.rs.GetReal("Force on Edges (kN)", form.diagram.edge_attribute(edges[0], 'f'))
                     form.diagram.edge_force(edge, force_value)
             elif show == "False":
                 for edge in edges:
