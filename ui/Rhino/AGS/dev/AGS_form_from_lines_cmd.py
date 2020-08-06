@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-import rhinoscriptsyntax as rs
+
 import compas_rhino
 
 from compas_ags.diagrams import FormGraph
@@ -25,7 +25,7 @@ def RunCommand(is_interactive):
     if not guids:
         return
 
-    rs.HideObjects(guids)
+    compas_rhino.rs.HideObjects(guids)
 
     lines = compas_rhino.get_line_coordinates(guids)
     graph = FormGraph.from_lines(lines)

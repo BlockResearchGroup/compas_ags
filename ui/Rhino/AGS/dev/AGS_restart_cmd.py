@@ -6,29 +6,29 @@ import scriptcontext as sc
 
 import compas_rhino
 
+from compas_ags.rhino import Scene
 
-__commandname__ = "AGS_force_anchor"
+
+__commandname__ = "AGS_restart"
 
 
 def RunCommand(is_interactive):
-
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
     scene = sc.sticky['AGS']['scene']
-    force = scene.find_by_name('Force')[0]
+    if not scene:
+        return
 
-    vertex = force.select_vertex()
-    if vertex is not None:
-        force.artist.anchor_vertex = vertex
+    options = ["Yes", "No"]
+    option = compas_rhino.rs.GetString("Restart and clear all AGS objects?", strings=options, defaultString="No")
+    if not option:
+        return
 
-        point = compas_rhino.pick_point()
-        if point:
-            force.artist.anchor_point = point
-
-    scene.clear()
-    scene.update()
+    if option == "Yes":
+        scene.clear()
+        sc.sticky['AGS']['scene'] = Scene()
 
 
 # ==============================================================================
