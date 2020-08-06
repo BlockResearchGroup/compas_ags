@@ -202,8 +202,8 @@
 <span class="sd">        Mesh</span>
 <span class="sd">            A mesh object.</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
 <span class="sd">        There are a few sample files available for testing and debugging:</span>
 
 <span class="sd">        * faces.obj</span>
@@ -242,8 +242,8 @@
 <span class="sd">            If false, vertices are shared between faces if this is also the case in the mesh.</span>
 <span class="sd">            Default is ``False``.</span>
 
-<span class="sd">        Warning</span>
-<span class="sd">        -------</span>
+<span class="sd">        Warnings</span>
+<span class="sd">        --------</span>
 <span class="sd">        This function only writes geometric data about the vertices and</span>
 <span class="sd">        the faces to the file.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -517,8 +517,8 @@
 
 <span class="sd">            Each face is a list of indices referencing the list of vertex coordinates.</span>
 
-<span class="sd">        Example</span>
-<span class="sd">        -------</span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">key_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
@@ -896,8 +896,8 @@
 <span class="sd">        float</span>
 <span class="sd">            The tributary are.</span>
 
-<span class="sd">        Example</span>
-<span class="sd">        -------</span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1222,14 +1222,14 @@
 <span class="sd">        float</span>
 <span class="sd">            The flatness.</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
 <span class="sd">        Flatness is computed as the ratio of the distance between the diagonals</span>
 <span class="sd">        of the face to the average edge length. A practical limit on this value</span>
 <span class="sd">        realted to manufacturing is 0.02 (2%).</span>
 
-<span class="sd">        Warning</span>
-<span class="sd">        -------</span>
+<span class="sd">        Warnings</span>
+<span class="sd">        --------</span>
 <span class="sd">        This method only makes sense for quadrilateral faces.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">face_vertices</span><span class="p">(</span><span class="n">fkey</span><span class="p">)</span>
@@ -1331,8 +1331,8 @@
 <span class="sd">        list</span>
 <span class="sd">            The vertices of the boundary.</span>
 
-<span class="sd">        Warning</span>
-<span class="sd">        -------</span>
+<span class="sd">        Warnings</span>
+<span class="sd">        --------</span>
 <span class="sd">        If the vertices are requested in order, and the mesh has multiple borders,</span>
 <span class="sd">        currently only the vertices of one of the borders will be returned.</span>
 

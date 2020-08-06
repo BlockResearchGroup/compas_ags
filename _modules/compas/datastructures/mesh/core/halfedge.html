@@ -79,12 +79,14 @@
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
+<span class="c1"># import schema</span>
 <span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">OrderedDict</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">from</span> <span class="nn">ast</span> <span class="kn">import</span> <span class="n">literal_eval</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">sample</span>
 <span class="kn">from</span> <span class="nn">random</span> <span class="kn">import</span> <span class="n">choice</span>
 
+<span class="c1"># import compas</span>
 <span class="kn">from</span> <span class="nn">compas.datastructures.mesh.core</span> <span class="kn">import</span> <span class="n">VertexAttributeView</span>
 <span class="kn">from</span> <span class="nn">compas.datastructures.mesh.core</span> <span class="kn">import</span> <span class="n">EdgeAttributeView</span>
 <span class="kn">from</span> <span class="nn">compas.datastructures.mesh.core</span> <span class="kn">import</span> <span class="n">FaceAttributeView</span>
@@ -102,37 +104,64 @@
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
-<span class="sd">    attributes : dict</span>
-<span class="sd">        A dictionary of general attributes.</span>
-<span class="sd">    default_vertex_attributes : dict</span>
-<span class="sd">        The names of pre-assigned vertex attributes and their default values.</span>
-<span class="sd">    default_edge_attributes : dict</span>
-<span class="sd">        The default data attributes assigned to every new edge.</span>
-<span class="sd">    default_face_attributes : dict</span>
-<span class="sd">        The default data attributes assigned to every new face.</span>
-<span class="sd">    name : str</span>
-<span class="sd">        Shorthand for ``HalfEdge.attributes[&#39;name&#39;]``</span>
-<span class="sd">    adjacency : dict, read-only</span>
-<span class="sd">        The vertex adjacency dictionary.</span>
-<span class="sd">    data : dict</span>
-<span class="sd">        The data representing the mesh.</span>
-<span class="sd">        The dict has the following structure:</span>
-
-<span class="sd">        * &#39;attributes&#39;   =&gt; dict</span>
-<span class="sd">        * &#39;dva&#39;          =&gt; dict</span>
-<span class="sd">        * &#39;dea&#39;          =&gt; dict</span>
-<span class="sd">        * &#39;dfa&#39;          =&gt; dict</span>
-<span class="sd">        * &#39;vertex&#39;       =&gt; dict</span>
-<span class="sd">        * &#39;face&#39;         =&gt; dict</span>
-<span class="sd">        * &#39;facedata&#39;     =&gt; dict</span>
-<span class="sd">        * &#39;edgedata&#39;     =&gt; dict</span>
-<span class="sd">        * &#39;max_int_key&#39;  =&gt; int</span>
-<span class="sd">        * &#39;max_int_fkey&#39; =&gt; int</span>
+<span class="sd">    attributes</span>
+<span class="sd">    default_vertex_attributes</span>
+<span class="sd">    default_edge_attributes</span>
+<span class="sd">    default_face_attributes</span>
+<span class="sd">    name</span>
+<span class="sd">    adjacency</span>
+<span class="sd">    data</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># DATASCHEMA = schema.Schema({</span>
+    <span class="c1">#     &quot;compas&quot;: str,</span>
+    <span class="c1">#     &quot;datatype&quot;: str,</span>
+    <span class="c1">#     &quot;data&quot;: {</span>
+    <span class="c1">#         &quot;attributes&quot;: dict,</span>
+    <span class="c1">#         &quot;dva&quot;: dict,</span>
+    <span class="c1">#         &quot;dea&quot;: dict,</span>
+    <span class="c1">#         &quot;dfa&quot;: dict,</span>
+    <span class="c1">#         &quot;vertex&quot;: dict,</span>
+    <span class="c1">#         &quot;face&quot;: dict,</span>
+    <span class="c1">#         &quot;facedata&quot;: dict,</span>
+    <span class="c1">#         &quot;edgedata&quot;: dict,</span>
+    <span class="c1">#         &quot;max_int_key&quot;: schema.And(int, lambda x: x &gt;= -1),</span>
+    <span class="c1">#         &quot;max_int_fkey&quot;: schema.And(int, lambda x: x &gt;= -1)</span>
+    <span class="c1">#     }</span>
+    <span class="c1"># })</span>
+
+    <span class="c1"># JSONSCHEMA = {</span>
+    <span class="c1">#     &quot;$schema&quot;: &quot;http://json-schema.org/schema&quot;,</span>
+    <span class="c1">#     &quot;$id&quot;: &quot;https://github.com/compas-dev/compas/schemas/mesh.json&quot;,</span>
+    <span class="c1">#     &quot;$compas&quot;: compas.__version__,</span>
+
+    <span class="c1">#     &quot;type&quot;: &quot;object&quot;,</span>
+    <span class="c1">#     &quot;poperties&quot;: {</span>
+    <span class="c1">#         &quot;compas&quot;: {&quot;type&quot;: &quot;string&quot;},</span>
+    <span class="c1">#         &quot;datatype&quot;: {&quot;type&quot;: &quot;string&quot;},</span>
+    <span class="c1">#         &quot;data&quot;: {</span>
+    <span class="c1">#             &quot;type&quot;: &quot;object&quot;,</span>
+    <span class="c1">#             &quot;properties&quot;: {</span>
+    <span class="c1">#                 &quot;attributes&quot;:   {&quot;type&quot;: &quot;object&quot;},</span>
+    <span class="c1">#                 &quot;dva&quot;:          {&quot;type&quot;: &quot;object&quot;},</span>
+    <span class="c1">#                 &quot;dea&quot;:          {&quot;type&quot;: &quot;object&quot;},</span>
+    <span class="c1">#                 &quot;dfa&quot;:          {&quot;type&quot;: &quot;object&quot;},</span>
+    <span class="c1">#                 &quot;vertex&quot;:       {&quot;type&quot;: &quot;object&quot;},</span>
+    <span class="c1">#                 &quot;face&quot;:         {&quot;type&quot;: &quot;object&quot;},</span>
+    <span class="c1">#                 &quot;facedata&quot;:     {&quot;type&quot;: &quot;object&quot;},</span>
+    <span class="c1">#                 &quot;edgedata&quot;:     {&quot;type&quot;: &quot;object&quot;},</span>
+    <span class="c1">#                 &quot;max_int_key&quot;:  {&quot;type&quot;: &quot;number&quot;},</span>
+    <span class="c1">#                 &quot;max_int_fkey&quot;: {&quot;type&quot;: &quot;number&quot;}</span>
+    <span class="c1">#             },</span>
+    <span class="c1">#             &quot;required&quot;: [&quot;attributes&quot;, &quot;dva&quot;, &quot;dea&quot;, &quot;dfa&quot;, &quot;vertex&quot;, &quot;face&quot;, &quot;facedata&quot;, &quot;edgedata&quot;, &quot;max_int_key&quot;, &quot;max_int_fkey&quot;]</span>
+    <span class="c1">#         }</span>
+    <span class="c1">#     },</span>
+    <span class="c1">#     &quot;required&quot;: [&quot;compas&quot;, &quot;datatype&quot;, &quot;data&quot;]</span>
+    <span class="c1"># }</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">HalfEdge</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
@@ -207,8 +236,8 @@
 <span class="sd">        * &#39;max_int_key&#39;  =&gt; int</span>
 <span class="sd">        * &#39;max_int_fkey&#39; =&gt; int</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
 <span class="sd">        All dictionary keys are converted to their representation value (``repr(key)``)</span>
 <span class="sd">        to ensure compatibility of all allowed key types with the JSON serialisation</span>
 <span class="sd">        format, which only allows for dict keys that are strings.</span>
@@ -300,9 +329,9 @@
 <span class="sd">        object</span>
 <span class="sd">            An object of the type of ``cls``.</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
-<span class="sd">        This constructor method is meant to be used in conjuction with the</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This constructor method is meant to be used in conjunction with the</span>
 <span class="sd">        corresponding *to_data* method.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -318,9 +347,9 @@
 <span class="sd">        dict</span>
 <span class="sd">            The structured data.</span>
 
-<span class="sd">        Note</span>
+<span class="sd">        Notes</span>
 <span class="sd">        ----</span>
-<span class="sd">        This method produces the data that can be used in conjuction with the</span>
+<span class="sd">        This method produces the data that can be used in conjunction with the</span>
 <span class="sd">        corresponding *from_data* class method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">data</span>
@@ -339,9 +368,9 @@
 <span class="sd">        object</span>
 <span class="sd">            An object of the type of ``cls``.</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
-<span class="sd">        This constructor method is meant to be used in conjuction with the</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This constructor method is meant to be used in conjunction with the</span>
 <span class="sd">        corresponding *to_json* method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fp</span><span class="p">:</span>
@@ -378,9 +407,9 @@
 <span class="sd">        object</span>
 <span class="sd">            An object of type ``cls``.</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
-<span class="sd">        This constructor method is meant to be used in conjuction with the</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        This constructor method is meant to be used in conjunction with the</span>
 <span class="sd">        corresponding *to_pickle* method.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;rb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fo</span><span class="p">:</span>
@@ -615,11 +644,12 @@
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="k">return</span>
         <span class="k">if</span> <span class="n">vertices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">vertices</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
             <span class="n">vertices</span> <span class="o">=</span> <span class="n">vertices</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+        <span class="n">vertices</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="n">u</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pairwise</span><span class="p">(</span><span class="n">vertices</span> <span class="o">+</span> <span class="n">vertices</span><span class="p">[:</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">u</span> <span class="o">!=</span> <span class="n">v</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">return</span>
         <span class="k">if</span> <span class="n">fkey</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">fkey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_int_fkey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_int_fkey</span> <span class="o">+</span> <span class="mi">1</span>
         <span class="k">if</span> <span class="n">fkey</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_int_fkey</span><span class="p">:</span>
@@ -629,8 +659,6 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">face</span><span class="p">[</span><span class="n">fkey</span><span class="p">]</span> <span class="o">=</span> <span class="n">vertices</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">facedata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">fkey</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pairwise</span><span class="p">(</span><span class="n">vertices</span> <span class="o">+</span> <span class="n">vertices</span><span class="p">[:</span><span class="mi">1</span><span class="p">]):</span>
-            <span class="k">if</span> <span class="n">u</span> <span class="o">==</span> <span class="n">v</span><span class="p">:</span>
-                <span class="k">continue</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="n">fkey</span>
             <span class="k">if</span> <span class="n">u</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">v</span><span class="p">]:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">u</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
@@ -786,7 +814,7 @@
 <span class="sd">            The next edge as a (u, v) tuple, if ``data`` is false.</span>
 <span class="sd">            The next edge as a ((u, v), data) tuple, if ``data`` is true.</span>
 
-<span class="sd">        Note</span>
+<span class="sd">        Notes</span>
 <span class="sd">        ----</span>
 <span class="sd">        Mesh edges have no topological meaning. They are only used to store data.</span>
 <span class="sd">        Edges are not automatically created when vertices and faces are added to</span>
@@ -798,8 +826,8 @@
 <span class="sd">        edges is *as they come out*. However, as long as the toplogy remains</span>
 <span class="sd">        unchanged, the order is consistent.</span>
 
-<span class="sd">        Example</span>
-<span class="sd">        -------</span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">seen</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
@@ -1105,9 +1133,9 @@
 <span class="sd">            A dictionary compiled of remaining named arguments.</span>
 <span class="sd">            Defaults to an empty dict.</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
-<span class="sd">        Named arguments overwrite correpsonding key-value pairs in the attribute dictionary,</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        Named arguments overwrite corresponding key-value pairs in the attribute dictionary,</span>
 <span class="sd">        if they exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">attr_dict</span><span class="p">:</span>
@@ -1209,7 +1237,7 @@
         <span class="c1"># use it as a getter</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span><span class="p">:</span>
             <span class="c1"># return all vertex attributes as a dict</span>
-            <span class="k">return</span> <span class="n">VertexAttributeView</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_vertex_attributes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">VertexAttributeView</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_vertex_attributes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex</span><span class="p">[</span><span class="n">key</span><span class="p">]:</span>
@@ -1299,9 +1327,9 @@
 <span class="sd">            A dictionary compiled of remaining named arguments.</span>
 <span class="sd">            Defaults to an empty dict.</span>
 
-<span class="sd">        Note</span>
+<span class="sd">        Notes</span>
 <span class="sd">        ----</span>
-<span class="sd">        Named arguments overwrite correpsonding key-value pairs in the attribute dictionary,</span>
+<span class="sd">        Named arguments overwrite corresponding key-value pairs in the attribute dictionary,</span>
 <span class="sd">        if they exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">attr_dict</span><span class="p">:</span>
@@ -1406,7 +1434,7 @@
             <span class="k">return</span>
         <span class="c1"># use it as a getter</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">FaceAttributeView</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_face_attributes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">facedata</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">FaceAttributeView</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_face_attributes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">facedata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">{}))</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
             <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">face_attribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
@@ -1493,9 +1521,9 @@
 <span class="sd">            A dictionary compiled of remaining named arguments.</span>
 <span class="sd">            Defaults to an empty dict.</span>
 
-<span class="sd">        Note</span>
+<span class="sd">        Notes</span>
 <span class="sd">        ----</span>
-<span class="sd">        Named arguments overwrite correpsonding key-value pairs in the attribute dictionary,</span>
+<span class="sd">        Named arguments overwrite corresponding key-value pairs in the attribute dictionary,</span>
 <span class="sd">        if they exist.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">attr_dict</span><span class="p">:</span>
@@ -1611,7 +1639,7 @@
         <span class="c1"># use it as a getter</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span><span class="p">:</span>
             <span class="c1"># get the entire attribute dict</span>
-            <span class="k">return</span> <span class="n">EdgeAttributeView</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_edge_attributes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">edgedata</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">EdgeAttributeView</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_edge_attributes</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">edgedata</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">{}))</span>
         <span class="c1"># get only the values of the named attributes</span>
         <span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
@@ -1884,12 +1912,12 @@
         <span class="k">return</span> <span class="kc">False</span>
 
     <span class="k">def</span> <span class="nf">euler</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Calculate the Euler characterisic.</span>
+        <span class="sd">&quot;&quot;&quot;Calculate the Euler characteristic.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
-<span class="sd">            The Euler chracteristic.</span>
+<span class="sd">            The Euler characteristic.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">V</span> <span class="o">=</span> <span class="nb">len</span><span class="p">([</span><span class="n">vkey</span> <span class="k">for</span> <span class="n">vkey</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">()</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">vkey</span><span class="p">))</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">])</span>
         <span class="n">E</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">()</span>
@@ -1991,16 +2019,16 @@
 <span class="sd">            If the vertex lies on the boundary of the mesh,</span>
 <span class="sd">            an ordered list always starts and ends with with boundary vertices.</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
 <span class="sd">        Due to the nature of the ordering algorithm, the neighbors cycle around</span>
 <span class="sd">        the node in the opposite direction as the cycling direction of the faces.</span>
 <span class="sd">        For some algorithms this produces the expected results. For others it doesn&#39;t.</span>
 <span class="sd">        For example, a dual mesh constructed relying on these conventions will have</span>
 <span class="sd">        oposite face cycle directions compared to the original.</span>
 
-<span class="sd">        Example</span>
-<span class="sd">        -------</span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">temp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
@@ -2049,12 +2077,12 @@
 <span class="sd">        list</span>
 <span class="sd">            The vertices in the neighborhood.</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
 <span class="sd">        The vertices in the neighborhood are unordered.</span>
 
-<span class="sd">        Example</span>
-<span class="sd">        -------</span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2088,11 +2116,6 @@
     <span class="k">def</span> <span class="nf">vertex_min_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute the minimum degree of all vertices.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        key : int</span>
-<span class="sd">            The identifier of the vertex.</span>
-
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
@@ -2104,11 +2127,6 @@
 
     <span class="k">def</span> <span class="nf">vertex_max_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute the maximum degree of all vertices.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        key : int</span>
-<span class="sd">            The identifier of the vertex.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -2138,8 +2156,8 @@
 <span class="sd">        list</span>
 <span class="sd">            The faces connected to a vertex.</span>
 
-<span class="sd">        Example</span>
-<span class="sd">        -------</span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">ordered</span><span class="p">:</span>
@@ -2158,8 +2176,8 @@
     <span class="k">def</span> <span class="nf">has_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Verify that the mesh contains a specific edge.</span>
 
-<span class="sd">        Warning</span>
-<span class="sd">        -------</span>
+<span class="sd">        Warnings</span>
+<span class="sd">        --------</span>
 <span class="sd">        This method may produce unexpected results.</span>
 
 <span class="sd">        Parameters</span>
@@ -2206,7 +2224,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        tuple</span>
 <span class="sd">            The identifiers of the adjacent faces.</span>
-<span class="sd">            If the edge is on the bboundary, one of the identifiers is ``None``.</span>
+<span class="sd">            If the edge is on the boundary, one of the identifiers is ``None``.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">u</span><span class="p">]</span>
 
@@ -2347,8 +2365,8 @@
 <span class="sd">        list</span>
 <span class="sd">            The identifiers of the neighboring faces.</span>
 
-<span class="sd">        Example</span>
-<span class="sd">        -------</span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -2405,11 +2423,6 @@
     <span class="k">def</span> <span class="nf">face_min_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute the minimum degree of all faces.</span>
 
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        fkey : int</span>
-<span class="sd">            Identifier of the face.</span>
-
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
@@ -2421,11 +2434,6 @@
 
     <span class="k">def</span> <span class="nf">face_max_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute the maximum degree of all faces.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        fkey : int</span>
-<span class="sd">            Identifier of the face.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -2503,8 +2511,8 @@
 <span class="sd">        None</span>
 <span class="sd">            If the faces are not adjacent.</span>
 
-<span class="sd">        Note</span>
-<span class="sd">        ----</span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
 <span class="sd">        For use in form-finding algorithms, that rely on form-force duality information,</span>
 <span class="sd">        further checks relating to the orientation of the corresponding are required.</span>
 <span class="sd">        &quot;&quot;&quot;</span>

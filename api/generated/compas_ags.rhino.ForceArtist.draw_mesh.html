@@ -82,9 +82,22 @@
 <dt id="compas_ags.rhino.ForceArtist.draw_mesh">
 <code class="sig-prename descclassname">ForceArtist.</code><code class="sig-name descname">draw_mesh</code><span class="sig-paren">(</span><em class="sig-param">color=None</em>, <em class="sig-param">disjoint=False</em><span class="sig-paren">)</span></dt>
 <dd><p>Draw the mesh as a consolidated RhinoMesh.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color</strong> (<em>3-tuple, optional</em>) – RGB color components in integer format (0-255).</p></li>
+<li><p><strong>disjoint</strong> (<em>bool, optional</em>) – Draw the faces of the mesh with disjoint vertices.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>list</em> – The GUIDs of the created Rhino objects.</p>
+</dd>
+</dl>
 <p class="rubric">Notes</p>
 <p>The mesh should be a valid Rhino Mesh object, which means it should have
-only triangular or quadrilateral faces.</p>
+only triangular or quadrilateral faces.
+Faces with more than 4 vertices will be triangulated on-the-fly.</p>
 </dd></dl>
 
 </div>
@@ -115,6 +128,7 @@ only triangular or quadrilateral faces.</p>
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.diagrams.html">compas_ags.diagrams</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.rhino.html">compas_ags.rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.viewers.html">compas_ags.viewers</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.utilities.html">compas_ags.utilities</a></li>
 </ul>
 </li>
 </ul>

@@ -21,7 +21,7 @@
   
   
   
-    <link rel="prev" title="ForceArtist.to_data" href="compas_ags.rhino.ForceArtist.to_data.html" />
+    <link rel="prev" title="DiagramObject.unselect" href="compas_ags.rhino.DiagramObject.unselect.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -80,25 +80,9 @@
 <h1 class="display-4 p-0 mb-5">FormObject</h1>
 <dl class="class">
 <dt id="compas_ags.rhino.FormObject">
-<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">FormObject</code><span class="sig-paren">(</span><em class="sig-param">diagram</em>, <em class="sig-param">settings=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/formobject.html#FormObject"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">FormObject</code><span class="sig-paren">(</span><em class="sig-param">diagram</em>, <em class="sig-param">scene=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">layer=None</em>, <em class="sig-param">visible=True</em>, <em class="sig-param">settings=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/formobject.html#FormObject"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.rhino.diagramobject.DiagramObject</span></code></p>
 <p>A form object represents a form diagram in the Rhino model space.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>diagram</strong> (<a class="reference internal" href="compas_ags.diagrams.FormDiagram.html#compas_ags.diagrams.FormDiagram" title="compas_ags.diagrams.FormDiagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.FormDiagram</span></code></a>) – The form diagram instance.</p></li>
-<li><p><strong>settings</strong> (<em>dict, optional</em>) – Visualisation settings for the corresponding Rhino object(s).
-Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case the default settings of the artist are used.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Attributes</dt>
-<dd class="field-even"><ul class="simple">
-<li><p><strong>item</strong> (<a class="reference internal" href="compas_ags.diagrams.FormDiagram.html#compas_ags.diagrams.FormDiagram" title="compas_ags.diagrams.FormDiagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.FormDiagram</span></code></a>) – Stores the form diagram instance.</p></li>
-<li><p><strong>diagram</strong> (<a class="reference internal" href="compas_ags.diagrams.FormDiagram.html#compas_ags.diagrams.FormDiagram" title="compas_ags.diagrams.FormDiagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.diagrams.FormDiagram</span></code></a>) – Alias for <code class="docutils literal notranslate"><span class="pre">item</span></code>.</p></li>
-<li><p><strong>artist</strong> (<a class="reference internal" href="compas_ags.rhino.FormArtist.html#compas_ags.rhino.FormArtist" title="compas_ags.rhino.FormArtist"><code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.rhino.FormArtist</span></code></a>.) – Instance of a form diagram artist.</p></li>
-</ul>
-</dd>
-</dl>
 <p class="rubric">Methods</p>
 <table class="longtable docutils align-default">
 <colgroup>
@@ -106,40 +90,67 @@ Default is <code class="docutils literal notranslate"><span class="pre">None</sp
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.__init__.html#compas_ags.rhino.FormObject.__init__" title="compas_ags.rhino.FormObject.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(diagram[, settings])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.__init__.html#compas_ags.rhino.FormObject.__init__" title="compas_ags.rhino.FormObject.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(diagram[, scene, name, layer, …])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.clear.html#compas_ags.rhino.FormObject.clear" title="compas_ags.rhino.FormObject.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.build.html#compas_ags.rhino.FormObject.build" title="compas_ags.rhino.FormObject.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code></a>(item, **kwargs)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.clear.html#compas_ags.rhino.FormObject.clear" title="compas_ags.rhino.FormObject.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a>()</p></td>
 <td><p>Clear the diagram object and all related Rhino objects from the scene.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.clear_layer.html#compas_ags.rhino.FormObject.clear_layer" title="compas_ags.rhino.FormObject.clear_layer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_layer</span></code></a>()</p></td>
+<td><p>Clear the layer of the object.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.draw.html#compas_ags.rhino.FormObject.draw" title="compas_ags.rhino.FormObject.draw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw</span></code></a>()</p></td>
 <td><p>Draw the diagram using the artist.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.modify_edges.html#compas_ags.rhino.FormObject.modify_edges" title="compas_ags.rhino.FormObject.modify_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modify_edges</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.modify.html#compas_ags.rhino.FormObject.modify" title="compas_ags.rhino.FormObject.modify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modify</span></code></a>()</p></td>
+<td><p>Modify the item represented by the object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.modify_vertices.html#compas_ags.rhino.FormObject.modify_vertices" title="compas_ags.rhino.FormObject.modify_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modify_vertices</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.modify_edges.html#compas_ags.rhino.FormObject.modify_edges" title="compas_ags.rhino.FormObject.modify_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modify_edges</span></code></a>([edges, names])</p></td>
+<td><p>Modify the attributes of a selection of diagram edges.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.move_vertex.html#compas_ags.rhino.FormObject.move_vertex" title="compas_ags.rhino.FormObject.move_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_vertex</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.modify_faces.html#compas_ags.rhino.FormObject.modify_faces" title="compas_ags.rhino.FormObject.modify_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modify_faces</span></code></a>(faces)</p></td>
+<td><p>Modify the attributes of the faces of the mesh item.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.move_vertices.html#compas_ags.rhino.FormObject.move_vertices" title="compas_ags.rhino.FormObject.move_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_vertices</span></code></a>()</p></td>
-<td><p></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.modify_vertices.html#compas_ags.rhino.FormObject.modify_vertices" title="compas_ags.rhino.FormObject.modify_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modify_vertices</span></code></a>([vertices, names])</p></td>
+<td><p>Modify the attributes of a selection of diagram vertices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.move.html#compas_ags.rhino.FormObject.move" title="compas_ags.rhino.FormObject.move"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move</span></code></a>()</p></td>
+<td><p>Move the item represented by the object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.move_vertex.html#compas_ags.rhino.FormObject.move_vertex" title="compas_ags.rhino.FormObject.move_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_vertex</span></code></a>(vertex[, constraint, allow_off])</p></td>
+<td><p>Move one vertex of the diagram and update the data structure to the new geometry.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.move_vertices.html#compas_ags.rhino.FormObject.move_vertices" title="compas_ags.rhino.FormObject.move_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_vertices</span></code></a>(vertices)</p></td>
+<td><p>Move a selection of vertices of the diagram and update the data structure to the new geometry.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.redraw.html#compas_ags.rhino.FormObject.redraw" title="compas_ags.rhino.FormObject.redraw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redraw</span></code></a>()</p></td>
+<td><p>Redraw the Rhino scene/view.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.register.html#compas_ags.rhino.FormObject.register" title="compas_ags.rhino.FormObject.register"><code class="xref py py-obj docutils literal notranslate"><span class="pre">register</span></code></a>(item_type, object_type)</p></td>
+<td><p>Register a virtual subclass of an ABC.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.select.html#compas_ags.rhino.FormObject.select" title="compas_ags.rhino.FormObject.select"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select</span></code></a>()</p></td>
+<td><p>Select the object representing the item.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.select_edge.html#compas_ags.rhino.FormObject.select_edge" title="compas_ags.rhino.FormObject.select_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_edge</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Manually select one edge in the Rhino view.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.select_edges.html#compas_ags.rhino.FormObject.select_edges" title="compas_ags.rhino.FormObject.select_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_edges</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Manually select edges in the Rhino view.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.select_vertex.html#compas_ags.rhino.FormObject.select_vertex" title="compas_ags.rhino.FormObject.select_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vertex</span></code></a>()</p></td>
-<td><p>Manually select one vertex in the Rhino model view.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.select_faces.html#compas_ags.rhino.FormObject.select_faces" title="compas_ags.rhino.FormObject.select_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_faces</span></code></a>()</p></td>
+<td><p>Select faces of the mesh.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.select_vertices.html#compas_ags.rhino.FormObject.select_vertices" title="compas_ags.rhino.FormObject.select_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vertices</span></code></a>()</p></td>
-<td><p>Manually select vertices in the Rhino model view.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.select_vertex.html#compas_ags.rhino.FormObject.select_vertex" title="compas_ags.rhino.FormObject.select_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vertex</span></code></a>([message])</p></td>
+<td><p>Manually select one vertex in the Rhino view.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.unselect.html#compas_ags.rhino.FormObject.unselect" title="compas_ags.rhino.FormObject.unselect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unselect</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.select_vertices.html#compas_ags.rhino.FormObject.select_vertices" title="compas_ags.rhino.FormObject.select_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vertices</span></code></a>()</p></td>
+<td><p>Manually select vertices in the Rhino view.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.FormObject.unselect.html#compas_ags.rhino.FormObject.unselect" title="compas_ags.rhino.FormObject.unselect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unselect</span></code></a>()</p></td>
 <td><p>Unselect all Rhino objects associated with this diagram object.</p></td>
 </tr>
 </tbody>
@@ -151,8 +162,38 @@ Default is <code class="docutils literal notranslate"><span class="pre">None</sp
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">diagram</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">artist</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">diagram</span></code></p></td>
 <td><p>The diagram associated with the object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_edge</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_face</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertex</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">item</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">layer</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scene</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">settings</span></code></p></td>
+<td><p></p></td>
 </tr>
 </tbody>
 </table>
@@ -186,6 +227,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">None</sp
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.diagrams.html">compas_ags.diagrams</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.rhino.html">compas_ags.rhino</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.viewers.html">compas_ags.viewers</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.utilities.html">compas_ags.utilities</a></li>
 </ul>
 </li>
 </ul>

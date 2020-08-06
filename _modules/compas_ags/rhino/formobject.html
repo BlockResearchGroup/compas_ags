@@ -78,111 +78,22 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 <span class="kn">import</span> <span class="nn">compas_rhino</span>
-<span class="kn">from</span> <span class="nn">compas_ags.rhino.formartist</span> <span class="kn">import</span> <span class="n">FormArtist</span>
+<span class="kn">from</span> <span class="nn">compas_ags.rhino.diagramobject</span> <span class="kn">import</span> <span class="n">DiagramObject</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;FormObject&#39;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="FormObject"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.html#compas_ags.rhino.FormObject">[docs]</a><span class="k">class</span> <span class="nc">FormObject</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="FormObject"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.html#compas_ags.rhino.FormObject">[docs]</a><span class="k">class</span> <span class="nc">FormObject</span><span class="p">(</span><span class="n">DiagramObject</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A form object represents a form diagram in the Rhino model space.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    diagram : :class:`compas_ags.diagrams.FormDiagram`</span>
-<span class="sd">        The form diagram instance.</span>
-<span class="sd">    settings : dict, optional</span>
-<span class="sd">        Visualisation settings for the corresponding Rhino object(s).</span>
-<span class="sd">        Default is ``None``, in which case the default settings of the artist are used.</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    item : :class:`compas_ags.diagrams.FormDiagram`</span>
-<span class="sd">        Stores the form diagram instance.</span>
-<span class="sd">    diagram : :class:`compas_ags.diagrams.FormDiagram`</span>
-<span class="sd">        Alias for ``item``.</span>
-<span class="sd">    artist : :class:`compas_ags.rhino.FormArtist`.</span>
-<span class="sd">        Instance of a form diagram artist.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-
-<div class="viewcode-block" id="FormObject.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.__init__.html#compas_ags.rhino.FormObject.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">item</span> <span class="o">=</span> <span class="n">diagram</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">artist</span> <span class="o">=</span> <span class="n">FormArtist</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">item</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The diagram associated with the object.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">item</span>
-
-    <span class="nd">@diagram</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">item</span> <span class="o">=</span> <span class="n">diagram</span>
-
-<div class="viewcode-block" id="FormObject.draw"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.draw.html#compas_ags.rhino.FormObject.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Draw the diagram using the artist.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="FormObject.clear"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.clear.html#compas_ags.rhino.FormObject.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Clear the diagram object and all related Rhino objects from the scene.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">clear_layer</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="FormObject.unselect"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.unselect.html#compas_ags.rhino.FormObject.unselect">[docs]</a>    <span class="k">def</span> <span class="nf">unselect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Unselect all Rhino objects associated with this diagram object.&quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FormObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">unselect</span><span class="p">()</span>
         <span class="n">guids</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertex</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertexlabel</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_edge</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_edgelabel</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_face</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_facelabel</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
         <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_force</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">UnselectObjects</span><span class="p">(</span><span class="n">guids</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="FormObject.select_vertex"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.select_vertex.html#compas_ags.rhino.FormObject.select_vertex">[docs]</a>    <span class="k">def</span> <span class="nf">select_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Manually select one vertex in the Rhino model view.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        int</span>
-<span class="sd">            The identifier of the selected vertex.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pointfilter</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">point</span>
-        <span class="n">guid</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">GetObject</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Select Vertex.&quot;</span><span class="p">,</span> <span class="n">preselect</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">pointfilter</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">guid</span> <span class="ow">and</span> <span class="n">guid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertex</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertex</span><span class="p">[</span><span class="n">guid</span><span class="p">]</span></div>
-
-<div class="viewcode-block" id="FormObject.select_vertices"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.select_vertices.html#compas_ags.rhino.FormObject.select_vertices">[docs]</a>    <span class="k">def</span> <span class="nf">select_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Manually select vertices in the Rhino model view.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list</span>
-<span class="sd">            The identifiers of the selected vertices.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pointfilter</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">point</span>
-        <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">GetObjects</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="s2">&quot;Select Vertices.&quot;</span><span class="p">,</span> <span class="n">preselect</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">pointfilter</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">guids</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertex</span><span class="p">[</span><span class="n">guid</span><span class="p">]</span> <span class="k">for</span> <span class="n">guid</span> <span class="ow">in</span> <span class="n">guids</span> <span class="k">if</span> <span class="n">guid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertex</span><span class="p">]</span></div>
-
-<div class="viewcode-block" id="FormObject.select_edge"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.select_edge.html#compas_ags.rhino.FormObject.select_edge">[docs]</a>    <span class="k">def</span> <span class="nf">select_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div>
-
-<div class="viewcode-block" id="FormObject.select_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.select_edges.html#compas_ags.rhino.FormObject.select_edges">[docs]</a>    <span class="k">def</span> <span class="nf">select_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div>
-
-<div class="viewcode-block" id="FormObject.move_vertex"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.move_vertex.html#compas_ags.rhino.FormObject.move_vertex">[docs]</a>    <span class="k">def</span> <span class="nf">move_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div>
-
-<div class="viewcode-block" id="FormObject.move_vertices"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.move_vertices.html#compas_ags.rhino.FormObject.move_vertices">[docs]</a>    <span class="k">def</span> <span class="nf">move_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div>
-
-<div class="viewcode-block" id="FormObject.modify_vertices"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.modify_vertices.html#compas_ags.rhino.FormObject.modify_vertices">[docs]</a>    <span class="k">def</span> <span class="nf">modify_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div>
-
-<div class="viewcode-block" id="FormObject.modify_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.FormObject.modify_edges.html#compas_ags.rhino.FormObject.modify_edges">[docs]</a>    <span class="k">def</span> <span class="nf">modify_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span></div></div>
+        <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">UnselectObjects</span><span class="p">(</span><span class="n">guids</span><span class="p">)</span></div></div>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -190,7 +101,6 @@
 <span class="c1"># ==============================================================================</span>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-
     <span class="k">pass</span>
 </code></pre></div>
         

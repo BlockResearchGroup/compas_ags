@@ -127,6 +127,10 @@
     <span class="n">unify_cycles</span> <span class="o">=</span> <span class="n">mesh_unify_cycles</span>
     <span class="n">quads_to_triangles</span> <span class="o">=</span> <span class="n">mesh_quads_to_triangles</span>
 
+    <span class="k">def</span> <span class="nf">transform_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+        <span class="kn">from</span> <span class="nn">compas.datastructures.mesh.transformations_numpy</span> <span class="kn">import</span> <span class="n">mesh_transform_numpy</span>
+        <span class="n">mesh_transform_numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+
     <span class="k">def</span> <span class="nf">to_trimesh</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># convert to mesh with only triangle faces</span>
         <span class="c1"># provides options that define the rules for triangulation</span>
