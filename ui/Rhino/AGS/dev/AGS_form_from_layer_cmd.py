@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-import rhinoscriptsyntax as rs
 import compas_rhino
 
 from compas_ags.diagrams import FormGraph
@@ -21,13 +20,13 @@ def RunCommand(is_interactive):
 
     scene = sc.sticky['AGS']['scene']
 
-    layer = rs.CurrentLayer()
+    layer = compas_rhino.rs.CurrentLayer()
     layer_name = compas_rhino.rs.GetString("Layer to construct FormDiagram", layer)
     guids = compas_rhino.get_lines(layer=layer_name)
     if not guids:
         return
 
-    rs.HideObjects(guids)
+    compas_rhino.rs.HideObjects(guids)
 
     lines = compas_rhino.get_line_coordinates(guids)
     graph = FormGraph.from_lines(lines)

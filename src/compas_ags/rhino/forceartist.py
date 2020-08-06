@@ -59,7 +59,6 @@ class ForceArtist(DiagramArtist):
             color = {}
             color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
             color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
-            color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertices(color=color)
         # edges
         if self.settings['show.edges']:
@@ -80,7 +79,6 @@ class ForceArtist(DiagramArtist):
             color = {}
             color.update({vertex: self.settings['color.vertexlabels'] for vertex in self.diagram.vertices()})
             color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
-            color[self.anchor_vertex] = self.settings['color.anchor']
             self.draw_vertexlabels(text=text, color=color)
         # edge labels
         if self.settings['show.edgelabels']:

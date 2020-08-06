@@ -6,28 +6,30 @@ import scriptcontext as sc
 
 import compas_rhino
 
+from compas.geometry import subtract_vectors
+from compas.geometry import add_vectors
 
-__commandname__ = "AGS_form_anchor"
+
+__commandname__ = "AGS_force_location"
 
 
 def RunCommand(is_interactive):
-
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
     scene = sc.sticky['AGS']['scene']
-    form = scene.find_by_name('Form')[0]
+    force = scene.find_by_name('Force')[0]
 
-    vertex = form.select_vertex()
-    if vertex is not None:
-        form.artist.anchor_vertex = vertex
+    start = compas_rhino.pick_point('Pick a point to move from.')
+    if start:
+        end = compas_rhino.pick_point('Pick a point to move to.')
+        if end:
+            vector = subtract_vectors(end, start)
+            xyz = force.artist.anchor_point
+            new_xyz = add_vectors(xyz, vector)
+            force.artist.anchor_point = new_xyz
 
-        point = compas_rhino.pick_point()
-        if point:
-            form.artist.anchor_point = point
-
-    scene.clear()
     scene.update()
 
 

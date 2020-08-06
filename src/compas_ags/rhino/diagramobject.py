@@ -73,7 +73,7 @@ class DiagramObject(MeshObject):
         guids += list(self.artist.guid_facelabel.keys())
         compas_rhino.rs.UnselectObjects(guids)
 
-    def select_vertex(self):
+    def select_vertex(self, message="Select Vertex."):
         """Manually select one vertex in the Rhino view.
 
         Returns
@@ -82,7 +82,7 @@ class DiagramObject(MeshObject):
             The identifier of the selected vertex.
         """
         pointfilter = compas_rhino.rs.filter.point
-        guid = compas_rhino.rs.GetObject(message="Select Vertex.", preselect=True, select=True, filter=pointfilter)
+        guid = compas_rhino.rs.GetObject(message=message, preselect=True, select=True, filter=pointfilter)
         if guid and guid in self.artist.guid_vertex:
             return self.artist.guid_vertex[guid]
 
