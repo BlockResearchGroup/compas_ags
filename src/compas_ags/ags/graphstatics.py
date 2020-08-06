@@ -88,10 +88,12 @@ def force_update_from_form_proxy(forcedata, formdata, *args, **kwargs):
 
 def form_identify_dof(form):
     r"""Identify the DOF of a form diagram.
+
     Parameters
     ----------
     form : FormDiagram
         The form diagram.
+
     Returns
     -------
     k : int
@@ -102,26 +104,29 @@ def form_identify_dof(form):
         Number of (infenitesimal) mechanisms.
     ind : list
         Indices of the independent edges.
+
     Notes
     -----
     The equilibrium matrix of the form diagram is
+
     .. math::
+
         \mathbf{E}
         =
         \begin{bmatrix}
         \mathbf{C}_{i}^{t}\mathbf{U} \\
         \mathbf{C}_{i}^{t}\mathbf{V}
         \end{bmatrix}
-    If ``k == 0`` and ``m == 0``, the system described by the equilibrium matrix
-    is statically determined.
-    If ``k > 0`` and ``m == 0``, the system is statically indetermined with `k`
-    idependent states of stress.
-    If ``k == 0`` and ``m > 0``, the system is unstable, with `m` independent
-    mechanisms.
+
+    If ``k == 0`` and ``m == 0``, the system described by the equilibrium matrix is statically determined.
+    If ``k > 0`` and ``m == 0``, the system is statically indetermined with `k` idependent states of stress.
+    If ``k == 0`` and ``m > 0``, the system is unstable, with `m` independent mechanisms.
+
     The dimension of a vector space (such as the null space) is the number of
     vectors of a basis of that vector space. A set of vectors forms a basis of a
     vector space if they are linearly independent vectors and every vector of the
     space is a linear combination of this set.
+
     Examples
     --------
     >>>
@@ -143,10 +148,12 @@ def form_identify_dof(form):
 
 def form_count_dof(form):
     r"""Count the number of degrees of freedom of a form diagram.
+
     Parameters
     ----------
     form : FormDiagram
         The form diagram.
+
     Returns
     -------
     k : int
@@ -155,16 +162,20 @@ def form_count_dof(form):
     m : int
         Dimension of the left null space of the equilibrium matrix of the form
         diagram.
+
     Notes
     -----
     The equilibrium matrix of the form diagram is
+
     .. math::
+
         \mathbf{E}
         =
         \begin{bmatrix}
         \mathbf{C}_{i}^{t}\mathbf{U} \\
         \mathbf{C}_{i}^{t}\mathbf{V}
         \end{bmatrix}
+
     Examples
     --------
     >>>
@@ -191,14 +202,17 @@ def form_count_dof(form):
 def form_update_q_from_qind(form):
     """Update the force densities of the dependent edges of a form diagram using
     the values of the independent ones.
+
     Parameters
     ----------
     form : FormDiagram
         The form diagram.
+
     Returns
     -------
     None
         The updated force densities are stored as attributes of the edges of the form diagram.
+
     Examples
     --------
     >>>
@@ -232,16 +246,19 @@ def form_update_q_from_qind(form):
 
 def form_update_from_force(form, force, kmax=100):
     r"""Update the form diagram after a modification of the force diagram.
+
     Parameters
     ----------
     form : FormDiagram
         The form diagram to update.
     force : ForceDiagram
         The force diagram on which the update is based.
+
     Returns
     -------
     None
         The form and force diagram are updated in-place.
+
     Notes
     -----
     Compute the geometry of the form diagram from the geometry of the form diagram
@@ -250,12 +267,16 @@ def form_update_from_force(form, force, kmax=100):
     diagram can be expressed as the intersection of three or more lines parallel
     to the corresponding edges of the force diagram.
     Essentially, this boils down to solving the following problem:
+
     .. math::
+
         \mathbf{A}\mathbf{x} = \mathbf{b}
+
     with :math:`\mathbf{A}` the coefficients of the x and y-coordinate of the  ,
     :math:`\mathbf{x}` the coordinates of the vertices of the form diagram,
     in *Fortran* order (first all x-coordinates, then all y-coordinates),
     and  :math:`\mathbf{b}` ....
+
     Examples
     --------
     >>>
@@ -337,12 +358,14 @@ def form_update_from_force(form, force, kmax=100):
 
 def force_update_from_form(force, form):
     """Update the force diagram after modifying the (force densities of) the form diagram.
+
     Parameters
     ----------
     force : ForceDiagram
         The force diagram on which the update is based.
     form : FormDiagram
         The form diagram to update.
+
     Returns
     -------
     None
@@ -385,3 +408,6 @@ def force_update_from_form(force, form):
 # ==============================================================================
 # Main
 # ==============================================================================
+
+if __name__ == '__main__':
+    pass
