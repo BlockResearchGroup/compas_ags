@@ -25,7 +25,7 @@ def RunCommand(is_interactive):
         force.artist.anchor_point = force.artist.vertex_xyz[vertex]
         force.artist.anchor_vertex = vertex
 
-        scale_factor = rs.GetReal("Scale factor", force.artist.scale)
+        scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
         force.artist.scale = scale_factor
 
     scene.update()
