@@ -7,18 +7,18 @@ from compas.datastructures import network_find_cycles
 from compas_ags.diagrams import Diagram
 
 
-__all__ = ['FormDiagram']
+__all__ = ['BaseGraph']
 
 
-class FormDiagram(Diagram):
-    """Mesh-based data structure for form diagrams in AGS.
+class BaseGraph(Diagram):
+    """Mesh-based data structure for input graph in AGS.
     """
 
     def __init__(self):
-        super(FormDiagram, self).__init__()
+        super(BaseGraph, self).__init__()
         self._graph = None
         self.attributes.update({
-            'name': 'Form',
+            'name': 'BaseGraph',
         })
         self.update_default_vertex_attributes({
             'is_fixed': False,
@@ -27,10 +27,6 @@ class FormDiagram(Diagram):
         })
         self.update_default_edge_attributes({
             '_is_edge': True,
-
-            'q': 1.0,
-            'f': 0.0,
-            'l': 0.0,
             'is_ind': False,
             'is_external': False,
             'is_reaction': False,
@@ -61,12 +57,7 @@ class FormDiagram(Diagram):
         -------
         :class:`compas_ags.diagrams.FormDiagram`
         """
-
-        _graph = graph.copy()  # make a copy avoid modifying the graph
-        for node in list(_graph.nodes()):
-            if _graph.degree(node) == 2:
-                _graph.delete_node(node)
-        graph = _graph
+        
         node_index = graph.node_index()
         cycles = network_find_cycles(graph, breakpoints=graph.leaves())
         points = graph.nodes_attributes('xyz')
@@ -146,112 +137,6 @@ class FormDiagram(Diagram):
             if u in leaves or v in leaves:
                 edges.append((u, v))
         return edges
-
-    def edge_forcedensity(self, edge, q=None):
-        """Get or set the forcedensity in an edge.
-
-        Parameters
-        ----------
-        edge : int or tuple
-            The identifier of the edge.
-            This can be the index in the edge list or a tuple of vertices.
-        q : float, optional
-            If no new value is given, the current forcedensity value will be returned.
-            Otherwise the stored value is updated with the provided one.
-
-        Returns
-        -------
-        float or None
-            The current forcedensity in the edge if no new value is given.
-            Otherwise, nothing.
-        """
-        if type(edge) is int:
-            edge = next(islice(self.edges(), edge, None))
-        if q is None:
-            return self.edge_attribute(edge, 'q')
-        self.edge_attribute(edge, 'q', q)
-
-    def edge_force(self, edge, force=None):
-        """Get or set the force in an edge.
-
-        Parameters
-        ----------
-        edge : int or tuple
-            The identifier of the edge.
-            This can be the index in the edge list or a tuple of vertices.
-        force : float, optional
-            If no value is given, the current force value will be returned.
-            Otherwise the stored value is updated.
-
-        Returns
-        -------
-        float or None
-            The current force in the edge if no new value is given.
-            Otherwise, nothing.
-        """
-        if type(edge) is int:
-            edge = next(islice(self.edges(), edge, None))
-        length = self.edge_length(*edge)
-        q = self.edge_attribute(edge, 'q')
-        if force is None:
-            return q * length
-        self.edge_attribute(edge, 'is_ind', True)
-        self.edge_attribute(edge, 'q', force / length)
-
-    # --------------------------------------------------------------------------
-    # Convenience functions for retrieving the attributes of the formdiagram.
-    # --------------------------------------------------------------------------
-
-    def q(self):
-        return self.edges_attribute('q')
-
-    def xy(self):
-        return self.vertices_attributes('xy')
-
-    def fixed(self):
-        return list(self.vertices_where({'is_fixed': True}))
-
-    def constrained(self):
-        return [key for key, attr in self.vertices(True) if attr['cx'] or attr['cy']]
-
-    def constraints(self):
-        cx = self.vertices_attribute('cx')
-        cy = self.vertices_attribute('cy')
-        return cx, cy
-
-    def ind(self):
-        return list(self.edges_where({'is_ind': True}))
-
-    # --------------------------------------------------------------------------
-    # Identify features of the formdiagram based on geometrical inputs.
-    # --------------------------------------------------------------------------
-
-    # def identify_fixed(self, points=None, fix_degree=1):
-    #     for key, attr in self.vertices(True):
-    #         attr['is_fixed'] = self.vertex_degree(key) <= fix_degree
-    #     if points:
-    #         xy_key = {}
-    #         for key in self.vertices():
-    #             gkey = geometric_key_xy(self.vertex_attributes(key, 'xy'))
-    #             xy_key[gkey] = key
-    #         for xy in points:
-    #             gkey = geometric_key_xy(xy)
-    #             if gkey in xy_key:
-    #                 key = xy_key[gkey]
-    #                 self.vertex[key]['is_fixed'] = True
-
-    # def identify_constraints(self, points=None):
-    #     if points:
-    #         xy_key = {}
-    #         for key in self.vertices():
-    #             gkey = geometric_key_xy(self.vertex_attributes(key, 'xy'))
-    #             xy_key[gkey] = key
-    #         for xy in points:
-    #             gkey = geometric_key_xy(xy)
-    #             if gkey in xy_key:
-    #                 key = xy_key[gkey]
-    #                 self.vertex[key]['cx'] = 1.0
-    #                 self.vertex[key]['cy'] = 1.0
 
 
 # ==============================================================================
