@@ -77,7 +77,6 @@ def RunCommand(is_interactive):
 
             # calculate the scale factor for ForceDiagram
             scale_factor = calculate_drawingscale(form.diagram, force.diagram)
-            print("scale factor of the ForceDiagram is %s" % scale_factor)
             force.artist.scale = scale_factor
 
         scene.update()
