@@ -22,7 +22,6 @@ def RunCommand(is_interactive):
     force = scene.find_by_name('Force')[0]
 
     proxy.package = 'compas_ags.ags.loadpath'
-    print(proxy.package)
 
     lp = proxy.compute_loadpath_proxy(form.diagram.data, force.diagram.data)
     print('Loadpath of the structure is {} kNm.'.format(lp))
