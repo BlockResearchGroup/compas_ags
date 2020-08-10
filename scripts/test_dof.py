@@ -2,7 +2,6 @@ import compas_ags
 
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
-from compas_ags.ags import graphstatics
 from compas.rpc import Proxy
 
 graphstatics = Proxy('compas_ags.ags.graphstatics')
