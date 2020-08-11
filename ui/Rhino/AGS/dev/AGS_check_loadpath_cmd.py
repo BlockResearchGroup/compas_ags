@@ -23,8 +23,8 @@ def RunCommand(is_interactive):
 
     proxy.package = 'compas_ags.ags.loadpath'
 
-    lp = proxy.compute_loadpath_proxy(form.diagram.data, force.diagram.data)
-    print('Loadpath of the structure is {} kNm.'.format(lp))
+    lp = proxy.compute_loadpath(form.diagram, force.diagram)
+    print('Loadpath of the structure is {} kNm.'.format(round(lp, 2)))
 
 
 # ==============================================================================
