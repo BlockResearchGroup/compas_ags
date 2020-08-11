@@ -9,7 +9,7 @@
     {
         "icons":
         {
-            "bitmap": "",
+            "bitmap": "grid.png",
             "images":
             [
             ]
@@ -17,6 +17,32 @@
 
         "commands":
         [
+            {"name": "AGS_init",                  "menu_text": "Initialise AGS"},
+
+            {"name": "AGS_session_load",          "menu_text": "Load Session"},
+            {"name": "AGS_session_save",          "menu_text": "Save Session"},
+
+            {"name": "AGS_form_from_obj",         "menu_text": "FormDiagram From Obj"},
+            {"name": "AGS_form_from_layer",       "menu_text": "FormDiagram From Layer"},
+            {"name": "AGS_form_from_lines",       "menu_text": "FormDiagram From Lines"},
+
+            {"name": "AGS_assign_forces",         "menu_text": "Assign Forces"},
+            {"name": "AGS_form_fix_nodes",        "menu_text": "Fix Nodes"},
+
+            {"name": "AGS_form_move_nodes",       "menu_text": "Move Nodes"},
+
+            {"name": "AGS_force_from_form",       "menu_text": "Make ForceDiagram"},
+
+            {"name": "AGS_force_move_nodes",      "menu_text": "Move Nodes"},
+
+            {"name": "AGS_check_dof",             "menu_text": "Check Degree of Freedom"},
+            {"name": "AGS_check_loadpath",        "menu_text": "Check Loadpath"},
+
+            {"name": "AGS_form_displaysettings",  "menu_text": "FormDiagram Display Settings"},
+            {"name": "AGS_form_loaction",         "menu_text": "FormDiagram Location"},
+            {"name": "AGS_force_displaysettings", "menu_text": "FormDiagrace Display Settings"},
+            {"name": "AGS_force_location",        "menu_text": "FormDiagrace Location"},
+            {"name": "AGS_force_scale",           "menu_text": "FormDiagrace Scale"}
         ],
 
         "menus":
@@ -25,6 +51,66 @@
                 "name" : "AGS",
                 "items":
                 [
+                    {"command": "AGS_init"},
+                    {
+                        "name": "Session",
+                        "items":
+                        [
+                            {"command": "AGS_session_load"},
+                            {"command": "AGS_session_save"}
+                        ]
+                    },
+                    {
+                        "name": "Form Create",
+                        "items":
+                        [
+                            {"command": "AGS_form_from_obj"},
+                            {"command": "AGS_form_from_layer"},
+                            {"command": "AGS_form_from_lines"}
+                        ]
+                    },
+                    {
+                        "name": "Form Attribute",
+                        "items":
+                        [
+                            {"command": "AGS_assign_forces"},
+                            {"command": "AGS_form_fix_nodes"}
+                        ]
+                    },
+                    {
+                        "name": "Form Modify",
+                        "items":
+                        [
+                            {"command": "AGS_form_move_nodes"}
+                        ]
+                    },
+                    {"command": "AGS_force_from_form"},
+                    {
+                        "name": "Force Modify",
+                        "items":
+                        [
+                            {"command": "AGS_force_move_nodes"}
+                        ]
+                    },
+                    {
+                        "name": "Check",
+                        "items":
+                        [
+                            {"command": "AGS_check_dof"},
+                            {"command": "AGS_check_loadpath"}
+                        ]
+                    },
+                    {
+                        "name": "Display",
+                        "items":
+                        [
+                            {"command": "AGS_form_displaysettings"},
+                            {"command": "AGS_form_loaction"},
+                            {"command": "AGS_force_displaysettings"},
+                            {"command": "AGS_force_location"},
+                            {"command": "AGS_force_scale"}
+                        ]
+                    }
                 ]
             }
         ],
