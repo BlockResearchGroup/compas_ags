@@ -41,9 +41,9 @@ force_id = scene.add(force, name="Force", layer="AGS::ForceDiagram")
 form_obj = scene.find(form_id)
 force_obj = scene.find(force_id)
 
-# force_obj.artist.anchor_vertex = 0
-# force_obj.artist.anchor_point = [35, 0, 0]
-# force_obj.artist.scale = 0.5
+force_obj.artist.anchor_vertex = 0
+force_obj.artist.anchor_point = [35, 0, 0]
+force_obj.artist.scale = 0.5
 
 form_obj.artist.settings['scale.forces'] = 0.02
 
@@ -58,11 +58,11 @@ while True:
         scene.clear()
         scene.update()
 
-    toggle = compas_rhino.rs.GetString("Keep selecting?", defaultString="True", strings=["True", "False"])
-    if toggle == "True":
-        continue
-    else:
-        break
+    # toggle = compas_rhino.rs.GetString("Keep selecting?", defaultString="True", strings=["True", "False"])
+    # if toggle == "True":
+    #     continue
+    # else:
+    #     break
 
 scene.update()
 

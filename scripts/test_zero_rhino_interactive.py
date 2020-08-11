@@ -58,11 +58,11 @@ while True:
         scene.clear()
         scene.update()
 
-    toggle = compas_rhino.rs.GetString("Keep selecting?", defaultString="True", strings=["True", "False"])
-    if toggle == "True":
-        continue
-    else:
-        break
+    # toggle = compas_rhino.rs.GetString("Keep selecting?", defaultString="True", strings=["True", "False"])
+    # if toggle == "True":
+    #     continue
+    # else:
+    #     break
 
 scene.update()
 
