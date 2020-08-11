@@ -154,25 +154,31 @@ class DiagramObject(MeshObject):
         diagram = self.diagram
         vertex_xyz = self.artist.vertex_xyz
         scale = 1 / self.artist.scale
+        origin = self.artist.anchor_point
+        anchor_xyz = diagram.vertex_attributes(self.artist.anchor_vertex, 'xyz')
+
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         if '_is_edge' in diagram.default_edge_attributes:
             nbrs = [vertex_xyz[nbr] for nbr in diagram.vertex_neighbors(vertex) if diagram.edge_attribute((vertex, nbr), '_is_edge')]
         else:
             nbrs = [vertex_xyz[nbr] for nbr in diagram.vertex_neighbors(vertex)]
+
         nbrs = [Point3d(*xyz) for xyz in nbrs]
         gp = Rhino.Input.Custom.GetPoint()
         gp.SetCommandPrompt('Point to move to?')
         gp.DynamicDraw += OnDynamicDraw
         if constraint:
             gp.Constrain(constraint, allow_off)
+
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
             return False
-        pos1 = vertex_xyz[vertex]
-        pos2 = list(gp.Point())
-        vector = scale_vector(subtract_vectors(pos2, pos1), scale)
-        xyz = diagram.vertex_attributes(vertex, 'xyz')
-        diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, vector))
+
+        point = list(gp.Point())
+
+        dxyz = scale_vector(subtract_vectors(point, origin), scale)
+        diagram.vertex_attributes(vertex, 'xyz', add_vectors(anchor_xyz, dxyz))
+
         return True
 
     def move_vertices(self, vertices):
@@ -203,6 +209,9 @@ class DiagramObject(MeshObject):
         diagram = self.diagram
         vertex_xyz = self.artist.vertex_xyz
         scale = 1 / self.artist.scale
+        origin = self.artist.anchor_point
+        anchor_xyz = diagram.vertex_attributes(self.artist.anchor_vertex, 'xyz')
+
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         lines = []
         connectors = []
@@ -218,6 +227,7 @@ class DiagramObject(MeshObject):
                     lines.append(line)
                 else:
                     connectors.append(line)
+
         gp = Rhino.Input.Custom.GetPoint()
         gp.SetCommandPrompt('Point to move from?')
         gp.Get()
@@ -236,10 +246,13 @@ class DiagramObject(MeshObject):
             return False
 
         end = gp.Point()
-        vector = scale_vector(list(end - start), scale)
+        vector = list(end - start)
+
         for vertex in vertices:
-            xyz = diagram.vertex_attributes(vertex, 'xyz')
-            diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, vector))
+            dxyz = subtract_vectors(add_vectors(vertex_xyz[vertex], vector), origin)
+            dxyz = scale_vector(dxyz, scale)
+            diagram.vertex_attributes(vertex, 'xyz', add_vectors(anchor_xyz, dxyz))
+
         return True
 
     def modify_vertices(self, vertices=None, names=None):

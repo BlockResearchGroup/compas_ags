@@ -164,7 +164,7 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
 
                 n = _t[ij_e[(i, j)], None]  # the direction of the line (the line parallel to the corresponding line in the force diagram)
 
-                if normrow(n)[0, 0] < 0.0001:
+                if normrow(n)[0, 0] < 0.001:
                     continue
 
                 r = I - n.T.dot(n)          # projection into the orthogonal space of the direction vector

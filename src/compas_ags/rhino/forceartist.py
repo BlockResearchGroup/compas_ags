@@ -82,7 +82,9 @@ class ForceArtist(DiagramArtist):
             self.draw_vertexlabels(text=text, color=color)
         # edge labels
         if self.settings['show.edgelabels']:
-            text = {edge: index for index, edge in enumerate(self.diagram.ordered_edges(self.diagram.dual))}
+            edge_index = self.diagram.edge_index(self.diagram.dual)
+            edge_index.update({(v, u): index for (u, v), index in edge_index.items()})
+            text = {edge: edge_index[edge] for edge in self.diagram.edges()}
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
