@@ -171,7 +171,7 @@
 <span class="sd">        &gt;&gt;&gt;</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">()):</span>
             <span class="n">is_match</span> <span class="o">=</span> <span class="kc">True</span>
 
             <span class="n">dual_edge</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
@@ -223,7 +223,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">face_halfedges</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">u</span><span class="p">]</span> <span class="o">==</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
-                <span class="k">return</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span></div>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">has_edge</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)):</span>
+                    <span class="k">return</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
+                <span class="k">return</span> <span class="n">v</span><span class="p">,</span> <span class="n">u</span></div>
 
 <div class="viewcode-block" id="ForceDiagram.is_dual_edge_external"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.is_dual_edge_external.html#compas_ags.diagrams.ForceDiagram.is_dual_edge_external">[docs]</a>    <span class="k">def</span> <span class="nf">is_dual_edge_external</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Verify if the corresponding edge in the diagram&#39;s dual is marked as &quot;external&quot;.</span>
@@ -317,6 +319,7 @@
             <span class="n">f1</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="n">v</span><span class="p">]</span>
             <span class="n">f2</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">u</span><span class="p">]</span>
             <span class="n">edge_index</span><span class="p">[</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
+            <span class="c1"># the weird side-effect of this is that edges get rotated if necessary</span>
         <span class="k">return</span> <span class="n">edge_index</span></div>
 
 <div class="viewcode-block" id="ForceDiagram.ordered_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.ordered_edges.html#compas_ags.diagrams.ForceDiagram.ordered_edges">[docs]</a>    <span class="k">def</span> <span class="nf">ordered_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
