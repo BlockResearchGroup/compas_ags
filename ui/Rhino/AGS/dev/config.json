@@ -19,6 +19,7 @@
         [
             {"name": "AGS_init",                  "menu_text": "Initialise AGS"},
 
+            {"name": "AGS_restart",               "menu_text": "Restart AGS"},
             {"name": "AGS_session_load",          "menu_text": "Load Session"},
             {"name": "AGS_session_save",          "menu_text": "Save Session"},
 
@@ -55,11 +56,16 @@
                     {
                         "name": "Session",
                         "items":
-                        [
+                        [   
+                            {"command": "AGS_restart"},
+                            {"type": "separator"},
                             {"command": "AGS_session_load"},
                             {"command": "AGS_session_save"}
                         ]
                     },
+
+                    {"type": "separator"},
+                    
                     {
                         "name": "Form Create",
                         "items":
@@ -84,7 +90,16 @@
                             {"command": "AGS_form_move_nodes"}
                         ]
                     },
-                    {"command": "AGS_force_from_form"},
+
+                    {"type": "separator"},
+
+                    {
+                        "name": "Force Create",
+                        "items":
+                        [
+                            {"command": "AGS_force_from_form"}
+                        ]
+                    },
                     {
                         "name": "Force Modify",
                         "items":
@@ -92,6 +107,9 @@
                             {"command": "AGS_force_move_nodes"}
                         ]
                     },
+
+                    {"type": "separator"},
+                    
                     {
                         "name": "Check",
                         "items":
@@ -106,6 +124,7 @@
                         [
                             {"command": "AGS_form_displaysettings"},
                             {"command": "AGS_form_loaction"},
+                            {"type": "separator"},
                             {"command": "AGS_force_displaysettings"},
                             {"command": "AGS_force_location"},
                             {"command": "AGS_force_scale"}

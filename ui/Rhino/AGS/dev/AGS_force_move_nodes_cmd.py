@@ -27,13 +27,24 @@ def RunCommand(is_interactive):
         vertices = force.select_vertices()
         if not vertices:
             break
-
-        if force.move_vertices(vertices):
-            # update form diagram
-            form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data, kmax=100)
-            # update the scene
+        if vertices and force.move_vertices(vertices):
             scene.clear()
             scene.update()
+
+        toggle = compas_rhino.rs.GetString("Keep selecting?", defaultString="True", strings=["True", "False"])
+        if toggle == "True":
+            continue
+        else:
+            form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
+            scene.clear()
+            scene.update()
+            
+        # if force.move_vertices(vertices):
+        #     # update form diagram
+        #     form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data, kmax=100)
+        #     # update the scene
+        #     scene.clear()
+        #     scene.update()
 
 
 # ==============================================================================
