@@ -87,6 +87,9 @@
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">connectivity_matrix</span>
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">normrow</span>
 
+<span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">FormDiagram</span>
+<span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">ForceDiagram</span>
+
 <span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">update_form_from_force</span>
 
 
@@ -96,8 +99,33 @@
     <span class="s1">&#39;compute_internal_work&#39;</span><span class="p">,</span>
     <span class="s1">&#39;compute_internal_work_tension&#39;</span><span class="p">,</span>
     <span class="s1">&#39;compute_internal_work_compression&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;optimise_loadpath&#39;</span>
+    <span class="s1">&#39;optimise_loadpath&#39;</span><span class="p">,</span>
+
+    <span class="s1">&#39;compute_loadpath_proxy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;compute_loadpath_tension_proxy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;compute_loadpath_compression_proxy&#39;</span><span class="p">,</span>
 <span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">compute_loadpath_proxy</span><span class="p">(</span><span class="n">formdata</span><span class="p">,</span> <span class="n">forcedata</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">formdata</span><span class="p">)</span>
+    <span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">forcedata</span><span class="p">)</span>
+    <span class="n">lp</span> <span class="o">=</span> <span class="n">compute_loadpath</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lp</span>
+
+
+<span class="k">def</span> <span class="nf">compute_loadpath_tension_proxy</span><span class="p">(</span><span class="n">formdata</span><span class="p">,</span> <span class="n">forcedata</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">formdata</span><span class="p">)</span>
+    <span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">forcedata</span><span class="p">)</span>
+    <span class="n">lp</span> <span class="o">=</span> <span class="n">compute_internal_work_tension</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lp</span>
+
+
+<span class="k">def</span> <span class="nf">compute_loadpath_compression_proxy</span><span class="p">(</span><span class="n">formdata</span><span class="p">,</span> <span class="n">forcedata</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">formdata</span><span class="p">)</span>
+    <span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">forcedata</span><span class="p">)</span>
+    <span class="n">lp</span> <span class="o">=</span> <span class="n">compute_internal_work_compression</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lp</span>
 
 
 <div class="viewcode-block" id="compute_loadpath"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.compute_loadpath.html#compas_ags.ags.compute_loadpath">[docs]</a><span class="k">def</span> <span class="nf">compute_loadpath</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
