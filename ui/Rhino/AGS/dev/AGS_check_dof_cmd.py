@@ -22,7 +22,7 @@ def RunCommand(is_interactive):
 
     proxy.package = 'compas_ags.ags.graphstatics'
 
-    dof = proxy.form_count_dof_proxy(form.diagram.data)
+    dof = proxy.form_count_dof(form.diagram)
     k = dof[0]
     inds = len(list(form.diagram.edges_where({'is_ind': True})))
 

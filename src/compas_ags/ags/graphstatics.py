@@ -33,8 +33,6 @@ __all__ = [
     'form_update_from_force',
     'force_update_from_form',
 
-    'form_identify_dof_proxy',
-    'form_count_dof_proxy',
     'form_update_q_from_qind_proxy',
     'form_update_from_force_proxy',
     'force_update_from_form_proxy',
@@ -47,18 +45,6 @@ EPS = 1 / sys.float_info.epsilon
 # ==============================================================================
 # proxy
 # ==============================================================================
-
-
-def form_identify_dof_proxy(formdata, *args, **kwargs):
-    form = FormDiagram.from_data(formdata)
-    k, m, ind = form_identify_dof(form, *args, **kwargs)
-    return int(k), int(m), ind
-
-
-def form_count_dof_proxy(formdata, *args, **kwargs):
-    form = FormDiagram.from_data(formdata)
-    k, m = form_count_dof(form, *args, **kwargs)
-    return int(k), int(m)
 
 
 def form_update_q_from_qind_proxy(formdata, *args, **kwargs):
@@ -143,7 +129,7 @@ def form_identify_dof(form):
     k, m = dof(E)
     ind = nonpivots(rref(E))
 
-    return k, m, [edges[i] for i in ind]
+    return int(k), int(m), [edges[i] for i in ind]
 
 
 def form_count_dof(form):
@@ -191,7 +177,7 @@ def form_count_dof(form):
 
     k, m = dof(E)
 
-    return k, m
+    return int(k), int(m)
 
 
 # ==============================================================================
