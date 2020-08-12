@@ -154,8 +154,6 @@ class DiagramObject(MeshObject):
         diagram = self.diagram
         vertex_xyz = self.artist.vertex_xyz
         scale = 1 / self.artist.scale
-        origin = self.artist.anchor_point
-        anchor_xyz = diagram.vertex_attributes(self.artist.anchor_vertex, 'xyz')
 
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         if '_is_edge' in diagram.default_edge_attributes:
@@ -174,10 +172,14 @@ class DiagramObject(MeshObject):
         if gp.CommandResult() != Rhino.Commands.Result.Success:
             return False
 
-        point = list(gp.Point())
+        start = vertex_xyz[vertex]
+        end = list(gp.Point())
 
-        dxyz = scale_vector(subtract_vectors(point, origin), scale)
-        diagram.vertex_attributes(vertex, 'xyz', add_vectors(anchor_xyz, dxyz))
+        vector = subtract_vectors(end, start)
+        dxyz = scale_vector(vector, scale)
+        xyz = diagram.vertex_attributes(vertex, 'xyz')
+
+        diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, dxyz))
 
         return True
 
@@ -209,8 +211,6 @@ class DiagramObject(MeshObject):
         diagram = self.diagram
         vertex_xyz = self.artist.vertex_xyz
         scale = 1 / self.artist.scale
-        origin = self.artist.anchor_point
-        anchor_xyz = diagram.vertex_attributes(self.artist.anchor_vertex, 'xyz')
 
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         lines = []
@@ -229,6 +229,7 @@ class DiagramObject(MeshObject):
                     connectors.append(line)
 
         gp = Rhino.Input.Custom.GetPoint()
+
         gp.SetCommandPrompt('Point to move from?')
         gp.Get()
 
@@ -236,6 +237,7 @@ class DiagramObject(MeshObject):
             return False
 
         start = gp.Point()
+
         gp.SetCommandPrompt('Point to move to?')
         gp.SetBasePoint(start, False)
         gp.DrawLineFromPoint(start, True)
@@ -246,12 +248,13 @@ class DiagramObject(MeshObject):
             return False
 
         end = gp.Point()
-        vector = list(end - start)
+
+        vector = subtract_vectors(list(end), list(start))
+        dxyz = scale_vector(vector, scale)
 
         for vertex in vertices:
-            dxyz = subtract_vectors(add_vectors(vertex_xyz[vertex], vector), origin)
-            dxyz = scale_vector(dxyz, scale)
-            diagram.vertex_attributes(vertex, 'xyz', add_vectors(anchor_xyz, dxyz))
+            xyz = diagram.vertex_attributes(vertex, 'xyz')
+            diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, dxyz))
 
         return True
 
