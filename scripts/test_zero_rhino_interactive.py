@@ -1,7 +1,5 @@
 import os
 
-import compas_rhino
-
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
@@ -58,12 +56,7 @@ while True:
         scene.clear()
         scene.update()
 
-    # toggle = compas_rhino.rs.GetString("Keep selecting?", defaultString="True", strings=["True", "False"])
-    # if toggle == "True":
-    #     continue
-    # else:
-    #     break
-
+scene.clear()
 scene.update()
 
 # fix some of the nodes in the from diagram
