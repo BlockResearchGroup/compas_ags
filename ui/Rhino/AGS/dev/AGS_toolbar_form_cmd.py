@@ -6,12 +6,12 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from . import AGS_restart_cmd
-from . import AGS_session_load_cmd
-from . import AGS_session_save_cmd
+from . import AGS_form_from_obj_cmd
+from . import AGS_form_from_lines_cmd
+from . import AGS_form_from_layer_cmd
 
 
-__commandname__ = "AGS_toolbar_session"
+__commandname__ = "AGS_toolbar_form"
 
 
 def RunCommand(is_interactive):
@@ -20,20 +20,20 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    options = ["Restart, LoadSession, SaveSession"]
-    option = compas_rhino.rs.GetString("Session: ", strings=options)
+    options = ["FromObj, FromLines, FromLayer"]
+    option = compas_rhino.rs.GetString("Create Form: ", strings=options)
 
     if not option:
         return
 
-    if option == "Restart":
-        AGS_restart_cmd.RunCommand(True)
+    if option == "FromObj":
+        AGS_form_from_obj_cmd.RunCommand(True)
 
-    elif option == "LoadSession":
-        AGS_session_load_cmd.RunCommand(True)
+    elif option == "FromLines":
+        AGS_form_from_lines_cmd.RunCommand(True)
 
-    elif option == "SaveSession":
-        AGS_session_save_cmd.RunCommand(True)
+    elif option == "FromLayer":
+        AGS_form_from_layer_cmd.RunCommand(True)
 
 
 # ==============================================================================

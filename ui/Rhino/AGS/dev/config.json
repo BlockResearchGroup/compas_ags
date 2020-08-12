@@ -144,7 +144,19 @@
                     
                     {"type": "separator"},
 
-                    
+                    {"left": "AGS_toolbar_form"},
+                    {"left": "AGS_toolbar_form_attribute"},
+                    {"left": "AGS_toolbar_form_modify"},
+
+                    {"type": "separator"},
+
+                    {"left": "AGS_toolbar_force"},
+                    {"left": "AGS_toolbar_force_modify"},
+
+                    {"type": "separator"},
+
+                    {"left": "AGS_toolbar_check"},
+                    {"left": "AGS_toolbar_display"},
 
                 ]
             }

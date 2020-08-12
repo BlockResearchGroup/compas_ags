@@ -6,12 +6,11 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from . import AGS_restart_cmd
-from . import AGS_session_load_cmd
-from . import AGS_session_save_cmd
+from . import AGS_check_dof_cmd
+from . import AGS_check_loadpath_cmd
 
 
-__commandname__ = "AGS_toolbar_session"
+__commandname__ = "AGS_toolbar_check"
 
 
 def RunCommand(is_interactive):
@@ -20,20 +19,17 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    options = ["Restart, LoadSession, SaveSession"]
+    options = ["DoF, Loadpath"]
     option = compas_rhino.rs.GetString("Session: ", strings=options)
 
     if not option:
         return
 
-    if option == "Restart":
-        AGS_restart_cmd.RunCommand(True)
+    if option == "DoF":
+        AGS_check_dof_cmd.RunCommand(True)
 
-    elif option == "LoadSession":
-        AGS_session_load_cmd.RunCommand(True)
-
-    elif option == "SaveSession":
-        AGS_session_save_cmd.RunCommand(True)
+    elif option == "Loadpath":
+        AGS_check_loadpath_cmd.RunCommand(True)
 
 
 # ==============================================================================
