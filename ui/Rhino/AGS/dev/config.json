@@ -41,9 +41,9 @@
 
             {"name": "AGS_form_displaysettings",   "menu_text": "FormDiagram Display Settings"},
             {"name": "AGS_form_loaction",          "menu_text": "FormDiagram Location"},
-            {"name": "AGS_force_displaysettings",  "menu_text": "FormDiagrace Display Settings"},
-            {"name": "AGS_force_location",         "menu_text": "FormDiagrace Location"},
-            {"name": "AGS_force_scale",            "menu_text": "FormDiagrace Scale"},
+            {"name": "AGS_force_displaysettings",  "menu_text": "ForceDiagrace Display Settings"},
+            {"name": "AGS_force_location",         "menu_text": "ForceDiagrace Location"},
+            {"name": "AGS_force_scale",            "menu_text": "ForceDiagrace Scale"},
 
             {"name": "AGS_toolbar_session",        "menu_text": "AGS Session"},
             {"name": "AGS_toolbar_form",           "menu_text": "FormDiagram Create"},
