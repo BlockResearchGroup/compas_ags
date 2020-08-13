@@ -51,6 +51,7 @@ def RunCommand(is_interactive):
     with open(filepath, 'w+') as f:
         json.dump(session, f, cls=DataEncoder)
 
+    print("AGS session is saved to: %s" % filepath)
 
 # ==============================================================================
 # Main
