@@ -247,11 +247,14 @@ class DiagramObject(MeshObject):
 
         end = gp.Point()
         vector = list(end - start)
+        # dxyz = scale_vector(vector, scale)
 
         for vertex in vertices:
             dxyz = subtract_vectors(add_vectors(vertex_xyz[vertex], vector), origin)
             dxyz = scale_vector(dxyz, scale)
             diagram.vertex_attributes(vertex, 'xyz', add_vectors(anchor_xyz, dxyz))
+            # xyz = diagram.vertex_attributes(vertex, 'xyz')
+            # diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, dxyz))
 
         return True
 
