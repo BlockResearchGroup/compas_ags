@@ -322,11 +322,14 @@
 
         <span class="n">end</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Point</span><span class="p">()</span>
         <span class="n">vector</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
+        <span class="c1"># dxyz = scale_vector(vector, scale)</span>
 
         <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">:</span>
             <span class="n">dxyz</span> <span class="o">=</span> <span class="n">subtract_vectors</span><span class="p">(</span><span class="n">add_vectors</span><span class="p">(</span><span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span> <span class="n">vector</span><span class="p">),</span> <span class="n">origin</span><span class="p">)</span>
             <span class="n">dxyz</span> <span class="o">=</span> <span class="n">scale_vector</span><span class="p">(</span><span class="n">dxyz</span><span class="p">,</span> <span class="n">scale</span><span class="p">)</span>
             <span class="n">diagram</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s1">&#39;xyz&#39;</span><span class="p">,</span> <span class="n">add_vectors</span><span class="p">(</span><span class="n">anchor_xyz</span><span class="p">,</span> <span class="n">dxyz</span><span class="p">))</span>
+            <span class="c1"># xyz = diagram.vertex_attributes(vertex, &#39;xyz&#39;)</span>
+            <span class="c1"># diagram.vertex_attributes(vertex, &#39;xyz&#39;, add_vectors(xyz, dxyz))</span>
 
         <span class="k">return</span> <span class="kc">True</span></div>
 
