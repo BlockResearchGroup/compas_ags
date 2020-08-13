@@ -9,7 +9,7 @@
     {
         "icons":
         {
-            "bitmap": "",
+            "bitmap": "grid.png",
             "images":
             [
             ]
@@ -17,6 +17,42 @@
 
         "commands":
         [
+            {"name": "AGS_init",                   "menu_text": "Initialise AGS"},
+
+            {"name": "AGS_restart",                "menu_text": "Restart AGS"},
+            {"name": "AGS_session_load",           "menu_text": "Load Session"},
+            {"name": "AGS_session_save",           "menu_text": "Save Session"},
+
+            {"name": "AGS_form_from_obj",          "menu_text": "FormDiagram From Obj"},
+            {"name": "AGS_form_from_layer",        "menu_text": "FormDiagram From Layer"},
+            {"name": "AGS_form_from_lines",        "menu_text": "FormDiagram From Lines"},
+
+            {"name": "AGS_assign_forces",          "menu_text": "Assign Forces"},
+            {"name": "AGS_form_fix_nodes",         "menu_text": "Fix Nodes"},
+
+            {"name": "AGS_form_move_nodes",        "menu_text": "Move Nodes"},
+
+            {"name": "AGS_force_from_form",        "menu_text": "Make ForceDiagram"},
+
+            {"name": "AGS_force_move_nodes",       "menu_text": "Move Nodes"},
+
+            {"name": "AGS_check_dof",              "menu_text": "Check Degree of Freedom"},
+            {"name": "AGS_check_loadpath",         "menu_text": "Check Loadpath"},
+
+            {"name": "AGS_form_displaysettings",   "menu_text": "FormDiagram Display Settings"},
+            {"name": "AGS_form_loaction",          "menu_text": "FormDiagram Location"},
+            {"name": "AGS_force_displaysettings",  "menu_text": "ForceDiagrace Display Settings"},
+            {"name": "AGS_force_location",         "menu_text": "ForceDiagrace Location"},
+            {"name": "AGS_force_scale",            "menu_text": "ForceDiagrace Scale"},
+
+            {"name": "AGS_toolbar_session",        "menu_text": "AGS Session"},
+            {"name": "AGS_toolbar_form",           "menu_text": "FormDiagram Create"},
+            {"name": "AGS_toolbar_form_attribute", "menu_text": "FormDiagram Attribute"},
+            {"name": "AGS_toolbar_form_modify",    "menu_text": "FormDiagram Modify"},
+            {"name": "AGS_toolbar_force",          "menu_text": "ForceDiagram Create"},
+            {"name": "AGS_toolbar_force_modify",   "menu_text": "ForceDiagram Modify"},
+            {"name": "AGS_toolbar_check",          "menu_text": "Check Diagrams"},
+            {"name": "AGS_toolbar_display",        "menu_text": "Display Settings"}
         ],
 
         "menus":
@@ -25,6 +61,84 @@
                 "name" : "AGS",
                 "items":
                 [
+                    {"command": "AGS_init"},
+                    {
+                        "name": "Session",
+                        "items":
+                        [   
+                            {"command": "AGS_restart"},
+                            {"type": "separator"},
+                            {"command": "AGS_session_load"},
+                            {"command": "AGS_session_save"}
+                        ]
+                    },
+
+                    {"type": "separator"},
+                    
+                    {
+                        "name": "Form Create",
+                        "items":
+                        [
+                            {"command": "AGS_form_from_obj"},
+                            {"command": "AGS_form_from_layer"},
+                            {"command": "AGS_form_from_lines"}
+                        ]
+                    },
+                    {
+                        "name": "Form Attribute",
+                        "items":
+                        [
+                            {"command": "AGS_assign_forces"},
+                            {"command": "AGS_form_fix_nodes"}
+                        ]
+                    },
+                    {
+                        "name": "Form Modify",
+                        "items":
+                        [
+                            {"command": "AGS_form_move_nodes"}
+                        ]
+                    },
+
+                    {"type": "separator"},
+
+                    {
+                        "name": "Force Create",
+                        "items":
+                        [
+                            {"command": "AGS_force_from_form"}
+                        ]
+                    },
+                    {
+                        "name": "Force Modify",
+                        "items":
+                        [
+                            {"command": "AGS_force_move_nodes"}
+                        ]
+                    },
+
+                    {"type": "separator"},
+                    
+                    {
+                        "name": "Check",
+                        "items":
+                        [
+                            {"command": "AGS_check_dof"},
+                            {"command": "AGS_check_loadpath"}
+                        ]
+                    },
+                    {
+                        "name": "Display",
+                        "items":
+                        [
+                            {"command": "AGS_form_displaysettings"},
+                            {"command": "AGS_form_loaction"},
+                            {"type": "separator"},
+                            {"command": "AGS_force_displaysettings"},
+                            {"command": "AGS_force_location"},
+                            {"command": "AGS_force_scale"}
+                        ]
+                    }
                 ]
             }
         ],
@@ -34,6 +148,24 @@
                 "name": "AGS",
                 "items":
                 [
+                    {"left": "AGS_init"},
+                    {"left": "AGS_toolbar_session"},
+                    
+                    {"type": "separator"},
+
+                    {"left": "AGS_toolbar_form"},
+                    {"left": "AGS_toolbar_form_attribute"},
+                    {"left": "AGS_toolbar_form_modify"},
+
+                    {"type": "separator"},
+
+                    {"left": "AGS_toolbar_force"},
+                    {"left": "AGS_toolbar_force_modify"},
+
+                    {"type": "separator"},
+
+                    {"left": "AGS_toolbar_check"},
+                    {"left": "AGS_toolbar_display"}
                 ]
             }
         ],
