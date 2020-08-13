@@ -6,7 +6,7 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from . import AGS_force_from_form_cmd
+import AGS_force_from_form_cmd
 
 
 __commandname__ = "AGS_toolbar_force"
@@ -19,7 +19,7 @@ def RunCommand(is_interactive):
         return
 
     options = ["FromForm"]
-    option = compas_rhino.rs.GetString("Create Force: ", strings=options)
+    option = compas_rhino.rs.GetString("Create Force:", strings=options)
 
     if not option:
         return

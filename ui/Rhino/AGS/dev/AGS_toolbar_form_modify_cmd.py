@@ -6,7 +6,7 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from . import AGS_form_move_nodes_cmd
+import AGS_form_move_nodes_cmd
 
 __commandname__ = "AGS_toolbar_form_modify"
 

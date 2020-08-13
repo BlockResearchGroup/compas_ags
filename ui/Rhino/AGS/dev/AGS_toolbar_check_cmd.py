@@ -6,8 +6,8 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from . import AGS_check_dof_cmd
-from . import AGS_check_loadpath_cmd
+import AGS_check_dof_cmd
+import AGS_check_loadpath_cmd
 
 
 __commandname__ = "AGS_toolbar_check"
@@ -19,8 +19,8 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    options = ["DoF, Loadpath"]
-    option = compas_rhino.rs.GetString("Session: ", strings=options)
+    options = ["DoF", "Loadpath"]
+    option = compas_rhino.rs.GetString("Session:", strings=options)
 
     if not option:
         return

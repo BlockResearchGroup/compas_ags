@@ -6,8 +6,9 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from . import AGS_assign_forces_cmd
-from . import AGS_form_fix_nodes_cmd
+import AGS_assign_forces_cmd
+import AGS_form_fix_nodes_cmd
+
 
 __commandname__ = "AGS_toolbar_form_attribute"
 
@@ -18,8 +19,8 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    options = ["AssignForces, FixNodes"]
-    option = compas_rhino.rs.GetString("Assign Attribute: ", strings=options)
+    options = ["AssignForces", "FixNodes"]
+    option = compas_rhino.rs.GetString("Assign Attribute:", strings=options)
 
     if not option:
         return

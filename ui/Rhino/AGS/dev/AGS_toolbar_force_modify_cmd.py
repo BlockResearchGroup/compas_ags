@@ -6,7 +6,8 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from . import AGS_force_move_nodes_cmd
+import AGS_force_move_nodes_cmd
+
 
 __commandname__ = "AGS_toolbar_force_modify"
 
@@ -18,7 +19,7 @@ def RunCommand(is_interactive):
         return
 
     options = ["MoveNodes"]
-    option = compas_rhino.rs.GetString("Modify Force: ", strings=options)
+    option = compas_rhino.rs.GetString("Modify Force:", strings=options)
 
     if not option:
         return

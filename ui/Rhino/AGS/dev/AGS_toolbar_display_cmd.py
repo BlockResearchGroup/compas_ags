@@ -6,11 +6,11 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from . import AGS_form_location_cmd
-from . import AGS_form_displaysettings_cmd
-from . import AGS_force_location_cmd
-from . import AGS_force_scale_cmd
-from . import AGS_force_displaysettings_cmd
+import AGS_form_location_cmd
+import AGS_form_displaysettings_cmd
+import AGS_force_location_cmd
+import AGS_force_scale_cmd
+import AGS_force_displaysettings_cmd
 
 
 __commandname__ = "AGS_toolbar_display"
@@ -22,8 +22,8 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    options = ["FormLocation, FormDiaplay, ForceLocation, ForceScale, ForceDisplay"]
-    option = compas_rhino.rs.GetString("Display: ", strings=options)
+    options = ["FormLocation", "FormDiaplay", "ForceLocation", "ForceScale", "ForceDisplay"]
+    option = compas_rhino.rs.GetString("Display:", strings=options)
 
     if not option:
         return

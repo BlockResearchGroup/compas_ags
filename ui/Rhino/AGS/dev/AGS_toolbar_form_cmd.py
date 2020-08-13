@@ -6,9 +6,9 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from . import AGS_form_from_obj_cmd
-from . import AGS_form_from_lines_cmd
-from . import AGS_form_from_layer_cmd
+import AGS_form_from_obj_cmd
+import AGS_form_from_lines_cmd
+import AGS_form_from_layer_cmd
 
 
 __commandname__ = "AGS_toolbar_form"
@@ -20,8 +20,8 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    options = ["FromObj, FromLines, FromLayer"]
-    option = compas_rhino.rs.GetString("Create Form: ", strings=options)
+    options = ["FromObj", "FromLines", "FromLayer"]
+    option = compas_rhino.rs.GetString("Create Form:", strings=options)
 
     if not option:
         return

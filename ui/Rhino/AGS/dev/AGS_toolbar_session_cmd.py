@@ -6,9 +6,9 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from . import AGS_restart_cmd
-from . import AGS_session_load_cmd
-from . import AGS_session_save_cmd
+import AGS_restart_cmd
+import AGS_session_load_cmd
+import AGS_session_save_cmd
 
 
 __commandname__ = "AGS_toolbar_session"
@@ -20,8 +20,8 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    options = ["Restart, LoadSession, SaveSession"]
-    option = compas_rhino.rs.GetString("Session: ", strings=options)
+    options = ["Restart", "LoadSession", "SaveSession"]
+    option = compas_rhino.rs.GetString("Session:", strings=options)
 
     if not option:
         return

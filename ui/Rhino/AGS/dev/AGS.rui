@@ -1,185 +1,185 @@
 <?xml version="1.0" ?>
-<RhinoUI default_language_id="1033" guid="3894a855-204e-4501-bcf9-d326e190ea19" localize="False" major_ver="2" minor_ver="0">
+<RhinoUI default_language_id="1033" guid="065c0330-9276-4243-a1e4-e1fb4e4ad8b5" localize="False" major_ver="2" minor_ver="0">
   <extend_rhino_menus>
-    <menu guid="1417dc7e-3d9e-4a3e-95ba-5dfa0901f00a">
+    <menu guid="6b240222-d32e-44b4-8b36-b3e4d130f5ba">
       <text>
         <locale_1033>Extend Rhino Menus</locale_1033>
       </text>
     </menu>
   </extend_rhino_menus>
   <menus>
-    <menu guid="3ba16a83-4156-4d5a-b8ad-c9906fc93153">
+    <menu guid="3d12ae0f-8f66-4f55-ac5b-0e7799d14cc7">
       <text>
         <locale_1033>AGS</locale_1033>
       </text>
-      <menu_item guid="60924566-1d7d-4200-ad82-eb500955eb40" item_type="normal">
-        <macro_id>d172afd3-1024-4bf4-bf8d-ab7174e287da</macro_id>
+      <menu_item guid="963cc5c5-0acf-4c79-beb7-3bf202a7b03f" item_type="normal">
+        <macro_id>66ad0ca6-06a8-4d3e-af38-211d31cbfbe0</macro_id>
       </menu_item>
-      <menu guid="bdcb4a6b-eb20-4162-a130-05242c6a41fc">
+      <menu guid="9551d8d7-bd34-4d51-be41-6174c04ccd46">
         <text>
           <locale_1033>Session</locale_1033>
         </text>
-        <menu_item guid="1b8a0062-6329-414f-afd3-99d937a6ba85" item_type="normal">
-          <macro_id>dcf60713-a4a7-4a09-8919-589cf86d2550</macro_id>
+        <menu_item guid="c7ecc220-650d-42a1-a0be-5f366bd49b9c" item_type="normal">
+          <macro_id>c2158cc1-9caf-425c-9bcb-f59e94a293d8</macro_id>
         </menu_item>
-        <menu_item guid="e5f54577-3d49-4b68-bf45-c644d1228643" item_type="separator"/>
-        <menu_item guid="e4b9c3e7-b0ee-4e10-bdef-016d03f68b9b" item_type="normal">
-          <macro_id>b0c93593-8573-4463-8e18-9d5b48fff1d2</macro_id>
+        <menu_item guid="5f0fa37b-a0df-4c68-8b28-306ba25aa274" item_type="separator"/>
+        <menu_item guid="032edd4d-3088-4e93-a881-f26a4024f490" item_type="normal">
+          <macro_id>133a8151-e24c-4257-9927-eef236dc7f09</macro_id>
         </menu_item>
-        <menu_item guid="7c119cdb-98ac-401e-85cf-65a83c0607a2" item_type="normal">
-          <macro_id>168086a8-ed3a-4187-855f-ae9eb4ec77d7</macro_id>
+        <menu_item guid="46c3003c-cd5a-40d0-b5ac-4ef3f77f3399" item_type="normal">
+          <macro_id>215ad531-1520-4235-aabd-f9c2e9e7ec4a</macro_id>
         </menu_item>
       </menu>
-      <menu_item guid="0cea8d57-5278-460f-aa51-e895ab570795" item_type="separator"/>
-      <menu guid="efac30c4-ffc0-4e9f-91a5-7279176ba977">
+      <menu_item guid="16282ceb-e89b-4d4d-90cf-1e1faac8f5c3" item_type="separator"/>
+      <menu guid="51359397-6acf-4bf8-9996-1dc8b53c1d4e">
         <text>
           <locale_1033>Form Create</locale_1033>
         </text>
-        <menu_item guid="655e9a3b-9512-46a9-bab6-58cc8bbaa489" item_type="normal">
-          <macro_id>b46d7a15-89de-42c0-aa95-0db679028df7</macro_id>
+        <menu_item guid="17d50e81-86e7-4a6d-a382-5883b417788b" item_type="normal">
+          <macro_id>0c9ae31d-49f5-4b05-ba00-dd9c0de8e8bb</macro_id>
         </menu_item>
-        <menu_item guid="49a99ec1-c511-4694-82fd-c71a91cd025b" item_type="normal">
-          <macro_id>7939e13a-2f7b-4f5d-b16c-24af839711c1</macro_id>
+        <menu_item guid="b1424861-0af4-4d24-9388-a05af47efd72" item_type="normal">
+          <macro_id>7c9dc8ea-47fa-4e88-a1ae-05e08d3ba855</macro_id>
         </menu_item>
-        <menu_item guid="34653c1b-fe71-4551-be5e-6906e6d388a7" item_type="normal">
-          <macro_id>718eedfd-d032-4d04-848f-8dd06d807a3b</macro_id>
+        <menu_item guid="e62d676a-5d87-43d9-8a4e-3fead067795a" item_type="normal">
+          <macro_id>38f84ddd-8e31-4d62-b785-3b2023366abb</macro_id>
         </menu_item>
       </menu>
-      <menu guid="53bf6745-42c5-47c5-b42a-f9aa38539645">
+      <menu guid="c60d010a-bc06-4359-9c2c-aef86ae04e8d">
         <text>
           <locale_1033>Form Attribute</locale_1033>
         </text>
-        <menu_item guid="0d934231-4915-4a2b-9f42-49b1c8d34a7c" item_type="normal">
-          <macro_id>e2331296-5adf-425b-950c-b760a3babf25</macro_id>
+        <menu_item guid="30903f6f-e28f-4c74-892e-e7fc648c71c7" item_type="normal">
+          <macro_id>f778d58c-9ae9-4126-856d-7fed1cd45088</macro_id>
         </menu_item>
-        <menu_item guid="03f53cb5-e66a-49f9-bcf4-54ee1a977231" item_type="normal">
-          <macro_id>a852f549-9a12-4091-a42f-360deeaef96c</macro_id>
+        <menu_item guid="1af4359f-01f8-4f60-ba7f-cf6bc2adb068" item_type="normal">
+          <macro_id>ddf919a5-9628-4ab1-9128-d93217db69db</macro_id>
         </menu_item>
       </menu>
-      <menu guid="678488a1-3472-447f-b5da-7dc609c7fcc2">
+      <menu guid="af32abd1-c195-4f59-8e13-bc80a08dee6f">
         <text>
           <locale_1033>Form Modify</locale_1033>
         </text>
-        <menu_item guid="5f15a685-3c21-4fda-b2d6-39d1433f1a56" item_type="normal">
-          <macro_id>0bd956a9-a6ea-4893-99ca-b87531d3abde</macro_id>
+        <menu_item guid="1020409c-5124-4adb-90e3-f07d00667db3" item_type="normal">
+          <macro_id>192d5f5e-6ffb-4794-b934-7081bf8ea5a3</macro_id>
         </menu_item>
       </menu>
-      <menu_item guid="e4ee669f-29a5-4779-93a3-3332c339444e" item_type="separator"/>
-      <menu guid="3232f362-c009-45b2-b6ce-d229c9fc654b">
+      <menu_item guid="b0dee216-a826-43da-b774-f555205e4a81" item_type="separator"/>
+      <menu guid="ce9e8f55-df86-4e65-9b7b-5d4ddad483ec">
         <text>
           <locale_1033>Force Create</locale_1033>
         </text>
-        <menu_item guid="91bc65e2-4c1d-4afa-b56a-b10a986fa7b7" item_type="normal">
-          <macro_id>f7fc1be3-ff11-4412-a8cf-ba88b8ca8d7d</macro_id>
+        <menu_item guid="4cf6969b-1c3d-4e3b-b97d-2a27ecc8983f" item_type="normal">
+          <macro_id>757b27a1-fda2-4957-a08c-3fa45b96358a</macro_id>
         </menu_item>
       </menu>
-      <menu guid="8fb2e575-89fc-4856-ae36-b76ffcdaf509">
+      <menu guid="28cd9ac8-8b54-403e-888b-6590be7cd873">
         <text>
           <locale_1033>Force Modify</locale_1033>
         </text>
-        <menu_item guid="98895e9e-3685-4cae-9053-3b060b1f56b4" item_type="normal">
-          <macro_id>39b88a4e-01c3-448e-8fe6-148ffa2a4f73</macro_id>
+        <menu_item guid="2e844f38-5d2b-48bd-9d3b-f0f6f4880930" item_type="normal">
+          <macro_id>871e6c69-70d2-49f6-9475-fa9f83f8b580</macro_id>
         </menu_item>
       </menu>
-      <menu_item guid="5f48ca5a-7369-439e-8a3b-45d1b5541639" item_type="separator"/>
-      <menu guid="eba9ee7b-a7fc-4841-9ef7-3e341a839602">
+      <menu_item guid="e9f72abd-d3f9-4eab-b431-f3c1961f6296" item_type="separator"/>
+      <menu guid="dd56683b-3443-4382-8298-22899c35aff9">
         <text>
           <locale_1033>Check</locale_1033>
         </text>
-        <menu_item guid="ba904bb8-cbf4-4dac-8569-da7b4267e874" item_type="normal">
-          <macro_id>93eff1b2-909c-432b-964c-343b687ac90e</macro_id>
+        <menu_item guid="af2aa567-4195-486b-b2a1-51d745510c6d" item_type="normal">
+          <macro_id>69d633dc-a2ee-4df2-a13f-3c512d80eb61</macro_id>
         </menu_item>
-        <menu_item guid="67dc82b8-b805-4ec6-bba2-3b9211d7dcc7" item_type="normal">
-          <macro_id>9b8bb84a-abfa-4435-8aba-8c73b7f43726</macro_id>
+        <menu_item guid="c6664c0a-5fa6-4d92-94be-926fa68c04c1" item_type="normal">
+          <macro_id>7b2b98e3-0c05-4116-8535-60bda60b596a</macro_id>
         </menu_item>
       </menu>
-      <menu guid="fac07000-3c44-49f1-9c47-05f253ebc85a">
+      <menu guid="68f2203d-524a-421a-817a-6dd9fbb5fa12">
         <text>
           <locale_1033>Display</locale_1033>
         </text>
-        <menu_item guid="fd842fbf-393a-4087-85a9-2e209afcf633" item_type="normal">
-          <macro_id>371d043c-5a6f-424e-a1bd-3f8ac93e51aa</macro_id>
+        <menu_item guid="36c3cdfe-7216-474c-9fcb-9ba68148111c" item_type="normal">
+          <macro_id>4109d443-9e59-445d-8fc3-1e8d3084bcc2</macro_id>
         </menu_item>
-        <menu_item guid="357f6782-3e42-468a-b31a-b81b12998c1d" item_type="normal">
-          <macro_id>0faa98dc-a5ec-4f09-8683-5b858b0c0a84</macro_id>
+        <menu_item guid="8cf8f8b0-99fa-4a7e-9637-574f38a740d2" item_type="normal">
+          <macro_id>c6cfdfc1-ace9-475d-a3ab-297ac8f9d56b</macro_id>
         </menu_item>
-        <menu_item guid="56b72409-e2c3-49a8-8056-969a3d7cbf7c" item_type="separator"/>
-        <menu_item guid="31b40cd5-119f-44ee-84d7-a4a6b88dead5" item_type="normal">
-          <macro_id>883caa9f-085f-4234-9bc5-dec9065fa37f</macro_id>
+        <menu_item guid="afe70c2f-b602-4f6c-926c-e3a1b6980145" item_type="separator"/>
+        <menu_item guid="05378915-3dac-44b6-93ad-2a0c159c7d36" item_type="normal">
+          <macro_id>111b0192-d128-4e6f-972e-68ded987967a</macro_id>
         </menu_item>
-        <menu_item guid="c3f2aac8-027a-46bd-8bff-9477d2bfadea" item_type="normal">
-          <macro_id>7cd21811-bccd-4f76-b1d6-c9e018152aff</macro_id>
+        <menu_item guid="a567e6ee-a8d6-4d16-bbda-ba433e4102b8" item_type="normal">
+          <macro_id>e32b32f1-9802-459f-a88e-682008fc8df7</macro_id>
         </menu_item>
-        <menu_item guid="c8175495-ec0e-4af7-ac02-dcba054b0778" item_type="normal">
-          <macro_id>f98d6bf3-d7ab-46bc-8273-9c2d7b32916a</macro_id>
+        <menu_item guid="009a60c2-f061-4035-ab30-73ac839160ee" item_type="normal">
+          <macro_id>3464c58c-728f-434e-adc1-966e594bafc1</macro_id>
         </menu_item>
       </menu>
     </menu>
   </menus>
   <tool_bar_groups>
-    <tool_bar_group active_tool_bar_group="" dock_bar_guid32="" dock_bar_guid64="" guid="4ad4308a-10de-455b-af88-5d04b9e4972a" hide_single_tab="False" point_floating="0,0" single_file="False">
+    <tool_bar_group active_tool_bar_group="" dock_bar_guid32="" dock_bar_guid64="" guid="76f741d3-3354-4ef2-8d89-7d28b80f1f3c" hide_single_tab="False" point_floating="0,0" single_file="False">
       <text>
         <locale_1033>AGS</locale_1033>
       </text>
-      <tool_bar_group_item guid="e1e32d4f-e1b2-4ee1-afad-d43db2949a96" major_version="1" minor_version="1">
+      <tool_bar_group_item guid="26b2fbf4-3a2d-46e8-a15b-cf48d24b1b88" major_version="1" minor_version="1">
         <text>
           <locale_1033>AGS</locale_1033>
         </text>
-        <tool_bar_id>e83265e9-b068-4c89-9eef-4b805fa17846</tool_bar_id>
+        <tool_bar_id>6184d277-de48-4e94-b983-e4c8ba194f24</tool_bar_id>
       </tool_bar_group_item>
     </tool_bar_group>
   </tool_bar_groups>
   <tool_bars>
-    <tool_bar guid="e83265e9-b068-4c89-9eef-4b805fa17846" item_display_style="control">
+    <tool_bar guid="6184d277-de48-4e94-b983-e4c8ba194f24" item_display_style="control">
       <text>
         <locale_1033>AGS</locale_1033>
       </text>
-      <tool_bar_item button_style="normal" guid="05674ec7-bae9-4f63-afba-63318cf0e9a5">
-        <left_macro_id>d172afd3-1024-4bf4-bf8d-ab7174e287da</left_macro_id>
+      <tool_bar_item button_style="normal" guid="94b9f040-1825-4e68-9682-713ebea09c52">
+        <left_macro_id>66ad0ca6-06a8-4d3e-af38-211d31cbfbe0</left_macro_id>
         <right_macro_id>None</right_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="e3944426-08b0-4d75-b87f-f0975590553c">
-        <left_macro_id>984ddeaa-3d10-410c-94c2-f1cabcae426d</left_macro_id>
+      <tool_bar_item button_style="normal" guid="39e38aff-bd46-450e-9d88-be3d2243884d">
+        <left_macro_id>626f2d3f-e0cf-4d53-9b36-4b615dfca936</left_macro_id>
         <right_macro_id>None</right_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="f4231f2e-9f6f-4d47-b26a-c59a97a75c35">
+      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="fef8da8f-bace-40f2-aa2c-324fb35c24b8">
 </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="b2e14469-2066-4b92-a7b6-e5b420523df8">
-        <left_macro_id>66b14e63-ad4f-4002-9343-8559e0b054a0</left_macro_id>
+      <tool_bar_item button_style="normal" guid="7567f84d-28e3-4065-9861-fd89f9a58a2b">
+        <left_macro_id>8b2163ed-45f2-4683-a797-89dcd433fd7d</left_macro_id>
         <right_macro_id>None</right_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="07fd59b5-d795-405d-b55e-871f85030529">
-        <left_macro_id>51a9ba42-ed02-4ecf-9378-0ce0a6448b38</left_macro_id>
+      <tool_bar_item button_style="normal" guid="642c5e37-2eb5-437e-9495-ea497392fdca">
+        <left_macro_id>7d32a260-4077-461c-b3df-c5a933532a94</left_macro_id>
         <right_macro_id>None</right_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="9f83dcda-70f5-409c-810c-f46e2bb3f3d8">
-        <left_macro_id>91586fdd-bff0-4f64-b2fd-a7cfe743ef0e</left_macro_id>
+      <tool_bar_item button_style="normal" guid="68babf0c-a0dc-4b92-99b5-0febb76c84d9">
+        <left_macro_id>77e5c51c-47e3-4f64-82e3-5f6b2f741e72</left_macro_id>
         <right_macro_id>None</right_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="c68bcde1-c74d-4b08-85bb-b5e5e37b8a88">
+      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="6a324ba6-e4ed-4549-9bfd-7050a63307c4">
 </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="cdde4905-263b-4bf5-aaf6-d818b6df70a7">
-        <left_macro_id>d7c5a4ce-70cf-4103-9c77-5e5e95d50392</left_macro_id>
+      <tool_bar_item button_style="normal" guid="c1c0c260-d735-48b7-a4f1-aac31c6f425c">
+        <left_macro_id>a785f4ee-949c-4423-ada3-9e3c06a1f868</left_macro_id>
         <right_macro_id>None</right_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="ba7838ae-235a-4835-88f6-4632d32349f9">
-        <left_macro_id>742d2979-9b35-45b0-bec9-cadfacfa52ae</left_macro_id>
+      <tool_bar_item button_style="normal" guid="f89e6809-dd3b-419b-89ad-3c6d37d854d2">
+        <left_macro_id>a83119d5-5d26-42b3-b418-66997ea86dc6</left_macro_id>
         <right_macro_id>None</right_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="ac811195-75af-43c3-92e8-4269d7bc33db">
+      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="3137b461-c184-4d14-b109-99203ddf5a8d">
 </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="a63b9f38-e706-41e6-8997-b9ce88c14cb2">
-        <left_macro_id>8ebcdb31-adb4-44d4-880e-d669ee55a257</left_macro_id>
+      <tool_bar_item button_style="normal" guid="dd60f984-7aea-4fe2-a543-220d2220518c">
+        <left_macro_id>57c79cd3-b876-4d62-883e-61f5aae4fde8</left_macro_id>
         <right_macro_id>None</right_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="e25fd81d-59c6-494e-997c-bbd5565420ed">
-        <left_macro_id>4bcf3f58-77cc-4514-a1d5-9045304d0558</left_macro_id>
+      <tool_bar_item button_style="normal" guid="f81d2939-8dbf-47e7-b2c3-f9dd83940b21">
+        <left_macro_id>07785443-07f0-4766-8879-a2cf47a33830</left_macro_id>
         <right_macro_id>None</right_macro_id>
       </tool_bar_item>
     </tool_bar>
   </tool_bars>
   <macros>
-    <macro_item guid="d172afd3-1024-4bf4-bf8d-ab7174e287da">
+    <macro_item guid="66ad0ca6-06a8-4d3e-af38-211d31cbfbe0">
       <text>
         <locale_1033>AGS_init</locale_1033>
       </text>
@@ -197,7 +197,7 @@
         <locale_1033>Initialise AGS</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="dcf60713-a4a7-4a09-8919-589cf86d2550">
+    <macro_item guid="c2158cc1-9caf-425c-9bcb-f59e94a293d8">
       <text>
         <locale_1033>AGS_restart</locale_1033>
       </text>
@@ -215,7 +215,7 @@
         <locale_1033>Restart AGS</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="b0c93593-8573-4463-8e18-9d5b48fff1d2">
+    <macro_item guid="133a8151-e24c-4257-9927-eef236dc7f09">
       <text>
         <locale_1033>AGS_session_load</locale_1033>
       </text>
@@ -233,7 +233,7 @@
         <locale_1033>Load Session</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="168086a8-ed3a-4187-855f-ae9eb4ec77d7">
+    <macro_item guid="215ad531-1520-4235-aabd-f9c2e9e7ec4a">
       <text>
         <locale_1033>AGS_session_save</locale_1033>
       </text>
@@ -251,7 +251,7 @@
         <locale_1033>Save Session</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="b46d7a15-89de-42c0-aa95-0db679028df7">
+    <macro_item guid="0c9ae31d-49f5-4b05-ba00-dd9c0de8e8bb">
       <text>
         <locale_1033>AGS_form_from_obj</locale_1033>
       </text>
@@ -269,7 +269,7 @@
         <locale_1033>FormDiagram From Obj</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="7939e13a-2f7b-4f5d-b16c-24af839711c1">
+    <macro_item guid="7c9dc8ea-47fa-4e88-a1ae-05e08d3ba855">
       <text>
         <locale_1033>AGS_form_from_layer</locale_1033>
       </text>
@@ -287,7 +287,7 @@
         <locale_1033>FormDiagram From Layer</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="718eedfd-d032-4d04-848f-8dd06d807a3b">
+    <macro_item guid="38f84ddd-8e31-4d62-b785-3b2023366abb">
       <text>
         <locale_1033>AGS_form_from_lines</locale_1033>
       </text>
@@ -305,7 +305,7 @@
         <locale_1033>FormDiagram From Lines</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="e2331296-5adf-425b-950c-b760a3babf25">
+    <macro_item guid="f778d58c-9ae9-4126-856d-7fed1cd45088">
       <text>
         <locale_1033>AGS_assign_forces</locale_1033>
       </text>
@@ -323,7 +323,7 @@
         <locale_1033>Assign Forces</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="a852f549-9a12-4091-a42f-360deeaef96c">
+    <macro_item guid="ddf919a5-9628-4ab1-9128-d93217db69db">
       <text>
         <locale_1033>AGS_form_fix_nodes</locale_1033>
       </text>
@@ -341,7 +341,7 @@
         <locale_1033>Fix Nodes</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="0bd956a9-a6ea-4893-99ca-b87531d3abde">
+    <macro_item guid="192d5f5e-6ffb-4794-b934-7081bf8ea5a3">
       <text>
         <locale_1033>AGS_form_move_nodes</locale_1033>
       </text>
@@ -359,7 +359,7 @@
         <locale_1033>Move Nodes</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="f7fc1be3-ff11-4412-a8cf-ba88b8ca8d7d">
+    <macro_item guid="757b27a1-fda2-4957-a08c-3fa45b96358a">
       <text>
         <locale_1033>AGS_force_from_form</locale_1033>
       </text>
@@ -377,7 +377,7 @@
         <locale_1033>Make ForceDiagram</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="39b88a4e-01c3-448e-8fe6-148ffa2a4f73">
+    <macro_item guid="871e6c69-70d2-49f6-9475-fa9f83f8b580">
       <text>
         <locale_1033>AGS_force_move_nodes</locale_1033>
       </text>
@@ -395,7 +395,7 @@
         <locale_1033>Move Nodes</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="93eff1b2-909c-432b-964c-343b687ac90e">
+    <macro_item guid="69d633dc-a2ee-4df2-a13f-3c512d80eb61">
       <text>
         <locale_1033>AGS_check_dof</locale_1033>
       </text>
@@ -413,7 +413,7 @@
         <locale_1033>Check Degree of Freedom</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="9b8bb84a-abfa-4435-8aba-8c73b7f43726">
+    <macro_item guid="7b2b98e3-0c05-4116-8535-60bda60b596a">
       <text>
         <locale_1033>AGS_check_loadpath</locale_1033>
       </text>
@@ -431,7 +431,7 @@
         <locale_1033>Check Loadpath</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="371d043c-5a6f-424e-a1bd-3f8ac93e51aa">
+    <macro_item guid="4109d443-9e59-445d-8fc3-1e8d3084bcc2">
       <text>
         <locale_1033>AGS_form_displaysettings</locale_1033>
       </text>
@@ -449,7 +449,7 @@
         <locale_1033>FormDiagram Display Settings</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="0faa98dc-a5ec-4f09-8683-5b858b0c0a84">
+    <macro_item guid="c6cfdfc1-ace9-475d-a3ab-297ac8f9d56b">
       <text>
         <locale_1033>AGS_form_loaction</locale_1033>
       </text>
@@ -467,7 +467,7 @@
         <locale_1033>FormDiagram Location</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="883caa9f-085f-4234-9bc5-dec9065fa37f">
+    <macro_item guid="111b0192-d128-4e6f-972e-68ded987967a">
       <text>
         <locale_1033>AGS_force_displaysettings</locale_1033>
       </text>
@@ -485,7 +485,7 @@
         <locale_1033>FormDiagrace Display Settings</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="7cd21811-bccd-4f76-b1d6-c9e018152aff">
+    <macro_item guid="e32b32f1-9802-459f-a88e-682008fc8df7">
       <text>
         <locale_1033>AGS_force_location</locale_1033>
       </text>
@@ -503,7 +503,7 @@
         <locale_1033>FormDiagrace Location</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="f98d6bf3-d7ab-46bc-8273-9c2d7b32916a">
+    <macro_item guid="3464c58c-728f-434e-adc1-966e594bafc1">
       <text>
         <locale_1033>AGS_force_scale</locale_1033>
       </text>
@@ -521,7 +521,7 @@
         <locale_1033>FormDiagrace Scale</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="984ddeaa-3d10-410c-94c2-f1cabcae426d">
+    <macro_item guid="626f2d3f-e0cf-4d53-9b36-4b615dfca936">
       <text>
         <locale_1033>AGS_toolbar_session</locale_1033>
       </text>
@@ -539,7 +539,7 @@
         <locale_1033>AGS Session</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="66b14e63-ad4f-4002-9343-8559e0b054a0">
+    <macro_item guid="8b2163ed-45f2-4683-a797-89dcd433fd7d">
       <text>
         <locale_1033>AGS_toolbar_form</locale_1033>
       </text>
@@ -557,7 +557,7 @@
         <locale_1033>FormDiagram Create</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="51a9ba42-ed02-4ecf-9378-0ce0a6448b38">
+    <macro_item guid="7d32a260-4077-461c-b3df-c5a933532a94">
       <text>
         <locale_1033>AGS_toolbar_form_attribute</locale_1033>
       </text>
@@ -575,7 +575,7 @@
         <locale_1033>FormDiagram Attribute</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="91586fdd-bff0-4f64-b2fd-a7cfe743ef0e">
+    <macro_item guid="77e5c51c-47e3-4f64-82e3-5f6b2f741e72">
       <text>
         <locale_1033>AGS_toolbar_form_modify</locale_1033>
       </text>
@@ -593,7 +593,7 @@
         <locale_1033>FormDiagram Modify</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="d7c5a4ce-70cf-4103-9c77-5e5e95d50392">
+    <macro_item guid="a785f4ee-949c-4423-ada3-9e3c06a1f868">
       <text>
         <locale_1033>AGS_toolbar_force</locale_1033>
       </text>
@@ -611,7 +611,7 @@
         <locale_1033>ForceDiagram Create</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="742d2979-9b35-45b0-bec9-cadfacfa52ae">
+    <macro_item guid="a83119d5-5d26-42b3-b418-66997ea86dc6">
       <text>
         <locale_1033>AGS_toolbar_force_modify</locale_1033>
       </text>
@@ -629,7 +629,7 @@
         <locale_1033>ForceDiagram Modify</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="8ebcdb31-adb4-44d4-880e-d669ee55a257">
+    <macro_item guid="57c79cd3-b876-4d62-883e-61f5aae4fde8">
       <text>
         <locale_1033>AGS_toolbar_check</locale_1033>
       </text>
@@ -647,7 +647,7 @@
         <locale_1033>Check Diagrams</locale_1033>
       </menu_text>
     </macro_item>
-    <macro_item guid="4bcf3f58-77cc-4514-a1d5-9045304d0558">
+    <macro_item guid="07785443-07f0-4766-8879-a2cf47a33830">
       <text>
         <locale_1033>AGS_toolbar_display</locale_1033>
       </text>
