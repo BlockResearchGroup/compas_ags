@@ -20,6 +20,10 @@ def RunCommand(is_interactive):
     scene = sc.sticky['AGS']['scene']
     force = scene.find_by_name('Force')[0]
 
+    if not force:
+        print("There is no ForceDiagram in the scene.")
+        return
+
     vertex = force.select_vertex(message="Pick base node.")
     if vertex:
         force.artist.anchor_point = force.artist.vertex_xyz[vertex]

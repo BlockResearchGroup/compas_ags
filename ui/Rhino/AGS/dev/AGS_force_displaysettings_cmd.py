@@ -20,6 +20,10 @@ def RunCommand(is_interactive):
 
     force = scene.find_by_name('Force')[0]
 
+    if not force:
+        print("There is no ForceDiagram in the scene.")
+        return
+
     options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", ]
 
     while True:
