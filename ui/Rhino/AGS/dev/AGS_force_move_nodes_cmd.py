@@ -4,6 +4,8 @@ from __future__ import division
 
 import scriptcontext as sc
 
+from compas_ags.utilities import check_deviations
+
 import compas_rhino
 
 
@@ -44,8 +46,11 @@ def RunCommand(is_interactive):
             continue
         else:
             form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
+            if not check_deviations(form.diagram, force.diagram):
+                compas_rhino.display_message('Error: Diagrams are not in equilibrium!')
             scene.clear()
             scene.update()
+            break
 
         # if force.move_vertices(vertices):
         #     # update form diagram

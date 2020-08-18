@@ -91,6 +91,7 @@ class ForceArtist(DiagramArtist):
             color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where_dual({'is_load': True})})
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where_dual({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where_dual({'is_ind': True})})
+            color.update({edge: self.settings['color.edges:deviation'] for edge in self.diagram.edges() if self.diagram.dual_edge_a(edge) > 0})
             self.draw_edgelabels(text=text, color=color)
         # force magnitude labels
         if self.settings['show.forcelabels']:

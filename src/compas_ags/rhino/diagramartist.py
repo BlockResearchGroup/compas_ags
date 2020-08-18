@@ -82,6 +82,7 @@ class DiagramArtist(MeshArtist):
             'color.edges:is_external': (0, 255, 0),
             'color.edges:is_reaction': (0, 255, 0),
             'color.edges:is_load': (0, 255, 0),
+            'color.edges:deviation': (255, 0, 0),
             'color.faces': (210, 210, 210),
             'color.compression': (0, 0, 255),
             'color.tension': (255, 0, 0),

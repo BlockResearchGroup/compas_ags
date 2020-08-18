@@ -27,7 +27,7 @@ class FormDiagram(Diagram):
         })
         self.update_default_edge_attributes({
             '_is_edge': True,
-
+            'a': 0.0,
             'q': 1.0,
             'f': 0.0,
             'l': 0.0,

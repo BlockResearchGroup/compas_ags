@@ -6,6 +6,7 @@ import scriptcontext as sc
 
 from compas_ags.utilities import calculate_drawingscale
 from compas_ags.utilities import calculate_drawingscale_forces
+from compas_ags.utilities import check_deviations
 
 import compas_rhino
 
@@ -42,8 +43,11 @@ def RunCommand(is_interactive):
     scale_factor = calculate_drawingscale(form.diagram, force.diagram)
     drawingscale_forces = calculate_drawingscale_forces(form.diagram)
 
-    print("ForceDiagram successfully created!")
-    print("scale factor of the ForceDiagram is %s" % scale_factor)
+    if not check_deviations(form.diagram, force.diagram):
+        compas_rhino.display_message('Error: Diagrams are not in equilibrium!')
+    else:
+        print("ForceDiagram successfully created!")
+        print("scale factor of the ForceDiagram is %s" % scale_factor)
 
     # this should become part of "add"
     force.artist.anchor_vertex = 0

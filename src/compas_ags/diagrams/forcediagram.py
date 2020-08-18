@@ -222,6 +222,20 @@ class ForceDiagram(Diagram):
         """
         return self.dual.edge_attribute(self.dual_edge(edge), 'f')
 
+    def dual_edge_a(self, edge):
+        """Retrieve the angle deviation in the corresponding edge of the diagram's dual.
+
+        Parameters
+        ----------
+        edge : tuple(int, int)
+            The edge identifier.
+
+        Returns
+        -------
+        float
+        """
+        return self.dual.edge_attribute(self.dual_edge(edge), 'a')
+
     def edge_index(self, form=None):
         """Construct a mapping between the identifiers of edges and the corresponding indices in a list of edges.
 
