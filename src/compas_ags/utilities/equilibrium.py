@@ -10,6 +10,7 @@ __all__ = [
     'check_deviations',
 ]
 
+
 def check_deviations(form, force, tol=10e-3):
     """Checks whether the form and force diagrams are indeed reciprocal, i.e. have their corresponding edges parallel.
 
