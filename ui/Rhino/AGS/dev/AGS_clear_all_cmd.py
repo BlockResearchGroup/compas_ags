@@ -29,6 +29,7 @@ def RunCommand(is_interactive):
 
     if option == "Yes":
         scene.clear()
+        sc.sticky['AGS']['scene'] = Scene()
 
 
 # ==============================================================================
