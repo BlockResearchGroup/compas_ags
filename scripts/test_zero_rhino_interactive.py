@@ -1,4 +1,5 @@
 import os
+import compas_rhino
 
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
@@ -13,21 +14,26 @@ graphstatics.restart_server()
 # this file has unloaded, 2-valent nodes
 # they will be removed automatically
 # and the result renumbered
-HERE = os.path.dirname(__file__)
-FILE = os.path.join(HERE, '../data/debugging/zero.obj')
+# HERE = os.path.dirname(__file__)
+# FILE = os.path.join(HERE, '../data/debugging/zero.obj')
 
-graph = FormGraph.from_obj(FILE)
+# graph = FormGraph.from_obj(FILE)
+guids = compas_rhino.select_lines()
+lines = compas_rhino.get_line_coordinates(guids)
+graph = FormGraph.from_lines(lines)
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 scene = Scene()
 
 # fix the supports
-form.vertices_attribute('is_fixed', True, [8, 7])
+form.vertices_attribute('is_fixed', True, [1, 12])
 
 # set the loads
-form.edge_force((0, 1), +10.0)
-form.edge_force((2, 3), +10.0)
-form.edge_force((4, 5), +10.0)
+form.edge_force((8, 19), +10.0)
+form.edge_force((14, 3), +10.0)
+form.edge_force((17, 7), +10.0)
+form.edge_force((11, 9), +10.0)
+form.edge_force((13, 16), +10.0)
 
 # compute initial form and force diagrams
 form.data = graphstatics.form_update_q_from_qind_proxy(form.data)
@@ -40,10 +46,10 @@ form_obj = scene.find(form_id)
 force_obj = scene.find(force_id)
 
 force_obj.artist.anchor_vertex = 0
-force_obj.artist.anchor_point = [35, 0, 0]
-force_obj.artist.scale = 0.5
+force_obj.artist.anchor_point = [130, 0, 0]
+force_obj.artist.scale = 1.0
 
-form_obj.artist.settings['scale.forces'] = 0.02
+form_obj.artist.settings['scale.forces'] = 0.05
 
 scene.clear()
 scene.update()
@@ -56,12 +62,12 @@ while True:
         scene.clear()
         scene.update()
 
-scene.clear()
-scene.update()
+# scene.clear()
+# scene.update()
 
 # fix some of the nodes in the from diagram
 # to constraint the problem to a single solution
-form.vertices_attribute('is_fixed', True, [0, 2, 5])
+form.vertices_attribute('is_fixed', True, [8, 14, 17, 11, 13])
 
 # update the form diagram
 form.data = graphstatics.form_update_from_force_proxy(form.data, force.data)
