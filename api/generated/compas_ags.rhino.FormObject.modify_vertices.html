@@ -80,21 +80,19 @@
 <h1 class="display-4 p-0 mb-5">FormObject.modify_vertices</h1>
 <dl class="method">
 <dt id="compas_ags.rhino.FormObject.modify_vertices">
-<code class="sig-prename descclassname">FormObject.</code><code class="sig-name descname">modify_vertices</code><span class="sig-paren">(</span><em class="sig-param">vertices=None</em>, <em class="sig-param">names=None</em><span class="sig-paren">)</span></dt>
-<dd><p>Modify the attributes of a selection of diagram vertices.</p>
+<code class="sig-prename descclassname">FormObject.</code><code class="sig-name descname">modify_vertices</code><span class="sig-paren">(</span><em class="sig-param">vertices</em><span class="sig-paren">)</span></dt>
+<dd><p>Modify the attributes of the vertices of the mesh item.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>vertices</strong> (<em>list, optional</em>) – The identifiers of selected vertices.
-Default is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
-<li><p><strong>names</strong> (<em>list, optional</em>) – The names of the attributes that should be modified.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>vertices</strong> (<em>list</em>) – The identifiers of the vertices of which the attributes will be updated.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>bool</em> – True if the operation was successful.
-False otherwise.</p>
+<dd class="field-even"><p><em>bool</em> – <code class="docutils literal notranslate"><span class="pre">True</span></code> if the attributes were successfully updated.
+<code class="docutils literal notranslate"><span class="pre">False</span></code> otherwise.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>This method will produce a dialog for editing the attributes of the vertices.</p>
 </dd></dl>
 
 </div>
