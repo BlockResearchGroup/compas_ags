@@ -6,33 +6,21 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from compas.geometry import subtract_vectors
-from compas.geometry import add_vectors
+from compas_ags.rhino import Scene
 
 
-__commandname__ = "AGS_form_location"
+__commandname__ = "AGS_redraw"
 
 
 def RunCommand(is_interactive):
+
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
     scene = sc.sticky['AGS']['scene']
-    form  = scene.find_by_name('Form')[0]
-
-    if not form:
-        print("There is no FormDiagram in the scene.")
+    if not scene:
         return
-
-    start = compas_rhino.pick_point('Pick a point to move from.')
-    if start:
-        end = compas_rhino.pick_point('Pick a point to move to.')
-        if end:
-            vector = subtract_vectors(end, start)
-            xyz = form.artist.anchor_point
-            new_xyz = add_vectors(xyz, vector)
-            form.artist.anchor_point = new_xyz
 
     scene.update()
 

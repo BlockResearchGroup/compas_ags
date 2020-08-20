@@ -6,8 +6,10 @@ import scriptcontext as sc
 
 import compas_rhino
 
+import AGS_check_dof_cmd
 
-__commandname__ = "AGS_form_fix_nodes"
+
+__commandname__ = "AGS_toolbar_check_dof"
 
 
 def RunCommand(is_interactive):
@@ -16,22 +18,8 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    scene = sc.sticky['AGS']['scene']
-    form = scene.find_by_name('Form')[0]
+    AGS_check_dof_cmd.RunCommand(True)
 
-    if not form:
-        print("There is no FormDiagram in the scene.")
-        return
-
-    # select fixed vertices
-    while True:
-        vertices = form.select_vertices()
-        if not vertices:
-            break
-        for vertex in vertices:
-            form.diagram.vertex_attribute(vertex, 'is_fixed', True)
-        scene.clear()
-        scene.update()
 
 
 # ==============================================================================

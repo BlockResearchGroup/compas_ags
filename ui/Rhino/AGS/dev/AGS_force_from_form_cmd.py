@@ -25,6 +25,10 @@ def RunCommand(is_interactive):
     scene = sc.sticky['AGS']['scene']
     form = scene.find_by_name('Form')[0]
 
+    if not form:
+        print("There is no FormDiagram in the scene.")
+        return
+
     proxy.package = 'compas_ags.ags.graphstatics'
 
     forcediagram = ForceDiagram.from_formdiagram(form.diagram)
@@ -38,6 +42,7 @@ def RunCommand(is_interactive):
     scale_factor = calculate_drawingscale(form.diagram, force.diagram)
     drawingscale_forces = calculate_drawingscale_forces(form.diagram)
 
+    print("ForceDiagram successfully created!")
     print("scale factor of the ForceDiagram is %s" % scale_factor)
 
     # this should become part of "add"

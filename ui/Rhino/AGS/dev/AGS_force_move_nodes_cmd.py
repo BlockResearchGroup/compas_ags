@@ -21,6 +21,14 @@ def RunCommand(is_interactive):
     form = scene.find_by_name('Form')[0]
     force = scene.find_by_name('Force')[0]
 
+    if not form:
+        print("There is no FormDiagram in the scene.")
+        return
+
+    if not force:
+        print("There is no ForceDiagram in the scene.")
+        return
+
     proxy.package = 'compas_ags.ags.graphstatics'
 
     while True:
@@ -38,7 +46,7 @@ def RunCommand(is_interactive):
             form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
             scene.clear()
             scene.update()
-            
+
         # if force.move_vertices(vertices):
         #     # update form diagram
         #     form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data, kmax=100)

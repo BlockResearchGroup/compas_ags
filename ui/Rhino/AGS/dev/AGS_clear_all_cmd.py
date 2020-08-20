@@ -6,8 +6,10 @@ import scriptcontext as sc
 
 import compas_rhino
 
+from compas_ags.rhino import Scene
 
-__commandname__ = "AGS_check_loadpath"
+
+__commandname__ = "AGS_clear_all"
 
 
 def RunCommand(is_interactive):
@@ -16,15 +18,18 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    proxy = sc.sticky['AGS']['proxy']
     scene = sc.sticky['AGS']['scene']
-    form = scene.find_by_name('Form')[0]
-    force = scene.find_by_name('Force')[0]
+    if not scene:
+        return
 
-    proxy.package = 'compas_ags.ags.loadpath'
+    options = ["Yes", "No"]
+    option = compas_rhino.rs.GetString("Clear all RV2 objects?", strings=options, defaultString="No")
+    if not option:
+        return
 
-    lp = proxy.compute_loadpath(form.diagram, force.diagram)
-    print('Loadpath of the structure is {} kNm.'.format(round(lp, 2)))
+    if option == "Yes":
+        scene.clear()
+        sc.sticky['AGS']['scene'] = Scene()
 
 
 # ==============================================================================
