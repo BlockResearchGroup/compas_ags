@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 import AGS_assign_forces_cmd
-import AGS_form_fix_nodes_cmd
+import AGS_form_toggle_fix_cmd
 
 
 __commandname__ = "AGS_toolbar_form_attribute"
@@ -29,7 +29,7 @@ def RunCommand(is_interactive):
         AGS_assign_forces_cmd.RunCommand(True)
 
     elif option == "FixNodes":
-        AGS_form_fix_nodes_cmd.RunCommand(True)
+        AGS_form_toggle_fix_cmd.RunCommand(True)
 
 
 # ==============================================================================
