@@ -11,10 +11,9 @@ from compas.geometry import subtract_vectors
 
 from compas_rhino.objects import MeshObject
 
-if compas.IPY:
-    if compas.RHINO:
-        import Rhino
-        from Rhino.Geometry import Point3d
+if compas.RHINO:
+    import Rhino
+    from Rhino.Geometry import Point3d
 
 
 __all__ = ['DiagramObject']
