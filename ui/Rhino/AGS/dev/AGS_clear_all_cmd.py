@@ -6,8 +6,10 @@ import scriptcontext as sc
 
 import compas_rhino
 
+from compas_ags.rhino import Scene
 
-__commandname__ = "AGS_force_scale"
+
+__commandname__ = "AGS_clear_all"
 
 
 def RunCommand(is_interactive):
@@ -17,21 +19,17 @@ def RunCommand(is_interactive):
         return
 
     scene = sc.sticky['AGS']['scene']
-    force = scene.find_by_name('Force')[0]
-
-    if not force:
-        print("There is no ForceDiagram in the scene.")
+    if not scene:
         return
 
-    vertex = force.select_vertex(message="Pick base node.")
-    if vertex:
-        force.artist.anchor_point = force.artist.vertex_xyz[vertex]
-        force.artist.anchor_vertex = vertex
+    options = ["Yes", "No"]
+    option = compas_rhino.rs.GetString("Clear all RV2 objects?", strings=options, defaultString="No")
+    if not option:
+        return
 
-        scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
-        force.artist.scale = scale_factor
-
-    scene.update()
+    if option == "Yes":
+        scene.clear()
+        sc.sticky['AGS']['scene'] = Scene()
 
 
 # ==============================================================================

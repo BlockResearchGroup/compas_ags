@@ -6,8 +6,10 @@ import scriptcontext as sc
 
 import compas_rhino
 
+import AGS_force_move_nodes_cmd
 
-__commandname__ = "AGS_force_scale"
+
+__commandname__ = "AGS_toolbar_force_modify"
 
 
 def RunCommand(is_interactive):
@@ -16,22 +18,14 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    scene = sc.sticky['AGS']['scene']
-    force = scene.find_by_name('Force')[0]
+    options = ["MoveNodes"]
+    option = compas_rhino.rs.GetString("Modify Force:", strings=options)
 
-    if not force:
-        print("There is no ForceDiagram in the scene.")
+    if not option:
         return
 
-    vertex = force.select_vertex(message="Pick base node.")
-    if vertex:
-        force.artist.anchor_point = force.artist.vertex_xyz[vertex]
-        force.artist.anchor_vertex = vertex
-
-        scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
-        force.artist.scale = scale_factor
-
-    scene.update()
+    if option == "MoveNodes":
+        AGS_force_move_nodes_cmd.RunCommand(True)
 
 
 # ==============================================================================

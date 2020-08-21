@@ -21,6 +21,10 @@ def RunCommand(is_interactive):
     scene = sc.sticky['AGS']['scene']
     force = scene.find_by_name('Force')[0]
 
+    if not force:
+        print("There is no ForceDiagram in the scene.")
+        return
+
     start = compas_rhino.pick_point('Pick a point to move from.')
     if start:
         end = compas_rhino.pick_point('Pick a point to move to.')

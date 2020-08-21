@@ -7,6 +7,7 @@ from compas.geometry import scale_vector
 from compas.geometry import add_vectors
 from compas.geometry import subtract_vectors
 from compas.geometry import centroid_points
+from compas.geometry import distance_point_point
 from compas.utilities import color_to_colordict as colordict
 from compas_rhino.artists import MeshArtist
 
@@ -86,6 +87,7 @@ class DiagramArtist(MeshArtist):
             'color.tension': (255, 0, 0),
             'color.anchor': (255, 0, 0),
             'scale.forces': 0.1,
+            'tol.edges': 1e-3,
             'tol.forces': 1e-3,
         })
         self._anchor_point = None
@@ -283,7 +285,7 @@ class DiagramArtist(MeshArtist):
             The GUIDs of the created Rhino objects.
         """
         vertex_text = textdict(text, list(self.diagram.vertices()))
-        vertex_color = colordict(color, vertex_text.keys(), default=self.settings.get('color.vertices'), colorformat='rgb', normalize=False)
+        vertex_color = colordict(color, vertex_text.keys(), default=self.settings['color.vertices'], colorformat='rgb', normalize=False)
         vertex_xyz = self.vertex_xyz
         labels = []
         for vertex in vertex_text:
@@ -312,12 +314,17 @@ class DiagramArtist(MeshArtist):
             The GUIDs of the created Rhino objects.
         """
         edges = keys or list(self.diagram.edges())
-        edge_color = colordict(color, edges, default=self.settings.get('color.edges'), colorformat='rgb', normalize=False)
+        edge_color = colordict(color, edges, default=self.settings['color.edges'], colorformat='rgb', normalize=False)
         vertex_xyz = self.vertex_xyz
         lines = []
         for edge in edges:
-            lines.append({'start': vertex_xyz[edge[0]],
-                          'end': vertex_xyz[edge[1]],
+            start = vertex_xyz[edge[0]]
+            end = vertex_xyz[edge[1]]
+            if distance_point_point(start, end) < self.settings['tol.edges']:
+                continue
+
+            lines.append({'start': start,
+                          'end': end,
                           'color': edge_color[edge],
                           'name': "{}.edge.{}-{}".format(self.diagram.name, *edge)})
         guids = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
@@ -341,18 +348,20 @@ class DiagramArtist(MeshArtist):
             The GUIDs of the created Rhino objects.
         """
         if text is None:
-            edge_text = {(u, v): "{}-{}".format(u, v) for u, v in self.diagram.edges()}
+            edge_text = {edge: "{}-{}".format(*edge) for edge in self.diagram.edges()}
         elif isinstance(text, dict):
             edge_text = text
         else:
             raise NotImplementedError
 
-        edge_color = colordict(color, edge_text.keys(), default=self.settings.get('color.edges'), colorformat='rgb', normalize=False)
+        edge_color = colordict(color, edge_text.keys(), default=self.settings['color.edges'], colorformat='rgb', normalize=False)
         vertex_xyz = self.vertex_xyz
         labels = []
         for edge in edge_text:
             start = vertex_xyz[edge[0]]
             end = vertex_xyz[edge[1]]
+            if distance_point_point(start, end) < self.settings['tol.edges']:
+                continue
             pos = [0.5 * (a + b) for a, b in zip(start, end)]
             labels.append({'pos': pos,
                            'color': edge_color[edge],
@@ -382,7 +391,7 @@ class DiagramArtist(MeshArtist):
             The GUIDs of the created Rhino objects.
         """
         faces = keys or list(self.diagram.faces())
-        face_color = colordict(color, faces, default=self.settings.get('color.faces'), colorformat='rgb', normalize=False)
+        face_color = colordict(color, faces, default=self.settings['color.faces'], colorformat='rgb', normalize=False)
         vertex_xyz = self.vertex_xyz
         faces_ = []
         for face in faces:
@@ -411,7 +420,7 @@ class DiagramArtist(MeshArtist):
             The GUIDs of the created Rhino objects.
         """
         face_text = textdict(text, list(self.diagram.faces()))
-        face_color = colordict(color, face_text.keys(), default=self.settings.get('color.faces'), colorformat='rgb', normalize=False)
+        face_color = colordict(color, face_text.keys(), default=self.settings['color.faces'], colorformat='rgb', normalize=False)
         vertex_xyz = self.vertex_xyz
         labels = []
         for face in face_text:

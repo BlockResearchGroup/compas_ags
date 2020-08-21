@@ -96,7 +96,7 @@ class ForceDiagram(Diagram):
         >>>
 
         """
-        for edge in self.edges():
+        for edge in list(self.edges()):
             is_match = True
 
             dual_edge = self.dual_edge(edge)
@@ -148,7 +148,9 @@ class ForceDiagram(Diagram):
         """
         for u, v in self.dual.face_halfedges(edge[0]):
             if self.dual.halfedge[v][u] == edge[1]:
-                return u, v
+                if self.dual.has_edge((u, v)):
+                    return u, v
+                return v, u
 
     def is_dual_edge_external(self, edge):
         """Verify if the corresponding edge in the diagram's dual is marked as "external".
@@ -242,6 +244,7 @@ class ForceDiagram(Diagram):
             f1 = form.halfedge[u][v]
             f2 = form.halfedge[v][u]
             edge_index[f1, f2] = index
+            # the weird side-effect of this is that edges get rotated if necessary
         return edge_index
 
     def ordered_edges(self, form):
