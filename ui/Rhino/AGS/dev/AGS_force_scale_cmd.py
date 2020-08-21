@@ -23,13 +23,13 @@ def RunCommand(is_interactive):
         compas_rhino.display_message("There is no ForceDiagram in the scene.")
         return
 
-    vertex = force.select_vertex(message="Pick base node.")
-    if vertex:
-        force.artist.anchor_point = force.artist.vertex_xyz[vertex]
-        force.artist.anchor_vertex = vertex
+    # vertex = force.select_vertex(message="Pick base node.")
+    # if vertex:
+    #     force.artist.anchor_point = force.artist.vertex_xyz[vertex]
+    #     force.artist.anchor_vertex = vertex
 
-        scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
-        force.artist.scale = scale_factor
+    scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
+    force.artist.scale = scale_factor
 
     scene.update()
 
