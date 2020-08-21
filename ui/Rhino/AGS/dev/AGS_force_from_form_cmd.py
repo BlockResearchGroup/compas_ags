@@ -26,7 +26,7 @@ def RunCommand(is_interactive):
     form = scene.find_by_name('Form')[0]
 
     if not form:
-        print("There is no FormDiagram in the scene.")
+        compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
 
     proxy.package = 'compas_ags.ags.graphstatics'
@@ -42,8 +42,7 @@ def RunCommand(is_interactive):
     scale_factor = calculate_drawingscale(form.diagram, force.diagram)
     drawingscale_forces = calculate_drawingscale_forces(form.diagram)
 
-    print("ForceDiagram successfully created!")
-    print("scale factor of the ForceDiagram is %s" % scale_factor)
+    compas_rhino.display_message("ForceDiagram successfully created!\nScale factor of the ForceDiagram is %s" % scale_factor)
 
     # this should become part of "add"
     force.artist.anchor_vertex = 0
@@ -51,7 +50,6 @@ def RunCommand(is_interactive):
     force.artist.scale = scale_factor
     form.artist.settings['scale.forces'] = drawingscale_forces
 
-    scene.clear()
     scene.update()
 
 

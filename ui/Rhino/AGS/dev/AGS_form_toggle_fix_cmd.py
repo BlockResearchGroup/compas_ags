@@ -20,7 +20,7 @@ def RunCommand(is_interactive):
     form = scene.find_by_name('Form')[0]
 
     if not form:
-        print("There is no FormDiagram in the scene.")
+        compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
 
     # select fixed vertices
@@ -30,6 +30,7 @@ def RunCommand(is_interactive):
             break
         for vertex in vertices:
             form.diagram.vertex_attribute(vertex, 'is_fixed', not form.diagram.vertex_attribute(vertex, 'is_fixed'))
+
         scene.update()
 
 

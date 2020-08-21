@@ -19,10 +19,10 @@ def RunCommand(is_interactive):
         return
 
     scene = sc.sticky['AGS']['scene']
-    form  = scene.find_by_name('Form')[0]
+    form = scene.find_by_name('Form')[0]
 
     if not form:
-        print("There is no FormDiagram in the scene.")
+        compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
 
     start = compas_rhino.pick_point('Pick a point to move from.')

@@ -6,8 +6,6 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from compas_ags.rhino import Scene
-
 
 __commandname__ = "AGS_redraw"
 

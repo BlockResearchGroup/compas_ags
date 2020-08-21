@@ -22,7 +22,7 @@ def RunCommand(is_interactive):
     force = scene.find_by_name('Force')[0]
 
     if not force:
-        print("There is no ForceDiagram in the scene.")
+        compas_rhino.display_message("There is no ForceDiagram in the scene.")
         return
 
     start = compas_rhino.pick_point('Pick a point to move from.')

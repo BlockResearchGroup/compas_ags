@@ -20,7 +20,7 @@ def RunCommand(is_interactive):
     form = scene.find_by_name('Form')[0]
 
     if not form:
-        print("There is no FormDiagram in the scene.")
+        compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
 
     edge_index = form.diagram.edge_index()
@@ -35,21 +35,21 @@ def RunCommand(is_interactive):
             form.diagram.edge_attribute(edge, 'is_ind', not form.diagram.edge_attribute(edge, 'is_ind'))
         scene.update()
 
-        edges = list(form.diagram.edges_where({'is_ind': True}))
-        names = [edge_index[edge] for edge in edges]
-        values = [form.diagram.edge_attribute(edge, 'f') for edge in edges]
-        values = compas_rhino.update_named_values(names, values)
-        if values:
-            for edge, value in zip(edges, values):
-                try:
-                    F = float(value)
-                except (ValueError, TypeError):
-                    pass
-                else:
-                    L = form.diagram.edge_length(*edge)
-                    Q = F / L
-                    form.diagram.edge_attribute(edge, 'f', F)
-                    form.diagram.edge_attribute(edge, 'q', Q)
+    edges = list(form.diagram.edges_where({'is_ind': True}))
+    names = [edge_index[edge] for edge in edges]
+    values = [form.diagram.edge_attribute(edge, 'f') for edge in edges]
+    values = compas_rhino.update_named_values(names, values, message='Independent edges.', title='Update force values.')
+    if values:
+        for edge, value in zip(edges, values):
+            try:
+                F = float(value)
+            except (ValueError, TypeError):
+                pass
+            else:
+                L = form.diagram.edge_length(*edge)
+                Q = F / L
+                form.diagram.edge_attribute(edge, 'f', F)
+                form.diagram.edge_attribute(edge, 'q', Q)
 
 
 # ==============================================================================

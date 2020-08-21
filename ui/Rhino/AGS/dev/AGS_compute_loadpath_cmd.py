@@ -22,17 +22,17 @@ def RunCommand(is_interactive):
     force = scene.find_by_name('Force')[0]
 
     if not form:
-        print("There is no FormDiagram in the scene.")
+        compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
 
     if not force:
-        print("There is no ForceDiagram in the scene.")
+        compas_rhino.display_message("There is no ForceDiagram in the scene.")
         return
 
     proxy.package = 'compas_ags.ags.loadpath'
 
     lp = proxy.compute_loadpath(form.diagram, force.diagram)
-    print('Loadpath of the structure is {} kNm.'.format(round(lp, 2)))
+    compas_rhino.display_message('Loadpath of the structure is {} kNm.'.format(round(lp, 2)))
 
 
 # ==============================================================================
