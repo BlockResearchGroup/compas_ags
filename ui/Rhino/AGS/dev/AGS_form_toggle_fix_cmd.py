@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_form_fix_nodes"
+__commandname__ = "AGS_form_toggle_fix"
 
 
 def RunCommand(is_interactive):
@@ -29,8 +29,7 @@ def RunCommand(is_interactive):
         if not vertices:
             break
         for vertex in vertices:
-            form.diagram.vertex_attribute(vertex, 'is_fixed', True)
-        scene.clear()
+            form.diagram.vertex_attribute(vertex, 'is_fixed', not form.diagram.vertex_attribute(vertex, 'is_fixed'))
         scene.update()
 
 

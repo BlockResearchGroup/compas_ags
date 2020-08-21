@@ -55,9 +55,9 @@
 
             {"name": "AGS_force_from_form",             "menu_text": "Create ForceDiagram",             "icon": 6,      "tooltip": "Create ForceDiagram"},
 
-            {"name": "AGS_form_move_nodes",             "menu_text": "Move Nodes",                      "icon": 7,      "tooltip": "Move FormDiagram Vertices"},
-            {"name": "AGS_form_fix_nodes",              "menu_text": "Fix Nodes",                       "icon": 8,      "tooltip": "Fix ForceDiagram Vertices"},
-            {"name": "AGS_force_move_nodes",            "menu_text": "Move Nodes",                      "icon": 9,      "tooltip": "Move ForceDiagram Vertices"},
+            {"name": "AGS_form_move_nodes",             "menu_text": "Move Nodes",                      "icon": 7,      "tooltip": "Move FormDiagram Nodes"},
+            {"name": "AGS_form_toggle_fix",              "menu_text": "Toggle Fix Nodes",                       "icon": 8,      "tooltip": "Fix ForceDiagram Nodes"},
+            {"name": "AGS_force_move_nodes",            "menu_text": "Move Nodes",                      "icon": 9,      "tooltip": "Move ForceDiagram Nodes"},
 
             {"name": "AGS_compute_loadpath",            "menu_text": "Compute Loadpath",                "icon": 10,     "tooltip": "Compute Loadpath"},
 
@@ -118,7 +118,7 @@
                         "items":
                         [
                             {"command": "AGS_form_move_nodes"},
-                            {"command": "AGS_form_fix_nodes"}
+                            {"command": "AGS_form_toggle_fix"}
                         ]
                     },
 
@@ -183,7 +183,7 @@
                     {"type": "separator"},
 
                     {"left": "AGS_form_move_nodes"},
-                    {"left": "AGS_form_fix_nodes"},
+                    {"left": "AGS_form_toggle_fix"},
                     {"left": "AGS_force_move_nodes"},
 
                     {"type": "separator"},
