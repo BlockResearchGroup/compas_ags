@@ -24,11 +24,8 @@ class DiagramObject(MeshObject):
 
     Parameters
     ----------
-    diagram : :class:`compas_ags.diagrams.FormDiagram`
+    diagram : :class:`compas_ags.diagrams.Diagram`
         The form diagram instance.
-    settings : dict, optional
-        Visualisation settings for the corresponding Rhino object(s).
-        Default is ``None``, in which case the default settings of the artist are used.
 
     Attributes
     ----------
