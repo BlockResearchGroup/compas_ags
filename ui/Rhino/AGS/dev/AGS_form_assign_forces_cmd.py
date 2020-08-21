@@ -23,40 +23,33 @@ def RunCommand(is_interactive):
         print("There is no FormDiagram in the scene.")
         return
 
+    edge_index = form.diagram.edge_index()
+
     # select edges and assign forces
     while True:
         edges = form.select_edges()
         if not edges:
             break
-        if form.diagram.edge_attribute(edges[0], 'is_ind'):
-            current = str(form.diagram.edge_attribute(edges[0], 'is_ind'))  # display T/F based on first selected
-            show = compas_rhino.rs.GetString("Modify Forces on selection", defaultString=current, strings=["True", "False"])
-            if show == "True":
-                force_value = compas_rhino.rs.GetReal("Force on Edges (kN)", form.diagram.edge_force(edges[0]))
-                for edge in edges:
-                    form.diagram.edge_force(edge, force_value)
-            elif show == "False":
-                for edge in edges:
-                    form.diagram.edge_attribute(edge, 'is_ind', False)
-            else:
-                pass
-        else:
-            force_value = compas_rhino.rs.GetReal("Force on Edges (kN)", 1.0)
-            for edge in edges:
-                form.diagram.edge_force(edge, force_value)
+
+        for edge in edges:
+            form.diagram.edge_attribute(edge, 'is_ind', not form.diagram.edge_attribute(edge, 'is_ind'))
         scene.update()
 
-    edge_index = form.diagram.edge_index()
-
-    edges = list(form.diagram.edges_where({'is_ind': True}))
-
-    names = [str(edge_index[edge]) for edge in edges]
-    values = ["{:.3f}".format(form.diagram.edge_force(edge)) for edge in edges]
-    values = compas_rhino.update_named_values(names, values)
-
-    if values:
-        for name, value in zip(names, values):
-            form.diagram.edge_force(int(name), float(value))
+        edges = list(form.diagram.edges_where({'is_ind': True}))
+        names = [edge_index[edge] for edge in edges]
+        values = [form.diagram.edge_attribute(edge, 'f') for edge in edges]
+        values = compas_rhino.update_named_values(names, values)
+        if values:
+            for edge, value in zip(edges, values):
+                try:
+                    F = float(value)
+                except (ValueError, TypeError):
+                    pass
+                else:
+                    L = form.diagram.edge_length(*edge)
+                    Q = F / L
+                    form.diagram.edge_attribute(edge, 'f', F)
+                    form.diagram.edge_attribute(edge, 'q', Q)
 
 
 # ==============================================================================
