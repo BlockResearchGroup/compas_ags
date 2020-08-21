@@ -8,8 +8,6 @@ import compas_rhino
 from compas.geometry import scale_vector
 from compas.geometry import add_vectors
 from compas.geometry import subtract_vectors
-from compas_rhino.objects.modifiers import VertexModifier
-from compas_rhino.objects.modifiers import EdgeModifier
 
 from compas_rhino.objects import MeshObject
 
@@ -154,25 +152,31 @@ class DiagramObject(MeshObject):
         diagram = self.diagram
         vertex_xyz = self.artist.vertex_xyz
         scale = 1 / self.artist.scale
+        origin = self.artist.anchor_point
+        anchor_xyz = diagram.vertex_attributes(self.artist.anchor_vertex, 'xyz')
+
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         if '_is_edge' in diagram.default_edge_attributes:
             nbrs = [vertex_xyz[nbr] for nbr in diagram.vertex_neighbors(vertex) if diagram.edge_attribute((vertex, nbr), '_is_edge')]
         else:
             nbrs = [vertex_xyz[nbr] for nbr in diagram.vertex_neighbors(vertex)]
+
         nbrs = [Point3d(*xyz) for xyz in nbrs]
         gp = Rhino.Input.Custom.GetPoint()
         gp.SetCommandPrompt('Point to move to?')
         gp.DynamicDraw += OnDynamicDraw
         if constraint:
             gp.Constrain(constraint, allow_off)
+
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
             return False
-        pos1 = vertex_xyz[vertex]
-        pos2 = list(gp.Point())
-        vector = scale_vector(subtract_vectors(pos2, pos1), scale)
-        xyz = diagram.vertex_attributes(vertex, 'xyz')
-        diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, vector))
+
+        point = list(gp.Point())
+
+        dxyz = scale_vector(subtract_vectors(point, origin), scale)
+        diagram.vertex_attributes(vertex, 'xyz', add_vectors(anchor_xyz, dxyz))
+
         return True
 
     def move_vertices(self, vertices):
@@ -203,6 +207,9 @@ class DiagramObject(MeshObject):
         diagram = self.diagram
         vertex_xyz = self.artist.vertex_xyz
         scale = 1 / self.artist.scale
+        origin = self.artist.anchor_point
+        anchor_xyz = diagram.vertex_attributes(self.artist.anchor_vertex, 'xyz')
+
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         lines = []
         connectors = []
@@ -218,6 +225,7 @@ class DiagramObject(MeshObject):
                     lines.append(line)
                 else:
                     connectors.append(line)
+
         gp = Rhino.Input.Custom.GetPoint()
         gp.SetCommandPrompt('Point to move from?')
         gp.Get()
@@ -236,53 +244,17 @@ class DiagramObject(MeshObject):
             return False
 
         end = gp.Point()
-        vector = scale_vector(list(end - start), scale)
+        vector = list(end - start)
+        # dxyz = scale_vector(vector, scale)
+
         for vertex in vertices:
-            xyz = diagram.vertex_attributes(vertex, 'xyz')
-            diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, vector))
+            dxyz = subtract_vectors(add_vectors(vertex_xyz[vertex], vector), origin)
+            dxyz = scale_vector(dxyz, scale)
+            diagram.vertex_attributes(vertex, 'xyz', add_vectors(anchor_xyz, dxyz))
+            # xyz = diagram.vertex_attributes(vertex, 'xyz')
+            # diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, dxyz))
+
         return True
-
-    def modify_vertices(self, vertices=None, names=None):
-        """Modify the attributes of a selection of diagram vertices.
-
-        Parameters
-        ----------
-        vertices : list, optional
-            The identifiers of selected vertices.
-            Default is ``None``.
-        names : list, optional
-            The names of the attributes that should be modified.
-
-        Returns
-        -------
-        bool
-            True if the operation was successful.
-            False otherwise.
-        """
-        vertices = vertices or list(self.diagram.vertices())
-        names = [name for name in sorted(self.diagram.default_vertex_attributes.keys()) if not name.startswith('_')]
-        return VertexModifier.update_vertex_attributes(self.diagram, vertices, names)
-
-    def modify_edges(self, edges=None, names=None):
-        """Modify the attributes of a selection of diagram edges.
-
-        Parameters
-        ----------
-        edges : list, optional
-            The identifiers of selected edges.
-            Default is ``None``.
-        names : list, optional
-            The names of the attributes that should be modified.
-
-        Returns
-        -------
-        bool
-            True if the operation was successful.
-            False otherwise.
-        """
-        edges = edges or list(self.diagram.edges())
-        names = [name for name in sorted(self.diagram.default_edge_attributes.keys()) if not name.startswith('_')]
-        return EdgeModifier.update_edge_attributes(self.diagram, edges, names)
 
 
 # ==============================================================================

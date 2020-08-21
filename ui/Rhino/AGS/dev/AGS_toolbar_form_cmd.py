@@ -6,8 +6,12 @@ import scriptcontext as sc
 
 import compas_rhino
 
+import AGS_form_from_obj_cmd
+import AGS_form_from_lines_cmd
+import AGS_form_from_layer_cmd
 
-__commandname__ = "AGS_force_scale"
+
+__commandname__ = "AGS_toolbar_form"
 
 
 def RunCommand(is_interactive):
@@ -16,22 +20,20 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    scene = sc.sticky['AGS']['scene']
-    force = scene.find_by_name('Force')[0]
+    options = ["FromObj", "FromLines", "FromLayer"]
+    option = compas_rhino.rs.GetString("Create Form:", strings=options)
 
-    if not force:
-        print("There is no ForceDiagram in the scene.")
+    if not option:
         return
 
-    vertex = force.select_vertex(message="Pick base node.")
-    if vertex:
-        force.artist.anchor_point = force.artist.vertex_xyz[vertex]
-        force.artist.anchor_vertex = vertex
+    if option == "FromObj":
+        AGS_form_from_obj_cmd.RunCommand(True)
 
-        scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
-        force.artist.scale = scale_factor
+    elif option == "FromLines":
+        AGS_form_from_lines_cmd.RunCommand(True)
 
-    scene.update()
+    elif option == "FromLayer":
+        AGS_form_from_layer_cmd.RunCommand(True)
 
 
 # ==============================================================================

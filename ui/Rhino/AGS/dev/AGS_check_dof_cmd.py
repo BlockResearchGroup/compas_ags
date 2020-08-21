@@ -20,9 +20,13 @@ def RunCommand(is_interactive):
     scene = sc.sticky['AGS']['scene']
     form = scene.find_by_name('Form')[0]
 
+    if not form:
+        print("There is no FormDiagram in the scene.")
+        return
+
     proxy.package = 'compas_ags.ags.graphstatics'
 
-    dof = proxy.form_count_dof_proxy(form.diagram.data)
+    dof = proxy.form_count_dof(form.diagram)
     k = dof[0]
     inds = len(list(form.diagram.edges_where({'is_ind': True})))
 

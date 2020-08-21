@@ -6,8 +6,12 @@ import scriptcontext as sc
 
 import compas_rhino
 
+import AGS_restart_cmd
+import AGS_session_load_cmd
+import AGS_session_save_cmd
 
-__commandname__ = "AGS_form_fix_nodes"
+
+__commandname__ = "AGS_toolbar_session"
 
 
 def RunCommand(is_interactive):
@@ -16,18 +20,20 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    scene = sc.sticky['AGS']['scene']
-    form = scene.find_by_name('Form')[0]
+    options = ["Restart", "LoadSession", "SaveSession"]
+    option = compas_rhino.rs.GetString("Session:", strings=options)
 
-    # select fixed vertices
-    while True:
-        vertices = form.select_vertices()
-        if not vertices:
-            break
-        for vertex in vertices:
-            form.diagram.vertex_attribute(vertex, 'is_fixed', True)
-        scene.clear()
-        scene.update()
+    if not option:
+        return
+
+    if option == "Restart":
+        AGS_restart_cmd.RunCommand(True)
+
+    elif option == "LoadSession":
+        AGS_session_load_cmd.RunCommand(True)
+
+    elif option == "SaveSession":
+        AGS_session_save_cmd.RunCommand(True)
 
 
 # ==============================================================================

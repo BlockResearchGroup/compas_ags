@@ -6,8 +6,11 @@ import scriptcontext as sc
 
 import compas_rhino
 
+import AGS_assign_forces_cmd
+import AGS_form_toggle_fix_cmd
 
-__commandname__ = "AGS_force_scale"
+
+__commandname__ = "AGS_toolbar_form_attribute"
 
 
 def RunCommand(is_interactive):
@@ -16,22 +19,17 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    scene = sc.sticky['AGS']['scene']
-    force = scene.find_by_name('Force')[0]
+    options = ["AssignForces", "FixNodes"]
+    option = compas_rhino.rs.GetString("Assign Attribute:", strings=options)
 
-    if not force:
-        print("There is no ForceDiagram in the scene.")
+    if not option:
         return
 
-    vertex = force.select_vertex(message="Pick base node.")
-    if vertex:
-        force.artist.anchor_point = force.artist.vertex_xyz[vertex]
-        force.artist.anchor_vertex = vertex
+    if option == "AssignForces":
+        AGS_assign_forces_cmd.RunCommand(True)
 
-        scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
-        force.artist.scale = scale_factor
-
-    scene.update()
+    elif option == "FixNodes":
+        AGS_form_toggle_fix_cmd.RunCommand(True)
 
 
 # ==============================================================================

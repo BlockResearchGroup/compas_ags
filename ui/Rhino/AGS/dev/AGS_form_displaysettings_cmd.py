@@ -20,6 +20,10 @@ def RunCommand(is_interactive):
 
     form = scene.find_by_name('Form')[0]
 
+    if not form:
+        print("There is no FormDiagram in the scene.")
+        return
+
     options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", ]
 
     while True:
