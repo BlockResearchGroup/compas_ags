@@ -49,7 +49,7 @@
             {"name": "AGS_form_from_layer",             "menu_text": "FormDiagram From Layer"},
             {"name": "AGS_form_from_lines",             "menu_text": "FormDiagram From Lines"},
 
-            {"name": "AGS_assign_forces",               "menu_text": "Assign Forces",                   "icon": 4,      "tooltip": "Assign Loads"},
+            {"name": "AGS_form_assign_forces",               "menu_text": "Assign Forces",                   "icon": 4,      "tooltip": "Assign Forces"},
 
             {"name": "AGS_check_dof",                   "menu_text": "Check Degree of Freedom",         "icon": 5,      "tooltip": "Check DoF"},
 
@@ -101,7 +101,7 @@
                         ]
                     },
 
-                    {"command": "AGS_assign_forces"},
+                    {"command": "AGS_form_assign_forces"},
 
                     {"type": "separator"},
 
@@ -170,7 +170,7 @@
                     {"type": "separator"},
 
                     {"left": "AGS_toolbar_form"},
-                    {"left": "AGS_assign_forces"},
+                    {"left": "AGS_form_assign_forces"},
 
                     {"type": "separator"},
 
