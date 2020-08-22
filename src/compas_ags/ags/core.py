@@ -165,8 +165,9 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
                     continue
 
                 n = _t[ij_e[(i, j)], None]  # the direction of the line (the line parallel to the corresponding line in the force diagram)
+                _l = _uv[ij_e[(i, j)], None]
 
-                if normrow(n)[0, 0] < 0.001:
+                if normrow(_l)[0, 0] < 0.001:
                     continue
 
                 r = I - n.T.dot(n)          # projection into the orthogonal space of the direction vector
@@ -178,8 +179,13 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
             b[row: row + 2] = q
             row += 2
 
+            # p = solve(R.T.dot(R), R.T.dot(q))
+            # xy[i] = p.reshape((-1, 2), order='C')
+
         res = solve(A.T.dot(A), A.T.dot(b))
         xy[free] = res.reshape((-1, 2), order='C')
+        # res = lstsq(A, b)
+        # xy[free] = res[0].reshape((-1, 2), order='C')
 
     # reconnect leaves
     for i in leaves:
