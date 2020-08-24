@@ -20,6 +20,10 @@ def RunCommand(is_interactive):
     scene = sc.sticky['AGS']['scene']
     form = scene.find_by_name('Form')[0]
 
+    if not form:
+        compas_rhino.display_message("There is no FormDiagram in the scene.")
+        return
+
     proxy.package = 'compas_ags.ags.graphstatics'
 
     dof = proxy.form_count_dof(form.diagram)
@@ -27,7 +31,7 @@ def RunCommand(is_interactive):
     inds = len(list(form.diagram.edges_where({'is_ind': True})))
 
     if k == inds:
-        print('Success: You have identified the correct number of externally applied loads.')
+        compas_rhino.display_message('Success: You have identified the correct number of externally applied loads.')
     elif k > inds:
         compas_rhino.display_message('Warning: You have not yet identified all external loads. (%s required and %s selected)' % (k, inds))
     else:

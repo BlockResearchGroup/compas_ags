@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_force_scale"
+__commandname__ = "AGS_redraw"
 
 
 def RunCommand(is_interactive):
@@ -17,19 +17,8 @@ def RunCommand(is_interactive):
         return
 
     scene = sc.sticky['AGS']['scene']
-    force = scene.find_by_name('Force')[0]
-
-    if not force:
-        compas_rhino.display_message("There is no ForceDiagram in the scene.")
+    if not scene:
         return
-
-    # vertex = force.select_vertex(message="Pick base node.")
-    # if vertex:
-    #     force.artist.anchor_point = force.artist.vertex_xyz[vertex]
-    #     force.artist.anchor_vertex = vertex
-
-    scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
-    force.artist.scale = scale_factor
 
     scene.update()
 

@@ -36,7 +36,8 @@ def RunCommand(is_interactive):
 
     scene.add(form, name='Form', layer='AGS::FormDiagram')
 
-    scene.clear()
+    # compas_rhino.display_message("FormDiagram successfully created!")
+
     scene.update()
 
 

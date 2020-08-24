@@ -21,6 +21,14 @@ def RunCommand(is_interactive):
     form = scene.find_by_name('Form')[0]
     force = scene.find_by_name('Force')[0]
 
+    if not form:
+        compas_rhino.display_message("There is no FormDiagram in the scene.")
+        return
+
+    if not force:
+        compas_rhino.display_message("There is no ForceDiagram in the scene.")
+        return
+
     proxy.package = 'compas_ags.ags.graphstatics'
 
     while True:
@@ -33,7 +41,6 @@ def RunCommand(is_interactive):
             form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
             force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
             # update the scene
-            scene.clear()
             scene.update()
 
 

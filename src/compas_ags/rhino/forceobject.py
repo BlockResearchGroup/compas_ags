@@ -12,9 +12,9 @@ class ForceObject(DiagramObject):
     """A force object represents a force diagram in the Rhino view.
     """
 
-    def unselect(self):
-        """Unselect all Rhino objects associated with this diagram object."""
-        super(ForceObject, self).unselect()
+    # def unselect(self):
+    #     """Unselect all Rhino objects associated with this diagram object."""
+    #     super(ForceObject, self).unselect()
 
 
 # ==============================================================================

@@ -8,15 +8,12 @@ import compas_rhino
 from compas.geometry import scale_vector
 from compas.geometry import add_vectors
 from compas.geometry import subtract_vectors
-from compas_rhino.objects.modifiers import VertexModifier
-from compas_rhino.objects.modifiers import EdgeModifier
 
 from compas_rhino.objects import MeshObject
 
-if compas.IPY:
-    if compas.RHINO:
-        import Rhino
-        from Rhino.Geometry import Point3d
+if compas.RHINO:
+    import Rhino
+    from Rhino.Geometry import Point3d
 
 
 __all__ = ['DiagramObject']
@@ -27,11 +24,8 @@ class DiagramObject(MeshObject):
 
     Parameters
     ----------
-    diagram : :class:`compas_ags.diagrams.FormDiagram`
+    diagram : :class:`compas_ags.diagrams.Diagram`
         The form diagram instance.
-    settings : dict, optional
-        Visualisation settings for the corresponding Rhino object(s).
-        Default is ``None``, in which case the default settings of the artist are used.
 
     Attributes
     ----------
@@ -86,7 +80,7 @@ class DiagramObject(MeshObject):
         if guid and guid in self.artist.guid_vertex:
             return self.artist.guid_vertex[guid]
 
-    def select_vertices(self):
+    def select_vertices(self, message="Select Vertices."):
         """Manually select vertices in the Rhino view.
 
         Returns
@@ -95,12 +89,12 @@ class DiagramObject(MeshObject):
             The identifiers of the selected vertices.
         """
         pointfilter = compas_rhino.rs.filter.point
-        guids = compas_rhino.rs.GetObjects(message="Select Vertices.", preselect=True, select=True, group=False, filter=pointfilter)
+        guids = compas_rhino.rs.GetObjects(message=message, preselect=True, select=True, group=False, filter=pointfilter)
         if not guids:
             return []
         return [self.artist.guid_vertex[guid] for guid in guids if guid in self.artist.guid_vertex]
 
-    def select_edge(self):
+    def select_edge(self, message="Select Edge."):
         """Manually select one edge in the Rhino view.
 
         Returns
@@ -109,11 +103,11 @@ class DiagramObject(MeshObject):
             The identifier of the selected edge.
         """
         curvefilter = compas_rhino.rs.filter.curve
-        guid = compas_rhino.rs.GetObject(message="Select Edge.", preselect=True, select=True, filter=curvefilter)
+        guid = compas_rhino.rs.GetObject(message=message, preselect=True, select=True, filter=curvefilter)
         if guid and guid in self.artist.guid_edge:
             return self.artist.guid_edge[guid]
 
-    def select_edges(self):
+    def select_edges(self, message="Select Edges."):
         """Manually select edges in the Rhino view.
 
         Returns
@@ -122,10 +116,45 @@ class DiagramObject(MeshObject):
             The identifiers of the selected edges.
         """
         curvefilter = compas_rhino.rs.filter.curve
-        guids = compas_rhino.rs.GetObjects(message="Select Edges.", preselect=True, select=True, group=False, filter=curvefilter)
+        guids = compas_rhino.rs.GetObjects(message=message, preselect=True, select=True, group=False, filter=curvefilter)
         if not guids:
             return []
         return [self.artist.guid_edge[guid] for guid in guids if guid in self.artist.guid_edge]
+
+    def move(self):
+        """"""
+        color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+
+        vertex_xyz = self.artist.vertex_xyz
+        vertex_xyz0 = {vertex: xyz[:] for vertex, xyz in vertex_xyz.items()}
+
+        edges = list(self.diagram.edges())
+
+        start = compas_rhino.pick_point('Point to move from?')
+        if not start:
+            return False
+        start = list(start)
+
+        gp = Rhino.Input.Custom.GetPoint()
+        gp.SetCommandPrompt('Point to move to?')
+
+        def OnDynamicDraw(sender, e):
+            translation = subtract_vectors(list(e.CurrentPoint), start)
+            for vertex in vertex_xyz:
+                vertex_xyz[vertex] = add_vectors(vertex_xyz0[vertex], translation)
+            for u, v in iter(edges):
+                e.Display.DrawDottedLine(Point3d(* vertex_xyz[u]), Point3d(* vertex_xyz[v]), color)
+
+        gp.DynamicDraw += OnDynamicDraw
+        gp.Get()
+
+        if gp.CommandResult() != Rhino.Commands.Result.Success:
+            return False
+
+        end = list(gp.Point())
+        translation = subtract_vectors(end, start)
+        self.artist.anchor_point = add_vectors(self.artist.anchor_point, translation)
+        return True
 
     def move_vertex(self, vertex, constraint=None, allow_off=None):
         """Move one vertex of the diagram and update the data structure to the new geometry.
@@ -146,39 +175,42 @@ class DiagramObject(MeshObject):
             True if the operation was successful.
             False otherwise.
         """
-        def OnDynamicDraw(sender, e):
-            sp = e.CurrentPoint
-            for ep in nbrs:
-                e.Display.DrawDottedLine(sp, ep, color)
+        color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
 
         diagram = self.diagram
         vertex_xyz = self.artist.vertex_xyz
-        scale = 1 / self.artist.scale
-        origin = self.artist.anchor_point
-        anchor_xyz = diagram.vertex_attributes(self.artist.anchor_vertex, 'xyz')
 
-        color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         if '_is_edge' in diagram.default_edge_attributes:
             nbrs = [vertex_xyz[nbr] for nbr in diagram.vertex_neighbors(vertex) if diagram.edge_attribute((vertex, nbr), '_is_edge')]
         else:
             nbrs = [vertex_xyz[nbr] for nbr in diagram.vertex_neighbors(vertex)]
 
         nbrs = [Point3d(*xyz) for xyz in nbrs]
+
         gp = Rhino.Input.Custom.GetPoint()
         gp.SetCommandPrompt('Point to move to?')
-        gp.DynamicDraw += OnDynamicDraw
         if constraint:
             gp.Constrain(constraint, allow_off)
 
+        def OnDynamicDraw(sender, e):
+            sp = e.CurrentPoint
+            for ep in nbrs:
+                e.Display.DrawDottedLine(sp, ep, color)
+
+        gp.DynamicDraw += OnDynamicDraw
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
             return False
 
         point = list(gp.Point())
 
-        dxyz = scale_vector(subtract_vectors(point, origin), scale)
-        diagram.vertex_attributes(vertex, 'xyz', add_vectors(anchor_xyz, dxyz))
+        xyz0 = vertex_xyz[vertex]
+        dxyz0 = subtract_vectors(point, xyz0)
 
+        dxyz = scale_vector(dxyz0, 1 / self.artist.scale)
+        xyz = diagram.vertex_attributes(vertex, 'xyz')
+        xyz[:] = add_vectors(xyz, dxyz)
+        diagram.vertex_attributes(vertex, 'xyz', xyz)
         return True
 
     def move_vertices(self, vertices):
@@ -199,18 +231,12 @@ class DiagramObject(MeshObject):
             end = e.CurrentPoint
             vector = end - start
             for a, b in lines:
-                a = a + vector
-                b = b + vector
-                e.Display.DrawDottedLine(a, b, color)
+                e.Display.DrawDottedLine(a + vector, b + vector, color)
             for a, b in connectors:
-                a = a + vector
-                e.Display.DrawDottedLine(a, b, color)
+                e.Display.DrawDottedLine(a + vector, b, color)
 
         diagram = self.diagram
         vertex_xyz = self.artist.vertex_xyz
-        scale = 1 / self.artist.scale
-        origin = self.artist.anchor_point
-        anchor_xyz = diagram.vertex_attributes(self.artist.anchor_vertex, 'xyz')
 
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
         lines = []
@@ -236,6 +262,7 @@ class DiagramObject(MeshObject):
             return False
 
         start = gp.Point()
+
         gp.SetCommandPrompt('Point to move to?')
         gp.SetBasePoint(start, False)
         gp.DrawLineFromPoint(start, True)
@@ -246,59 +273,21 @@ class DiagramObject(MeshObject):
             return False
 
         end = gp.Point()
-        vector = list(end - start)
-        # dxyz = scale_vector(vector, scale)
+        dxyz0 = list(end - start)
+        dxyz = scale_vector(dxyz0, 1 / self.artist.scale)
 
         for vertex in vertices:
-            dxyz = subtract_vectors(add_vectors(vertex_xyz[vertex], vector), origin)
-            dxyz = scale_vector(dxyz, scale)
-            diagram.vertex_attributes(vertex, 'xyz', add_vectors(anchor_xyz, dxyz))
-            # xyz = diagram.vertex_attributes(vertex, 'xyz')
-            # diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, dxyz))
+            # dxyz = subtract_vectors(add_vectors(vertex_xyz[vertex], vector), origin)
+            # dxyz = scale_vector(dxyz, scale)
+            # diagram.vertex_attributes(vertex, 'xyz', add_vectors(anchor_xyz, dxyz))
+            # # xyz = diagram.vertex_attributes(vertex, 'xyz')
+            # # diagram.vertex_attributes(vertex, 'xyz', add_vectors(xyz, dxyz))
+
+            xyz = diagram.vertex_attributes(vertex, 'xyz')
+            xyz[:] = add_vectors(xyz, dxyz)
+            diagram.vertex_attributes(vertex, 'xyz', xyz)
 
         return True
-
-    def modify_vertices(self, vertices=None, names=None):
-        """Modify the attributes of a selection of diagram vertices.
-
-        Parameters
-        ----------
-        vertices : list, optional
-            The identifiers of selected vertices.
-            Default is ``None``.
-        names : list, optional
-            The names of the attributes that should be modified.
-
-        Returns
-        -------
-        bool
-            True if the operation was successful.
-            False otherwise.
-        """
-        vertices = vertices or list(self.diagram.vertices())
-        names = [name for name in sorted(self.diagram.default_vertex_attributes.keys()) if not name.startswith('_')]
-        return VertexModifier.update_vertex_attributes(self.diagram, vertices, names)
-
-    def modify_edges(self, edges=None, names=None):
-        """Modify the attributes of a selection of diagram edges.
-
-        Parameters
-        ----------
-        edges : list, optional
-            The identifiers of selected edges.
-            Default is ``None``.
-        names : list, optional
-            The names of the attributes that should be modified.
-
-        Returns
-        -------
-        bool
-            True if the operation was successful.
-            False otherwise.
-        """
-        edges = edges or list(self.diagram.edges())
-        names = [name for name in sorted(self.diagram.default_edge_attributes.keys()) if not name.startswith('_')]
-        return EdgeModifier.update_edge_attributes(self.diagram, edges, names)
 
 
 # ==============================================================================

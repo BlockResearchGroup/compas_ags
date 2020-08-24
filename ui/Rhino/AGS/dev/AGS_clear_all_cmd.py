@@ -6,8 +6,10 @@ import scriptcontext as sc
 
 import compas_rhino
 
+from compas_ags.rhino import Scene
 
-__commandname__ = "AGS_form_fix_nodes"
+
+__commandname__ = "AGS_clear_all"
 
 
 def RunCommand(is_interactive):
@@ -17,17 +19,17 @@ def RunCommand(is_interactive):
         return
 
     scene = sc.sticky['AGS']['scene']
-    form = scene.find_by_name('Form')[0]
+    if not scene:
+        return
 
-    # select fixed vertices
-    while True:
-        vertices = form.select_vertices()
-        if not vertices:
-            break
-        for vertex in vertices:
-            form.diagram.vertex_attribute(vertex, 'is_fixed', True)
+    options = ["Yes", "No"]
+    option = compas_rhino.rs.GetString("Clear all RV2 objects?", strings=options, defaultString="No")
+    if not option:
+        return
+
+    if option == "Yes":
         scene.clear()
-        scene.update()
+        sc.sticky['AGS']['scene'] = Scene()
 
 
 # ==============================================================================

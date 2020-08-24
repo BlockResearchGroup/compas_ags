@@ -6,35 +6,33 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from compas.geometry import subtract_vectors
-from compas.geometry import add_vectors
 
-
-__commandname__ = "AGS_form_location"
+__commandname__ = "AGS_compute_loadpath"
 
 
 def RunCommand(is_interactive):
+
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
+    proxy = sc.sticky['AGS']['proxy']
     scene = sc.sticky['AGS']['scene']
     form = scene.find_by_name('Form')[0]
+    force = scene.find_by_name('Force')[0]
 
     if not form:
         compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
 
-    start = compas_rhino.pick_point('Pick a point to move from.')
-    if start:
-        end = compas_rhino.pick_point('Pick a point to move to.')
-        if end:
-            vector = subtract_vectors(end, start)
-            xyz = form.artist.anchor_point
-            new_xyz = add_vectors(xyz, vector)
-            form.artist.anchor_point = new_xyz
+    if not force:
+        compas_rhino.display_message("There is no ForceDiagram in the scene.")
+        return
 
-    scene.update()
+    proxy.package = 'compas_ags.ags.loadpath'
+
+    lp = proxy.compute_loadpath(form.diagram, force.diagram)
+    compas_rhino.display_message('Loadpath of the structure is {} kNm.'.format(round(lp, 2)))
 
 
 # ==============================================================================

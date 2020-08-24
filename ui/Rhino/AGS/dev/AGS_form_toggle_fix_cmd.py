@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_check_loadpath"
+__commandname__ = "AGS_form_toggle_fix"
 
 
 def RunCommand(is_interactive):
@@ -16,15 +16,22 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    proxy = sc.sticky['AGS']['proxy']
     scene = sc.sticky['AGS']['scene']
     form = scene.find_by_name('Form')[0]
-    force = scene.find_by_name('Force')[0]
 
-    proxy.package = 'compas_ags.ags.loadpath'
+    if not form:
+        compas_rhino.display_message("There is no FormDiagram in the scene.")
+        return
 
-    lp = proxy.compute_loadpath(form.diagram, force.diagram)
-    print('Loadpath of the structure is {} kNm.'.format(round(lp, 2)))
+    # select fixed vertices
+    while True:
+        vertices = form.select_vertices()
+        if not vertices:
+            break
+        for vertex in vertices:
+            form.diagram.vertex_attribute(vertex, 'is_fixed', not form.diagram.vertex_attribute(vertex, 'is_fixed'))
+
+        scene.update()
 
 
 # ==============================================================================
