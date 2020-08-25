@@ -130,15 +130,8 @@
                         ]
                     },
 
-                    {
-                        "name": "Update FormDiagram",
-                        "items":
-                        [
-                            {"command": "AGS_form_update_from_force"},
-                            {"command": "AGS_form_update_from_qind"}
-                        ]
-                    },
-                    
+                    {"command": "AGS_form_update_from_force"},
+                 
                     {"type": "separator"},
 
                     {
@@ -149,13 +142,7 @@
                         ]
                     },
 
-                    {
-                        "name": "Update ForceDiagram",
-                        "items":
-                        [
-                            {"command": "AGS_force_update"}
-                        ]
-                    },
+                    {"command": "AGS_force_update"},
 
                     {"type": "separator"},
 
@@ -212,7 +199,12 @@
 
                     {"left": "AGS_form_move_nodes"},
                     {"left": "AGS_form_select_fixed"},
+                    {"left": "AGS_form_update_from_force"},
+
+                    {"type": "separator"},
+
                     {"left": "AGS_force_move_nodes"},
+                    {"left": "AGS_force_update"},
 
                     {"type": "separator"},
 
