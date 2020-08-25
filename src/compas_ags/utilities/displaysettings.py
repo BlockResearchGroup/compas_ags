@@ -89,3 +89,11 @@ def calculate_drawingscale_forces(form):
     scale = 0.1/max(q)  # highest force/length radio equals 10% of length
 
     return scale
+
+
+# ==============================================================================
+# Main
+# ==============================================================================
+
+if __name__ == '__main__':
+    pass

@@ -34,6 +34,11 @@ def RunCommand(is_interactive):
         'scene': scene
     }
 
+    scene.update()
+
+    # would be useful to add a notification about the cloud: new / reconnect
+    compas_rhino.display_message("AGS has started.")
+
 
 # ==============================================================================
 # Main

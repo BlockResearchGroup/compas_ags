@@ -18,21 +18,23 @@ def RunCommand(is_interactive):
 
     proxy = sc.sticky['AGS']['proxy']
     scene = sc.sticky['AGS']['scene']
-    form = scene.find_by_name('Form')[0]
-    force = scene.find_by_name('Force')[0]
 
-    if not form:
+    objects = scene.find_by_name('Form')
+    if not objects:
         compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
+    form = objects[0]
 
-    if not force:
+    objects = scene.find_by_name('Force')
+    if not objects:
         compas_rhino.display_message("There is no ForceDiagram in the scene.")
         return
+    force = objects[0]
 
     proxy.package = 'compas_ags.ags.loadpath'
 
     lp = proxy.compute_loadpath(form.diagram, force.diagram)
-    compas_rhino.display_message('Loadpath of the structure is {} kNm.'.format(round(lp, 2)))
+    compas_rhino.display_message('The total load-path of the structure is {} kNm.'.format(round(lp, 2)))
 
 
 # ==============================================================================

@@ -18,23 +18,24 @@ def RunCommand(is_interactive):
 
     scene = sc.sticky['AGS']['scene']
 
-    form = scene.find_by_name('Form')[0]
-
-    if not form:
+    objects = scene.find_by_name('Form')
+    if not objects:
         compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
+    form = objects[0]
 
-    options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", ]
+    options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", "ScaleForces"]
 
     while True:
         option = compas_rhino.rs.GetString("FormDiagram Display", strings=options)
 
-        if not option:
+        if not option or option not in options:
             return
 
         if option == "Vertexlabels":
             current = str(form.artist.settings['show.vertexlabels'])
-            show = compas_rhino.rs.GetString("Vertex labels", defaultString=current, strings=["True", "False"])
+            show = compas_rhino.rs.GetString("Vertex labels", current, ["True", "False"])
+
             if show == "True":
                 form.artist.settings['show.vertexlabels'] = True
             elif show == "False":
@@ -42,7 +43,8 @@ def RunCommand(is_interactive):
 
         elif option == "Edgelabels":
             current = str(form.artist.settings['show.edgelabels'])
-            show = compas_rhino.rs.GetString("Edge labels", defaultString=current, strings=["True", "False"])
+            show = compas_rhino.rs.GetString("Edge labels", current, ["True", "False"])
+
             if show == "True":
                 form.artist.settings['show.edgelabels'] = True
                 form.artist.settings['show.forcelabels'] = False
@@ -51,7 +53,8 @@ def RunCommand(is_interactive):
 
         elif option == "Forcelabels":
             current = str(form.artist.settings['show.forcelabels'])
-            show = compas_rhino.rs.GetString("Force labels", defaultString=current, strings=["True", "False"])
+            show = compas_rhino.rs.GetString("Force labels", current, ["True", "False"])
+
             if show == "True":
                 form.artist.settings['show.forcelabels'] = True
                 form.artist.settings['show.edgelabels'] = False
@@ -60,11 +63,20 @@ def RunCommand(is_interactive):
 
         elif option == "CompressionTension":
             current = str(form.artist.settings['show.forces'])
-            show = compas_rhino.rs.GetString("Compression / Tension", defaultString=current, strings=["True", "False"])
+            show = compas_rhino.rs.GetString("Compression / Tension", current, ["True", "False"])
+
             if show == "True":
                 form.artist.settings['show.forces'] = True
             elif show == "False":
                 form.artist.settings['show.forces'] = False
+
+        elif option == "ScaleForces":
+            scale = compas_rhino.rs.GetReal("Scale Forces", form.artist.settings['scale.forces'])
+            scale = float(scale)
+            form.artist.settings['scale.forces'] = scale
+
+        else:
+            raise NotImplementedError
 
         scene.update()
 

@@ -27,26 +27,40 @@ def RunCommand(is_interactive):
 
     if not filepath:
         return
+
     if filepath.split('.')[-1] != system['session.extension']:
         filepath = "%s.%s" % (filepath, system['session.extension'])
 
     dirname, basename = os.path.split(filepath)
     filename, _ = os.path.splitext(basename)
 
+    system['session.dirname'] = dirname
+    system['session.filename'] = filename
+
     filepath = os.path.join(dirname, filename + '.' + system['session.extension'])
 
     session = {
         "data": {"form": None, "force": None},
+        "scene": {"form": None, "force": None}
     }
 
-    form = scene.find_by_name('Form')[0]
-    force = scene.find_by_name('Force')[0]
+    objects = scene.find_by_name('Form')
+    if objects:
+        form = objects[0]
+        if form:
+            session['data']['form'] = form.diagram.to_data()
+            session['scene']['form'] = {
+                'anchor': {'vertex': form.artist.anchor_vertex, 'point': form.artist.anchor_point},
+                'scale': form.artist.scale}
 
-    if form:
-        session['data']['form'] = form.diagram.to_data()
-
-    if force:
-        session['data']['force'] = force.diagram.to_data()
+    objects = scene.find_by_name('Force')
+    if objects:
+        force = objects[0]
+        if force:
+            session['data']['force'] = force.diagram.to_data()
+            session['scene']['force'] = {
+                'anchor': {'vertex': force.artist.anchor_vertex, 'point': force.artist.anchor_point},
+                'scale': force.artist.scale}
 
     with open(filepath, 'w+') as f:
         json.dump(session, f, cls=DataEncoder)

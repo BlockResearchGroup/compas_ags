@@ -6,30 +6,25 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from compas_ags.rhino import Scene
 
-
-__commandname__ = "AGS_clear_all"
+__commandname__ = "AGS_force_move"
 
 
 def RunCommand(is_interactive):
-
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
     scene = sc.sticky['AGS']['scene']
-    if not scene:
-        return
 
-    options = ["Yes", "No"]
-    option = compas_rhino.rs.GetString("Clear all RV2 objects?", strings=options, defaultString="No")
-    if not option:
+    objects = scene.find_by_name('Force')
+    if not objects:
+        compas_rhino.display_message("There is no ForceDiagram in the scene.")
         return
+    force = objects[0]
 
-    if option == "Yes":
-        scene.clear()
-        sc.sticky['AGS']['scene'] = Scene()
+    if force.move():
+        scene.update()
 
 
 # ==============================================================================

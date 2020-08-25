@@ -103,8 +103,13 @@ class Scene(object):
 
     def update(self):
         """Redraw all objects in the scene."""
-        for guid in self.objects:
-            self.objects[guid].draw()
+        compas_rhino.rs.EnableRedraw(False)
+        try:
+            for guid in self.objects:
+                self.objects[guid].clear()
+                self.objects[guid].draw()
+        except Exception:
+            pass
         compas_rhino.rs.EnableRedraw(True)
 
 
