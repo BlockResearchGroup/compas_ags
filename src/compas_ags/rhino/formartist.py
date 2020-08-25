@@ -77,8 +77,8 @@ class FormArtist(DiagramArtist):
         None
 
         """
-        self.clear()
-        self.clear_layer()
+        # self.clear()
+        # self.clear_layer()
         # vertices
         if self.settings['show.vertices']:
             color = {}

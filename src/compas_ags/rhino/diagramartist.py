@@ -221,14 +221,12 @@ class DiagramArtist(MeshArtist):
         None
         """
         guids = []
-        guids_vertices = list(self.guid_vertex.keys())
-        guids_edges = list(self.guid_edge.keys())
-        guids_faces = list(self.guid_face.keys())
-        guids_vertexlabels = list(self.guid_vertexlabel.keys())
-        guids_edgelabels = list(self.guid_edgelabel.keys())
-        guids_facelabels = list(self.guid_facelabel.keys())
-        guids += guids_vertices + guids_edges + guids_faces
-        guids += guids_vertexlabels + guids_edgelabels + guids_facelabels
+        guids += list(self.guid_vertex.keys())
+        guids += list(self.guid_edge.keys())
+        guids += list(self.guid_face.keys())
+        guids += list(self.guid_vertexlabel.keys())
+        guids += list(self.guid_edgelabel.keys())
+        guids += list(self.guid_facelabel.keys())
         compas_rhino.delete_objects(guids, purge=True)
         self._guid_vertex = {}
         self._guid_edge = {}
