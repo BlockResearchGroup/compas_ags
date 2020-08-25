@@ -125,8 +125,7 @@
                         "items":
                         [
                             {"command": "AGS_form_move_nodes"},
-                            {"command": "AGS_form_select_fixed"},
-                            {"command": "AGS_form_select_ind"}
+                            {"command": "AGS_form_select_fixed"}
                         ]
                     },
 
