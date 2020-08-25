@@ -182,10 +182,10 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
             # p = solve(R.T.dot(R), R.T.dot(q))
             # xy[i] = p.reshape((-1, 2), order='C')
 
-        res = solve(A.T.dot(A), A.T.dot(b))
-        xy[free] = res.reshape((-1, 2), order='C')
-        # res = lstsq(A, b)
-        # xy[free] = res[0].reshape((-1, 2), order='C')
+        # res = solve(A.T.dot(A), A.T.dot(b))
+        # xy[free] = res.reshape((-1, 2), order='C')
+        res = lstsq(A, b)
+        xy[free] = res[0].reshape((-1, 2), order='C')
 
     # reconnect leaves
     for i in leaves:
