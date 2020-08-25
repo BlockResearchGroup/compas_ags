@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_restart"
+__commandname__ = "AGS_server_restart"
 
 
 def RunCommand(is_interactive):

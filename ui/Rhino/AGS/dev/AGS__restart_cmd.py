@@ -4,23 +4,23 @@ from __future__ import division
 
 import scriptcontext as sc
 
-import compas_rhino
 
-
-__commandname__ = "AGS_redraw"
+__commandname__ = "AGS__restart"
 
 
 def RunCommand(is_interactive):
-
-    if 'AGS' not in sc.sticky:
-        compas_rhino.display_message('AGS has not been initialised yet.')
-        return
 
     scene = sc.sticky['AGS']['scene']
     if not scene:
         return
 
-    scene.update()
+    proxy = sc.sticky['AGS']['proxy']
+    if not proxy:
+        return
+
+    scene.clear()
+    proxy.stop_server()
+    proxy.start_server()
 
 
 # ==============================================================================

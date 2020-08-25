@@ -98,8 +98,15 @@ class Scene(object):
 
     def clear(self):
         """Clear all objects from the scene."""
-        for guid in self.objects:
-            self.objects[guid].clear()
+        compas_rhino.rs.EnableRedraw(False)
+        try:
+            for guid in list(self.objects.keys()):
+                self.objects[guid].clear()
+                del self.objects[guid]
+        except Exception:
+            pass
+        compas_rhino.rs.EnableRedraw(True)
+        compas_rhino.rs.Redraw()
 
     def update(self):
         """Redraw all objects in the scene."""
@@ -111,6 +118,7 @@ class Scene(object):
         except Exception:
             pass
         compas_rhino.rs.EnableRedraw(True)
+        compas_rhino.rs.Redraw()
 
 
 # ==============================================================================
