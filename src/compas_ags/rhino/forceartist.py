@@ -91,6 +91,10 @@ class ForceArtist(DiagramArtist):
             color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where_dual({'is_load': True})})
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where_dual({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where_dual({'is_ind': True})})
+            # forces of the structure
+            if self.settings['show.forces']:
+                color.update({edge: self.settings['color.tension'] for edge in self.diagram.edges_where_dual({'is_external': False}) if self.diagram.dual_edge_f(edge) > 0})
+                color.update({edge: self.settings['color.compression'] for edge in self.diagram.edges_where_dual({'is_external': False}) if self.diagram.dual_edge_f(edge) < 0})
             self.draw_edgelabels(text=text, color=color)
         # force magnitude labels
         if self.settings['show.forcelabels']:
@@ -105,6 +109,8 @@ class ForceArtist(DiagramArtist):
             color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where_dual({'is_load': True})})
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where_dual({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where_dual({'is_ind': True})})
+            color.update({edge: self.settings['color.tension'] for edge in self.diagram.edges_where_dual({'is_external': False}) if self.diagram.dual_edge_f(edge) > 0})
+            color.update({edge: self.settings['color.compression'] for edge in self.diagram.edges_where_dual({'is_external': False}) if self.diagram.dual_edge_f(edge) < 0})
             self.draw_edgelabels(text=text, color=color)
 
 
