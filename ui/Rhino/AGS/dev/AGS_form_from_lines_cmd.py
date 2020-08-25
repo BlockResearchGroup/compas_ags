@@ -36,6 +36,7 @@ def RunCommand(is_interactive):
 
     form = FormDiagram.from_graph(graph)
 
+    scene.clear()
     scene.add(form, name='Form', layer='AGS::FormDiagram')
     scene.update()
 

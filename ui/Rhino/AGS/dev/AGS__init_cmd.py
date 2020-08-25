@@ -11,7 +11,7 @@ from compas.rpc import Proxy
 from compas_ags.rhino import Scene
 
 
-__commandname__ = "AGS_init"
+__commandname__ = "AGS__init"
 
 
 HERE = compas_rhino.get_document_dirname()

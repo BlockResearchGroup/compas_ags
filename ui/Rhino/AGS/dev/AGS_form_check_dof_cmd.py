@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_compute_loadpath"
+__commandname__ = "AGS_form_check_dof"
 
 
 def RunCommand(is_interactive):
@@ -25,16 +25,18 @@ def RunCommand(is_interactive):
         return
     form = objects[0]
 
-    objects = scene.find_by_name('Force')
-    if not objects:
-        compas_rhino.display_message("There is no ForceDiagram in the scene.")
-        return
-    force = objects[0]
+    proxy.package = 'compas_ags.ags.graphstatics'
 
-    proxy.package = 'compas_ags.ags.loadpath'
+    dof = proxy.form_count_dof(form.diagram)
+    k = dof[0]
+    inds = len(list(form.diagram.edges_where({'is_ind': True})))
 
-    lp = proxy.compute_loadpath(form.diagram, force.diagram)
-    compas_rhino.display_message('The total load-path of the structure is {} kNm.'.format(round(lp, 2)))
+    if k == inds:
+        compas_rhino.display_message('Success: You have identified the correct number of externally applied loads.')
+    elif k > inds:
+        compas_rhino.display_message('Warning: You have not yet identified all external loads. (%s required and %s selected)' % (k, inds))
+    else:
+        compas_rhino.display_message('Warning: You have identified too many external forces as loads. (%s required and %s selected)' % (k, inds))
 
 
 # ==============================================================================

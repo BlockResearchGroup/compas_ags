@@ -50,6 +50,8 @@ def RunCommand(is_interactive):
     if not session['data']['form']:
         compas_rhino.display_message('The session file has no form diagram.')
 
+    scene.clear()
+
     formdiagram = FormDiagram.from_data(session['data']['form'])
 
     form_id = scene.add(formdiagram, name='Form', layer='AGS::FormDiagram')
