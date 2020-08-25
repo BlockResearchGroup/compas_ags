@@ -23,9 +23,12 @@ def RunCommand(is_interactive):
         return
     force = objects[0]
 
+    vertex_xyz = force.artist.vertex_xyz
+
     vertex = force.select_vertex("Select the anchor vertex.")
     if vertex is not None:
         force.artist.anchor_vertex = vertex
+        force.artist.anchor_point = vertex_xyz[vertex]
         scene.update()
 
 

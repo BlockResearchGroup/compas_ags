@@ -33,7 +33,7 @@ def RunCommand(is_interactive):
         return
     force = objects[0]
 
-    # form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
+    form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
     force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
 
     scene.update()
