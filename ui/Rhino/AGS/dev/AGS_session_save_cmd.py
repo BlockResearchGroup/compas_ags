@@ -50,6 +50,7 @@ def RunCommand(is_interactive):
         if form:
             session['data']['form'] = form.diagram.to_data()
             session['scene']['form'] = {
+                'settings': form.artist.settings,
                 'anchor': {'vertex': form.artist.anchor_vertex, 'point': form.artist.anchor_point},
                 'scale': form.artist.scale}
 
@@ -59,6 +60,7 @@ def RunCommand(is_interactive):
         if force:
             session['data']['force'] = force.diagram.to_data()
             session['scene']['force'] = {
+                'settings': force.artist.settings,
                 'anchor': {'vertex': force.artist.anchor_vertex, 'point': force.artist.anchor_point},
                 'scale': force.artist.scale}
 
