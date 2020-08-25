@@ -198,12 +198,7 @@
 
                     {"left": "AGS_form_move_nodes"},
                     {"left": "AGS_form_select_fixed"},
-                    {"left": "AGS_form_update_from_force"},
-
-                    {"type": "separator"},
-
                     {"left": "AGS_force_move_nodes"},
-                    {"left": "AGS_force_update"},
 
                     {"type": "separator"},
 
