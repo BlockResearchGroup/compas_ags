@@ -25,22 +25,17 @@ def RunCommand(is_interactive):
         return
     form = objects[0]
 
-    objects = scene.find_by_name('Force')
-    if not objects:
-        compas_rhino.display_message("There is no ForceDiagram in the scene.")
-        return
-    force = objects[0]
+    # objects = scene.find_by_name('Force')
+    # if not objects:
+    #     compas_rhino.display_message("There is no ForceDiagram in the scene.")
+    #     return
+    # force = objects[0]
 
     proxy.package = 'compas_ags.ags.graphstatics'
 
-    while True:
-        vertices = force.select_vertices()
-        if not vertices:
-            break
-        if force.move_vertices(vertices):
-            scene.update()
+    form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
+    # force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
 
-    form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
     scene.update()
 
 

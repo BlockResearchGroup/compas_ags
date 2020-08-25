@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_form_assign_forces"
+__commandname__ = "AGS_form_select_ind"
 
 
 def RunCommand(is_interactive):
@@ -24,17 +24,14 @@ def RunCommand(is_interactive):
         return
     form = objects[0]
 
-    options = ["Select", "Toggle", "Skip"]
+    options = ["Select", "Toggle"]
     while True:
         option = compas_rhino.rs.GetString("Identification Mode", options[0], options)
         if not option or option not in options:
             return
 
-        if option == "Skip":
-            break
-
-        elif option == "Select":
-            edges = form.select_edges("Select the independent edges.")
+        if option == "Select":
+            edges = form.select_edges("Mark selected edges as independent (all others as dependent).")
             if edges:
                 form.diagram.edges_attribute('is_ind', False)
                 form.diagram.edges_attribute('is_ind', True, keys=edges)
@@ -49,35 +46,6 @@ def RunCommand(is_interactive):
 
         else:
             raise NotImplementedError
-
-    # update the force values of the independent edges
-
-    edges = list(form.diagram.edges_where({'is_ind': True}))
-
-    if not len(edges):
-        compas_rhino.display_message("""
-None of the edges of the diagram are marked as "independent".
-Forces can only be assigned to "independent" edges.
-Please select the independent edges first.""")
-        return
-
-    edge_index = form.diagram.edge_index()
-
-    names = [edge_index[edge] for edge in edges]
-
-    values = [form.diagram.edge_attribute(edge, 'f') for edge in edges]
-    values = compas_rhino.update_named_values(names, values, message='Independent edges.', title='Update force values.')
-    if values:
-        for edge, value in zip(edges, values):
-            try:
-                F = float(value)
-            except (ValueError, TypeError):
-                pass
-            else:
-                L = form.diagram.edge_length(*edge)
-                Q = F / L
-                form.diagram.edge_attribute(edge, 'f', F)
-                form.diagram.edge_attribute(edge, 'q', Q)
 
 
 # ==============================================================================

@@ -33,13 +33,6 @@ def RunCommand(is_interactive):
 
     proxy.package = 'compas_ags.ags.graphstatics'
 
-    while True:
-        vertices = force.select_vertices()
-        if not vertices:
-            break
-        if force.move_vertices(vertices):
-            scene.update()
-
     form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
     scene.update()
 

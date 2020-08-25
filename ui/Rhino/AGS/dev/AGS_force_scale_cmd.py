@@ -17,11 +17,12 @@ def RunCommand(is_interactive):
         return
 
     scene = sc.sticky['AGS']['scene']
-    force = scene.find_by_name('Force')[0]
 
-    if not force:
+    objects = scene.find_by_name('Force')
+    if not objects:
         compas_rhino.display_message("There is no ForceDiagram in the scene.")
         return
+    force = objects[0]
 
     # vertex = force.select_vertex(message="Pick base node.")
     # if vertex:

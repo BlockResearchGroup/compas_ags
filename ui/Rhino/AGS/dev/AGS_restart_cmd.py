@@ -6,29 +6,24 @@ import scriptcontext as sc
 
 import compas_rhino
 
-from compas_ags.rhino import Scene
-
 
 __commandname__ = "AGS_restart"
 
 
 def RunCommand(is_interactive):
+
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    scene = sc.sticky['AGS']['scene']
-    if not scene:
+    proxy = sc.sticky['AGS']['proxy']
+    if not proxy:
         return
 
-    options = ["Yes", "No"]
-    option = compas_rhino.rs.GetString("Restart and clear all AGS objects?", strings=options, defaultString="No")
-    if not option:
-        return
+    proxy.stop_server()
+    proxy.start_server()
 
-    if option == "Yes":
-        scene.clear()
-        sc.sticky['AGS']['scene'] = Scene()
+    compas_rhino.display_message('AGS server restarted.')
 
 
 # ==============================================================================

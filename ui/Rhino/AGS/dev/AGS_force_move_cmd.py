@@ -6,11 +6,8 @@ import scriptcontext as sc
 
 import compas_rhino
 
-# from compas.geometry import subtract_vectors
-# from compas.geometry import add_vectors
 
-
-__commandname__ = "AGS_force_location"
+__commandname__ = "AGS_force_move"
 
 
 def RunCommand(is_interactive):
@@ -19,15 +16,12 @@ def RunCommand(is_interactive):
         return
 
     scene = sc.sticky['AGS']['scene']
-    force = scene.find_by_name('Force')[0]
 
-    if not force:
+    objects = scene.find_by_name('Force')
+    if not objects:
         compas_rhino.display_message("There is no ForceDiagram in the scene.")
         return
-
-    anchor_vertex = force.select_vertex('Select the anchor vertex.')
-    if anchor_vertex:
-        force.anchor_vertex = anchor_vertex
+    force = objects[0]
 
     if force.move():
         scene.update()
