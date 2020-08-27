@@ -6,7 +6,7 @@ import scriptcontext as sc
 
 import compas_rhino
 from compas_ags.diagrams import ForceDiagram
-from compas_ags.utilities import calculate_drawingscale_forces
+# from compas_ags.utilities import calculate_drawingscale_forces
 
 
 __commandname__ = "AGS_force_from_form"
@@ -42,14 +42,25 @@ def RunCommand(is_interactive):
             "You have not assigned the correct number of force values. Please, check the degrees of freedom of the form diagram and update the assigned forces accordingly.")
         return
 
+    # this should become part of the scene
+    for guid in list(scene.objects.keys()):
+        obj = scene.objects[guid]
+        if obj.name == 'Force':
+            compas_rhino.rs.EnableRedraw(False)
+            try:
+                obj.clear()
+                del scene.objects[guid]
+            except Exception:
+                pass
+            compas_rhino.rs.EnableRedraw(True)
+            compas_rhino.rs.Redraw()
+
     forcediagram = ForceDiagram.from_formdiagram(form.diagram)
     force_id = scene.add(forcediagram, name="Force", layer="AGS::ForceDiagram")
     force = scene.find(force_id)
 
     form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
     force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
-
-    form.artist.settings['scale.forces'] = calculate_drawingscale_forces(form.diagram)
 
     form_xyz = list(form.artist.vertex_xyz.values())
     force_xyz = list(force.artist.vertex_xyz.values())
