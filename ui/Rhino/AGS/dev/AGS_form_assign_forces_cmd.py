@@ -72,6 +72,7 @@ Please select the independent edges first.""")
 
     values = [form.diagram.edge_attribute(edge, 'f') for edge in edges]
     values = compas_rhino.update_named_values(names, values, message='Independent edges.', title='Update force values.')
+
     if values:
         for edge, value in zip(edges, values):
             try:
@@ -83,6 +84,8 @@ Please select the independent edges first.""")
                 Q = F / L
                 form.diagram.edge_attribute(edge, 'f', F)
                 form.diagram.edge_attribute(edge, 'q', Q)
+
+        scene.save()
 
 
 # ==============================================================================

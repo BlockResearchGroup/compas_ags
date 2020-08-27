@@ -24,34 +24,36 @@ def RunCommand(is_interactive):
         return
     force = objects[0]
 
-    options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", ]
+    options = ["VertexLabels", "EdgeLabels", "ForceLabels", "CompressionTension"]
 
     while True:
         option = compas_rhino.rs.GetString("FormDiagram Display", strings=options)
-
         if not option:
             return
 
-        if option == "Vertexlabels":
+        if option == "VertexLabels":
             current = str(force.artist.settings['show.vertexlabels'])
             show = compas_rhino.rs.GetString("Vertex labels", defaultString=current, strings=["True", "False"])
+
             if show == "True":
                 force.artist.settings['show.vertexlabels'] = True
             elif show == "False":
                 force.artist.settings['show.vertexlabels'] = False
 
-        elif option == "Edgelabels":
+        elif option == "EdgeLabels":
             current = str(force.artist.settings['show.edgelabels'])
             show = compas_rhino.rs.GetString("Edge labels", defaultString=current, strings=["True", "False"])
+
             if show == "True":
                 force.artist.settings['show.edgelabels'] = True
                 force.artist.settings['show.forcelabels'] = False
             elif show == "False":
                 force.artist.settings['show.edgelabels'] = False
 
-        elif option == "Forcelabels":
+        elif option == "ForceLabels":
             current = str(force.artist.settings['show.forcelabels'])
             show = compas_rhino.rs.GetString("Force labels", defaultString=current, strings=["True", "False"])
+
             if show == "True":
                 force.artist.settings['show.forcelabels'] = True
                 force.artist.settings['show.edgelabels'] = False
@@ -61,12 +63,15 @@ def RunCommand(is_interactive):
         elif option == "CompressionTension":
             current = str(force.artist.settings['show.forces'])
             show = compas_rhino.rs.GetString("Compression / Tension", defaultString=current, strings=["True", "False"])
+
             if show == "True":
                 force.artist.settings['show.forces'] = True
             elif show == "False":
                 force.artist.settings['show.forces'] = False
 
         scene.update()
+
+    scene.save()
 
 
 # ==============================================================================

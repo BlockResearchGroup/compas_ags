@@ -78,6 +78,7 @@ def RunCommand(is_interactive):
         force.artist.anchor_point = point
 
     scene.update()
+    scene.save()
 
 
 # ==============================================================================

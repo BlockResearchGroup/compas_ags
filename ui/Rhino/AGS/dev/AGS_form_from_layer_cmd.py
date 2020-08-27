@@ -40,6 +40,7 @@ def RunCommand(is_interactive):
     scene.clear()
     scene.add(form, name='Form', layer='AGS::FormDiagram')
     scene.update()
+    scene.save()
 
 
 # ==============================================================================

@@ -87,6 +87,7 @@ def RunCommand(is_interactive):
             force.artist.scale = session['scene']['force']['scale']
 
     scene.update()
+    scene.save()
 
 
 # ==============================================================================

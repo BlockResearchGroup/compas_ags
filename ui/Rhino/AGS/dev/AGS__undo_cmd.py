@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_scene_redo"
+__commandname__ = "AGS__undo"
 
 
 def RunCommand(is_interactive):
@@ -20,8 +20,8 @@ def RunCommand(is_interactive):
     if not scene:
         return
 
-    if not scene.redo():
-        compas_rhino.display_message("Nothing left to redo.")
+    if not scene.undo():
+        compas_rhino.display_message("Nothing left to undo.")
 
 
 # ==============================================================================
