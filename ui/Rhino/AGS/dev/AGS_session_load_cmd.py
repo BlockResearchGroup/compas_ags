@@ -57,6 +57,9 @@ def RunCommand(is_interactive):
     form_id = scene.add(formdiagram, name='Form', layer='AGS::FormDiagram')
     form = scene.find(form_id)
 
+    if 'settings' in session['scene']['form']:
+        form.artist.settings.update(session['scene']['form']['settings'])
+
     if 'anchor' in session['scene']['form']:
         form.artist.anchor_vertex = session['scene']['form']['anchor']['vertex']
         form.artist.anchor_point = session['scene']['form']['anchor']['point']
@@ -72,6 +75,9 @@ def RunCommand(is_interactive):
 
         force_id = scene.add(forcediagram, name='Force', layer='AGS::ForceDiagram')
         force = scene.find(force_id)
+
+        if 'settings' in session['scene']['force']:
+            force.artist.settings.update(session['scene']['force']['settings'])
 
         if 'anchor' in session['scene']['force']:
             force.artist.anchor_vertex = session['scene']['force']['anchor']['vertex']

@@ -6,9 +6,10 @@ import scriptcontext as sc
 
 import compas_rhino
 
-import AGS_form_location_cmd
+import AGS_form_move_cmd
 import AGS_form_displaysettings_cmd
-import AGS_force_location_cmd
+import AGS_force_move_cmd
+import AGS_force_select_anchor_cmd
 import AGS_force_scale_cmd
 import AGS_force_displaysettings_cmd
 
@@ -22,20 +23,23 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    options = ["FormLocation", "FormDiaplay", "ForceLocation", "ForceScale", "ForceDisplay"]
+    options = ["FormLocation", "FormDiaplay", "ForceLocation", "ForceAnchor", "ForceScale", "ForceDisplay"]
     option = compas_rhino.rs.GetString("Display:", strings=options)
 
     if not option:
         return
 
     if option == "FormLocation":
-        AGS_form_location_cmd.RunCommand(True)
+        AGS_form_move_cmd.RunCommand(True)
 
     elif option == "FormDiaplay":
         AGS_form_displaysettings_cmd.RunCommand(True)
 
     elif option == "ForceLocation":
-        AGS_force_location_cmd.RunCommand(True)
+        AGS_force_move_cmd.RunCommand(True)
+    
+    elif option == "ForceAnchor":
+        AGS_force_select_anchor_cmd.RunCommand(True)
 
     elif option == "ForceScale":
         AGS_force_scale_cmd.RunCommand(True)
