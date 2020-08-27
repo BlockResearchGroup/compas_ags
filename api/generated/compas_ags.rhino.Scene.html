@@ -80,7 +80,7 @@
 <h1 class="display-4 p-0 mb-5">Scene</h1>
 <dl class="class">
 <dt id="compas_ags.rhino.Scene">
-<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">Scene</code><a class="reference internal" href="../../_modules/compas_ags/rhino/scene.html#Scene"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">Scene</code><span class="sig-paren">(</span><em class="sig-param">db</em>, <em class="sig-param">depth=10</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/scene.html#Scene"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A Rhino scene for AGS.</p>
 <dl class="field-list simple">
@@ -114,7 +114,7 @@ The GUIDs are automatically generated and assigned.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.__init__.html#compas_ags.rhino.Scene.__init__" title="compas_ags.rhino.Scene.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>()</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.__init__.html#compas_ags.rhino.Scene.__init__" title="compas_ags.rhino.Scene.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(db[, depth])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.add.html#compas_ags.rhino.Scene.add" title="compas_ags.rhino.Scene.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(item[, name, layer, visible, settings])</p></td>
@@ -129,7 +129,16 @@ The GUIDs are automatically generated and assigned.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.find_by_name.html#compas_ags.rhino.Scene.find_by_name" title="compas_ags.rhino.Scene.find_by_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_by_name</span></code></a>(name)</p></td>
 <td><p>Find an object using its name.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.update.html#compas_ags.rhino.Scene.update" title="compas_ags.rhino.Scene.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>()</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.redo.html#compas_ags.rhino.Scene.redo" title="compas_ags.rhino.Scene.redo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redo</span></code></a>()</p></td>
+<td><p>Redo scene updates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.redraw.html#compas_ags.rhino.Scene.redraw" title="compas_ags.rhino.Scene.redraw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redraw</span></code></a>()</p></td>
+<td><p>Redraw the entire scene.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.undo.html#compas_ags.rhino.Scene.undo" title="compas_ags.rhino.Scene.undo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">undo</span></code></a>()</p></td>
+<td><p>Undo scene updates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.update.html#compas_ags.rhino.Scene.update" title="compas_ags.rhino.Scene.update"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update</span></code></a>()</p></td>
 <td><p>Redraw all objects in the scene.</p></td>
 </tr>
 </tbody>
