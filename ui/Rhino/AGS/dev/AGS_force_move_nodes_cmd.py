@@ -37,11 +37,14 @@ def RunCommand(is_interactive):
         vertices = force.select_vertices()
         if not vertices:
             break
+
         if force.move_vertices(vertices):
             scene.update()
 
     form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
+
     scene.update()
+    scene.save()
 
 
 # ==============================================================================

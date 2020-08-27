@@ -25,6 +25,7 @@ def RunCommand(is_interactive):
 
     if force.move():
         scene.update()
+        scene.save()
 
 
 # ==============================================================================

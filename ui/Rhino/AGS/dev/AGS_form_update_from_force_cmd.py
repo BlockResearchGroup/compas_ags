@@ -34,7 +34,9 @@ def RunCommand(is_interactive):
     proxy.package = 'compas_ags.ags.graphstatics'
 
     form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
+
     scene.update()
+    scene.save()
 
 
 # ==============================================================================

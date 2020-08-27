@@ -126,6 +126,8 @@ class Scene(object):
     def update(self):
         """Redraw all objects in the scene."""
         self.redraw()
+
+    def save(self):
         states = self._db['states']
         if self._current < -1:
             del states[self._current + 1:]

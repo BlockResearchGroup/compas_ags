@@ -30,6 +30,7 @@ def RunCommand(is_interactive):
     form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
 
     scene.update()
+    scene.save()
 
 
 # ==============================================================================

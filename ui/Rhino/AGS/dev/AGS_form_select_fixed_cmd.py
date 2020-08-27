@@ -24,28 +24,16 @@ def RunCommand(is_interactive):
         return
     form = objects[0]
 
-    options = ["Select", "Toggle"]
     while True:
-        option = compas_rhino.rs.GetString("Identification Mode", options[0], options)
-        if not option or option not in options:
-            return
+        vertices = form.select_vertices("Fix selected vertices (unfix all others).")
+        if not vertices:
+            break
 
-        if option == "Select":
-            vertices = form.select_vertices("Fix selected vertices (unfix all others).")
-            if vertices:
-                form.diagram.vertices_attribute('is_fixed', False)
-                form.diagram.vertices_attribute('is_fixed', True, keys=vertices)
-                scene.update()
+        form.diagram.vertices_attribute('is_fixed', False)
+        form.diagram.vertices_attribute('is_fixed', True, keys=vertices)
+        scene.update()
 
-        elif option == "Toggle":
-            vertices = form.select_vertices("Toggle the fixed state of selected vertices.")
-            if vertices:
-                for vertex in vertices:
-                    form.diagram.vertex_attribute(vertex, 'is_fixed', not form.diagram.vertex_attribute(vertex, 'is_fixed'))
-                scene.update()
-
-        else:
-            raise NotImplementedError
+    scene.save()
 
 
 # ==============================================================================

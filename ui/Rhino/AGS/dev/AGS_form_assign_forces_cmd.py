@@ -24,34 +24,6 @@ def RunCommand(is_interactive):
         return
     form = objects[0]
 
-    options = ["Select", "Toggle", "Skip"]
-    while True:
-        option = compas_rhino.rs.GetString("Identification Mode", options[0], options)
-        if not option or option not in options:
-            return
-
-        if option == "Skip":
-            break
-
-        elif option == "Select":
-            edges = form.select_edges("Select the independent edges.")
-            if edges:
-                form.diagram.edges_attribute('is_ind', False)
-                form.diagram.edges_attribute('is_ind', True, keys=edges)
-                scene.update()
-
-        elif option == "Toggle":
-            edges = form.select_edges("Toggle the independent state of selected edges.")
-            if edges:
-                for edge in edges:
-                    form.diagram.edge_attribute(edge, 'is_ind', not form.diagram.edge_attribute(edge, 'is_ind'))
-                scene.update()
-
-        else:
-            raise NotImplementedError
-
-    # update the force values of the independent edges
-
     edges = list(form.diagram.edges_where({'is_ind': True}))
 
     if not len(edges):
@@ -67,6 +39,7 @@ Please select the independent edges first.""")
 
     values = [form.diagram.edge_attribute(edge, 'f') for edge in edges]
     values = compas_rhino.update_named_values(names, values, message='Independent edges.', title='Update force values.')
+
     if values:
         for edge, value in zip(edges, values):
             try:
@@ -78,6 +51,8 @@ Please select the independent edges first.""")
                 Q = F / L
                 form.diagram.edge_attribute(edge, 'f', F)
                 form.diagram.edge_attribute(edge, 'q', Q)
+
+        scene.save()
 
 
 # ==============================================================================

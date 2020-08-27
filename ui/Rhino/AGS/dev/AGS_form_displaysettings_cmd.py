@@ -24,15 +24,14 @@ def RunCommand(is_interactive):
         return
     form = objects[0]
 
-    options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", "ScaleForces"]
+    options = ["VertexLabels", "EdgeLabels", "ForceLabels", "CompressionTension", "ScaleForces"]
 
     while True:
         option = compas_rhino.rs.GetString("FormDiagram Display", strings=options)
-
-        if not option or option not in options:
+        if not option:
             return
 
-        if option == "Vertexlabels":
+        if option == "VertexLabels":
             current = str(form.artist.settings['show.vertexlabels'])
             show = compas_rhino.rs.GetString("Vertex labels", current, ["True", "False"])
 
@@ -41,7 +40,7 @@ def RunCommand(is_interactive):
             elif show == "False":
                 form.artist.settings['show.vertexlabels'] = False
 
-        elif option == "Edgelabels":
+        elif option == "EdgeLabels":
             current = str(form.artist.settings['show.edgelabels'])
             show = compas_rhino.rs.GetString("Edge labels", current, ["True", "False"])
 
@@ -51,7 +50,7 @@ def RunCommand(is_interactive):
             elif show == "False":
                 form.artist.settings['show.edgelabels'] = False
 
-        elif option == "Forcelabels":
+        elif option == "ForceLabels":
             current = str(form.artist.settings['show.forcelabels'])
             show = compas_rhino.rs.GetString("Force labels", current, ["True", "False"])
 
@@ -79,6 +78,8 @@ def RunCommand(is_interactive):
             raise NotImplementedError
 
         scene.update()
+
+    scene.save()
 
 
 # ==============================================================================
