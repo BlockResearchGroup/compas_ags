@@ -106,9 +106,9 @@ class ForceArtist(DiagramArtist):
             for index, (u, v) in enumerate(self.diagram.ordered_edges(self.diagram.dual)):
                 f = self.diagram.dual.edge_attribute(dual_edges[index], 'f')
                 if (u, v) in self.diagram.edges():
-                    text[(u, v)] = "%s kN {%s}" % (round(abs(f), 2), index)
+                    text[(u, v)] = "%s kN {%s}" % (round(abs(f), 1), index)
                 else:
-                    text[(v, u)] = "%s kN {%s}" % (round(abs(f), 2), index)
+                    text[(v, u)] = "%s kN {%s}" % (round(abs(f), 1), index)
 
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})

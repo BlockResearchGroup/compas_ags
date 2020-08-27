@@ -35,7 +35,7 @@ def RunCommand(is_interactive):
         compas_rhino.display_message("There is no ForceDiagram in the scene.")
         return
 
-    options = ["FormLocation", "FormDiaplay", "ForceLocation", "ForceAnchor", "ForceScale", "ForceDisplay"]
+    options = ["FormLocation", "FormDisplay", "ForceLocation", "ForceAnchor", "ForceScale", "ForceDisplay"]
     option = compas_rhino.rs.GetString("Display:", strings=options)
 
     if not option:
