@@ -25,6 +25,7 @@ def RunCommand(is_interactive):
     form = objects[0]
 
     options = ["Select", "Toggle", "Skip"]
+    
     while True:
         option = compas_rhino.rs.GetString("Identification Mode", options[0], options)
         if not option or option not in options:
@@ -39,6 +40,8 @@ def RunCommand(is_interactive):
                 form.diagram.edges_attribute('is_ind', False)
                 form.diagram.edges_attribute('is_ind', True, keys=edges)
                 scene.update()
+            else:
+                break
 
         elif option == "Toggle":
             edges = form.select_edges("Toggle the independent state of selected edges.")
@@ -46,6 +49,8 @@ def RunCommand(is_interactive):
                 for edge in edges:
                     form.diagram.edge_attribute(edge, 'is_ind', not form.diagram.edge_attribute(edge, 'is_ind'))
                 scene.update()
+            else:
+                break
 
         else:
             raise NotImplementedError

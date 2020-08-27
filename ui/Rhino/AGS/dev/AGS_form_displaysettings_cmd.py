@@ -24,7 +24,7 @@ def RunCommand(is_interactive):
         return
     form = objects[0]
 
-    options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", "ScaleForces"]
+    options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", "PipeScale"]
 
     while True:
         option = compas_rhino.rs.GetString("FormDiagram Display", strings=options)
@@ -70,7 +70,7 @@ def RunCommand(is_interactive):
             elif show == "False":
                 form.artist.settings['show.forces'] = False
 
-        elif option == "ScaleForces":
+        elif option == "PipeScale":
             scale = compas_rhino.rs.GetReal("Scale Forces", form.artist.settings['scale.forces'])
             scale = float(scale)
             form.artist.settings['scale.forces'] = scale

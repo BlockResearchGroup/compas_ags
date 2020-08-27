@@ -23,6 +23,18 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
+    scene = sc.sticky['AGS']['scene']
+    if not scene:
+        return
+
+    if not scene.find_by_name('Form'):
+        compas_rhino.display_message("There is no FormDiagram in the scene.")
+        return
+
+    if not scene.find_by_name('Force'):
+        compas_rhino.display_message("There is no ForceDiagram in the scene.")
+        return
+
     options = ["FormLocation", "FormDiaplay", "ForceLocation", "ForceAnchor", "ForceScale", "ForceDisplay"]
     option = compas_rhino.rs.GetString("Display:", strings=options)
 
@@ -37,7 +49,7 @@ def RunCommand(is_interactive):
 
     elif option == "ForceLocation":
         AGS_force_move_cmd.RunCommand(True)
-    
+
     elif option == "ForceAnchor":
         AGS_force_select_anchor_cmd.RunCommand(True)
 
