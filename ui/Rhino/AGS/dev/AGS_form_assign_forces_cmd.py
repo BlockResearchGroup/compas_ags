@@ -25,7 +25,7 @@ def RunCommand(is_interactive):
     form = objects[0]
 
     options = ["Select", "Toggle", "Skip"]
-    
+
     while True:
         option = compas_rhino.rs.GetString("Identification Mode", options[0], options)
         if not option or option not in options:
