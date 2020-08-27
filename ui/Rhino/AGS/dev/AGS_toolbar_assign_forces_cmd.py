@@ -28,7 +28,6 @@ def RunCommand(is_interactive):
         compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
 
-    AGS_form_check_dof_cmd.RunCommand(True)
     AGS_form_assign_forces_cmd.RunCommand(True)
     AGS_form_update_from_qind_cmd.RunCommand(True)
 
