@@ -3,8 +3,12 @@ from __future__ import absolute_import
 from __future__ import division
 
 import os
+import errno
+import shelve
+
 import scriptcontext as sc
 
+import compas
 import compas_rhino
 
 from compas.rpc import Proxy
@@ -14,6 +18,8 @@ from compas_ags.rhino import Scene
 __commandname__ = "AGS__init"
 
 
+# the current working directory could be the APPTEMP directory for AGS
+# until it is specified by the user
 HERE = compas_rhino.get_document_dirname()
 HOME = os.path.expanduser('~')
 CWD = HERE or HOME
@@ -21,7 +27,18 @@ CWD = HERE or HOME
 
 def RunCommand(is_interactive):
 
-    scene = Scene()
+    shelvepath = os.path.join(compas.APPTEMP, 'AGS', '.history')
+    if not os.path.exists(os.path.dirname(shelvepath)):
+        try:
+            os.makedirs(os.path.dirname(shelvepath))
+        except OSError as error:
+            if error.errno != errno.EEXIST:
+                raise
+
+    db = shelve.open(shelvepath, 'n')
+    db['states'] = []
+
+    scene = Scene(db)
     scene.clear()
 
     sc.sticky["AGS"] = {
@@ -31,7 +48,7 @@ def RunCommand(is_interactive):
             "session.filename": None,
             "session.extension": 'ags'
         },
-        'scene': scene
+        'scene': scene,
     }
 
     scene.update()
