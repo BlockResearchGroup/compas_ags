@@ -39,6 +39,7 @@ class FormArtist(DiagramArtist):
         super(FormArtist, self).__init__(form, **kwargs)
         self._guid_force = {}
         self.scale = scale
+        self.settings.update({'show.forcepipes': True})
         if settings:
             self.settings.update(settings)
 
@@ -141,11 +142,11 @@ class FormArtist(DiagramArtist):
                 color.update(
                     {edge: self.settings['color.compression'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') < -tol})
             self.draw_edgelabels(text=text, color=color)
-        # forces
-        if self.settings['show.forces']:
-            self.draw_forces()
+        # force pipes
+        if self.settings['show.forcepipes']:
+            self.draw_forcepipes()
 
-    def draw_forces(self):
+    def draw_forcepipes(self):
         """Draw the forces in the internal edges as pipes with color and thickness matching the force value.
 
         Parameters

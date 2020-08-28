@@ -109,7 +109,6 @@ class ForceArtist(DiagramArtist):
                     text[(u, v)] = "%s kN {%s}" % (round(abs(f), 1), index)
                 else:
                     text[(v, u)] = "%s kN {%s}" % (round(abs(f), 1), index)
-
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
