@@ -8,16 +8,9 @@ import compas_rhino
 
 import AGS_form_move_cmd
 import AGS_form_displaysettings_cmd
-import AGS_force_move_cmd
-import AGS_force_select_anchor_cmd
-import AGS_force_scale_cmd
-import AGS_force_displaysettings_cmd
 
 
-__commandname__ = "AGS_toolbar_display"
-"""ATTENTION!
-This cmd will be deleted (replaced by toolbar_force_display_cmd, toolbar_form_display_cmd...)
-"""
+__commandname__ = "AGS_toolbar_form_display"
 
 
 def RunCommand(is_interactive):
@@ -34,11 +27,7 @@ def RunCommand(is_interactive):
         compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
 
-    if not scene.find_by_name('Force'):
-        compas_rhino.display_message("There is no ForceDiagram in the scene.")
-        return
-
-    options = ["FormLocation", "FormDisplay", "ForceLocation", "ForceAnchor", "ForceScale", "ForceDisplay"]
+    options = ["FormLocation", "FormDisplay"]
     option = compas_rhino.rs.GetString("Display:", strings=options)
 
     if not option:
@@ -49,18 +38,6 @@ def RunCommand(is_interactive):
 
     elif option == "FormDiaplay":
         AGS_form_displaysettings_cmd.RunCommand(True)
-
-    elif option == "ForceLocation":
-        AGS_force_move_cmd.RunCommand(True)
-
-    elif option == "ForceAnchor":
-        AGS_force_select_anchor_cmd.RunCommand(True)
-
-    elif option == "ForceScale":
-        AGS_force_scale_cmd.RunCommand(True)
-
-    elif option == "ForceDisplay":
-        AGS_force_displaysettings_cmd.RunCommand(True)
 
 
 # ==============================================================================
