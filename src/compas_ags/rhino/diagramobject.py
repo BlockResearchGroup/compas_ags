@@ -50,6 +50,7 @@ class DiagramObject(MeshObject):
 
     @property
     def inspector(self):
+        """:class:`compas_rhino.objects.MeshVertexInspector`: An inspector conduit."""
         if not self._inspector:
             self._inspector = MeshVertexInspector(self.diagram)
         return self._inspector
