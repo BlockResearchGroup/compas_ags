@@ -32,42 +32,30 @@ def RunCommand(is_interactive):
             return
 
         if option == "VertexLabels":
-            current = str(form.artist.settings['show.vertexlabels'])
-            show = compas_rhino.rs.GetString("Vertex labels", current, ["True", "False"])
-
-            if show == "True":
-                form.artist.settings['show.vertexlabels'] = True
-            elif show == "False":
+            if form.artist.settings['show.vertexlabels'] is True:
                 form.artist.settings['show.vertexlabels'] = False
+            else:
+                form.artist.settings['show.vertexlabels'] = True
 
         elif option == "EdgeLabels":
-            current = str(form.artist.settings['show.edgelabels'])
-            show = compas_rhino.rs.GetString("Edge labels", current, ["True", "False"])
-
-            if show == "True":
+            if form.artist.settings['show.edgelabels'] is True:
+                form.artist.settings['show.edgelabels'] = False
+            else:
                 form.artist.settings['show.edgelabels'] = True
                 form.artist.settings['show.forcelabels'] = False
-            elif show == "False":
-                form.artist.settings['show.edgelabels'] = False
 
         elif option == "ForceLabels":
-            current = str(form.artist.settings['show.forcelabels'])
-            show = compas_rhino.rs.GetString("Force labels", current, ["True", "False"])
-
-            if show == "True":
+            if form.artist.settings['show.forcelabels'] is True:
+                form.artist.settings['show.forcelabels'] = False
+            else:
                 form.artist.settings['show.forcelabels'] = True
                 form.artist.settings['show.edgelabels'] = False
-            elif show == "False":
-                form.artist.settings['show.forcelabels'] = False
 
         elif option == "CompressionTension":
-            current = str(form.artist.settings['show.forces'])
-            show = compas_rhino.rs.GetString("Compression / Tension", current, ["True", "False"])
-
-            if show == "True":
-                form.artist.settings['show.forces'] = True
-            elif show == "False":
+            if form.artist.settings['show.forces'] is True:
                 form.artist.settings['show.forces'] = False
+            else:
+                form.artist.settings['show.forces'] = True
 
         elif option == "AxialForceScale":
             scale = compas_rhino.rs.GetReal("Scale Forces", form.artist.settings['scale.forces'])
