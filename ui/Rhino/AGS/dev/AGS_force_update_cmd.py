@@ -37,6 +37,7 @@ def RunCommand(is_interactive):
     force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
 
     scene.update()
+    scene.save()
 
 
 # ==============================================================================

@@ -6,7 +6,7 @@ import scriptcontext as sc
 
 import compas_rhino
 from compas_ags.diagrams import ForceDiagram
-# from compas_ags.utilities import calculate_drawingscale_forces
+from compas_ags.utilities import calculate_drawingscale_forces
 
 
 __commandname__ = "AGS_force_from_form"
@@ -77,7 +77,10 @@ def RunCommand(is_interactive):
         point[0] += dx
         force.artist.anchor_point = point
 
+    form.artist.settings['scale.forces'] = calculate_drawingscale_forces(form.diagram)
+
     scene.update()
+    scene.save()
 
 
 # ==============================================================================

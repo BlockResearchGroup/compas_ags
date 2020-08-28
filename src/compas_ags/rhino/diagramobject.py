@@ -2,7 +2,9 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import compas
+import Rhino
+from Rhino.Geometry import Point3d
+
 import compas_rhino
 
 from compas.geometry import scale_vector
@@ -11,9 +13,7 @@ from compas.geometry import subtract_vectors
 
 from compas_rhino.objects import MeshObject
 
-if compas.RHINO:
-    import Rhino
-    from Rhino.Geometry import Point3d
+from compas_rhino.objects import MeshVertexInspector
 
 
 __all__ = ['DiagramObject']
@@ -37,6 +37,7 @@ class DiagramObject(MeshObject):
 
     def __init__(self, diagram, scene=None, name=None, layer=None, visible=True, settings=None):
         super(DiagramObject, self).__init__(diagram, scene, name, layer, visible, settings)
+        self._inspector = None
 
     @property
     def diagram(self):
@@ -46,6 +47,12 @@ class DiagramObject(MeshObject):
     @diagram.setter
     def diagram(self, diagram):
         self._item = diagram
+
+    @property
+    def inspector(self):
+        if not self._inspector:
+            self._inspector = MeshVertexInspector(self.diagram)
+        return self._inspector
 
     def draw(self):
         """Draw the diagram using the artist."""
@@ -288,6 +295,13 @@ class DiagramObject(MeshObject):
             diagram.vertex_attributes(vertex, 'xyz', xyz)
 
         return True
+
+    def inspector_on(self):
+        self.inspector.vertex_xyz = self.artist.vertex_xyz
+        self.inspector.enable()
+
+    def inspector_off(self):
+        self.inspector.disable()
 
 
 # ==============================================================================

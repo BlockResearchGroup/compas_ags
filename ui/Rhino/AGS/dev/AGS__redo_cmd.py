@@ -7,25 +7,21 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_form_move"
+__commandname__ = "AGS__redo"
 
 
 def RunCommand(is_interactive):
+
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
     scene = sc.sticky['AGS']['scene']
-
-    objects = scene.find_by_name('Form')
-    if not objects:
-        compas_rhino.display_message("There is no FormDiagram in the scene.")
+    if not scene:
         return
-    form = objects[0]
 
-    if form.move():
-        scene.update()
-        scene.save()
+    if not scene.redo():
+        compas_rhino.display_message("Nothing left to redo.")
 
 
 # ==============================================================================
