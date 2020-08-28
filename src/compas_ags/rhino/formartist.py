@@ -127,15 +127,19 @@ class FormArtist(DiagramArtist):
             text = {}
             for index, edge in enumerate(self.diagram.edges()):
                 f = self.diagram.edge_attribute(edge, 'f')
-                text[edge] = "%s kN {%s}" % (round(f, 2), index)
+                text[edge] = "%s kN {%s}" % (round(abs(f), 1), index)
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
             color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
-            color.update({edge: self.settings['color.tension'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') > tol})
-            color.update({edge: self.settings['color.compression'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') < -tol})
+            # forces of the structure
+            if self.settings['show.forces']:
+                color.update(
+                    {edge: self.settings['color.tension'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') > tol})
+                color.update(
+                    {edge: self.settings['color.compression'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') < -tol})
             self.draw_edgelabels(text=text, color=color)
         # forces
         if self.settings['show.forces']:
