@@ -74,6 +74,8 @@
 
             {"name": "AGS_toolbar_form",                "menu_text": "FormDiagram Create",              "icon": 3,      "tooltip": "Create FormDiagram"},
             {"name": "AGS_toolbar_display",             "menu_text": "Display Settings",                "icon": 11,     "tooltip": "Display Settings"},
+            {"name": "AGS_form_assign_forces",          "menu_text": "Assign Forces",                   "icon": 4,      "tooltip": "Assign Forces"},
+
             {"name": "AGS_scene_redraw",                "menu_text": "Redraw",                          "icon": 12,     "tooltip": "Refresh Scene"},
             {"name": "AGS__restart",                    "menu_text": "Clear All",                       "icon": 13,     "tooltip": "Clear Scene"}
         ],
