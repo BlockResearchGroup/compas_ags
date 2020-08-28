@@ -51,6 +51,8 @@ from .diagramobject import DiagramObject  # noqa: F401
 from .formobject import FormObject  # noqa: F401
 from .forceobject import ForceObject  # noqa: F401
 
+from .forceinspector import ForceDiagramInspector  # noqa: F401
+
 from .scene import Scene  # noqa: F401
 
 DiagramArtist.register(FormDiagram, FormArtist)
