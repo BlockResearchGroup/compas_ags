@@ -47,7 +47,7 @@ def RunCommand(is_interactive):
     if option == "FormLocation":
         AGS_form_move_cmd.RunCommand(True)
 
-    elif option == "FormDiaplay":
+    elif option == "FormDisplay":
         AGS_form_displaysettings_cmd.RunCommand(True)
 
     elif option == "ForceLocation":

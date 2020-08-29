@@ -52,10 +52,10 @@ def RunCommand(is_interactive):
                 force.artist.settings['show.edgelabels'] = False
 
         elif option == "CompressionTension":
-            if force.artist.settings['show.forces'] is True:
-                force.artist.settings['show.forces'] = False
+            if force.artist.settings['show.forcecolors'] is True:
+                force.artist.settings['show.forcecolors'] = False
             else:
-                force.artist.settings['show.forces'] = True
+                force.artist.settings['show.forcecolors'] = True
 
         scene.update()
 

@@ -24,7 +24,7 @@ def RunCommand(is_interactive):
         return
     form = objects[0]
 
-    options = ["VertexLabels", "EdgeLabels", "ForceLabels", "CompressionTension", "AxialForce", "AxialForceScale"]
+    options = ["VertexLabels", "EdgeLabels", "ForceLabels", "CompressionTension", "AxialForces", "AxialForceScale"]
 
     while True:
         option = compas_rhino.rs.GetString("FormDiagram Display", strings=options)
@@ -52,12 +52,12 @@ def RunCommand(is_interactive):
                 form.artist.settings['show.edgelabels'] = False
 
         elif option == "CompressionTension":
-            if form.artist.settings['show.forces'] is True:
-                form.artist.settings['show.forces'] = False
+            if form.artist.settings['show.forcecolors'] is True:
+                form.artist.settings['show.forcecolors'] = False
             else:
-                form.artist.settings['show.forces'] = True
+                form.artist.settings['show.forcecolors'] = True
 
-        elif option == "AxialForce":
+        elif option == "AxialForces":
             if form.artist.settings['show.forcepipes'] is True:
                 form.artist.settings['show.forcepipes'] = False
             else:

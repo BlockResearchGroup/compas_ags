@@ -93,7 +93,7 @@ class ForceObject(DiagramObject):
         self.artist.scale = scale_factor
 
     def scale_from_4_points(self):
-        """Scale the ForceDiagram from 3 points
+        """Scale the ForceDiagram from 4 points
         """
         color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
 
