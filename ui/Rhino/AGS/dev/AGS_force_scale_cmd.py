@@ -24,13 +24,13 @@ def RunCommand(is_interactive):
         return
     force = objects[0]
 
-    options = ["ScaleFactor", "2Points"]
+    options = ["Factor", "2Points"]
     option = compas_rhino.rs.GetString("Scale ForceDiagram:", strings=options)
 
     if not option:
         return
 
-    if option == "ScaleFactor":
+    if option == "Factor":
         scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
         force.artist.scale = scale_factor
 

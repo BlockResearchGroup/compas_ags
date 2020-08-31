@@ -48,6 +48,7 @@ class ForceObject(DiagramObject):
         edges = list(self.diagram.edges())
         anchor_xyz = self.diagram.vertex_attributes(self.artist.anchor_vertex, 'xyz')
         origin = self.artist.anchor_point
+        origin_pt = Point3d(* origin)
 
         # get the first reference point
         gp = Rhino.Input.Custom.GetPoint()
@@ -61,9 +62,9 @@ class ForceObject(DiagramObject):
         gp.SetCommandPrompt('Select the 2nd reference point.')
 
         def OnDynamicDraw(sender, e):
-            base_ref1 = Point3d(* origin).DistanceTo(ref1)
-            base_ref2 = Point3d(* origin).DistanceTo(e.CurrentPoint)
-            ratio = base_ref2 / base_ref1
+            d1 = origin_pt.DistanceTo(ref1)
+            d2 = origin_pt.DistanceTo(e.CurrentPoint)
+            ratio = d2 / d1
             for vertex in self.diagram.vertices():
                 xyz = self.diagram.vertex_attributes(vertex, 'xyz')
                 vector = subtract_vectors(xyz, anchor_xyz)
@@ -77,9 +78,9 @@ class ForceObject(DiagramObject):
             return False
         ref2 = gp.Point()
 
-        base_ref1 = Point3d(* origin).DistanceTo(ref1)
-        base_ref2 = Point3d(* origin).DistanceTo(ref2)
-        ratio = base_ref2 / base_ref1
+        d1 = origin_pt.DistanceTo(ref1)
+        d2 = origin_pt.DistanceTo(ref2)
+        ratio = d2 / d1
         scale_factor = self.artist.scale * ratio
         self.artist.scale = scale_factor
 
