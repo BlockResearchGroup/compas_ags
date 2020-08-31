@@ -5,7 +5,6 @@ from __future__ import division
 import Rhino
 from Rhino.Geometry import Point3d
 
-from compas.geometry import distance_point_point
 from compas.geometry import subtract_vectors
 from compas.geometry import add_vectors
 from compas.geometry import scale_vector
@@ -151,7 +150,7 @@ class ForceObject(DiagramObject):
         scale_factor = self.artist.scale * ratio
         self.artist.scale = scale_factor
 
-        
+
 # ==============================================================================
 # Main
 # ==============================================================================
