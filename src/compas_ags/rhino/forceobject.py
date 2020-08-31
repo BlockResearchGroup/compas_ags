@@ -59,7 +59,7 @@ class ForceObject(DiagramObject):
 
         # get the first reference point
         gp = Rhino.Input.Custom.GetPoint()
-        gp.SetCommandPrompt('Select the first reference point.')
+        gp.SetCommandPrompt('Select the 1st reference point.')
         gp.DrawLineFromPoint(base, True)
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
@@ -67,7 +67,7 @@ class ForceObject(DiagramObject):
         ref1 = gp.Point()
 
         # get the second reference point
-        gp.SetCommandPrompt('Select the second reference point.')
+        gp.SetCommandPrompt('Select the 2nd reference point.')
 
         def OnDynamicDraw(sender, e):
             base_ref1 = base.DistanceTo(ref1)
@@ -104,7 +104,7 @@ class ForceObject(DiagramObject):
 
         # select the start point of reference line
         gp = Rhino.Input.Custom.GetPoint()
-        gp.SetCommandPrompt('Select the start point of reference line.')
+        gp.SetCommandPrompt('Select the start point of 1st reference line.')
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
             return False
@@ -112,7 +112,7 @@ class ForceObject(DiagramObject):
 
         # get the end point of reference line
         gp = Rhino.Input.Custom.GetPoint()
-        gp.SetCommandPrompt('Select the end point of reference line.')
+        gp.SetCommandPrompt('Select the end point of 1st reference line.')
         gp.DrawLineFromPoint(ref1_sp, True)
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
@@ -121,14 +121,14 @@ class ForceObject(DiagramObject):
         gp.EnableDrawLineFromPoint(False)
 
         # select the start point of target line
-        gp.SetCommandPrompt('Select the start point of the target line.')
+        gp.SetCommandPrompt('Select the start point of the 2nd reference line.')
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
             return False
         ref2_sp = gp.Point()
 
         # select the end point of target line
-        gp.SetCommandPrompt('Select the end point of the target line.')
+        gp.SetCommandPrompt('Select the end point of the 2nd reference line.')
         gp.EnableDrawLineFromPoint(True)
 
         def OnDynamicDraw(sender, e):
