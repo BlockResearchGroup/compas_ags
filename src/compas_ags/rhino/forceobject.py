@@ -60,6 +60,7 @@ class ForceObject(DiagramObject):
         # get the first reference point
         gp = Rhino.Input.Custom.GetPoint()
         gp.SetCommandPrompt('Select the first reference point.')
+        gp.DrawLineFromPoint(base, True)
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
             return False
@@ -112,10 +113,12 @@ class ForceObject(DiagramObject):
         # get the end point of reference line
         gp = Rhino.Input.Custom.GetPoint()
         gp.SetCommandPrompt('Select the end point of reference line.')
+        gp.DrawLineFromPoint(ref1_sp, True)
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
             return False
         ref1_ep = gp.Point()
+        gp.EnableDrawLineFromPoint(False)
 
         # select the start point of target line
         gp.SetCommandPrompt('Select the start point of the target line.')
@@ -126,6 +129,7 @@ class ForceObject(DiagramObject):
 
         # select the end point of target line
         gp.SetCommandPrompt('Select the end point of the target line.')
+        gp.EnableDrawLineFromPoint(True)
 
         def OnDynamicDraw(sender, e):
             line1 = ref1_sp.DistanceTo(ref1_ep)
@@ -139,6 +143,7 @@ class ForceObject(DiagramObject):
                 e.Display.DrawDottedLine(Point3d(* vertex_xyz[u]), Point3d(* vertex_xyz[v]), color)
 
         gp.DynamicDraw += OnDynamicDraw
+        gp.DrawLineFromPoint(ref2_sp, True)
         gp.Get()
         if gp.CommandResult() != Rhino.Commands.Result.Success:
             return False
