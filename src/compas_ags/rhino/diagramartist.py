@@ -69,8 +69,8 @@ class DiagramArtist(MeshArtist):
             'show.vertices': True,
             'show.edges': True,
             'show.faces': False,
-            'show.vertexlabels': True,
-            'show.edgelabels': True,
+            'show.vertexlabels': False,
+            'show.edgelabels': False,
             'show.facelabels': False,
             'show.forces': True,
             'show.forcelabels': False,
@@ -151,8 +151,11 @@ class DiagramArtist(MeshArtist):
         origin = self.anchor_point
         for vertex in self.diagram.vertices():
             xyz = self.diagram.vertex_attributes(vertex, 'xyz')
-            vector = subtract_vectors(xyz, anchor_xyz)
-            vertex_xyz[vertex] = add_vectors(origin, scale_vector(vector, self.scale))
+            vertex_xyz[vertex] = add_vectors(
+                origin,
+                scale_vector(
+                    subtract_vectors(xyz, anchor_xyz),
+                    self.scale))
         return vertex_xyz
 
     @property

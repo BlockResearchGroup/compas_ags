@@ -298,10 +298,12 @@ class DiagramObject(MeshObject):
         return True
 
     def inspector_on(self):
+        """Turn on the diagram inspector conduit."""
         self.inspector.vertex_xyz = self.artist.vertex_xyz
         self.inspector.enable()
 
     def inspector_off(self):
+        """Turn off the diagram inspector conduit."""
         self.inspector.disable()
 
 
