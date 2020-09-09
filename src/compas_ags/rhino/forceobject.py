@@ -2,6 +2,13 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import Rhino
+from Rhino.Geometry import Point3d
+
+from compas.geometry import subtract_vectors
+from compas.geometry import add_vectors
+from compas.geometry import scale_vector
+
 from compas_ags.rhino.diagramobject import DiagramObject
 from compas_ags.rhino.forceinspector import ForceDiagramInspector
 
@@ -31,6 +38,51 @@ class ForceObject(DiagramObject):
 
     def inspector_off(self):
         self.inspector.disable()
+
+    def scale_from_2_points(self):
+        """Scale the ForceDiagram from 2 reference points
+        """
+        color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+
+        vertex_xyz = self.artist.vertex_xyz
+        edges = list(self.diagram.edges())
+        anchor_xyz = self.diagram.vertex_attributes(self.artist.anchor_vertex, 'xyz')
+        origin = self.artist.anchor_point
+        origin_pt = Point3d(* origin)
+
+        # get the first reference point
+        gp = Rhino.Input.Custom.GetPoint()
+        gp.SetCommandPrompt('Select the 1st reference point.')
+        gp.Get()
+        if gp.CommandResult() != Rhino.Commands.Result.Success:
+            return False
+        ref1 = gp.Point()
+
+        # get the second reference point
+        gp.SetCommandPrompt('Select the 2nd reference point.')
+
+        def OnDynamicDraw(sender, e):
+            d1 = origin_pt.DistanceTo(ref1)
+            d2 = origin_pt.DistanceTo(e.CurrentPoint)
+            ratio = d2 / d1
+            for vertex in self.diagram.vertices():
+                xyz = self.diagram.vertex_attributes(vertex, 'xyz')
+                vector = subtract_vectors(xyz, anchor_xyz)
+                vertex_xyz[vertex] = add_vectors(origin, scale_vector(vector, self.artist.scale * ratio))
+            for u, v in iter(edges):
+                e.Display.DrawDottedLine(Point3d(* vertex_xyz[u]), Point3d(* vertex_xyz[v]), color)
+
+        gp.DynamicDraw += OnDynamicDraw
+        gp.Get()
+        if gp.CommandResult() != Rhino.Commands.Result.Success:
+            return False
+        ref2 = gp.Point()
+
+        d1 = origin_pt.DistanceTo(ref1)
+        d2 = origin_pt.DistanceTo(ref2)
+        ratio = d2 / d1
+        scale_factor = self.artist.scale * ratio
+        self.artist.scale = scale_factor
 
 
 # ==============================================================================

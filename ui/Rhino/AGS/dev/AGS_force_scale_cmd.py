@@ -24,8 +24,18 @@ def RunCommand(is_interactive):
         return
     force = objects[0]
 
-    scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
-    force.artist.scale = scale_factor
+    options = ["Factor", "2Points"]
+    option = compas_rhino.rs.GetString("Scale ForceDiagram:", strings=options)
+
+    if not option:
+        return
+
+    if option == "Factor":
+        scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
+        force.artist.scale = scale_factor
+
+    elif option == "2Points":
+        force.scale_from_2_points()
 
     scene.update()
     scene.save()

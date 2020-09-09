@@ -39,6 +39,7 @@ class FormArtist(DiagramArtist):
         super(FormArtist, self).__init__(form, **kwargs)
         self._guid_force = {}
         self.scale = scale
+        self.settings.update({'show.forcepipes': True})
         if settings:
             self.settings.update(settings)
 
@@ -93,7 +94,7 @@ class FormArtist(DiagramArtist):
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
             # forces of the structure
-            if self.settings['show.forces']:
+            if self.settings['show.forcecolors']:
                 color.update(
                     {edge: self.settings['color.tension'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') > tol})
                 color.update(
@@ -116,7 +117,7 @@ class FormArtist(DiagramArtist):
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
             # forces of the structure
-            if self.settings['show.forces']:
+            if self.settings['show.forcecolors']:
                 color.update(
                     {edge: self.settings['color.tension'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') > tol})
                 color.update(
@@ -127,7 +128,7 @@ class FormArtist(DiagramArtist):
             text = {}
             for index, edge in enumerate(self.diagram.edges()):
                 f = self.diagram.edge_attribute(edge, 'f')
-                text[edge] = "%s kN {%s}" % (round(abs(f), 1), index)
+                text[edge] = "%s kN" % (round(abs(f), 1))
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
@@ -135,17 +136,17 @@ class FormArtist(DiagramArtist):
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
             # forces of the structure
-            if self.settings['show.forces']:
+            if self.settings['show.forcecolors']:
                 color.update(
                     {edge: self.settings['color.tension'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') > tol})
                 color.update(
                     {edge: self.settings['color.compression'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') < -tol})
             self.draw_edgelabels(text=text, color=color)
-        # forces
-        if self.settings['show.forces']:
-            self.draw_forces()
+        # force pipes
+        if self.settings['show.forcepipes']:
+            self.draw_forcepipes()
 
-    def draw_forces(self):
+    def draw_forcepipes(self):
         """Draw the forces in the internal edges as pipes with color and thickness matching the force value.
 
         Parameters

@@ -15,6 +15,9 @@ import AGS_force_displaysettings_cmd
 
 
 __commandname__ = "AGS_toolbar_display"
+"""ATTENTION!
+This cmd will be deleted (replaced by toolbar_force_display_cmd, toolbar_form_display_cmd...)
+"""
 
 
 def RunCommand(is_interactive):
@@ -44,7 +47,7 @@ def RunCommand(is_interactive):
     if option == "FormLocation":
         AGS_form_move_cmd.RunCommand(True)
 
-    elif option == "FormDiaplay":
+    elif option == "FormDisplay":
         AGS_form_displaysettings_cmd.RunCommand(True)
 
     elif option == "ForceLocation":

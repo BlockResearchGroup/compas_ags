@@ -32,42 +32,30 @@ def RunCommand(is_interactive):
             return
 
         if option == "VertexLabels":
-            current = str(force.artist.settings['show.vertexlabels'])
-            show = compas_rhino.rs.GetString("Vertex labels", defaultString=current, strings=["True", "False"])
-
-            if show == "True":
-                force.artist.settings['show.vertexlabels'] = True
-            elif show == "False":
+            if force.artist.settings['show.vertexlabels'] is True:
                 force.artist.settings['show.vertexlabels'] = False
+            else:
+                force.artist.settings['show.vertexlabels'] = True
 
         elif option == "EdgeLabels":
-            current = str(force.artist.settings['show.edgelabels'])
-            show = compas_rhino.rs.GetString("Edge labels", defaultString=current, strings=["True", "False"])
-
-            if show == "True":
+            if force.artist.settings['show.edgelabels'] is True:
+                force.artist.settings['show.edgelabels'] = False
+            else:
                 force.artist.settings['show.edgelabels'] = True
                 force.artist.settings['show.forcelabels'] = False
-            elif show == "False":
-                force.artist.settings['show.edgelabels'] = False
 
         elif option == "ForceLabels":
-            current = str(force.artist.settings['show.forcelabels'])
-            show = compas_rhino.rs.GetString("Force labels", defaultString=current, strings=["True", "False"])
-
-            if show == "True":
+            if force.artist.settings['show.forcelabels'] is True:
+                force.artist.settings['show.forcelabels'] = False
+            else:
                 force.artist.settings['show.forcelabels'] = True
                 force.artist.settings['show.edgelabels'] = False
-            elif show == "False":
-                force.artist.settings['show.forcelabels'] = False
 
         elif option == "CompressionTension":
-            current = str(force.artist.settings['show.forces'])
-            show = compas_rhino.rs.GetString("Compression / Tension", defaultString=current, strings=["True", "False"])
-
-            if show == "True":
-                force.artist.settings['show.forces'] = True
-            elif show == "False":
-                force.artist.settings['show.forces'] = False
+            if force.artist.settings['show.forcecolors'] is True:
+                force.artist.settings['show.forcecolors'] = False
+            else:
+                force.artist.settings['show.forcecolors'] = True
 
         scene.update()
 
