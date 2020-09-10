@@ -152,7 +152,7 @@ class FormObject(DiagramObject):
         # force pipes
         if self.settings['show.forcepipes']:
             self.artist.draw_forcepipes(
-                color_compression=self.settings['color.comppression'],
+                color_compression=self.settings['color.compression'],
                 color_tension=self.settings['color.tension'],
                 scale=self.settings['scale.forces'],
                 tol=self.settings['tol.forces'])
