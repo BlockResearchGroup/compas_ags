@@ -97,7 +97,7 @@ class DiagramObject(MeshObject):
 
         end = list(gp.Point())
         translation = subtract_vectors(end, start)
-        self.artist.anchor_point = add_vectors(self.artist.anchor_point, translation)
+        self.location = add_vectors(self.location, translation)
         return True
 
     def move_vertex(self, vertex, constraint=None, allow_off=None):
