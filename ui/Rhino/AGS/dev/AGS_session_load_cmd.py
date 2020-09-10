@@ -83,6 +83,8 @@ def RunCommand(is_interactive):
 
         if 'anchor' in session['scene']['force']:
             force.anchor = session['scene']['force']['anchor']
+
+        if 'location' in session['scene']['force']:
             force.location = session['scene']['force']['location']
 
         if 'scale' in session['scene']['form']:
