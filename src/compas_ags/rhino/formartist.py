@@ -18,30 +18,32 @@ class FormArtist(DiagramArtist):
     ----------
     form: compas_ags.diagrams.FormDiagram
         The form diagram to draw.
-    scale : float, optional
-        The drawing scale.
-        Default is ``1.0``.
-    settings : dict, optional
-        Customisation of the artist settings.
-
-    Other Parameters
-    ----------------
-    See the parent artists for other parameters.
 
     Attributes
     ----------
-    guid_force : dict
-        Map between Rhino object GUIDs and force diagram force identifiers.
-
+    color_compression : 3-tuple
+        Default color for compression.
+    color_tension : 3-tuple
+        Default color for tension.
+    scale_forces : float
+        Scale factor for the force pipes.
+    tol_forces : float
+        Tolerance for force magnitudes.
     """
 
-    def __init__(self, form, scale=None, settings=None, **kwargs):
-        super(FormArtist, self).__init__(form, **kwargs)
+    def __init__(self, form, layer=None):
+        super(FormArtist, self).__init__(form, layer=layer)
         self._guid_force = {}
-        self.scale = scale
-        self.settings.update({'show.forcepipes': True})
-        if settings:
-            self.settings.update(settings)
+        self.color_compression = (0, 0, 255)
+        self.color_tension = (255, 0, 0)
+        self.scale_forces = 0.01
+        self.tol_forces = 0.001
+
+    @property
+    def guids(self):
+        guids = super(FormArtist, self).guids
+        guids += list(self.guid_force.keys())
+        return guids
 
     @property
     def guid_force(self):
@@ -54,114 +56,28 @@ class FormArtist(DiagramArtist):
 
     def clear(self):
         super(FormArtist, self).clear()
-        guids = []
-        guids += list(self.guid_force.keys())
-        compas_rhino.delete_objects(guids, purge=True)
+        compas_rhino.delete_objects(self.guids, purge=True)
         self._guid_force = {}
 
-    def draw(self):
-        """Draw the form diagram.
-
-        The visible components, display properties and visual style of the form diagram
-        drawn by this method can be fully customised using the configuration items
-        in the settings dict: ``FormArtist.settings``.
-
-        The method will clear the scene of any objects it has previously drawn
-        and keep track of any newly created objects using their GUID.
-
-        Parameters
-        ----------
-        None
-
-        Returns
-        -------
-        None
-
-        """
-        tol = self.settings['tol.forces']
-        # vertices
-        if self.settings['show.vertices']:
-            color = {}
-            color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
-            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
-            self.draw_vertices(color=color)
-        # edges
-        if self.settings['show.edges']:
-            color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
-            # forces of the structure
-            if self.settings['show.forcecolors']:
-                color.update(
-                    {edge: self.settings['color.tension'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') > tol})
-                color.update(
-                    {edge: self.settings['color.compression'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') < -tol})
-            self.draw_edges(color=color)
-        # vertex labels
-        if self.settings['show.vertexlabels']:
-            text = {vertex: index for index, vertex in enumerate(self.diagram.vertices())}
-            color = {}
-            color.update({vertex: self.settings['color.vertexlabels'] for vertex in self.diagram.vertices()})
-            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
-            self.draw_vertexlabels(text=text, color=color)
-        # edge labels
-        if self.settings['show.edgelabels']:
-            text = {edge: index for index, edge in enumerate(self.diagram.edges())}
-            color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
-            # forces of the structure
-            if self.settings['show.forcecolors']:
-                color.update(
-                    {edge: self.settings['color.tension'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') > tol})
-                color.update(
-                    {edge: self.settings['color.compression'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') < -tol})
-            self.draw_edgelabels(text=text, color=color)
-        # force magnitude labels
-        if self.settings['show.forcelabels']:
-            text = {}
-            for index, edge in enumerate(self.diagram.edges()):
-                f = self.diagram.edge_attribute(edge, 'f')
-                text[edge] = "%s kN" % (round(abs(f), 1))
-            color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
-            # forces of the structure
-            if self.settings['show.forcecolors']:
-                color.update(
-                    {edge: self.settings['color.tension'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') > tol})
-                color.update(
-                    {edge: self.settings['color.compression'] for edge in self.diagram.edges_where({'is_external': False}) if self.diagram.edge_attribute(edge, 'f') < -tol})
-            self.draw_edgelabels(text=text, color=color)
-        # force pipes
-        if self.settings['show.forcepipes']:
-            self.draw_forcepipes()
-
-    def draw_forcepipes(self):
+    def draw_forcepipes(self, color_compression=None, color_tension=None, scale=None, tol=None):
         """Draw the forces in the internal edges as pipes with color and thickness matching the force value.
 
         Parameters
         ----------
-        None
+        color_compression
+        color_tension
+        scale
+        tol
 
         Returns
         -------
         list
             The GUIDs of the created Rhino objects.
         """
-        color_compression = self.settings['color.compression']
-        color_tension = self.settings['color.tension']
-        scale = self.settings['scale.forces']
-        tol = self.settings['tol.forces']
+        color_compression = color_compression or self.color_compression
+        color_tension = color_tension or self.color_tension
+        scale = scale or self.scale_forces
+        tol = tol or self.tol_forces
         vertex_xyz = self.vertex_xyz
         edges = []
         pipes = []

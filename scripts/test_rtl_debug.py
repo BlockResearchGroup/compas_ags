@@ -1,16 +1,13 @@
+import os
 import json
-import compas_ags
 
-from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 from compas_ags.ags import graphstatics
 from compas_ags.viewers import Viewer
 
-# this file has unloaded, 2-valent nodes
-# they will be removed automatically
-# and the result renumbered
-FILE = compas_ags.get('forms/howe_modified.ags')
+HERE = os.path.dirname(__file__)
+FILE = os.path.join(HERE, '../data/forms/howe_modified.ags')
 
 with open(FILE, 'r') as f:
     data = json.load(f)
