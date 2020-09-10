@@ -204,9 +204,8 @@ class Scene(object):
         force = None
         for data in state:
             diagram = data['diagram']['type'].from_data(data['diagram']['data'])
-            guid = self.add(diagram, **data['object'])
+            guid = self.add(diagram, name=data['object']['name'], layer=data['object']['layer'], visible=data['object']['visible'], settings=data['object']['settings'])
             obj = self.find(guid)
-            obj.settings.update(data['object']['settings'])
             obj.anchor = data['object']['anchor']
             obj.location = data['object']['location']
             obj.scale = data['object']['scale']
@@ -242,9 +241,8 @@ class Scene(object):
         force = None
         for data in state:
             diagram = data['diagram']['type'].from_data(data['diagram']['data'])
-            guid = self.add(diagram, **data['object'])
+            guid = self.add(diagram, name=data['object']['name'], layer=data['object']['layer'], visible=data['object']['visible'], settings=data['object']['settings'])
             obj = self.find(guid)
-            obj.settings.update(data['object']['settings'])
             obj.anchor = data['object']['anchor']
             obj.location = data['object']['location']
             obj.scale = data['object']['scale']

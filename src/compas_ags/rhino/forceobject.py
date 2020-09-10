@@ -3,7 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 from compas_ags.rhino.diagramobject import DiagramObject
-from compas_ags.rhino.forceinspector import ForceDiagramInspector
+from compas_ags.rhino.forceinspector import ForceDiagramVertexInspector
 
 
 __all__ = ['ForceObject']
@@ -47,7 +47,7 @@ class ForceObject(DiagramObject):
     def inspector(self):
         """:class:`compas_ags.rhino.ForceDiagramInspector`: An inspector conduit."""
         if not self._inspector:
-            self._inspector = ForceDiagramInspector(self.diagram)
+            self._inspector = ForceDiagramVertexInspector(self.diagram)
         return self._inspector
 
     def inspector_on(self, form):
