@@ -169,7 +169,7 @@ class Scene(object):
                     'visible': obj.visible,
                     'settings': obj.settings,
                     'anchor': obj.anchor,
-                    'location': obj.location,
+                    'location': list(obj.location),
                     'scale': obj.scale,
                 },
                 'diagram': {
