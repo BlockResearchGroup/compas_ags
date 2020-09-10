@@ -37,8 +37,9 @@ class FormObject(DiagramObject):
             'color.compression': (0, 0, 255),
             'color.tension': (255, 0, 0),
 
-            'scale.forcepipes': 0.1,
+            'scale.forces': 0.1,
 
+            'tol.edges': 1e-3,
             'tol.forces': 1e-3,
         })
 
@@ -64,13 +65,17 @@ class FormObject(DiagramObject):
         self.clear()
         if not self.visible:
             return
+
         self.artist.vertex_xyz = self.vertex_xyz
+
         # vertices
         if self.settings['show.vertices']:
             color = {}
             color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
             color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
+
             self.artist.draw_vertices(color=color)
+
         # edges
         if self.settings['show.edges']:
             color = {}
@@ -79,15 +84,18 @@ class FormObject(DiagramObject):
             color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
-            # forces of the structure
+
+            # force colors
             if self.settings['show.forcecolors']:
-                color.update(
-                    {edge: self.settings['color.tension'] for edge in self.diagram.edges_where({'is_external': False})
-                     if self.diagram.edge_attribute(edge, 'f') > self.settings['tol.forces']})
-                color.update(
-                    {edge: self.settings['color.compression'] for edge in self.diagram.edges_where({'is_external': False})
-                     if self.diagram.edge_attribute(edge, 'f') < - self.settings['tol.forces']})
+                tol = self.settings['tol.forces']
+                for edge in self.diagram.edges_where({'is_external': False}):
+                    if self.diagram.edge_attribute(edge, 'f') > + tol:
+                        color[edge] = self.settings['color.tension']
+                    elif self.diagram.edge_attribute(edge, 'f') < - tol:
+                        color[edge] = self.settings['color.compression']
+
             self.artist.draw_edges(color=color)
+
         # vertex labels
         if self.settings['show.vertexlabels']:
             text = {vertex: index for index, vertex in enumerate(self.diagram.vertices())}
@@ -95,6 +103,7 @@ class FormObject(DiagramObject):
             color.update({vertex: self.settings['color.vertexlabels'] for vertex in self.diagram.vertices()})
             color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
             self.artist.draw_vertexlabels(text=text, color=color)
+
         # edge labels
         if self.settings['show.edgelabels']:
             text = {edge: index for index, edge in enumerate(self.diagram.edges())}
@@ -104,16 +113,19 @@ class FormObject(DiagramObject):
             color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
-            # forces of the structure
+
+            # force colors
             if self.settings['show.forcecolors']:
-                color.update(
-                    {edge: self.settings['color.tension'] for edge in self.diagram.edges_where({'is_external': False})
-                     if self.diagram.edge_attribute(edge, 'f') > self.settings['tol.forces']})
-                color.update(
-                    {edge: self.settings['color.compression'] for edge in self.diagram.edges_where({'is_external': False})
-                     if self.diagram.edge_attribute(edge, 'f') < - self.settings['tol.forces']})
+                tol = self.settings['tol.forces']
+                for edge in self.diagram.edges_where({'is_external': False}):
+                    if self.diagram.edge_attribute(edge, 'f') > + tol:
+                        color[edge] = self.settings['color.tension']
+                    elif self.diagram.edge_attribute(edge, 'f') < - tol:
+                        color[edge] = self.settings['color.compression']
+
             self.artist.draw_edgelabels(text=text, color=color)
-        # force magnitude labels
+
+        # force labels
         if self.settings['show.forcelabels']:
             text = {}
             for index, edge in enumerate(self.diagram.edges()):
@@ -125,18 +137,26 @@ class FormObject(DiagramObject):
             color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
-            # forces of the structure
+
+            # force colors
             if self.settings['show.forcecolors']:
-                color.update(
-                    {edge: self.settings['color.tension'] for edge in self.diagram.edges_where({'is_external': False})
-                     if self.diagram.edge_attribute(edge, 'f') > self.settings['tol.forces']})
-                color.update(
-                    {edge: self.settings['color.compression'] for edge in self.diagram.edges_where({'is_external': False})
-                     if self.diagram.edge_attribute(edge, 'f') < - self.settings['tol.forces']})
+                tol = self.settings['tol.forces']
+                for edge in self.diagram.edges_where({'is_external': False}):
+                    if self.diagram.edge_attribute(edge, 'f') > + tol:
+                        color[edge] = self.settings['color.tension']
+                    elif self.diagram.edge_attribute(edge, 'f') < - tol:
+                        color[edge] = self.settings['color.compression']
+
             self.artist.draw_edgelabels(text=text, color=color)
+
         # force pipes
         if self.settings['show.forcepipes']:
-            self.artist.draw_forcepipes()
+            self.artist.draw_forcepipes(
+                color_compression=self.settings['color.comppression'],
+                color_tension=self.settings['color.tension'],
+                scale=self.settings['scale.forces'],
+                tol=self.settings['tol.forces'])
+
         self.redraw()
 
 
