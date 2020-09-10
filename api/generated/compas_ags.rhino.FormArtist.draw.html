@@ -52,8 +52,10 @@
         <li class="nav-item active"><a class="nav-link" href="https://blockresearchgroup.github.io/compas_ags">COMPAS AGS</a></li>
       </ul>
       <!-- primary -->
-      <!-- social -->
       <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        
+        <!-- version -->
+        <!-- social -->
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/BlockResearchGroup/compas_ags" target="_blank">
             <span class="fab fa-github fa-1x"></span>
@@ -64,8 +66,8 @@
             <span class="fab fa-discourse fa-1x"></span>
           </a>
         </li>
+        <!-- social -->
       </ul>
-      <!-- social -->
     </nav>
   </header>
   <!-- header -->
@@ -80,21 +82,19 @@
 <h1 class="display-4 p-0 mb-5">FormArtist.draw</h1>
 <dl class="method">
 <dt id="compas_ags.rhino.FormArtist.draw">
-<code class="sig-prename descclassname">FormArtist.</code><code class="sig-name descname">draw</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/formartist.html#FormArtist.draw"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Draw the form diagram.</p>
-<p>The visible components, display properties and visual style of the form diagram
-drawn by this method can be fully customised using the configuration items
-in the settings dict: <code class="docutils literal notranslate"><span class="pre">FormArtist.settings</span></code>.</p>
-<p>The method will clear the scene of any objects it has previously drawn
-and keep track of any newly created objects using their GUID.</p>
+<code class="sig-prename descclassname">FormArtist.</code><code class="sig-name descname">draw</code><span class="sig-paren">(</span><em class="sig-param">settings=None</em><span class="sig-paren">)</span></dt>
+<dd><p>Draw the mesh using the chosen visualisation settings.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>None</strong></p>
+<dd class="field-odd"><p><strong>settings</strong> (<em>dict, optional</em>) – Dictionary of visualisation settings that will be merged with the settings of the artist.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>None</em></p>
+<dd class="field-even"><p><em>list</em> – The GUIDs of the created Rhino objects.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>This method will attempt to clear all previously drawn elements by this artist.
+However, clearing the artist layer has to be done explicitly with a call to <code class="docutils literal notranslate"><span class="pre">MeshArtist.clear_layer</span></code>.</p>
 </dd></dl>
 
 </div>
@@ -216,6 +216,11 @@ and keep track of any newly created objects using their GUID.</p>
 
     hljs.initHighlighting();
     anchors.add();
+
+    $('.nav-versions .dropdown-item').filter(function(i, ver) {
+      return window.location.href.startsWith(ver.href);
+    }).addClass("active");
+
   });
   </script>
   

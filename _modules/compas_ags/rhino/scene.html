@@ -48,8 +48,10 @@
         <li class="nav-item active"><a class="nav-link" href="https://blockresearchgroup.github.io/compas_ags">COMPAS AGS</a></li>
       </ul>
       <!-- primary -->
-      <!-- social -->
       <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        
+        <!-- version -->
+        <!-- social -->
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/BlockResearchGroup/compas_ags" target="_blank">
             <span class="fab fa-github fa-1x"></span>
@@ -60,8 +62,8 @@
             <span class="fab fa-discourse fa-1x"></span>
           </a>
         </li>
+        <!-- social -->
       </ul>
-      <!-- social -->
     </nav>
   </header>
   <!-- header -->
@@ -117,13 +119,13 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Scene.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.Scene.__init__.html#compas_ags.rhino.Scene.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+<div class="viewcode-block" id="Scene.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.Scene.__init__.html#compas_ags.rhino.Scene.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_depth</span> <span class="o">=</span> <span class="n">depth</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_db</span> <span class="o">=</span> <span class="n">db</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">objects</span> <span class="o">=</span> <span class="p">{}</span></div>
 
-<div class="viewcode-block" id="Scene.add"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.Scene.add.html#compas_ags.rhino.Scene.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Scene.add"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.Scene.add.html#compas_ags.rhino.Scene.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Add an object to the scene matching the provided item.</span>
 
 <span class="sd">        Parameters</span>
@@ -174,7 +176,7 @@
                 <span class="n">objects</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">objects</span></div>
 
-<div class="viewcode-block" id="Scene.clear"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.Scene.clear.html#compas_ags.rhino.Scene.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="Scene.purge"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.Scene.purge.html#compas_ags.rhino.Scene.purge">[docs]</a>    <span class="k">def</span> <span class="nf">purge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Clear all objects from the scene.&quot;&quot;&quot;</span>
         <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
@@ -186,12 +188,33 @@
         <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">Redraw</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="Scene.clear"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.Scene.clear.html#compas_ags.rhino.Scene.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear all objects from the scene.&quot;&quot;&quot;</span>
+        <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">guid</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">guid</span><span class="p">]</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">Redraw</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Scene.clear_layers"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.Scene.clear_layers.html#compas_ags.rhino.Scene.clear_layers">[docs]</a>    <span class="k">def</span> <span class="nf">clear_layers</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Clear all object layers of the scene.&quot;&quot;&quot;</span>
+        <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">guid</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">guid</span><span class="p">]</span><span class="o">.</span><span class="n">clear_layer</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">Redraw</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="Scene.redraw"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.Scene.redraw.html#compas_ags.rhino.Scene.redraw">[docs]</a>    <span class="k">def</span> <span class="nf">redraw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Redraw the entire scene.&quot;&quot;&quot;</span>
         <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">EnableRedraw</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">guid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">guid</span><span class="p">]</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">objects</span><span class="p">[</span><span class="n">guid</span><span class="p">]</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span>
         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
             <span class="k">pass</span>
@@ -200,9 +223,12 @@
 
 <div class="viewcode-block" id="Scene.update"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.Scene.update.html#compas_ags.rhino.Scene.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Redraw all objects in the scene.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">redraw</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="Scene.save"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.Scene.save.html#compas_ags.rhino.Scene.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">:</span>
+            <span class="k">return</span>
         <span class="n">states</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
             <span class="k">del</span> <span class="n">states</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">+</span> <span class="mi">1</span><span class="p">:]</span>
@@ -217,15 +243,16 @@
                 <span class="s1">&#39;object&#39;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
                     <span class="s1">&#39;layer&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span>
-                    <span class="s1">&#39;visible&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">visible</span><span class="p">},</span>
+                    <span class="s1">&#39;visible&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">visible</span><span class="p">,</span>
+                    <span class="s1">&#39;settings&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span>
+                    <span class="s1">&#39;anchor&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">anchor</span><span class="p">,</span>
+                    <span class="s1">&#39;location&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">location</span><span class="p">,</span>
+                    <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">scale</span><span class="p">,</span>
+                <span class="p">},</span>
                 <span class="s1">&#39;diagram&#39;</span><span class="p">:</span> <span class="p">{</span>
                     <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">diagram</span><span class="p">),</span>
-                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">to_data</span><span class="p">()},</span>
-                <span class="s1">&#39;artist&#39;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s1">&#39;settings&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span>
-                    <span class="s1">&#39;anchor_vertex&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">anchor_vertex</span><span class="p">,</span>
-                    <span class="s1">&#39;anchor_point&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">anchor_point</span><span class="p">,</span>
-                    <span class="s1">&#39;scale&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">scale</span><span class="p">}</span>
+                    <span class="s1">&#39;data&#39;</span><span class="p">:</span> <span class="n">obj</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">to_data</span><span class="p">(),</span>
+                <span class="p">},</span>
             <span class="p">})</span>
         <span class="n">states</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">states</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">_depth</span><span class="p">:</span>
@@ -241,6 +268,8 @@
 <span class="sd">            False if there is nothing (more) to undo.</span>
 <span class="sd">            True if undo was successful.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">:</span>
+            <span class="k">return</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">&lt;=</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_depth</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
@@ -254,10 +283,10 @@
             <span class="n">diagram</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;diagram&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;diagram&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
             <span class="n">guid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">])</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">guid</span><span class="p">)</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;artist&#39;</span><span class="p">][</span><span class="s1">&#39;settings&#39;</span><span class="p">])</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">anchor_vertex</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;artist&#39;</span><span class="p">][</span><span class="s1">&#39;anchor_vertex&#39;</span><span class="p">]</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">anchor_point</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;artist&#39;</span><span class="p">][</span><span class="s1">&#39;anchor_point&#39;</span><span class="p">]</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;artist&#39;</span><span class="p">][</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">][</span><span class="s1">&#39;settings&#39;</span><span class="p">])</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">anchor</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">][</span><span class="s1">&#39;anchor&#39;</span><span class="p">]</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">][</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">][</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Form&#39;</span><span class="p">:</span>
                 <span class="n">form</span> <span class="o">=</span> <span class="n">obj</span>
             <span class="k">elif</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Force&#39;</span><span class="p">:</span>
@@ -277,6 +306,8 @@
 <span class="sd">            False if there is nothing (more) to redo.</span>
 <span class="sd">            True if redo was successful.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">:</span>
+            <span class="k">return</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_db</span><span class="p">[</span><span class="s1">&#39;states&#39;</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_current</span> <span class="o">&gt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
@@ -290,10 +321,10 @@
             <span class="n">diagram</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;diagram&#39;</span><span class="p">][</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;diagram&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">])</span>
             <span class="n">guid</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">])</span>
             <span class="n">obj</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">guid</span><span class="p">)</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;artist&#39;</span><span class="p">][</span><span class="s1">&#39;settings&#39;</span><span class="p">])</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">anchor_vertex</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;artist&#39;</span><span class="p">][</span><span class="s1">&#39;anchor_vertex&#39;</span><span class="p">]</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">anchor_point</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;artist&#39;</span><span class="p">][</span><span class="s1">&#39;anchor_point&#39;</span><span class="p">]</span>
-            <span class="n">obj</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;artist&#39;</span><span class="p">][</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">][</span><span class="s1">&#39;settings&#39;</span><span class="p">])</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">anchor</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">][</span><span class="s1">&#39;anchor&#39;</span><span class="p">]</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">location</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">][</span><span class="s1">&#39;location&#39;</span><span class="p">]</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">scale</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s1">&#39;object&#39;</span><span class="p">][</span><span class="s1">&#39;scale&#39;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Form&#39;</span><span class="p">:</span>
                 <span class="n">form</span> <span class="o">=</span> <span class="n">obj</span>
             <span class="k">elif</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s1">&#39;Force&#39;</span><span class="p">:</span>
@@ -416,6 +447,11 @@
 
     hljs.initHighlighting();
     anchors.add();
+
+    $('.nav-versions .dropdown-item').filter(function(i, ver) {
+      return window.location.href.startsWith(ver.href);
+    }).addClass("active");
+
   });
   </script>
   

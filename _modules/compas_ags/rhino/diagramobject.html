@@ -48,8 +48,10 @@
         <li class="nav-item active"><a class="nav-link" href="https://blockresearchgroup.github.io/compas_ags">COMPAS AGS</a></li>
       </ul>
       <!-- primary -->
-      <!-- social -->
       <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        
+        <!-- version -->
+        <!-- social -->
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/BlockResearchGroup/compas_ags" target="_blank">
             <span class="fab fa-github fa-1x"></span>
@@ -60,8 +62,8 @@
             <span class="fab fa-discourse fa-1x"></span>
           </a>
         </li>
+        <!-- social -->
       </ul>
-      <!-- social -->
     </nav>
   </header>
   <!-- header -->
@@ -77,7 +79,9 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
-<span class="kn">import</span> <span class="nn">compas</span>
+<span class="kn">import</span> <span class="nn">Rhino</span>
+<span class="kn">from</span> <span class="nn">Rhino.Geometry</span> <span class="kn">import</span> <span class="n">Point3d</span>
+
 <span class="kn">import</span> <span class="nn">compas_rhino</span>
 
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">scale_vector</span>
@@ -86,61 +90,29 @@
 
 <span class="kn">from</span> <span class="nn">compas_rhino.objects</span> <span class="kn">import</span> <span class="n">MeshObject</span>
 
-<span class="k">if</span> <span class="n">compas</span><span class="o">.</span><span class="n">RHINO</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">Rhino</span>
-    <span class="kn">from</span> <span class="nn">Rhino.Geometry</span> <span class="kn">import</span> <span class="n">Point3d</span>
-
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DiagramObject&#39;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="DiagramObject"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.html#compas_ags.rhino.DiagramObject">[docs]</a><span class="k">class</span> <span class="nc">DiagramObject</span><span class="p">(</span><span class="n">MeshObject</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;A diagram object represents a form or force diagram in the Rhino view.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    diagram : :class:`compas_ags.diagrams.Diagram`</span>
-<span class="sd">        The form diagram instance.</span>
-
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
-<span class="sd">    diagram : :class:`compas_ags.diagrams.Diagram`</span>
-<span class="sd">        Stores the diagram instance.</span>
-<span class="sd">    artist : :class:`compas_ags.rhino.DiagramArtist`.</span>
-<span class="sd">        Instance of a diagram artist.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DiagramObject.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.__init__.html#compas_ags.rhino.DiagramObject.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="n">scene</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">DiagramObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="n">scene</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">layer</span><span class="p">,</span> <span class="n">visible</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span></div>
+<div class="viewcode-block" id="DiagramObject.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.__init__.html#compas_ags.rhino.DiagramObject.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DiagramObject</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;The diagram associated with the object.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_item</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span>
 
     <span class="nd">@diagram</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_item</span> <span class="o">=</span> <span class="n">diagram</span>
-
-<div class="viewcode-block" id="DiagramObject.draw"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.draw.html#compas_ags.rhino.DiagramObject.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Draw the diagram using the artist.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">draw</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="DiagramObject.clear"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.clear.html#compas_ags.rhino.DiagramObject.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Clear the diagram object and all related Rhino objects from the scene.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">clear_layer</span><span class="p">()</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">diagram</span>
 
 <div class="viewcode-block" id="DiagramObject.unselect"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.unselect.html#compas_ags.rhino.DiagramObject.unselect">[docs]</a>    <span class="k">def</span> <span class="nf">unselect</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Unselect all Rhino objects associated with this diagram object.&quot;&quot;&quot;</span>
-        <span class="n">guids</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertex</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertexlabel</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_edge</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_edgelabel</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_face</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_facelabel</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">UnselectObjects</span><span class="p">(</span><span class="n">guids</span><span class="p">)</span></div>
+        <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">UnselectObjects</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guids</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="DiagramObject.select_vertex"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.select_vertex.html#compas_ags.rhino.DiagramObject.select_vertex">[docs]</a>    <span class="k">def</span> <span class="nf">select_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Select Vertex.&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Manually select one vertex in the Rhino view.</span>
@@ -155,20 +127,6 @@
         <span class="k">if</span> <span class="n">guid</span> <span class="ow">and</span> <span class="n">guid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertex</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertex</span><span class="p">[</span><span class="n">guid</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="DiagramObject.select_vertices"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.select_vertices.html#compas_ags.rhino.DiagramObject.select_vertices">[docs]</a>    <span class="k">def</span> <span class="nf">select_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Select Vertices.&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Manually select vertices in the Rhino view.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list</span>
-<span class="sd">            The identifiers of the selected vertices.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">pointfilter</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">point</span>
-        <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">GetObjects</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">preselect</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">pointfilter</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">guids</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertex</span><span class="p">[</span><span class="n">guid</span><span class="p">]</span> <span class="k">for</span> <span class="n">guid</span> <span class="ow">in</span> <span class="n">guids</span> <span class="k">if</span> <span class="n">guid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_vertex</span><span class="p">]</span></div>
-
 <div class="viewcode-block" id="DiagramObject.select_edge"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.select_edge.html#compas_ags.rhino.DiagramObject.select_edge">[docs]</a>    <span class="k">def</span> <span class="nf">select_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Select Edge.&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Manually select one edge in the Rhino view.</span>
 
@@ -182,37 +140,15 @@
         <span class="k">if</span> <span class="n">guid</span> <span class="ow">and</span> <span class="n">guid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_edge</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_edge</span><span class="p">[</span><span class="n">guid</span><span class="p">]</span></div>
 
-<div class="viewcode-block" id="DiagramObject.select_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.select_edges.html#compas_ags.rhino.DiagramObject.select_edges">[docs]</a>    <span class="k">def</span> <span class="nf">select_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Select Edges.&quot;</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Manually select edges in the Rhino view.</span>
+<div class="viewcode-block" id="DiagramObject.move"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.move.html#compas_ags.rhino.DiagramObject.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Move the entire diagram.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        list</span>
-<span class="sd">            The identifiers of the selected edges.</span>
+<span class="sd">        bool</span>
+<span class="sd">            True if the operation is successful.</span>
+<span class="sd">            False otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">curvefilter</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">filter</span><span class="o">.</span><span class="n">curve</span>
-        <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">rs</span><span class="o">.</span><span class="n">GetObjects</span><span class="p">(</span><span class="n">message</span><span class="o">=</span><span class="n">message</span><span class="p">,</span> <span class="n">preselect</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">select</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="nb">filter</span><span class="o">=</span><span class="n">curvefilter</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">guids</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[]</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_edge</span><span class="p">[</span><span class="n">guid</span><span class="p">]</span> <span class="k">for</span> <span class="n">guid</span> <span class="ow">in</span> <span class="n">guids</span> <span class="k">if</span> <span class="n">guid</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">guid_edge</span><span class="p">]</span></div>
-
-<div class="viewcode-block" id="DiagramObject.move"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramObject.move.html#compas_ags.rhino.DiagramObject.move">[docs]</a>    <span class="k">def</span> <span class="nf">move</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
-        <span class="n">color</span> <span class="o">=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">ApplicationSettings</span><span class="o">.</span><span class="n">AppearanceSettings</span><span class="o">.</span><span class="n">FeedbackColor</span>
-
-        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">vertex_xyz</span>
-        <span class="n">vertex_xyz0</span> <span class="o">=</span> <span class="p">{</span><span class="n">vertex</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[:]</span> <span class="k">for</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="n">vertex_xyz</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-
-        <span class="n">edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
-
-        <span class="n">start</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">pick_point</span><span class="p">(</span><span class="s1">&#39;Point to move from?&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">start</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
-
-        <span class="n">gp</span> <span class="o">=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Input</span><span class="o">.</span><span class="n">Custom</span><span class="o">.</span><span class="n">GetPoint</span><span class="p">()</span>
-        <span class="n">gp</span><span class="o">.</span><span class="n">SetCommandPrompt</span><span class="p">(</span><span class="s1">&#39;Point to move to?&#39;</span><span class="p">)</span>
-
         <span class="k">def</span> <span class="nf">OnDynamicDraw</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
             <span class="n">translation</span> <span class="o">=</span> <span class="n">subtract_vectors</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">CurrentPoint</span><span class="p">),</span> <span class="n">start</span><span class="p">)</span>
             <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">vertex_xyz</span><span class="p">:</span>
@@ -220,9 +156,19 @@
             <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">edges</span><span class="p">):</span>
                 <span class="n">e</span><span class="o">.</span><span class="n">Display</span><span class="o">.</span><span class="n">DrawDottedLine</span><span class="p">(</span><span class="n">Point3d</span><span class="p">(</span><span class="o">*</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">u</span><span class="p">]),</span> <span class="n">Point3d</span><span class="p">(</span><span class="o">*</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">v</span><span class="p">]),</span> <span class="n">color</span><span class="p">)</span>
 
+        <span class="n">color</span> <span class="o">=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">ApplicationSettings</span><span class="o">.</span><span class="n">AppearanceSettings</span><span class="o">.</span><span class="n">FeedbackColor</span>
+        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">vertex_xyz</span>
+        <span class="n">vertex_xyz0</span> <span class="o">=</span> <span class="p">{</span><span class="n">vertex</span><span class="p">:</span> <span class="n">xyz</span><span class="p">[:]</span> <span class="k">for</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="n">vertex_xyz</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="n">edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">pick_point</span><span class="p">(</span><span class="s1">&#39;Point to move from?&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">start</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">start</span><span class="p">)</span>
+
+        <span class="n">gp</span> <span class="o">=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Input</span><span class="o">.</span><span class="n">Custom</span><span class="o">.</span><span class="n">GetPoint</span><span class="p">()</span>
+        <span class="n">gp</span><span class="o">.</span><span class="n">SetCommandPrompt</span><span class="p">(</span><span class="s1">&#39;Point to move to?&#39;</span><span class="p">)</span>
         <span class="n">gp</span><span class="o">.</span><span class="n">DynamicDraw</span> <span class="o">+=</span> <span class="n">OnDynamicDraw</span>
         <span class="n">gp</span><span class="o">.</span><span class="n">Get</span><span class="p">()</span>
-
         <span class="k">if</span> <span class="n">gp</span><span class="o">.</span><span class="n">CommandResult</span><span class="p">()</span> <span class="o">!=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Commands</span><span class="o">.</span><span class="n">Result</span><span class="o">.</span><span class="n">Success</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
@@ -250,39 +196,33 @@
 <span class="sd">            True if the operation was successful.</span>
 <span class="sd">            False otherwise.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">color</span> <span class="o">=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">ApplicationSettings</span><span class="o">.</span><span class="n">AppearanceSettings</span><span class="o">.</span><span class="n">FeedbackColor</span>
-
-        <span class="n">diagram</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span>
-        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">vertex_xyz</span>
-
-        <span class="k">if</span> <span class="s1">&#39;_is_edge&#39;</span> <span class="ow">in</span> <span class="n">diagram</span><span class="o">.</span><span class="n">default_edge_attributes</span><span class="p">:</span>
-            <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertex_xyz</span><span class="p">[</span><span class="n">nbr</span><span class="p">]</span> <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="n">diagram</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span> <span class="k">if</span> <span class="n">diagram</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">((</span><span class="n">vertex</span><span class="p">,</span> <span class="n">nbr</span><span class="p">),</span> <span class="s1">&#39;_is_edge&#39;</span><span class="p">)]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertex_xyz</span><span class="p">[</span><span class="n">nbr</span><span class="p">]</span> <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="n">diagram</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">vertex</span><span class="p">)]</span>
-
-        <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Point3d</span><span class="p">(</span><span class="o">*</span><span class="n">xyz</span><span class="p">)</span> <span class="k">for</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="n">nbrs</span><span class="p">]</span>
-
-        <span class="n">gp</span> <span class="o">=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Input</span><span class="o">.</span><span class="n">Custom</span><span class="o">.</span><span class="n">GetPoint</span><span class="p">()</span>
-        <span class="n">gp</span><span class="o">.</span><span class="n">SetCommandPrompt</span><span class="p">(</span><span class="s1">&#39;Point to move to?&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">constraint</span><span class="p">:</span>
-            <span class="n">gp</span><span class="o">.</span><span class="n">Constrain</span><span class="p">(</span><span class="n">constraint</span><span class="p">,</span> <span class="n">allow_off</span><span class="p">)</span>
-
         <span class="k">def</span> <span class="nf">OnDynamicDraw</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
             <span class="n">sp</span> <span class="o">=</span> <span class="n">e</span><span class="o">.</span><span class="n">CurrentPoint</span>
             <span class="k">for</span> <span class="n">ep</span> <span class="ow">in</span> <span class="n">nbrs</span><span class="p">:</span>
                 <span class="n">e</span><span class="o">.</span><span class="n">Display</span><span class="o">.</span><span class="n">DrawDottedLine</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">ep</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
 
+        <span class="n">color</span> <span class="o">=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">ApplicationSettings</span><span class="o">.</span><span class="n">AppearanceSettings</span><span class="o">.</span><span class="n">FeedbackColor</span>
+        <span class="n">diagram</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span>
+        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">vertex_xyz</span>
+
+        <span class="k">if</span> <span class="s1">&#39;_is_edge&#39;</span> <span class="ow">in</span> <span class="n">diagram</span><span class="o">.</span><span class="n">default_edge_attributes</span><span class="p">:</span>
+            <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Point3d</span><span class="p">(</span><span class="o">*</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">nbr</span><span class="p">])</span> <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="n">diagram</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span> <span class="k">if</span> <span class="n">diagram</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">((</span><span class="n">vertex</span><span class="p">,</span> <span class="n">nbr</span><span class="p">),</span> <span class="s1">&#39;_is_edge&#39;</span><span class="p">)]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">Point3d</span><span class="p">(</span><span class="o">*</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">nbr</span><span class="p">])</span> <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="n">diagram</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">vertex</span><span class="p">)]</span>
+
+        <span class="n">gp</span> <span class="o">=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Input</span><span class="o">.</span><span class="n">Custom</span><span class="o">.</span><span class="n">GetPoint</span><span class="p">()</span>
+        <span class="n">gp</span><span class="o">.</span><span class="n">SetCommandPrompt</span><span class="p">(</span><span class="s1">&#39;Point to move to?&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">constraint</span><span class="p">:</span>
+            <span class="n">gp</span><span class="o">.</span><span class="n">Constrain</span><span class="p">(</span><span class="n">constraint</span><span class="p">,</span> <span class="n">allow_off</span><span class="p">)</span>
         <span class="n">gp</span><span class="o">.</span><span class="n">DynamicDraw</span> <span class="o">+=</span> <span class="n">OnDynamicDraw</span>
         <span class="n">gp</span><span class="o">.</span><span class="n">Get</span><span class="p">()</span>
         <span class="k">if</span> <span class="n">gp</span><span class="o">.</span><span class="n">CommandResult</span><span class="p">()</span> <span class="o">!=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Commands</span><span class="o">.</span><span class="n">Result</span><span class="o">.</span><span class="n">Success</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
 
         <span class="n">point</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">gp</span><span class="o">.</span><span class="n">Point</span><span class="p">())</span>
-
         <span class="n">xyz0</span> <span class="o">=</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span>
         <span class="n">dxyz0</span> <span class="o">=</span> <span class="n">subtract_vectors</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="n">xyz0</span><span class="p">)</span>
-
-        <span class="n">dxyz</span> <span class="o">=</span> <span class="n">scale_vector</span><span class="p">(</span><span class="n">dxyz0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
+        <span class="n">dxyz</span> <span class="o">=</span> <span class="n">scale_vector</span><span class="p">(</span><span class="n">dxyz0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
         <span class="n">xyz</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s1">&#39;xyz&#39;</span><span class="p">)</span>
         <span class="n">xyz</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">add_vectors</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">dxyz</span><span class="p">)</span>
         <span class="n">diagram</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s1">&#39;xyz&#39;</span><span class="p">,</span> <span class="n">xyz</span><span class="p">)</span>
@@ -330,12 +270,11 @@
                     <span class="n">connectors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
         <span class="n">gp</span> <span class="o">=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Input</span><span class="o">.</span><span class="n">Custom</span><span class="o">.</span><span class="n">GetPoint</span><span class="p">()</span>
+
         <span class="n">gp</span><span class="o">.</span><span class="n">SetCommandPrompt</span><span class="p">(</span><span class="s1">&#39;Point to move from?&#39;</span><span class="p">)</span>
         <span class="n">gp</span><span class="o">.</span><span class="n">Get</span><span class="p">()</span>
-
         <span class="k">if</span> <span class="n">gp</span><span class="o">.</span><span class="n">CommandResult</span><span class="p">()</span> <span class="o">!=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Commands</span><span class="o">.</span><span class="n">Result</span><span class="o">.</span><span class="n">Success</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
-
         <span class="n">start</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Point</span><span class="p">()</span>
 
         <span class="n">gp</span><span class="o">.</span><span class="n">SetCommandPrompt</span><span class="p">(</span><span class="s1">&#39;Point to move to?&#39;</span><span class="p">)</span>
@@ -343,25 +282,16 @@
         <span class="n">gp</span><span class="o">.</span><span class="n">DrawLineFromPoint</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
         <span class="n">gp</span><span class="o">.</span><span class="n">DynamicDraw</span> <span class="o">+=</span> <span class="n">OnDynamicDraw</span>
         <span class="n">gp</span><span class="o">.</span><span class="n">Get</span><span class="p">()</span>
-
         <span class="k">if</span> <span class="n">gp</span><span class="o">.</span><span class="n">CommandResult</span><span class="p">()</span> <span class="o">!=</span> <span class="n">Rhino</span><span class="o">.</span><span class="n">Commands</span><span class="o">.</span><span class="n">Result</span><span class="o">.</span><span class="n">Success</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
-
         <span class="n">end</span> <span class="o">=</span> <span class="n">gp</span><span class="o">.</span><span class="n">Point</span><span class="p">()</span>
+
         <span class="n">dxyz0</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">end</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span>
-        <span class="n">dxyz</span> <span class="o">=</span> <span class="n">scale_vector</span><span class="p">(</span><span class="n">dxyz0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">artist</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
-
+        <span class="n">dxyz</span> <span class="o">=</span> <span class="n">scale_vector</span><span class="p">(</span><span class="n">dxyz0</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">:</span>
-            <span class="c1"># dxyz = subtract_vectors(add_vectors(vertex_xyz[vertex], vector), origin)</span>
-            <span class="c1"># dxyz = scale_vector(dxyz, scale)</span>
-            <span class="c1"># diagram.vertex_attributes(vertex, &#39;xyz&#39;, add_vectors(anchor_xyz, dxyz))</span>
-            <span class="c1"># # xyz = diagram.vertex_attributes(vertex, &#39;xyz&#39;)</span>
-            <span class="c1"># # diagram.vertex_attributes(vertex, &#39;xyz&#39;, add_vectors(xyz, dxyz))</span>
-
             <span class="n">xyz</span> <span class="o">=</span> <span class="n">diagram</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s1">&#39;xyz&#39;</span><span class="p">)</span>
             <span class="n">xyz</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">add_vectors</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">dxyz</span><span class="p">)</span>
             <span class="n">diagram</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s1">&#39;xyz&#39;</span><span class="p">,</span> <span class="n">xyz</span><span class="p">)</span>
-
         <span class="k">return</span> <span class="kc">True</span></div></div>
 
 
@@ -477,6 +407,11 @@
 
     hljs.initHighlighting();
     anchors.add();
+
+    $('.nav-versions .dropdown-item').filter(function(i, ver) {
+      return window.location.href.startsWith(ver.href);
+    }).addClass("active");
+
   });
   </script>
   

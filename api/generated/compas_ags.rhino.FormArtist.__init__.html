@@ -52,8 +52,10 @@
         <li class="nav-item active"><a class="nav-link" href="https://blockresearchgroup.github.io/compas_ags">COMPAS AGS</a></li>
       </ul>
       <!-- primary -->
-      <!-- social -->
       <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        
+        <!-- version -->
+        <!-- social -->
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/BlockResearchGroup/compas_ags" target="_blank">
             <span class="fab fa-github fa-1x"></span>
@@ -64,8 +66,8 @@
             <span class="fab fa-discourse fa-1x"></span>
           </a>
         </li>
+        <!-- social -->
       </ul>
-      <!-- social -->
     </nav>
   </header>
   <!-- header -->
@@ -80,7 +82,7 @@
 <h1 class="display-4 p-0 mb-5">FormArtist.__init__</h1>
 <dl class="method">
 <dt id="compas_ags.rhino.FormArtist.__init__">
-<code class="sig-prename descclassname">FormArtist.</code><code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">form</em>, <em class="sig-param">scale=None</em>, <em class="sig-param">settings=None</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/formartist.html#FormArtist.__init__"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">FormArtist.</code><code class="sig-name descname">__init__</code><span class="sig-paren">(</span><em class="sig-param">form</em>, <em class="sig-param">layer=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/formartist.html#FormArtist.__init__"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Initialize self.  See help(type(self)) for accurate signature.</p>
 </dd></dl>
 
@@ -203,6 +205,11 @@
 
     hljs.initHighlighting();
     anchors.add();
+
+    $('.nav-versions .dropdown-item').filter(function(i, ver) {
+      return window.location.href.startsWith(ver.href);
+    }).addClass("active");
+
   });
   </script>
   

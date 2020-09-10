@@ -52,8 +52,10 @@
         <li class="nav-item active"><a class="nav-link" href="https://blockresearchgroup.github.io/compas_ags">COMPAS AGS</a></li>
       </ul>
       <!-- primary -->
-      <!-- social -->
       <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        
+        <!-- version -->
+        <!-- social -->
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/BlockResearchGroup/compas_ags" target="_blank">
             <span class="fab fa-github fa-1x"></span>
@@ -64,8 +66,8 @@
             <span class="fab fa-discourse fa-1x"></span>
           </a>
         </li>
+        <!-- social -->
       </ul>
-      <!-- social -->
     </nav>
   </header>
   <!-- header -->
@@ -80,7 +82,7 @@
 <h1 class="display-4 p-0 mb-5">Scene.add</h1>
 <dl class="method">
 <dt id="compas_ags.rhino.Scene.add">
-<code class="sig-prename descclassname">Scene.</code><code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">item</em>, <em class="sig-param">name=None</em>, <em class="sig-param">layer=None</em>, <em class="sig-param">visible=None</em>, <em class="sig-param">settings=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/scene.html#Scene.add"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">Scene.</code><code class="sig-name descname">add</code><span class="sig-paren">(</span><em class="sig-param">item</em>, <em class="sig-param">name=None</em>, <em class="sig-param">layer=None</em>, <em class="sig-param">visible=True</em>, <em class="sig-param">settings=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/scene.html#Scene.add"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Add an object to the scene matching the provided item.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
@@ -217,6 +219,11 @@
 
     hljs.initHighlighting();
     anchors.add();
+
+    $('.nav-versions .dropdown-item').filter(function(i, ver) {
+      return window.location.href.startsWith(ver.href);
+    }).addClass("active");
+
   });
   </script>
   

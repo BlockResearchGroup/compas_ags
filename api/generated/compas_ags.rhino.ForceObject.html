@@ -52,8 +52,10 @@
         <li class="nav-item active"><a class="nav-link" href="https://blockresearchgroup.github.io/compas_ags">COMPAS AGS</a></li>
       </ul>
       <!-- primary -->
-      <!-- social -->
       <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        
+        <!-- version -->
+        <!-- social -->
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/BlockResearchGroup/compas_ags" target="_blank">
             <span class="fab fa-github fa-1x"></span>
@@ -64,8 +66,8 @@
             <span class="fab fa-discourse fa-1x"></span>
           </a>
         </li>
+        <!-- social -->
       </ul>
-      <!-- social -->
     </nav>
   </header>
   <!-- header -->
@@ -80,7 +82,7 @@
 <h1 class="display-4 p-0 mb-5">ForceObject</h1>
 <dl class="class">
 <dt id="compas_ags.rhino.ForceObject">
-<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">ForceObject</code><span class="sig-paren">(</span><em class="sig-param">diagram</em>, <em class="sig-param">scene=None</em>, <em class="sig-param">name=None</em>, <em class="sig-param">layer=None</em>, <em class="sig-param">visible=True</em>, <em class="sig-param">settings=None</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/forceobject.html#ForceObject"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">ForceObject</code><span class="sig-paren">(</span><em class="sig-param">diagram</em>, <em class="sig-param">*args</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/forceobject.html#ForceObject"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">compas_ags.rhino.diagramobject.DiagramObject</span></code></p>
 <p>A force object represents a force diagram in the Rhino view.</p>
 <p class="rubric">Methods</p>
@@ -90,20 +92,26 @@
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.__init__.html#compas_ags.rhino.ForceObject.__init__" title="compas_ags.rhino.ForceObject.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(diagram[, scene, name, layer, …])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.__init__.html#compas_ags.rhino.ForceObject.__init__" title="compas_ags.rhino.ForceObject.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(diagram, *args, **kwargs)</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.build.html#compas_ags.rhino.ForceObject.build" title="compas_ags.rhino.ForceObject.build"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build</span></code></a>(item, **kwargs)</p></td>
 <td><p></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.clear.html#compas_ags.rhino.ForceObject.clear" title="compas_ags.rhino.ForceObject.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a>()</p></td>
-<td><p>Clear the diagram object and all related Rhino objects from the scene.</p></td>
+<td><p>Clear all previously created Rhino objects.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.clear_layer.html#compas_ags.rhino.ForceObject.clear_layer" title="compas_ags.rhino.ForceObject.clear_layer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_layer</span></code></a>()</p></td>
 <td><p>Clear the layer of the object.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.draw.html#compas_ags.rhino.ForceObject.draw" title="compas_ags.rhino.ForceObject.draw"><code class="xref py py-obj docutils literal notranslate"><span class="pre">draw</span></code></a>()</p></td>
-<td><p>Draw the diagram using the artist.</p></td>
+<td><p>Draw the diagram.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.inspector_off.html#compas_ags.rhino.ForceObject.inspector_off" title="compas_ags.rhino.ForceObject.inspector_off"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inspector_off</span></code></a>()</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.inspector_on.html#compas_ags.rhino.ForceObject.inspector_on" title="compas_ags.rhino.ForceObject.inspector_on"><code class="xref py py-obj docutils literal notranslate"><span class="pre">inspector_on</span></code></a>(form)</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.modify.html#compas_ags.rhino.ForceObject.modify" title="compas_ags.rhino.ForceObject.modify"><code class="xref py py-obj docutils literal notranslate"><span class="pre">modify</span></code></a>()</p></td>
 <td><p>Modify the item represented by the object.</p></td>
@@ -118,7 +126,7 @@
 <td><p>Modify the attributes of the vertices of the mesh item.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.move.html#compas_ags.rhino.ForceObject.move" title="compas_ags.rhino.ForceObject.move"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move</span></code></a>()</p></td>
-<td><p></p></td>
+<td><p>Move the entire diagram.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.move_vertex.html#compas_ags.rhino.ForceObject.move_vertex" title="compas_ags.rhino.ForceObject.move_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">move_vertex</span></code></a>(vertex[, constraint, allow_off])</p></td>
 <td><p>Move one vertex of the diagram and update the data structure to the new geometry.</p></td>
@@ -138,8 +146,8 @@
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.select_edge.html#compas_ags.rhino.ForceObject.select_edge" title="compas_ags.rhino.ForceObject.select_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_edge</span></code></a>([message])</p></td>
 <td><p>Manually select one edge in the Rhino view.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.select_edges.html#compas_ags.rhino.ForceObject.select_edges" title="compas_ags.rhino.ForceObject.select_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_edges</span></code></a>([message])</p></td>
-<td><p>Manually select edges in the Rhino view.</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.select_edges.html#compas_ags.rhino.ForceObject.select_edges" title="compas_ags.rhino.ForceObject.select_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_edges</span></code></a>()</p></td>
+<td><p>Select edges of the mesh.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.select_faces.html#compas_ags.rhino.ForceObject.select_faces" title="compas_ags.rhino.ForceObject.select_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_faces</span></code></a>()</p></td>
 <td><p>Select faces of the mesh.</p></td>
@@ -147,8 +155,8 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.select_vertex.html#compas_ags.rhino.ForceObject.select_vertex" title="compas_ags.rhino.ForceObject.select_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vertex</span></code></a>([message])</p></td>
 <td><p>Manually select one vertex in the Rhino view.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.select_vertices.html#compas_ags.rhino.ForceObject.select_vertices" title="compas_ags.rhino.ForceObject.select_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vertices</span></code></a>([message])</p></td>
-<td><p>Manually select vertices in the Rhino view.</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.select_vertices.html#compas_ags.rhino.ForceObject.select_vertices" title="compas_ags.rhino.ForceObject.select_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">select_vertices</span></code></a>()</p></td>
+<td><p>Select vertices of the mesh.</p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.ForceObject.unselect.html#compas_ags.rhino.ForceObject.unselect" title="compas_ags.rhino.ForceObject.unselect"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unselect</span></code></a>()</p></td>
 <td><p>Unselect all Rhino objects associated with this diagram object.</p></td>
@@ -177,22 +185,25 @@
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid_vertex</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">item</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">inspector</span></code></p></td>
+<td><p>An inspector conduit.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">item</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">layer</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">layer</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scene</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">scene</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">settings</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">settings</span></code></p></td>
 <td><p></p></td>
 </tr>
 </tbody>
@@ -318,6 +329,11 @@
 
     hljs.initHighlighting();
     anchors.add();
+
+    $('.nav-versions .dropdown-item').filter(function(i, ver) {
+      return window.location.href.startsWith(ver.href);
+    }).addClass("active");
+
   });
   </script>
   

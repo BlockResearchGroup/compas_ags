@@ -52,8 +52,10 @@
         <li class="nav-item active"><a class="nav-link" href="https://blockresearchgroup.github.io/compas_ags">COMPAS AGS</a></li>
       </ul>
       <!-- primary -->
-      <!-- social -->
       <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        
+        <!-- version -->
+        <!-- social -->
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/BlockResearchGroup/compas_ags" target="_blank">
             <span class="fab fa-github fa-1x"></span>
@@ -64,8 +66,8 @@
             <span class="fab fa-discourse fa-1x"></span>
           </a>
         </li>
+        <!-- social -->
       </ul>
-      <!-- social -->
     </nav>
   </header>
   <!-- header -->
@@ -81,19 +83,27 @@
 <dl class="method">
 <dt id="compas_ags.rhino.FormArtist.draw_edges">
 <code class="sig-prename descclassname">FormArtist.</code><code class="sig-name descname">draw_edges</code><span class="sig-paren">(</span><em class="sig-param">keys=None</em>, <em class="sig-param">color=None</em><span class="sig-paren">)</span></dt>
-<dd><p>Draw the edges of the force diagram according to the drawing scale.</p>
+<dd><p>Draw a selection of edges.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>keys</strong> (<em>list, optional</em>) – The identifiers of the edges that have to be drawn.</p></li>
-<li><p><strong>color</strong> (<em>str or tuple or dict, optional</em>) – A color specification.
-The default color is in the settings dict.</p></li>
+<li><p><strong>keys</strong> (<em>list</em>) – A list of edge keys (as uv pairs) identifying which edges to draw.
+The default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case all edges are drawn.</p></li>
+<li><p><strong>color</strong> (<em>str, tuple, dict</em>) – The color specififcation for the edges.
+Colors should be specified in the form of a string (hex colors) or as a tuple of RGB components.
+To apply the same color to all edges, provide a single color specification.
+Individual colors can be assigned using a dictionary of key-color pairs.
+Missing keys will be assigned the default edge color (<code class="docutils literal notranslate"><span class="pre">self.settings['edge.color']</span></code>).
+The default is <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case all edges are assigned the default edge color.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><em>list</em> – The GUIDs of the created Rhino objects.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>All edges are named using the following template: <code class="docutils literal notranslate"><span class="pre">&quot;{mesh.name}.edge.{u}-{v}&quot;</span></code>.
+This name can be used afterwards to identify edges in the Rhino model.</p>
 </dd></dl>
 
 </div>
@@ -215,6 +225,11 @@ The default color is in the settings dict.</p></li>
 
     hljs.initHighlighting();
     anchors.add();
+
+    $('.nav-versions .dropdown-item').filter(function(i, ver) {
+      return window.location.href.startsWith(ver.href);
+    }).addClass("active");
+
   });
   </script>
   

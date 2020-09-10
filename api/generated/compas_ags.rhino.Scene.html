@@ -52,8 +52,10 @@
         <li class="nav-item active"><a class="nav-link" href="https://blockresearchgroup.github.io/compas_ags">COMPAS AGS</a></li>
       </ul>
       <!-- primary -->
-      <!-- social -->
       <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        
+        <!-- version -->
+        <!-- social -->
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/BlockResearchGroup/compas_ags" target="_blank">
             <span class="fab fa-github fa-1x"></span>
@@ -64,8 +66,8 @@
             <span class="fab fa-discourse fa-1x"></span>
           </a>
         </li>
+        <!-- social -->
       </ul>
-      <!-- social -->
     </nav>
   </header>
   <!-- header -->
@@ -80,7 +82,7 @@
 <h1 class="display-4 p-0 mb-5">Scene</h1>
 <dl class="class">
 <dt id="compas_ags.rhino.Scene">
-<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">Scene</code><span class="sig-paren">(</span><em class="sig-param">db</em>, <em class="sig-param">depth=10</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/scene.html#Scene"><span class="viewcode-link">[source]</span></a></dt>
+<em class="property">class </em><code class="sig-prename descclassname">compas_ags.rhino.</code><code class="sig-name descname">Scene</code><span class="sig-paren">(</span><em class="sig-param">db=None</em>, <em class="sig-param">depth=10</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/rhino/scene.html#Scene"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.8)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
 <p>A Rhino scene for AGS.</p>
 <dl class="field-list simple">
@@ -114,7 +116,7 @@ The GUIDs are automatically generated and assigned.</p>
 <col style="width: 90%" />
 </colgroup>
 <tbody>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.__init__.html#compas_ags.rhino.Scene.__init__" title="compas_ags.rhino.Scene.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>(db[, depth])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.__init__.html#compas_ags.rhino.Scene.__init__" title="compas_ags.rhino.Scene.__init__"><code class="xref py py-obj docutils literal notranslate"><span class="pre">__init__</span></code></a>([db, depth])</p></td>
 <td><p>Initialize self.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.add.html#compas_ags.rhino.Scene.add" title="compas_ags.rhino.Scene.add"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add</span></code></a>(item[, name, layer, visible, settings])</p></td>
@@ -123,11 +125,17 @@ The GUIDs are automatically generated and assigned.</p>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.clear.html#compas_ags.rhino.Scene.clear" title="compas_ags.rhino.Scene.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a>()</p></td>
 <td><p>Clear all objects from the scene.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.find.html#compas_ags.rhino.Scene.find" title="compas_ags.rhino.Scene.find"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find</span></code></a>(guid)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.clear_layers.html#compas_ags.rhino.Scene.clear_layers" title="compas_ags.rhino.Scene.clear_layers"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear_layers</span></code></a>()</p></td>
+<td><p>Clear all object layers of the scene.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.find.html#compas_ags.rhino.Scene.find" title="compas_ags.rhino.Scene.find"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find</span></code></a>(guid)</p></td>
 <td><p>Find an object using its GUID.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.find_by_name.html#compas_ags.rhino.Scene.find_by_name" title="compas_ags.rhino.Scene.find_by_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_by_name</span></code></a>(name)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.find_by_name.html#compas_ags.rhino.Scene.find_by_name" title="compas_ags.rhino.Scene.find_by_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">find_by_name</span></code></a>(name)</p></td>
 <td><p>Find an object using its name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.purge.html#compas_ags.rhino.Scene.purge" title="compas_ags.rhino.Scene.purge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">purge</span></code></a>()</p></td>
+<td><p>Clear all objects from the scene.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.rhino.Scene.redo.html#compas_ags.rhino.Scene.redo" title="compas_ags.rhino.Scene.redo"><code class="xref py py-obj docutils literal notranslate"><span class="pre">redo</span></code></a>()</p></td>
 <td><p>Redo scene updates.</p></td>
@@ -267,6 +275,11 @@ The GUIDs are automatically generated and assigned.</p>
 
     hljs.initHighlighting();
     anchors.add();
+
+    $('.nav-versions .dropdown-item').filter(function(i, ver) {
+      return window.location.href.startsWith(ver.href);
+    }).addClass("active");
+
   });
   </script>
   

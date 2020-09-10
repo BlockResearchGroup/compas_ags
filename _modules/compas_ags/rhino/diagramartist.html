@@ -48,8 +48,10 @@
         <li class="nav-item active"><a class="nav-link" href="https://blockresearchgroup.github.io/compas_ags">COMPAS AGS</a></li>
       </ul>
       <!-- primary -->
-      <!-- social -->
       <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        
+        <!-- version -->
+        <!-- social -->
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/BlockResearchGroup/compas_ags" target="_blank">
             <span class="fab fa-github fa-1x"></span>
@@ -60,8 +62,8 @@
             <span class="fab fa-discourse fa-1x"></span>
           </a>
         </li>
+        <!-- social -->
       </ul>
-      <!-- social -->
     </nav>
   </header>
   <!-- header -->
@@ -77,103 +79,46 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
-<span class="kn">import</span> <span class="nn">compas_rhino</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">scale_vector</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">add_vectors</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">subtract_vectors</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">centroid_points</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">distance_point_point</span>
-<span class="kn">from</span> <span class="nn">compas.utilities</span> <span class="kn">import</span> <span class="n">color_to_colordict</span> <span class="k">as</span> <span class="n">colordict</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="c1"># import compas_rhino</span>
+<span class="c1"># from compas.geometry import scale_vector</span>
+<span class="c1"># from compas.geometry import add_vectors</span>
+<span class="c1"># from compas.geometry import subtract_vectors</span>
+<span class="c1"># from compas.geometry import centroid_points</span>
+<span class="c1"># from compas.geometry import distance_point_point</span>
+<span class="kn">from</span> <span class="nn">compas.utilities</span> <span class="kn">import</span> <span class="n">color_to_colordict</span>
 <span class="kn">from</span> <span class="nn">compas_rhino.artists</span> <span class="kn">import</span> <span class="n">MeshArtist</span>
+
+
+<span class="n">colordict</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">color_to_colordict</span><span class="p">,</span> <span class="n">colorformat</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="c1"># def textdict(text, items):</span>
+<span class="c1">#     if text is None:</span>
+<span class="c1">#         item_text = {item: str(item) for item in items}</span>
+<span class="c1">#     elif isinstance(text, dict):</span>
+<span class="c1">#         item_text = text</span>
+<span class="c1">#     elif text == &#39;key&#39;:</span>
+<span class="c1">#         item_text = {item: str(item) for item in items}</span>
+<span class="c1">#     elif text == &#39;index&#39;:</span>
+<span class="c1">#         item_text = {item: str(index) for index, item in enumerate(items)}</span>
+<span class="c1">#     else:</span>
+<span class="c1">#         raise NotImplementedError</span>
+<span class="c1">#     return item_text</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;DiagramArtist&#39;</span><span class="p">]</span>
 
 
-<span class="k">def</span> <span class="nf">textdict</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">items</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">item_text</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">}</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-        <span class="n">item_text</span> <span class="o">=</span> <span class="n">text</span>
-    <span class="k">elif</span> <span class="n">text</span> <span class="o">==</span> <span class="s1">&#39;key&#39;</span><span class="p">:</span>
-        <span class="n">item_text</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">}</span>
-    <span class="k">elif</span> <span class="n">text</span> <span class="o">==</span> <span class="s1">&#39;index&#39;</span><span class="p">:</span>
-        <span class="n">item_text</span> <span class="o">=</span> <span class="p">{</span><span class="n">item</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">index</span><span class="p">)</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">items</span><span class="p">)}</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-    <span class="k">return</span> <span class="n">item_text</span>
-
-
 <div class="viewcode-block" id="DiagramArtist"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramArtist.html#compas_ags.rhino.DiagramArtist">[docs]</a><span class="k">class</span> <span class="nc">DiagramArtist</span><span class="p">(</span><span class="n">MeshArtist</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base artist for diagrams in AGS.</span>
-
-<span class="sd">    Parameters</span>
-<span class="sd">    ----------</span>
-<span class="sd">    diagram: :class:`compas_ags.diagrams.Diagram`</span>
 
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    diagram : :class:`compas_ags.diagrams.Diagram`</span>
 <span class="sd">        The diagram associated with the artist.</span>
-<span class="sd">    anchor_point : list</span>
-<span class="sd">        The location of the point where the diagram should be anchored.</span>
-<span class="sd">    anchor_vertex : int</span>
-<span class="sd">        The identifier of the vertex that should be anchored to the anchor point.</span>
-<span class="sd">    scale : float</span>
-<span class="sd">        Drawing scale of the diagram.</span>
-<span class="sd">        The scale is such that the drawing length of an edge of the diagram is ``drawing length = scale * real length``.</span>
-<span class="sd">    vertex_xyz (read-only) : dict</span>
-<span class="sd">        Maps the vertices of the diagram to a location in the anchored and scaled drawing.</span>
-<span class="sd">    guid_vertex : dict</span>
-<span class="sd">        Map between Rhino object GUIDs and force diagram vertex identifiers.</span>
-<span class="sd">    guid_edge : dict</span>
-<span class="sd">        Map between Rhino object GUIDs and force diagram edge identifiers.</span>
-<span class="sd">    guid_face : dict</span>
-<span class="sd">        Map between Rhino object GUIDs and force diagram face identifiers.</span>
-<span class="sd">    guid_vertexlabels : dict</span>
-<span class="sd">        Map between Rhino object GUIDs and force diagram vertex label identifiers.</span>
-<span class="sd">    guid_edgelabels : dict</span>
-<span class="sd">        Map between Rhino object GUIDs and force diagram edge label identifiers.</span>
-<span class="sd">    guid_facelabels : dict</span>
-<span class="sd">        Map between Rhino object GUIDs and force diagram face label identifiers.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="DiagramArtist.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramArtist.__init__.html#compas_ags.rhino.DiagramArtist.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="nb">super</span><span class="p">(</span><span class="n">DiagramArtist</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">diagram</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
-            <span class="s1">&#39;show.vertices&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s1">&#39;show.edges&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s1">&#39;show.faces&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;show.vertexlabels&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s1">&#39;show.edgelabels&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s1">&#39;show.facelabels&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;show.forces&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span>
-            <span class="s1">&#39;show.forcelabels&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;color.vertices&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="s1">&#39;color.vertexlabels&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
-            <span class="s1">&#39;color.vertices:is_fixed&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
-            <span class="s1">&#39;color.edges&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="s1">&#39;color.edges:is_ind&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
-            <span class="s1">&#39;color.edges:is_external&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="s1">&#39;color.edges:is_reaction&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="s1">&#39;color.edges:is_load&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="s1">&#39;color.faces&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">210</span><span class="p">,</span> <span class="mi">210</span><span class="p">,</span> <span class="mi">210</span><span class="p">),</span>
-            <span class="s1">&#39;color.compression&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">255</span><span class="p">),</span>
-            <span class="s1">&#39;color.tension&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="s1">&#39;color.anchor&#39;</span><span class="p">:</span> <span class="p">(</span><span class="mi">255</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
-            <span class="s1">&#39;scale.forces&#39;</span><span class="p">:</span> <span class="mf">0.1</span><span class="p">,</span>
-            <span class="s1">&#39;tol.edges&#39;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span>
-            <span class="s1">&#39;tol.forces&#39;</span><span class="p">:</span> <span class="mf">1e-3</span><span class="p">,</span>
-        <span class="p">})</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_point</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_vertex</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_vertex</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_edge</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_face</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_vertexlabel</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_edgelabel</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_facelabel</span> <span class="o">=</span> <span class="p">{}</span></div>
+<span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -182,329 +127,7 @@
 
     <span class="nd">@diagram</span><span class="o">.</span><span class="n">setter</span>
     <span class="k">def</span> <span class="nf">diagram</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">diagram</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">diagram</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">anchor_point</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Location of the anchor point for the drawing of the diagram.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_point</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anchor_vertex</span><span class="p">,</span> <span class="s1">&#39;xyz&#39;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_point</span>
-
-    <span class="nd">@anchor_point</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">anchor_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anchor_point</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_point</span> <span class="o">=</span> <span class="n">anchor_point</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">anchor_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Identifier of the anchored vertex.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_vertex</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_vertex</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices</span><span class="p">())</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_vertex</span>
-
-    <span class="nd">@anchor_vertex</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">anchor_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">anchor_vertex</span><span class="p">):</span>
-        <span class="k">if</span> <span class="n">anchor_vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_anchor_vertex</span> <span class="o">=</span> <span class="n">anchor_vertex</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The drawing scale.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mf">1.0</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span>
-
-    <span class="nd">@scale</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scale</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_scale</span> <span class="o">=</span> <span class="n">scale</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">vertex_xyz</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Map between diagram vertices and drawing locations.&quot;&quot;&quot;</span>
-        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">anchor_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anchor_vertex</span><span class="p">,</span> <span class="s1">&#39;xyz&#39;</span><span class="p">)</span>
-        <span class="n">origin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">anchor_point</span>
-        <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices</span><span class="p">():</span>
-            <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s1">&#39;xyz&#39;</span><span class="p">)</span>
-            <span class="n">vector</span> <span class="o">=</span> <span class="n">subtract_vectors</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">anchor_xyz</span><span class="p">)</span>
-            <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="o">=</span> <span class="n">add_vectors</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">scale_vector</span><span class="p">(</span><span class="n">vector</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">scale</span><span class="p">))</span>
-        <span class="k">return</span> <span class="n">vertex_xyz</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">guid_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Map between Rhino object GUIDs and force diagram vertex identifiers.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_guid_vertex</span>
-
-    <span class="nd">@guid_vertex</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">guid_vertex</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_vertex</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">guid_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Map between Rhino object GUIDs and force diagram edge identifiers.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_guid_edge</span>
-
-    <span class="nd">@guid_edge</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">guid_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_edge</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">guid_face</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Map between Rhino object GUIDs and force diagram face identifiers.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_guid_face</span>
-
-    <span class="nd">@guid_face</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">guid_face</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_face</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">guid_vertexlabel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Map between Rhino object GUIDs and force diagram vertex label identifiers.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_guid_vertexlabel</span>
-
-    <span class="nd">@guid_vertexlabel</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">guid_vertexlabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_vertexlabel</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">guid_facelabel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Map between Rhino object GUIDs and force diagram face label identifiers.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_guid_facelabel</span>
-
-    <span class="nd">@guid_facelabel</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">guid_facelabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_facelabel</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">guid_edgelabel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Map between Rhino object GUIDs and force diagram edge label identifiers.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_guid_edgelabel</span>
-
-    <span class="nd">@guid_edgelabel</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">guid_edgelabel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_edgelabel</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
-
-<div class="viewcode-block" id="DiagramArtist.clear"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramArtist.clear.html#compas_ags.rhino.DiagramArtist.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Clear all objects previously drawn by this artist.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        None</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        None</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">guids</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid_vertex</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid_edge</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid_face</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid_vertexlabel</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid_edgelabel</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">guids</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">guid_facelabel</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="n">compas_rhino</span><span class="o">.</span><span class="n">delete_objects</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">purge</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_vertex</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_edge</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_face</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_vertexlabel</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_edgelabel</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_guid_facelabel</span> <span class="o">=</span> <span class="p">{}</span></div>
-
-<div class="viewcode-block" id="DiagramArtist.draw"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramArtist.draw.html#compas_ags.rhino.DiagramArtist.draw">[docs]</a>    <span class="k">def</span> <span class="nf">draw</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
-
-<div class="viewcode-block" id="DiagramArtist.draw_vertices"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramArtist.draw_vertices.html#compas_ags.rhino.DiagramArtist.draw_vertices">[docs]</a>    <span class="k">def</span> <span class="nf">draw_vertices</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Draw the vertices of the diagram according to the drawing scale.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        keys : list, optional</span>
-<span class="sd">            The identifiers of the vertices that have to be drawn.</span>
-<span class="sd">        color : str or tuple or dict, optional</span>
-<span class="sd">            A color specification.</span>
-<span class="sd">            The default color is in the settings dict.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list</span>
-<span class="sd">            The GUIDs of the created Rhino objects.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">vertices</span> <span class="o">=</span> <span class="n">keys</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices</span><span class="p">())</span>
-        <span class="n">vertex_color</span> <span class="o">=</span> <span class="n">colordict</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">vertices</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.vertices&#39;</span><span class="p">],</span> <span class="n">colorformat</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_xyz</span>
-        <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">:</span>
-            <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span>
-                           <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">vertex_color</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span>
-                           <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.vertex.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">vertex</span><span class="p">)})</span>
-        <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_points</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guid_vertex</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">vertices</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">guids</span></div>
-
-<div class="viewcode-block" id="DiagramArtist.draw_vertexlabels"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramArtist.draw_vertexlabels.html#compas_ags.rhino.DiagramArtist.draw_vertexlabels">[docs]</a>    <span class="k">def</span> <span class="nf">draw_vertexlabels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Draw the labels of the vertices of the diagram according to the drawing scale.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        text : str or dict, optional</span>
-<span class="sd">            The label text.</span>
-<span class="sd">        color : str or tuple or dict, optional</span>
-<span class="sd">            The colors specification of the labels.</span>
-<span class="sd">            The default color is in the settings.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list</span>
-<span class="sd">            The GUIDs of the created Rhino objects.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">vertex_text</span> <span class="o">=</span> <span class="n">textdict</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices</span><span class="p">()))</span>
-        <span class="n">vertex_color</span> <span class="o">=</span> <span class="n">colordict</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">vertex_text</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.vertices&#39;</span><span class="p">],</span> <span class="n">colorformat</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_xyz</span>
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">vertex_text</span><span class="p">:</span>
-            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span>
-                           <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">vertex_color</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span>
-                           <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">vertex_text</span><span class="p">[</span><span class="n">vertex</span><span class="p">],</span>
-                           <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.vertexlabel.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">vertex</span><span class="p">)})</span>
-        <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_labels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guid_vertexlabel</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">vertex_text</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">guids</span></div>
-
-<div class="viewcode-block" id="DiagramArtist.draw_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramArtist.draw_edges.html#compas_ags.rhino.DiagramArtist.draw_edges">[docs]</a>    <span class="k">def</span> <span class="nf">draw_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Draw the edges of the force diagram according to the drawing scale.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        keys : list, optional</span>
-<span class="sd">            The identifiers of the edges that have to be drawn.</span>
-<span class="sd">        color : str or tuple or dict, optional</span>
-<span class="sd">            A color specification.</span>
-<span class="sd">            The default color is in the settings dict.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list</span>
-<span class="sd">            The GUIDs of the created Rhino objects.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">edges</span> <span class="o">=</span> <span class="n">keys</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">edges</span><span class="p">())</span>
-        <span class="n">edge_color</span> <span class="o">=</span> <span class="n">colordict</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.edges&#39;</span><span class="p">],</span> <span class="n">colorformat</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_xyz</span>
-        <span class="n">lines</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
-            <span class="n">start</span> <span class="o">=</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-            <span class="n">end</span> <span class="o">=</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
-            <span class="k">if</span> <span class="n">distance_point_point</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;tol.edges&#39;</span><span class="p">]:</span>
-                <span class="k">continue</span>
-
-            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span>
-                          <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="n">end</span><span class="p">,</span>
-                          <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">edge_color</span><span class="p">[</span><span class="n">edge</span><span class="p">],</span>
-                          <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.edge.</span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">edge</span><span class="p">)})</span>
-        <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_lines</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guid_edge</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">guids</span></div>
-
-<div class="viewcode-block" id="DiagramArtist.draw_edgelabels"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramArtist.draw_edgelabels.html#compas_ags.rhino.DiagramArtist.draw_edgelabels">[docs]</a>    <span class="k">def</span> <span class="nf">draw_edgelabels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Draw the labels of the edges of the force diagram according to the drawing scale.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        text : str or dict, optional</span>
-<span class="sd">            The label text.</span>
-<span class="sd">        color : str or tuple or dict, optional</span>
-<span class="sd">            The colors specification of the labels.</span>
-<span class="sd">            The default color is in the settings.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list</span>
-<span class="sd">            The GUIDs of the created Rhino objects.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">text</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">edge_text</span> <span class="o">=</span> <span class="p">{</span><span class="n">edge</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">edges</span><span class="p">()}</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
-            <span class="n">edge_text</span> <span class="o">=</span> <span class="n">text</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">NotImplementedError</span>
-
-        <span class="n">edge_color</span> <span class="o">=</span> <span class="n">colordict</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">edge_text</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.edges&#39;</span><span class="p">],</span> <span class="n">colorformat</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_xyz</span>
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edge_text</span><span class="p">:</span>
-            <span class="n">start</span> <span class="o">=</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
-            <span class="n">end</span> <span class="o">=</span> <span class="n">vertex_xyz</span><span class="p">[</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]]</span>
-            <span class="k">if</span> <span class="n">distance_point_point</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;tol.edges&#39;</span><span class="p">]:</span>
-                <span class="k">continue</span>
-            <span class="n">pos</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)]</span>
-            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">pos</span><span class="p">,</span>
-                           <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">edge_color</span><span class="p">[</span><span class="n">edge</span><span class="p">],</span>
-                           <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">edge_text</span><span class="p">[</span><span class="n">edge</span><span class="p">],</span>
-                           <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.edgelabel.</span><span class="si">{}</span><span class="s2">-</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="o">*</span><span class="n">edge</span><span class="p">)})</span>
-        <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_labels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guid_edgelabel</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">edge_text</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">guids</span></div>
-
-<div class="viewcode-block" id="DiagramArtist.draw_faces"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramArtist.draw_faces.html#compas_ags.rhino.DiagramArtist.draw_faces">[docs]</a>    <span class="k">def</span> <span class="nf">draw_faces</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Draw the faces of the force diagram according to the drawing scale.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        keys : list, optional</span>
-<span class="sd">            The identifiers of the faces that have to be drawn.</span>
-<span class="sd">        color : str or tuple or dict, optional</span>
-<span class="sd">            A color specification.</span>
-<span class="sd">            The default color is in the settings dict.</span>
-<span class="sd">        join_faces : bool, optional</span>
-<span class="sd">            Join the faces into 1 mesh.</span>
-<span class="sd">            Note that this mesh can only have one color, but will be flat shaded rather than shiny.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list</span>
-<span class="sd">            The GUIDs of the created Rhino objects.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">faces</span> <span class="o">=</span> <span class="n">keys</span> <span class="ow">or</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">faces</span><span class="p">())</span>
-        <span class="n">face_color</span> <span class="o">=</span> <span class="n">colordict</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">faces</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.faces&#39;</span><span class="p">],</span> <span class="n">colorformat</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_xyz</span>
-        <span class="n">faces_</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">faces</span><span class="p">:</span>
-            <span class="n">points</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">face_vertices</span><span class="p">(</span><span class="n">face</span><span class="p">)]</span>
-            <span class="n">faces_</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;points&#39;</span><span class="p">:</span> <span class="n">points</span><span class="p">,</span>
-                           <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">face_color</span><span class="p">[</span><span class="n">face</span><span class="p">],</span>
-                           <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.face.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">face</span><span class="p">)})</span>
-        <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_faces</span><span class="p">(</span><span class="n">faces_</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guid_face</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">faces</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">guids</span></div>
-
-<div class="viewcode-block" id="DiagramArtist.draw_facelabels"><a class="viewcode-back" href="../../../api/generated/compas_ags.rhino.DiagramArtist.draw_facelabels.html#compas_ags.rhino.DiagramArtist.draw_facelabels">[docs]</a>    <span class="k">def</span> <span class="nf">draw_facelabels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Draw the labels of the faces of the force diagram according to the drawing scale.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        text : str or dict, optional</span>
-<span class="sd">            The label text.</span>
-<span class="sd">        color : str or tuple or dict, optional</span>
-<span class="sd">            The colors specification of the labels.</span>
-<span class="sd">            The default color is in the settings.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list</span>
-<span class="sd">            The GUIDs of the created Rhino objects.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">face_text</span> <span class="o">=</span> <span class="n">textdict</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">faces</span><span class="p">()))</span>
-        <span class="n">face_color</span> <span class="o">=</span> <span class="n">colordict</span><span class="p">(</span><span class="n">color</span><span class="p">,</span> <span class="n">face_text</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">settings</span><span class="p">[</span><span class="s1">&#39;color.faces&#39;</span><span class="p">],</span> <span class="n">colorformat</span><span class="o">=</span><span class="s1">&#39;rgb&#39;</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="n">vertex_xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_xyz</span>
-        <span class="n">labels</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">face_text</span><span class="p">:</span>
-            <span class="n">pos</span> <span class="o">=</span> <span class="n">centroid_points</span><span class="p">([</span><span class="n">vertex_xyz</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">face_vertices</span><span class="p">(</span><span class="n">face</span><span class="p">)])</span>
-            <span class="n">labels</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s1">&#39;pos&#39;</span><span class="p">:</span> <span class="n">pos</span><span class="p">,</span>
-                           <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="n">face_color</span><span class="p">[</span><span class="n">face</span><span class="p">],</span>
-                           <span class="s1">&#39;text&#39;</span><span class="p">:</span> <span class="n">face_text</span><span class="p">[</span><span class="n">face</span><span class="p">],</span>
-                           <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">{}</span><span class="s2">.facelabel.</span><span class="si">{}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">face</span><span class="p">)})</span>
-        <span class="n">guids</span> <span class="o">=</span> <span class="n">compas_rhino</span><span class="o">.</span><span class="n">draw_labels</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">layer</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">layer</span><span class="p">,</span> <span class="n">clear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">redraw</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">guid_facelabel</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">guids</span><span class="p">,</span> <span class="n">face_text</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
-        <span class="k">return</span> <span class="n">guids</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">diagram</span></div>
 
 
 <span class="c1"># ==============================================================================</span>
@@ -618,6 +241,11 @@
 
     hljs.initHighlighting();
     anchors.add();
+
+    $('.nav-versions .dropdown-item').filter(function(i, ver) {
+      return window.location.href.startsWith(ver.href);
+    }).addClass("active");
+
   });
   </script>
   

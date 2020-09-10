@@ -52,8 +52,10 @@
         <li class="nav-item active"><a class="nav-link" href="https://blockresearchgroup.github.io/compas_ags">COMPAS AGS</a></li>
       </ul>
       <!-- primary -->
-      <!-- social -->
       <ul class="navbar-nav d-none d-md-flex ml-md-auto">
+        
+        <!-- version -->
+        <!-- social -->
         <li class="nav-item">
           <a class="nav-link" href="https://github.com/BlockResearchGroup/compas_ags" target="_blank">
             <span class="fab fa-github fa-1x"></span>
@@ -64,8 +66,8 @@
             <span class="fab fa-discourse fa-1x"></span>
           </a>
         </li>
+        <!-- social -->
       </ul>
-      <!-- social -->
     </nav>
   </header>
   <!-- header -->
@@ -81,19 +83,27 @@
 <dl class="method">
 <dt id="compas_ags.rhino.FormArtist.draw_vertexlabels">
 <code class="sig-prename descclassname">FormArtist.</code><code class="sig-name descname">draw_vertexlabels</code><span class="sig-paren">(</span><em class="sig-param">text=None</em>, <em class="sig-param">color=None</em><span class="sig-paren">)</span></dt>
-<dd><p>Draw the labels of the vertices of the diagram according to the drawing scale.</p>
+<dd><p>Draw labels for a selection vertices.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>text</strong> (<em>str or dict, optional</em>) – The label text.</p></li>
-<li><p><strong>color</strong> (<em>str or tuple or dict, optional</em>) – The colors specification of the labels.
-The default color is in the settings.</p></li>
+<li><p><strong>text</strong> (<em>dict</em>) – A dictionary of vertex labels as key-text pairs.
+The default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case every vertex will be labelled with its key.</p></li>
+<li><p><strong>color</strong> (<em>str, tuple, dict</em>) – The color sepcification of the labels.
+String values are interpreted as hex colors.
+Tuples are interpreted as RGB component specifications.
+If a dictionary of specififcations is provided,
+the keys should refer to vertex keys and the values should be color specifications in the form of strings or tuples.
+The default value is <code class="docutils literal notranslate"><span class="pre">None</span></code>, in which case the labels are assigned the default vertex color (<code class="docutils literal notranslate"><span class="pre">self.settings['color.vertices']</span></code>).</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
 <dd class="field-even"><p><em>list</em> – The GUIDs of the created Rhino objects.</p>
 </dd>
 </dl>
+<p class="rubric">Notes</p>
+<p>All vertex labels are named using the following template: <code class="docutils literal notranslate"><span class="pre">&quot;{mesh.name}.vertex_label.{id}&quot;</span></code>.
+This name can be used afterwards to identify vertices in the Rhino model.</p>
 </dd></dl>
 
 </div>
@@ -215,6 +225,11 @@ The default color is in the settings.</p></li>
 
     hljs.initHighlighting();
     anchors.add();
+
+    $('.nav-versions .dropdown-item').filter(function(i, ver) {
+      return window.location.href.startsWith(ver.href);
+    }).addClass("active");
+
   });
   </script>
   
