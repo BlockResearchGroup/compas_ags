@@ -5,6 +5,7 @@ from __future__ import division
 import os
 import errno
 import shelve
+import pickle
 
 import scriptcontext as sc
 
@@ -35,7 +36,7 @@ def RunCommand(is_interactive):
             if error.errno != errno.EEXIST:
                 raise
 
-    db = shelve.open(shelvepath, 'n')
+    db = shelve.open(shelvepath, 'n', protocol=pickle.HIGHEST_PROTOCOL)
     db['states'] = []
 
     scene = Scene(db)
