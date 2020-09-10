@@ -13,32 +13,34 @@ class ForceObject(DiagramObject):
     """A force object represents a force diagram in the Rhino view.
     """
 
+    SETTINGS = {
+        'show.vertices': True,
+        'show.edges': True,
+        'show.faces': False,
+        'show.vertexlabels': False,
+        'show.edgelabels': False,
+        'show.facelabels': False,
+        'show.forcecolors': True,
+        'show.forcelabels': False,
+
+        'color.vertices': (0, 0, 0),
+        'color.vertexlabels': (255, 255, 255),
+        'color.vertices:is_fixed': (0, 255, 255),
+        'color.edges': (0, 0, 0),
+        'color.edges:is_ind': (0, 255, 255),
+        'color.edges:is_external': (0, 255, 0),
+        'color.edges:is_reaction': (0, 255, 0),
+        'color.edges:is_load': (0, 255, 0),
+        'color.faces': (210, 210, 210),
+        'color.compression': (0, 0, 255),
+        'color.tension': (255, 0, 0),
+
+        'tol.forces': 1e-3,
+    }
+
     def __init__(self, diagram, *args, **kwargs):
         super(ForceObject, self).__init__(diagram, *args, **kwargs)
-        self.settings.update({
-            'show.vertices': True,
-            'show.edges': True,
-            'show.faces': False,
-            'show.vertexlabels': False,
-            'show.edgelabels': False,
-            'show.facelabels': False,
-            'show.forcecolors': True,
-            'show.forcelabels': False,
-
-            'color.vertices': (0, 0, 0),
-            'color.vertexlabels': (255, 255, 255),
-            'color.vertices:is_fixed': (0, 255, 255),
-            'color.edges': (0, 0, 0),
-            'color.edges:is_ind': (0, 255, 255),
-            'color.edges:is_external': (0, 255, 0),
-            'color.edges:is_reaction': (0, 255, 0),
-            'color.edges:is_load': (0, 255, 0),
-            'color.faces': (210, 210, 210),
-            'color.compression': (0, 0, 255),
-            'color.tension': (255, 0, 0),
-
-            'tol.forces': 1e-3,
-        })
+        self.settings.update(ForceObject.SETTINGS)
         self._inspector = None
 
     @property

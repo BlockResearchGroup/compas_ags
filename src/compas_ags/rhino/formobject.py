@@ -12,36 +12,38 @@ class FormObject(DiagramObject):
     """A form object represents a form diagram in the Rhino model space.
     """
 
+    SETTINGS = {
+        'show.vertices': True,
+        'show.edges': True,
+        'show.faces': False,
+        'show.vertexlabels': False,
+        'show.edgelabels': False,
+        'show.facelabels': False,
+        'show.forcecolors': True,
+        'show.forcelabels': False,
+        'show.forcepipes': True,
+
+        'color.vertices': (0, 0, 0),
+        'color.vertexlabels': (255, 255, 255),
+        'color.vertices:is_fixed': (0, 255, 255),
+        'color.edges': (0, 0, 0),
+        'color.edges:is_ind': (0, 255, 255),
+        'color.edges:is_external': (0, 255, 0),
+        'color.edges:is_reaction': (0, 255, 0),
+        'color.edges:is_load': (0, 255, 0),
+        'color.faces': (210, 210, 210),
+        'color.compression': (0, 0, 255),
+        'color.tension': (255, 0, 0),
+
+        'scale.forces': 0.1,
+
+        'tol.edges': 1e-3,
+        'tol.forces': 1e-3,
+    }
+
     def __init__(self, diagram, *args, **kwargs):
-        super(DiagramObject, self).__init__(diagram, *args, **kwargs)
-        self.settings.update({
-            'show.vertices': True,
-            'show.edges': True,
-            'show.faces': False,
-            'show.vertexlabels': False,
-            'show.edgelabels': False,
-            'show.facelabels': False,
-            'show.forcecolors': True,
-            'show.forcelabels': False,
-            'show.forcepipes': True,
-
-            'color.vertices': (0, 0, 0),
-            'color.vertexlabels': (255, 255, 255),
-            'color.vertices:is_fixed': (0, 255, 255),
-            'color.edges': (0, 0, 0),
-            'color.edges:is_ind': (0, 255, 255),
-            'color.edges:is_external': (0, 255, 0),
-            'color.edges:is_reaction': (0, 255, 0),
-            'color.edges:is_load': (0, 255, 0),
-            'color.faces': (210, 210, 210),
-            'color.compression': (0, 0, 255),
-            'color.tension': (255, 0, 0),
-
-            'scale.forces': 0.1,
-
-            'tol.edges': 1e-3,
-            'tol.forces': 1e-3,
-        })
+        super(FormObject, self).__init__(diagram, *args, **kwargs)
+        self.settings.update(FormObject.SETTINGS)
 
     def draw(self):
         """Draw the form diagram.
