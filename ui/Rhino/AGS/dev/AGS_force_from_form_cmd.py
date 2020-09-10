@@ -77,7 +77,7 @@ def RunCommand(is_interactive):
         point[0] += dx
         force.artist.anchor_point = point
 
-    form.artist.settings['scale.forces'] = calculate_drawingscale_forces(form.diagram)
+    form.settings['scale.forces'] = calculate_drawingscale_forces(form.diagram)
 
     scene.update()
     scene.save()

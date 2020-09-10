@@ -32,30 +32,30 @@ def RunCommand(is_interactive):
             return
 
         if option == "VertexLabels":
-            if force.artist.settings['show.vertexlabels'] is True:
-                force.artist.settings['show.vertexlabels'] = False
+            if force.settings['show.vertexlabels'] is True:
+                force.settings['show.vertexlabels'] = False
             else:
-                force.artist.settings['show.vertexlabels'] = True
+                force.settings['show.vertexlabels'] = True
 
         elif option == "EdgeLabels":
-            if force.artist.settings['show.edgelabels'] is True:
-                force.artist.settings['show.edgelabels'] = False
+            if force.settings['show.edgelabels'] is True:
+                force.settings['show.edgelabels'] = False
             else:
-                force.artist.settings['show.edgelabels'] = True
-                force.artist.settings['show.forcelabels'] = False
+                force.settings['show.edgelabels'] = True
+                force.settings['show.forcelabels'] = False
 
         elif option == "ForceLabels":
-            if force.artist.settings['show.forcelabels'] is True:
-                force.artist.settings['show.forcelabels'] = False
+            if force.settings['show.forcelabels'] is True:
+                force.settings['show.forcelabels'] = False
             else:
-                force.artist.settings['show.forcelabels'] = True
-                force.artist.settings['show.edgelabels'] = False
+                force.settings['show.forcelabels'] = True
+                force.settings['show.edgelabels'] = False
 
         elif option == "CompressionTension":
-            if force.artist.settings['show.forcecolors'] is True:
-                force.artist.settings['show.forcecolors'] = False
+            if force.settings['show.forcecolors'] is True:
+                force.settings['show.forcecolors'] = False
             else:
-                force.artist.settings['show.forcecolors'] = True
+                force.settings['show.forcecolors'] = True
 
         scene.update()
 

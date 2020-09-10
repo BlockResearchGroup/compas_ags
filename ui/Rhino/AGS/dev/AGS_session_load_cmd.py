@@ -58,14 +58,16 @@ def RunCommand(is_interactive):
     form = scene.find(form_id)
 
     if 'settings' in session['scene']['form']:
-        form.artist.settings.update(session['scene']['form']['settings'])
+        form.settings.update(session['scene']['form']['settings'])
 
     if 'anchor' in session['scene']['form']:
-        form.artist.anchor_vertex = session['scene']['form']['anchor']['vertex']
-        form.artist.anchor_point = session['scene']['form']['anchor']['point']
+        form.anchor = session['scene']['form']['anchor']
+
+    if 'location' in session['scene']['form']:
+        form.location = session['scene']['form']['location']
 
     if 'scale' in session['scene']['form']:
-        form.artist.scale = session['scene']['form']['scale']
+        form.scale = session['scene']['form']['scale']
 
     if session['data']['force']:
         forcediagram = ForceDiagram.from_data(session['data']['force'])
@@ -77,14 +79,14 @@ def RunCommand(is_interactive):
         force = scene.find(force_id)
 
         if 'settings' in session['scene']['force']:
-            force.artist.settings.update(session['scene']['force']['settings'])
+            force.settings.update(session['scene']['force']['settings'])
 
         if 'anchor' in session['scene']['force']:
-            force.artist.anchor_vertex = session['scene']['force']['anchor']['vertex']
-            force.artist.anchor_point = session['scene']['force']['anchor']['point']
+            force.anchor = session['scene']['force']['anchor']
+            force.location = session['scene']['force']['location']
 
         if 'scale' in session['scene']['form']:
-            force.artist.scale = session['scene']['force']['scale']
+            force.scale = session['scene']['force']['scale']
 
     scene.update()
     scene.save()
