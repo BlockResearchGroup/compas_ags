@@ -197,7 +197,7 @@ class Scene(object):
             return False
         if len(self._db['states']) < 2:
             return False
-        self.clear()
+        self.purge()
         self._current -= 1
         state = self._db['states'][self._current]
         form = None
@@ -234,7 +234,7 @@ class Scene(object):
             return False
         if self._current >= -1:
             return False
-        self.clear()
+        self.purge()
         self._current += 1
         state = self._db['states'][self._current]
         form = None
