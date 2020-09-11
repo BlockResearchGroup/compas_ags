@@ -20,7 +20,7 @@ class FormObject(DiagramObject):
         'show.edgelabels': False,
         'show.facelabels': False,
         'show.forcecolors': True,
-        'show.forcelabels': False,
+        'show.forcelabels': True,
         'show.forcepipes': True,
 
         'color.vertices': (0, 0, 0),
@@ -44,6 +44,9 @@ class FormObject(DiagramObject):
     def __init__(self, diagram, *args, **kwargs):
         super(FormObject, self).__init__(diagram, *args, **kwargs)
         self.settings.update(FormObject.SETTINGS)
+        settings = kwargs.get('settings') or {}
+        if settings:
+            self.settings.update(settings)
 
     def draw(self):
         """Draw the form diagram.

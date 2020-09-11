@@ -21,7 +21,7 @@ class ForceObject(DiagramObject):
         'show.edgelabels': False,
         'show.facelabels': False,
         'show.forcecolors': True,
-        'show.forcelabels': False,
+        'show.forcelabels': True,
 
         'color.vertices': (0, 0, 0),
         'color.vertexlabels': (255, 255, 255),
@@ -41,6 +41,9 @@ class ForceObject(DiagramObject):
     def __init__(self, diagram, *args, **kwargs):
         super(ForceObject, self).__init__(diagram, *args, **kwargs)
         self.settings.update(ForceObject.SETTINGS)
+        settings = kwargs.get('settings') or {}
+        if settings:
+            self.settings.update(settings)
         self._inspector = None
 
     @property
