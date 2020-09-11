@@ -21,9 +21,6 @@ class DiagramObject(MeshObject):
     """A diagram object represents a form or force diagram in the Rhino view.
     """
 
-    def __init__(self, diagram, *args, **kwargs):
-        super(DiagramObject, self).__init__(diagram, *args, **kwargs)
-
     @property
     def diagram(self):
         """The diagram associated with the object."""
