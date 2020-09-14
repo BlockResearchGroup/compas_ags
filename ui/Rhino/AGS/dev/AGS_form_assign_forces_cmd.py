@@ -52,7 +52,11 @@ Please select the independent edges first.""")
                 form.diagram.edge_attribute(edge, 'f', F)
                 form.diagram.edge_attribute(edge, 'q', Q)
 
+        form.settings['show.forcelabels'] = True
+        form.settings['show.edgelabels'] = False
+        scene.update()
         scene.save()
+
 
 
 # ==============================================================================

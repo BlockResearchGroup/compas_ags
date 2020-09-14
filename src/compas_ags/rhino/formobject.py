@@ -17,10 +17,10 @@ class FormObject(DiagramObject):
         'show.edges': True,
         'show.faces': False,
         'show.vertexlabels': False,
-        'show.edgelabels': False,
+        'show.edgelabels': True,
         'show.facelabels': False,
         'show.forcecolors': True,
-        'show.forcelabels': True,
+        'show.forcelabels': False,
         'show.forcepipes': True,
 
         'color.vertices': (0, 0, 0),
