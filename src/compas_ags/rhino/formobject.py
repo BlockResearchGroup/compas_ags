@@ -35,7 +35,7 @@ class FormObject(DiagramObject):
         'color.compression': (0, 0, 255),
         'color.tension': (255, 0, 0),
 
-        'scale.forces': 0.1,
+        'scale.forces': None,
 
         'tol.edges': 1e-3,
         'tol.forces': 1e-3,
