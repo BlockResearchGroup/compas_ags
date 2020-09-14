@@ -81,90 +81,83 @@
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s1">&#39;calculate_drawingscale&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;find_anchor_point&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;calculate_drawingscale_forces&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;compute_force_drawingscale&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;compute_force_drawinglocation&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;compute_form_forcescale&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="calculate_drawingscale"><a class="viewcode-back" href="../../../api/generated/compas_ags.utilities.calculate_drawingscale.html#compas_ags.utilities.calculate_drawingscale">[docs]</a><span class="k">def</span> <span class="nf">calculate_drawingscale</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Calculate an appropriate scale factor to create the force diagram.</span>
+<div class="viewcode-block" id="compute_force_drawingscale"><a class="viewcode-back" href="../../../api/generated/compas_ags.utilities.compute_force_drawingscale.html#compas_ags.utilities.compute_force_drawingscale">[docs]</a><span class="k">def</span> <span class="nf">compute_force_drawingscale</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute an appropriate scale factor to create the force diagram.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    form: compas_ags.diagrams.FormDiagram</span>
-<span class="sd">        The form diagram to draw.</span>
-<span class="sd">    force: compas_ags.diagrams.ForceDiagram</span>
-<span class="sd">        The force diagram to draw.</span>
+<span class="sd">    form: :class:`compas_ags.rhino.FormObject`</span>
+<span class="sd">    force: :class:`compas_ags.rhino.ForceObject`</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    scale : float</span>
+<span class="sd">    scale: float</span>
 <span class="sd">        Appropriate scale factor to draw form and force diagram next to each other</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
-
-    <span class="n">form_x</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-    <span class="n">form_y</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+    <span class="n">form_x</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">form_y</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
     <span class="n">form_xdim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">form_x</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">form_x</span><span class="p">)</span>
     <span class="n">form_ydim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">form_y</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">form_y</span><span class="p">)</span>
 
-    <span class="n">force_x</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-    <span class="n">force_y</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
+    <span class="n">force_x</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+    <span class="n">force_y</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
     <span class="n">force_xdim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">force_x</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">force_x</span><span class="p">)</span>
     <span class="n">force_ydim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">force_y</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">force_y</span><span class="p">)</span>
 
     <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">max</span><span class="p">([</span><span class="n">force_xdim</span> <span class="o">/</span> <span class="n">form_xdim</span><span class="p">,</span> <span class="n">force_ydim</span> <span class="o">/</span> <span class="n">form_ydim</span><span class="p">])</span>
-
     <span class="k">return</span> <span class="n">scale</span></div>
 
 
-<div class="viewcode-block" id="find_anchor_point"><a class="viewcode-back" href="../../../api/generated/compas_ags.utilities.find_anchor_point.html#compas_ags.utilities.find_anchor_point">[docs]</a><span class="k">def</span> <span class="nf">find_anchor_point</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Calculate an appropriate position to draw the force diagram.</span>
+<div class="viewcode-block" id="compute_force_drawinglocation"><a class="viewcode-back" href="../../../api/generated/compas_ags.utilities.compute_force_drawinglocation.html#compas_ags.utilities.compute_force_drawinglocation">[docs]</a><span class="k">def</span> <span class="nf">compute_force_drawinglocation</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Compute an appropriate location for the force diagram.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    form: compas_ags.diagrams.FormDiagram</span>
-<span class="sd">        The form diagram to draw.</span>
-<span class="sd">    force: compas_ags.diagrams.ForceDiagram</span>
-<span class="sd">        The force diagram to draw.</span>
+<span class="sd">    form: :class:`compas_ags.rhino.FormObject`</span>
+<span class="sd">    force: :class:`compas_ags.rhino.ForceObject`</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    [X, Y, Z] : list</span>
-<span class="sd">        Proposed position hang the anchor point of the force diagram</span>
-
+<span class="sd">    :class:`compas.geometry.Point`</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">point</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">location</span>
 
-    <span class="n">form_x</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-    <span class="n">form_y</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
-    <span class="n">form_xdim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">form_x</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">form_x</span><span class="p">)</span>
-    <span class="n">form_xmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">form_x</span><span class="p">)</span>
-    <span class="n">form_ymid</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">form_y</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">form_y</span><span class="p">))</span> <span class="o">+</span> <span class="nb">min</span><span class="p">(</span><span class="n">form_y</span><span class="p">)</span>
+    <span class="n">form_xyz</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertex_xyz</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">force_xyz</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">vertex_xyz</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">form_xmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="n">form_xyz</span><span class="p">])</span>
+    <span class="n">form_xmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="n">form_xyz</span><span class="p">])</span>
+    <span class="n">form_ymin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="n">form_xyz</span><span class="p">])</span>
+    <span class="n">force_xmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="n">force_xyz</span><span class="p">])</span>
+    <span class="n">force_ymin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">xyz</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">xyz</span> <span class="ow">in</span> <span class="n">force_xyz</span><span class="p">])</span>
 
-    <span class="k">return</span> <span class="p">[</span><span class="n">form_xdim</span> <span class="o">+</span> <span class="n">form_xmax</span><span class="p">,</span> <span class="n">form_ymid</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
+    <span class="n">spacing</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">form_xmax</span> <span class="o">-</span> <span class="n">form_xmin</span><span class="p">)</span>
+
+    <span class="n">point</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">form_xmax</span> <span class="o">+</span> <span class="n">spacing</span> <span class="o">-</span> <span class="n">force_xmin</span>
+    <span class="n">point</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">form_ymin</span> <span class="o">-</span> <span class="n">force_ymin</span>
+    <span class="k">return</span> <span class="n">point</span></div>
 
 
-<div class="viewcode-block" id="calculate_drawingscale_forces"><a class="viewcode-back" href="../../../api/generated/compas_ags.utilities.calculate_drawingscale_forces.html#compas_ags.utilities.calculate_drawingscale_forces">[docs]</a><span class="k">def</span> <span class="nf">calculate_drawingscale_forces</span><span class="p">(</span><span class="n">form</span><span class="p">):</span>
+<div class="viewcode-block" id="compute_form_forcescale"><a class="viewcode-back" href="../../../api/generated/compas_ags.utilities.compute_form_forcescale.html#compas_ags.utilities.compute_form_forcescale">[docs]</a><span class="k">def</span> <span class="nf">compute_form_forcescale</span><span class="p">(</span><span class="n">form</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculate an appropriate scale to the thickness of the forces in the form diagram.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    form: compas_ags.diagrams.FormDiagram</span>
-<span class="sd">        The form diagram to draw.</span>
-<span class="sd">    force: compas_ags.diagrams.ForceDiagram</span>
-<span class="sd">        The force diagram to draw.</span>
+<span class="sd">    form: :class:`compas_ags.rhino.FormObject`</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
-<span class="sd">    scale : float</span>
+<span class="sd">    scale: float</span>
 <span class="sd">        Appropriate scale factor to thickness of form diagram lines.</span>
-
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">uv</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">uv</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_external&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})]</span>
 
-    <span class="n">q</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">uv</span><span class="p">,</span> <span class="s1">&#39;q&#39;</span><span class="p">))</span> <span class="k">for</span> <span class="n">uv</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_external&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})]</span>
-    <span class="n">scale</span> <span class="o">=</span> <span class="mf">0.1</span><span class="o">/</span><span class="nb">max</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>  <span class="c1"># highest force/length radio equals 10% of length</span>
-
+    <span class="n">scale</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">scale</span></div>
 
 
