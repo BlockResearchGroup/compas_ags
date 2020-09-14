@@ -54,6 +54,7 @@ from .forceobject import ForceObject  # noqa: F401
 from .forceinspector import ForceDiagramInspector  # noqa: F401
 
 from .scene import Scene  # noqa: F401
+from .settings import SettingsForm  # noqa: F401
 
 DiagramArtist.register(FormDiagram, FormArtist)
 DiagramArtist.register(ForceDiagram, ForceArtist)
