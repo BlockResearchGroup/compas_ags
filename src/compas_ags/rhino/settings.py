@@ -2,23 +2,20 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-
-import compas
 from collections import OrderedDict
 import scriptcontext as sc
 
-try:
-    import Eto.Drawing as drawing
-    import Eto.Forms as forms
-    import Rhino.UI
-except Exception:
-    compas.raise_if_ironpython()
+import Eto.Drawing as drawing
+import Eto.Forms as forms
+import Rhino.UI
 
 
 __all__ = ["SettingsForm", "Settings_Tab"]
 
+
 def get_scene():
     return sc.sticky['AGS']['scene']
+
 
 class Settings_Tab(forms.TabPage):
 
@@ -129,7 +126,7 @@ class SettingsForm(forms.Dialog[bool]):
 
         # pre-populate class default settings
         if object_types:
-            for object_type in object_types: # avoid property objects
+            for object_type in object_types:  # avoid property objects
                 all_settings[object_type.__name__] = object_type.SETTINGS
 
         # overwite with object setting if added as node
