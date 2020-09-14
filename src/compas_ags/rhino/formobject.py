@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 from compas_ags.rhino.diagramobject import DiagramObject
+from compas_ags.rhino.forminspector import FormDiagramVertexInspector
 
 
 __all__ = ['FormObject']
@@ -47,6 +48,22 @@ class FormObject(DiagramObject):
         settings = kwargs.get('settings') or {}
         if settings:
             self.settings.update(settings)
+        self._inspector = None
+
+    @property
+    def inspector(self):
+        """:class:`compas_ags.rhino.FormDiagramInspector`: An inspector conduit."""
+        if not self._inspector:
+            self._inspector = FormDiagramVertexInspector(self.diagram)
+        return self._inspector
+
+    def inspector_on(self, force):
+        self.inspector.force_vertex_xyz = force.artist.vertex_xyz
+        self.inspector.form_vertex_xyz = self.artist.vertex_xyz
+        self.inspector.enable()
+
+    def inspector_off(self):
+        self.inspector.disable()
 
     def draw(self):
         """Draw the form diagram.
