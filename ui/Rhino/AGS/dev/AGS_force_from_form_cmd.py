@@ -64,7 +64,7 @@ def RunCommand(is_interactive):
     form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
     force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
 
-    print('force scale', force.scale)
+    print('force scale', force.scale)  # This does not work as I expected. Should return None.
 
     if not force.scale:
         scale = calculate_drawingscale(form.diagram, force.diagram)
