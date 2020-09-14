@@ -148,11 +148,3 @@ class ForceDiagramVertexInspector(ForceDiagramInspector):
                     lines.Add(Line(Point3d(* self.form_vertex_xyz[u]), Point3d(* self.form_vertex_xyz[v])))
                 draw_arrows(lines, self.linecolor)
                 break
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass

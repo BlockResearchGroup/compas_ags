@@ -175,12 +175,3 @@ class ForceObject(DiagramObject):
             self.artist.draw_edgelabels(text=text, color=color)
 
         self.redraw()
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == '__main__':
-
-    pass

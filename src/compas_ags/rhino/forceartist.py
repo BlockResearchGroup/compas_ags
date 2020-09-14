@@ -20,11 +20,3 @@ class ForceArtist(DiagramArtist):
 
     def __init__(self, force, layer=None):
         super(ForceArtist, self).__init__(force, layer=layer)
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass
