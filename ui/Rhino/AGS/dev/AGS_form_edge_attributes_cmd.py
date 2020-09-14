@@ -3,14 +3,13 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-
 import compas_rhino
-from compas_ags.rhino import SettingsForm
-from compas_ags.rhino import FormObject
-from compas_ags.rhino import ForceObject
+
+from compas_ags.rhino import AttributesForm
 
 
-__commandname__ = "AGS_toolbar_display"
+__commandname__ = "AGS_form_edge_attributes"
+
 
 def RunCommand(is_interactive):
 
@@ -19,17 +18,16 @@ def RunCommand(is_interactive):
         return
 
     scene = sc.sticky['AGS']['scene']
-    if not scene:
-        return
+    
+    form = scene.find_by_name("Form")[0]
+    AttributesForm.from_sceneNode(form)
 
-    # TODO: deal with undo redo
-    SettingsForm.from_scene(scene, object_types=[FormObject, ForceObject])
+    
 
 
 # ==============================================================================
 # Main
 # ==============================================================================
-
 if __name__ == '__main__':
 
     RunCommand(True)

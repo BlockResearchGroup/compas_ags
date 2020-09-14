@@ -37,7 +37,7 @@ Please select the independent edges first.""")
 
     names = [edge_index[edge] for edge in edges]
 
-    values = [form.diagram.edge_attribute(edge, 'f') for edge in edges]
+    values = [str(form.diagram.edge_attribute(edge, 'f')) for edge in edges]
     values = compas_rhino.update_named_values(names, values, message='Independent edges.', title='Update force values.')
 
     if values:
