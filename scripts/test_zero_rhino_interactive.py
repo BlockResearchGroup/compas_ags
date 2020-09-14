@@ -1,4 +1,3 @@
-import os
 import compas_rhino
 
 from compas_ags.diagrams import FormGraph
@@ -51,7 +50,6 @@ force_obj.artist.scale = 1.0
 
 form_obj.artist.settings['scale.forces'] = 0.05
 
-scene.clear()
 scene.update()
 
 while True:
@@ -59,11 +57,7 @@ while True:
     if not vertices:
         break
     if vertices and force_obj.move_vertices(vertices):
-        scene.clear()
         scene.update()
-
-# scene.clear()
-# scene.update()
 
 # fix some of the nodes in the from diagram
 # to constraint the problem to a single solution

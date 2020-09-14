@@ -2,15 +2,8 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import Rhino
-from Rhino.Geometry import Point3d
-
-from compas.geometry import subtract_vectors
-from compas.geometry import add_vectors
-from compas.geometry import scale_vector
-
 from compas_ags.rhino.diagramobject import DiagramObject
-from compas_ags.rhino.forceinspector import ForceDiagramInspector
+from compas_ags.rhino.forceinspector import ForceDiagramVertexInspector
 
 
 __all__ = ['ForceObject']
@@ -20,15 +13,44 @@ class ForceObject(DiagramObject):
     """A force object represents a force diagram in the Rhino view.
     """
 
-    def __init__(self, diagram, scene=None, name=None, layer=None, visible=True, settings=None):
-        super(ForceObject, self).__init__(diagram, scene, name, layer, visible, settings)
+    SETTINGS = {
+        'show.vertices': True,
+        'show.edges': True,
+        'show.faces': False,
+        'show.vertexlabels': False,
+        'show.edgelabels': False,
+        'show.facelabels': False,
+        'show.forcecolors': True,
+        'show.forcelabels': True,
+
+        'color.vertices': (0, 0, 0),
+        'color.vertexlabels': (255, 255, 255),
+        'color.vertices:is_fixed': (0, 255, 255),
+        'color.edges': (0, 0, 0),
+        'color.edges:is_ind': (0, 255, 255),
+        'color.edges:is_external': (0, 255, 0),
+        'color.edges:is_reaction': (0, 255, 0),
+        'color.edges:is_load': (0, 255, 0),
+        'color.faces': (210, 210, 210),
+        'color.compression': (0, 0, 255),
+        'color.tension': (255, 0, 0),
+
+        'tol.forces': 1e-3,
+    }
+
+    def __init__(self, diagram, *args, **kwargs):
+        super(ForceObject, self).__init__(diagram, *args, **kwargs)
+        self.settings.update(ForceObject.SETTINGS)
+        settings = kwargs.get('settings') or {}
+        if settings:
+            self.settings.update(settings)
         self._inspector = None
 
     @property
     def inspector(self):
         """:class:`compas_ags.rhino.ForceDiagramInspector`: An inspector conduit."""
         if not self._inspector:
-            self._inspector = ForceDiagramInspector(self.diagram)
+            self._inspector = ForceDiagramVertexInspector(self.diagram)
         return self._inspector
 
     def inspector_on(self, form):
@@ -39,50 +61,120 @@ class ForceObject(DiagramObject):
     def inspector_off(self):
         self.inspector.disable()
 
-    def scale_from_2_points(self):
-        """Scale the ForceDiagram from 2 reference points
+    def draw(self):
+        """Draw the diagram.
+
+        The visible components, display properties and visual style of the diagram
+        can be fully customised using the configuration items in the settings dict.
+
+        The method will clear the drawing layer and any objects it has drawn in a previous call,
+        and keep track of any newly created objects using their GUID.
+
+        Parameters
+        ----------
+        None
+
+        Returns
+        -------
+        None
+
         """
-        color = Rhino.ApplicationSettings.AppearanceSettings.FeedbackColor
+        self.clear()
+        if not self.visible:
+            return
 
-        vertex_xyz = self.artist.vertex_xyz
-        edges = list(self.diagram.edges())
-        anchor_xyz = self.diagram.vertex_attributes(self.artist.anchor_vertex, 'xyz')
-        origin = self.artist.anchor_point
-        origin_pt = Point3d(* origin)
+        self.artist.vertex_xyz = self.vertex_xyz
 
-        # get the first reference point
-        gp = Rhino.Input.Custom.GetPoint()
-        gp.SetCommandPrompt('Select the 1st reference point.')
-        gp.Get()
-        if gp.CommandResult() != Rhino.Commands.Result.Success:
-            return False
-        ref1 = gp.Point()
+        # vertices
+        if self.settings['show.vertices']:
+            color = {}
+            color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
+            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
 
-        # get the second reference point
-        gp.SetCommandPrompt('Select the 2nd reference point.')
+            self.artist.draw_vertices(color=color)
 
-        def OnDynamicDraw(sender, e):
-            d1 = origin_pt.DistanceTo(ref1)
-            d2 = origin_pt.DistanceTo(e.CurrentPoint)
-            ratio = d2 / d1
-            for vertex in self.diagram.vertices():
-                xyz = self.diagram.vertex_attributes(vertex, 'xyz')
-                vector = subtract_vectors(xyz, anchor_xyz)
-                vertex_xyz[vertex] = add_vectors(origin, scale_vector(vector, self.artist.scale * ratio))
-            for u, v in iter(edges):
-                e.Display.DrawDottedLine(Point3d(* vertex_xyz[u]), Point3d(* vertex_xyz[v]), color)
+        # edges
+        if self.settings['show.edges']:
+            color = {}
+            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where_dual({'is_load': True})})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where_dual({'is_reaction': True})})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where_dual({'is_ind': True})})
 
-        gp.DynamicDraw += OnDynamicDraw
-        gp.Get()
-        if gp.CommandResult() != Rhino.Commands.Result.Success:
-            return False
-        ref2 = gp.Point()
+            # force colors
+            if self.settings['show.forcecolors']:
+                tol = self.settings['tol.forces']
+                for edge in self.diagram.edges_where_dual({'is_external': False}):
+                    if self.diagram.dual_edge_f(edge) > + tol:
+                        color[edge] = self.settings['color.tension']
+                    elif self.diagram.dual_edge_f(edge) < - tol:
+                        color[edge] = self.settings['color.compression']
 
-        d1 = origin_pt.DistanceTo(ref1)
-        d2 = origin_pt.DistanceTo(ref2)
-        ratio = d2 / d1
-        scale_factor = self.artist.scale * ratio
-        self.artist.scale = scale_factor
+            self.artist.draw_edges(color=color)
+
+        # vertex labels
+        if self.settings['show.vertexlabels']:
+            text = {vertex: index for index, vertex in enumerate(self.diagram.vertices())}
+            color = {}
+            color.update({vertex: self.settings['color.vertexlabels'] for vertex in self.diagram.vertices()})
+            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
+
+            self.artist.draw_vertexlabels(text=text, color=color)
+
+        # edge labels
+        if self.settings['show.edgelabels']:
+            edge_index = self.diagram.edge_index(self.diagram.dual)
+            edge_index.update({(v, u): index for (u, v), index in edge_index.items()})
+            text = {edge: edge_index[edge] for edge in self.diagram.edges()}
+            color = {}
+            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where_dual({'is_load': True})})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where_dual({'is_reaction': True})})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where_dual({'is_ind': True})})
+
+            # force colors
+            if self.settings['show.forcecolors']:
+                tol = self.settings['tol.forces']
+                for edge in self.diagram.edges_where_dual({'is_external': False}):
+                    if self.diagram.dual_edge_f(edge) > + tol:
+                        color[edge] = self.settings['color.tension']
+                    elif self.diagram.dual_edge_f(edge) < - tol:
+                        color[edge] = self.settings['color.compression']
+
+            self.artist.draw_edgelabels(text=text, color=color)
+
+        # force labels
+        if self.settings['show.forcelabels']:
+            text = {}
+            dual_edges = list(self.diagram.dual.edges())
+            for index, (u, v) in enumerate(self.diagram.ordered_edges(self.diagram.dual)):
+                f = self.diagram.dual.edge_attribute(dual_edges[index], 'f')
+                if (u, v) in self.diagram.edges():
+                    text[(u, v)] = "%s kN" % (round(abs(f), 1))
+                else:
+                    text[(v, u)] = "%s kN" % (round(abs(f), 1))
+
+            color = {}
+            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
+            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
+            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where_dual({'is_load': True})})
+            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where_dual({'is_reaction': True})})
+            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where_dual({'is_ind': True})})
+
+            # force colors
+            if self.settings['show.forcecolors']:
+                tol = self.settings['tol.forces']
+                for edge in self.diagram.edges_where_dual({'is_external': False}):
+                    if self.diagram.dual_edge_f(edge) > + tol:
+                        color[edge] = self.settings['color.tension']
+                    elif self.diagram.dual_edge_f(edge) < - tol:
+                        color[edge] = self.settings['color.compression']
+
+            self.artist.draw_edgelabels(text=text, color=color)
+
+        self.redraw()
 
 
 # ==============================================================================

@@ -42,13 +42,13 @@ class Scene(object):
 
     """
 
-    def __init__(self, db, depth=10):
+    def __init__(self, db=None, depth=10):
         self._current = -1
         self._depth = depth
         self._db = db
         self.objects = {}
 
-    def add(self, item, name=None, layer=None, visible=None, settings=None):
+    def add(self, item, name=None, layer=None, visible=True, settings=None):
         """Add an object to the scene matching the provided item.
 
         Parameters
@@ -99,7 +99,7 @@ class Scene(object):
                 objects.append(obj)
         return objects
 
-    def clear(self):
+    def purge(self):
         """Clear all objects from the scene."""
         compas_rhino.rs.EnableRedraw(False)
         try:
@@ -111,12 +111,33 @@ class Scene(object):
         compas_rhino.rs.EnableRedraw(True)
         compas_rhino.rs.Redraw()
 
+    def clear(self):
+        """Clear all objects from the scene."""
+        compas_rhino.rs.EnableRedraw(False)
+        try:
+            for guid in list(self.objects.keys()):
+                self.objects[guid].clear()
+        except Exception:
+            pass
+        compas_rhino.rs.EnableRedraw(True)
+        compas_rhino.rs.Redraw()
+
+    def clear_layers(self):
+        """Clear all object layers of the scene."""
+        compas_rhino.rs.EnableRedraw(False)
+        try:
+            for guid in list(self.objects.keys()):
+                self.objects[guid].clear_layer()
+        except Exception:
+            pass
+        compas_rhino.rs.EnableRedraw(True)
+        compas_rhino.rs.Redraw()
+
     def redraw(self):
         """Redraw the entire scene."""
         compas_rhino.rs.EnableRedraw(False)
         try:
             for guid in self.objects:
-                self.objects[guid].clear()
                 self.objects[guid].draw()
         except Exception:
             pass
@@ -125,9 +146,12 @@ class Scene(object):
 
     def update(self):
         """Redraw all objects in the scene."""
+        self.clear()
         self.redraw()
 
     def save(self):
+        if not self._db:
+            return
         states = self._db['states']
         if self._current < -1:
             del states[self._current + 1:]
@@ -142,15 +166,16 @@ class Scene(object):
                 'object': {
                     'name': obj.name,
                     'layer': obj.layer,
-                    'visible': obj.visible},
+                    'visible': obj.visible,
+                    'settings': obj.settings,
+                    'anchor': obj.anchor,
+                    'location': list(obj.location),
+                    'scale': obj.scale,
+                },
                 'diagram': {
                     'type': type(obj.diagram),
-                    'data': obj.diagram.to_data()},
-                'artist': {
-                    'settings': obj.artist.settings,
-                    'anchor_vertex': obj.artist.anchor_vertex,
-                    'anchor_point': obj.artist.anchor_point,
-                    'scale': obj.artist.scale}
+                    'data': obj.diagram.to_data(),
+                },
             })
         states.append(state)
         if len(states) > self._depth:
@@ -166,23 +191,24 @@ class Scene(object):
             False if there is nothing (more) to undo.
             True if undo was successful.
         """
+        if not self._db:
+            return
         if self._current <= - self._depth:
             return False
         if len(self._db['states']) < 2:
             return False
-        self.clear()
+        self.purge()
         self._current -= 1
         state = self._db['states'][self._current]
         form = None
         force = None
         for data in state:
             diagram = data['diagram']['type'].from_data(data['diagram']['data'])
-            guid = self.add(diagram, **data['object'])
+            guid = self.add(diagram, name=data['object']['name'], layer=data['object']['layer'], visible=data['object']['visible'], settings=data['object']['settings'])
             obj = self.find(guid)
-            obj.artist.settings.update(data['artist']['settings'])
-            obj.artist.anchor_vertex = data['artist']['anchor_vertex']
-            obj.artist.anchor_point = data['artist']['anchor_point']
-            obj.artist.scale = data['artist']['scale']
+            obj.anchor = data['object']['anchor']
+            obj.location = data['object']['location']
+            obj.scale = data['object']['scale']
             if obj.name == 'Form':
                 form = obj
             elif obj.name == 'Force':
@@ -202,23 +228,24 @@ class Scene(object):
             False if there is nothing (more) to redo.
             True if redo was successful.
         """
+        if not self._db:
+            return
         if len(self._db['states']) < 2:
             return False
         if self._current >= -1:
             return False
-        self.clear()
+        self.purge()
         self._current += 1
         state = self._db['states'][self._current]
         form = None
         force = None
         for data in state:
             diagram = data['diagram']['type'].from_data(data['diagram']['data'])
-            guid = self.add(diagram, **data['object'])
+            guid = self.add(diagram, name=data['object']['name'], layer=data['object']['layer'], visible=data['object']['visible'], settings=data['object']['settings'])
             obj = self.find(guid)
-            obj.artist.settings.update(data['artist']['settings'])
-            obj.artist.anchor_vertex = data['artist']['anchor_vertex']
-            obj.artist.anchor_point = data['artist']['anchor_point']
-            obj.artist.scale = data['artist']['scale']
+            obj.anchor = data['object']['anchor']
+            obj.location = data['object']['location']
+            obj.scale = data['object']['scale']
             if obj.name == 'Form':
                 form = obj
             elif obj.name == 'Force':

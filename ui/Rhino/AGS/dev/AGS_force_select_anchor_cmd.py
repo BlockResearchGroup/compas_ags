@@ -29,8 +29,8 @@ def RunCommand(is_interactive):
     if vertex is None:
         return
 
-    force.artist.anchor_vertex = vertex
-    force.artist.anchor_point = vertex_xyz[vertex]
+    force.anchor = vertex
+    force.location = vertex_xyz[vertex]
 
     scene.update()
     scene.save()

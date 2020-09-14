@@ -32,41 +32,41 @@ def RunCommand(is_interactive):
             return
 
         if option == "VertexLabels":
-            if form.artist.settings['show.vertexlabels'] is True:
-                form.artist.settings['show.vertexlabels'] = False
+            if form.settings['show.vertexlabels'] is True:
+                form.settings['show.vertexlabels'] = False
             else:
-                form.artist.settings['show.vertexlabels'] = True
+                form.settings['show.vertexlabels'] = True
 
         elif option == "EdgeLabels":
-            if form.artist.settings['show.edgelabels'] is True:
-                form.artist.settings['show.edgelabels'] = False
+            if form.settings['show.edgelabels'] is True:
+                form.settings['show.edgelabels'] = False
             else:
-                form.artist.settings['show.edgelabels'] = True
-                form.artist.settings['show.forcelabels'] = False
+                form.settings['show.edgelabels'] = True
+                form.settings['show.forcelabels'] = False
 
         elif option == "ForceLabels":
-            if form.artist.settings['show.forcelabels'] is True:
-                form.artist.settings['show.forcelabels'] = False
+            if form.settings['show.forcelabels'] is True:
+                form.settings['show.forcelabels'] = False
             else:
-                form.artist.settings['show.forcelabels'] = True
-                form.artist.settings['show.edgelabels'] = False
+                form.settings['show.forcelabels'] = True
+                form.settings['show.edgelabels'] = False
 
         elif option == "CompressionTension":
-            if form.artist.settings['show.forcecolors'] is True:
-                form.artist.settings['show.forcecolors'] = False
+            if form.settings['show.forcecolors'] is True:
+                form.settings['show.forcecolors'] = False
             else:
-                form.artist.settings['show.forcecolors'] = True
+                form.settings['show.forcecolors'] = True
 
         elif option == "AxialForces":
-            if form.artist.settings['show.forcepipes'] is True:
-                form.artist.settings['show.forcepipes'] = False
+            if form.settings['show.forcepipes'] is True:
+                form.settings['show.forcepipes'] = False
             else:
-                form.artist.settings['show.forcepipes'] = True
+                form.settings['show.forcepipes'] = True
 
         elif option == "AxialForceScale":
-            scale = compas_rhino.rs.GetReal("Scale Forces", form.artist.settings['scale.forces'])
+            scale = compas_rhino.rs.GetReal("Scale Forces", form.settings['scale.forces'])
             scale = float(scale)
-            form.artist.settings['scale.forces'] = scale
+            form.settings['scale.forces'] = scale
 
         else:
             raise NotImplementedError

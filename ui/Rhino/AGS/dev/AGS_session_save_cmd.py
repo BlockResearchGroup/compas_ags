@@ -50,9 +50,11 @@ def RunCommand(is_interactive):
         if form:
             session['data']['form'] = form.diagram.to_data()
             session['scene']['form'] = {
-                'settings': form.artist.settings,
-                'anchor': {'vertex': form.artist.anchor_vertex, 'point': form.artist.anchor_point},
-                'scale': form.artist.scale}
+                'settings': form.settings,
+                'anchor': form.anchor,
+                'location': form.location,
+                'scale': form.scale
+            }
 
     objects = scene.find_by_name('Force')
     if objects:
@@ -60,9 +62,11 @@ def RunCommand(is_interactive):
         if force:
             session['data']['force'] = force.diagram.to_data()
             session['scene']['force'] = {
-                'settings': force.artist.settings,
-                'anchor': {'vertex': force.artist.anchor_vertex, 'point': force.artist.anchor_point},
-                'scale': force.artist.scale}
+                'settings': force.settings,
+                'anchor': force.anchor,
+                'location': force.location,
+                'scale': force.scale
+            }
 
     with open(filepath, 'w+') as f:
         json.dump(session, f, cls=DataEncoder)

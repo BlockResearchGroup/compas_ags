@@ -31,6 +31,14 @@ def RunCommand(is_interactive):
         return
     force = objects[0]
 
+    fixed = list(form.diagram.vertices_where({'is_fixed': True}))
+    if len(fixed) < 2:
+        answer = compas_rhino.rs.GetString("You only have {} fixed vertices in the Form Diagram. Continue?", "No", ["Yes", "No"])
+        if not answer:
+            return
+        if answer == "No":
+            return
+
     proxy.package = 'compas_ags.ags.graphstatics'
 
     while True:

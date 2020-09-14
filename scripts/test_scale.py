@@ -41,19 +41,19 @@ force_object = ForceObject(force, name="Force", layer="AGS::ForceDiagram")
 form_object.clear_layer()
 force_object.clear_layer()
 
-form_object.anchor = 9
-
-force_object.anchor = 5
 force_object.location = [35, 0, 0]
 force_object.scale = 5.0
 
 form_object.draw()
 force_object.draw()
 
-vertices = form_object.select_vertices()
-if vertices and form_object.move_vertices(vertices):
-    form_object.draw()
+# vertices = form_object.select_vertices()
+# if vertices and form_object.move_vertices(vertices):
+#     form_object.draw()
 
-vertices = force_object.select_vertices()
-if vertices and force_object.move_vertices(vertices):
+# vertices = force_object.select_vertices()
+# if vertices and force_object.move_vertices(vertices):
+#     force_object.draw()
+
+if force_object.scale_from_3_points(message="Select the base node of the Force Diagram for the scaling operation"):
     force_object.draw()
