@@ -133,24 +133,25 @@ class FormObject(DiagramObject):
         # force labels
         if self.settings['show.forcelabels']:
             text = {}
-            for index, edge in enumerate(self.diagram.edges()):
+            for index, edge in enumerate(self.diagram.edges_where({'is_external': True})):
                 f = self.diagram.edge_attribute(edge, 'f')
-                text[edge] = "%s kN" % (round(abs(f), 1))
+                if f != 0.0:
+                    text[edge] = "%s kN" % (round(abs(f), 1))
             color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
+            # color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
             color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
 
-            # force colors
-            if self.settings['show.forcecolors']:
-                tol = self.settings['tol.forces']
-                for edge in self.diagram.edges_where({'is_external': False}):
-                    if self.diagram.edge_attribute(edge, 'f') > + tol:
-                        color[edge] = self.settings['color.tension']
-                    elif self.diagram.edge_attribute(edge, 'f') < - tol:
-                        color[edge] = self.settings['color.compression']
+            # # force colors
+            # if self.settings['show.forcecolors']:
+            #     tol = self.settings['tol.forces']
+            #     for edge in self.diagram.edges_where({'is_external': False}):
+            #         if self.diagram.edge_attribute(edge, 'f') > + tol:
+            #             color[edge] = self.settings['color.tension']
+            #         elif self.diagram.edge_attribute(edge, 'f') < - tol:
+            #             color[edge] = self.settings['color.compression']
 
             self.artist.draw_edgelabels(text=text, color=color)
 

@@ -89,10 +89,10 @@ class FormArtist(DiagramArtist):
         for edge in edges:
             arrow = None
             if self.diagram.edge_attribute(edge, 'is_external'):
-                q = self.diagram.edge_attribute(edge, 'q')
-                if q > 0:
+                f = self.diagram.edge_attribute(edge, 'f')
+                if f > 0:
                     arrow = 'start' if edge[0] in leaves else 'end'
-                elif q < 0:
+                elif f < 0:
                     arrow = 'start' if edge[1] in leaves else 'end'
             lines.append({
                 'start': vertex_xyz[edge[0]],
