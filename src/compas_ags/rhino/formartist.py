@@ -4,8 +4,12 @@ from __future__ import division
 
 import compas_rhino
 
+from functools import partial
 from math import fabs
 from compas_ags.rhino.diagramartist import DiagramArtist
+from compas.utilities import color_to_colordict
+
+colordict = partial(color_to_colordict, colorformat='rgb', normalize=False)
 
 
 __all__ = ['FormArtist']
@@ -59,6 +63,47 @@ class FormArtist(DiagramArtist):
         compas_rhino.delete_objects(self.guids, purge=True)
         self._guid_force = {}
 
+    def draw_edges(self, edges=None, color=None):
+        """Draw a selection of edges.
+
+        Parameters
+        ----------
+        edges : list, optional
+            A selection of edges to draw.
+            The default is ``None``, in which case all edges are drawn.
+        color : tuple or dict of tuple, optional
+            The color specififcation for the edges.
+            The default color is black, ``(0, 0, 0)``.
+
+        Returns
+        -------
+        list
+            The GUIDs of the created Rhino objects.
+
+        """
+        leaves = set(self.diagram.leaves())
+        edges = edges or list(self.diagram.edges())
+        vertex_xyz = self.vertex_xyz
+        edge_color = colordict(color, edges, default=self.color_edges)
+        lines = []
+        for edge in edges:
+            arrow = None
+            if self.diagram.edge_attribute(edge, 'is_external'):
+                q = self.diagram.edge_attribute(edge, 'q')
+                if q > 0:
+                    arrow = 'start' if edge[0] in leaves else 'end'
+                elif q < 0:
+                    arrow = 'start' if edge[1] in leaves else 'end'
+            lines.append({
+                'start': vertex_xyz[edge[0]],
+                'end': vertex_xyz[edge[1]],
+                'color': edge_color[edge],
+                'name': "{}.edge.{}-{}".format(self.diagram.name, *edge),
+                'arrow': arrow})
+        guids = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
+        self.guid_edge = zip(guids, edges)
+        return guids
+
     def draw_forcepipes(self, color_compression=None, color_tension=None, scale=None, tol=None):
         """Draw the forces in the internal edges as pipes with color and thickness matching the force value.
 
@@ -97,11 +142,3 @@ class FormArtist(DiagramArtist):
         guids = compas_rhino.draw_pipes(pipes, layer=self.layer, clear=False, redraw=False)
         self.guid_force = zip(guids, edges)
         return guids
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass
