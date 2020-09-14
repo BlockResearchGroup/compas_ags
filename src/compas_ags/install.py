@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     import compas_rhino
     from compas_rhino.install import install
-    from compas_rhino.uninstall import uninstall
+    # from compas_rhino.uninstall import uninstall
     from compas_rhino.install_plugin import install_plugin
     from compas_rhino.uninstall_plugin import uninstall_plugin
     import argparse
