@@ -52,6 +52,7 @@ Please select the independent edges first.""")
                 form.diagram.edge_attribute(edge, 'f', F)
                 form.diagram.edge_attribute(edge, 'q', Q)
 
+        scene.update()
         scene.save()
 
 
