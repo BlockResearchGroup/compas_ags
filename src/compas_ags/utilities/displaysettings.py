@@ -5,7 +5,7 @@ from __future__ import division
 
 __all__ = [
     'calculate_drawingscale',
-    'find_anchor_point',
+    'initial_position_anchor_point',
     'calculate_drawingscale_forces',
 ]
 
@@ -42,8 +42,10 @@ def calculate_drawingscale(form, force):
     return scale
 
 
-def find_anchor_point(form, force):
-    """Calculate an appropriate position to draw the force diagram.
+def initial_position_anchor_point(form, force):
+    """Calculate an appropriate position to draw the force diagram, such as the
+    right tip of form and the left tip of force are in the same y-coord and distant
+    to each other the amount of 1/2 form's extension in x.
 
     Parameters
     ----------
@@ -52,20 +54,24 @@ def find_anchor_point(form, force):
     force: compas_ags.diagrams.ForceDiagram
         The force diagram to draw.
 
-    Returns
-    -------
-    [X, Y, Z] : list
-        Proposed position hang the anchor point of the force diagram
-
     """
 
-    form_x = form.vertices_attribute('x')
-    form_y = form.vertices_attribute('y')
-    form_xdim = max(form_x) - min(form_x)
-    form_xmax = max(form_x)
-    form_ymid = 0.5 * (max(form_y) - min(form_y)) + min(form_y)
+    form_xyz = list(form.vertex_xyz.values())
+    force_xyz = list(force.vertex_xyz.values())
 
-    return [form_xdim + form_xmax, form_ymid, 0]
+    form_xmax = max([xyz[0] for xyz in form_xyz])
+    form_xmin = min([xyz[0] for xyz in form_xyz])
+    form_ymin = min([xyz[1] for xyz in form_xyz])
+
+    force_xmin = min([xyz[0] for xyz in force_xyz])
+    force_ymin = min([xyz[1] for xyz in force_xyz])
+
+    spacing = 0.5 * (form_xmax - form_xmin)
+
+    force.location[0] += form_xmax + spacing - force_xmin
+    force.location[1] += form_ymin - force_ymin
+
+    return
 
 
 def calculate_drawingscale_forces(form):
