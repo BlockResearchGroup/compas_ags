@@ -4,6 +4,7 @@ from __future__ import division
 
 from compas_ags.rhino.diagramobject import DiagramObject
 from compas_ags.rhino.forceinspector import ForceDiagramVertexInspector
+from compas_ags.utilities import calculate_drawingscale
 
 
 __all__ = ['ForceObject']
