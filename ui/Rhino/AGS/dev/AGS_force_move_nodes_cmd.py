@@ -41,6 +41,12 @@ def RunCommand(is_interactive):
 
     proxy.package = 'compas_ags.ags.graphstatics'
 
+    form.settings['show.edgelabels'] = True
+    form.settings['show.forcelabels'] = False
+    force.settings['show.edgelabels'] = True
+
+    scene.update()
+
     while True:
         vertices = force.select_vertices()
         if not vertices:
@@ -50,6 +56,10 @@ def RunCommand(is_interactive):
             scene.update()
 
     form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
+
+    form.settings['show.edgelabels'] = False
+    form.settings['show.forcelabels'] = True
+    force.settings['show.edgelabels'] = False
 
     scene.update()
     scene.save()
