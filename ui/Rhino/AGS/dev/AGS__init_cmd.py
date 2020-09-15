@@ -25,6 +25,13 @@ HOME = os.path.expanduser('~')
 CWD = HERE or HOME
 
 
+SETTINGS = {
+    'AGS': {
+        'autoupdate': True,
+    }
+}
+
+
 def RunCommand(is_interactive):
 
     shelvepath = os.path.join(compas.APPTEMP, 'AGS', '.history')
@@ -38,8 +45,8 @@ def RunCommand(is_interactive):
     db = shelve.open(shelvepath, 'n')
     db['states'] = []
 
-    scene = Scene(db)
-    scene.clear()
+    scene = Scene(db, 20, SETTINGS)
+    scene.purge()
 
     sc.sticky["AGS"] = {
         'proxy': Proxy(),

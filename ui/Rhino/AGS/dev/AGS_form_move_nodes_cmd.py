@@ -45,8 +45,9 @@ def RunCommand(is_interactive):
             break
 
         if form.move_vertices(vertices):
-            form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
-            force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
+            if scene.settings['autoupdate']:
+                form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
+                force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
             scene.update()
 
     form.settings['show.edgelabels'] = False

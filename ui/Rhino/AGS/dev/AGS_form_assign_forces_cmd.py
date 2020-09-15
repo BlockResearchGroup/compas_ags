@@ -33,6 +33,10 @@ Forces can only be assigned to "independent" edges.
 Please select the independent edges first.""")
         return
 
+    form.settings['show.edgelabels'] = True
+    form.settings['show.forcelabels'] = False
+    scene.update()
+
     edge_index = form.diagram.edge_index()
 
     names = [edge_index[edge] for edge in edges]
@@ -54,6 +58,10 @@ Please select the independent edges first.""")
 
         scene.update()
         scene.save()
+
+    form.settings['show.edgelabels'] = False
+    form.settings['show.forcelabels'] = True
+    scene.update()
 
 
 # ==============================================================================

@@ -42,11 +42,12 @@ class Scene(object):
 
     """
 
-    def __init__(self, db=None, depth=10):
+    def __init__(self, db=None, depth=10, settings=None):
         self._current = -1
         self._depth = depth
         self._db = db
         self.objects = {}
+        self.settings = settings or {}
 
     def add(self, item, name=None, layer=None, visible=True, settings=None):
         """Add an object to the scene matching the provided item.

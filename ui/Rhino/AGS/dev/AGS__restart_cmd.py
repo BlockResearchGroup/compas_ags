@@ -18,7 +18,7 @@ def RunCommand(is_interactive):
     if not proxy:
         return
 
-    scene.clear()
+    scene.purge()
     proxy.stop_server()
     proxy.start_server()
 

@@ -16,13 +16,11 @@ class FormObject(DiagramObject):
     SETTINGS = {
         'show.vertices': True,
         'show.edges': True,
-        'show.faces': False,
         'show.vertexlabels': False,
         'show.edgelabels': False,
-        'show.facelabels': False,
         'show.forcecolors': True,
         'show.forcelabels': True,
-        'show.forcepipes': True,
+        'show.forcepipes': False,
 
         'color.vertices': (0, 0, 0),
         'color.vertexlabels': (255, 255, 255),
@@ -153,7 +151,7 @@ class FormObject(DiagramObject):
             for index, edge in enumerate(self.diagram.edges_where({'is_external': True})):
                 f = self.diagram.edge_attribute(edge, 'f')
                 if f != 0.0:
-                    text[edge] = "%s kN" % (round(abs(f), 1))
+                    text[edge] = "{:.4g}kN".format(abs(f))
             color = {}
             # color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})

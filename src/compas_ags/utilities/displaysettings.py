@@ -2,6 +2,8 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+from compas.geometry import distance_point_point_xy
+
 
 __all__ = [
     'compute_force_drawingscale',
@@ -23,18 +25,20 @@ def compute_force_drawingscale(form, force):
     scale: float
         Appropriate scale factor to draw form and force diagram next to each other
     """
-    form_x = form.diagram.vertices_attribute('x')
-    form_y = form.diagram.vertices_attribute('y')
-    form_xdim = max(form_x) - min(form_x)
-    form_ydim = max(form_y) - min(form_y)
-
-    force_x = force.diagram.vertices_attribute('x')
-    force_y = force.diagram.vertices_attribute('y')
-    force_xdim = max(force_x) - min(force_x)
-    force_ydim = max(force_y) - min(force_y)
-
-    scale = 1 / max([force_xdim / form_xdim, force_ydim / form_ydim])
-    return scale
+    # form_x = form.diagram.vertices_attribute('x')
+    # form_y = form.diagram.vertices_attribute('y')
+    # form_xdim = max(form_x) - min(form_x)
+    # form_ydim = max(form_y) - min(form_y)
+    # force_x = force.diagram.vertices_attribute('x')
+    # force_y = force.diagram.vertices_attribute('y')
+    # force_xdim = max(force_x) - min(force_x)
+    # force_ydim = max(force_y) - min(force_y)
+    # scale = 1 / max([force_xdim / form_xdim, force_ydim / form_ydim])
+    form_bbox = form.diagram.bounding_box_xy()
+    force_bbox = force.diagram.bounding_box_xy()
+    form_diagonal = distance_point_point_xy(form_bbox[0], form_bbox[2])
+    force_diagonal = distance_point_point_xy(force_bbox[0], force_bbox[2])
+    return 0.75 * form_diagonal / force_diagonal
 
 
 def compute_force_drawinglocation(form, force):
