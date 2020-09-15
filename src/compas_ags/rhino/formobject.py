@@ -3,6 +3,7 @@ from __future__ import absolute_import
 from __future__ import division
 
 from compas_ags.rhino.diagramobject import DiagramObject
+from compas_ags.rhino.forminspector import FormDiagramVertexInspector
 
 
 __all__ = ['FormObject']
@@ -35,7 +36,7 @@ class FormObject(DiagramObject):
         'color.compression': (0, 0, 255),
         'color.tension': (255, 0, 0),
 
-        'scale.forces': 0.1,
+        'scale.forces': None,
 
         'tol.edges': 1e-3,
         'tol.forces': 1e-3,
@@ -47,6 +48,22 @@ class FormObject(DiagramObject):
         settings = kwargs.get('settings') or {}
         if settings:
             self.settings.update(settings)
+        self._inspector = None
+
+    @property
+    def inspector(self):
+        """:class:`compas_ags.rhino.FormDiagramInspector`: An inspector conduit."""
+        if not self._inspector:
+            self._inspector = FormDiagramVertexInspector(self.diagram)
+        return self._inspector
+
+    def inspector_on(self, force):
+        self.inspector.force_vertex_xyz = force.artist.vertex_xyz
+        self.inspector.form_vertex_xyz = self.artist.vertex_xyz
+        self.inspector.enable()
+
+    def inspector_off(self):
+        self.inspector.disable()
 
     def draw(self):
         """Draw the form diagram.
@@ -133,24 +150,25 @@ class FormObject(DiagramObject):
         # force labels
         if self.settings['show.forcelabels']:
             text = {}
-            for index, edge in enumerate(self.diagram.edges()):
+            for index, edge in enumerate(self.diagram.edges_where({'is_external': True})):
                 f = self.diagram.edge_attribute(edge, 'f')
-                text[edge] = "%s kN" % (round(abs(f), 1))
+                if f != 0.0:
+                    text[edge] = "%s kN" % (round(abs(f), 1))
             color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
+            # color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
             color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
             color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
 
-            # force colors
-            if self.settings['show.forcecolors']:
-                tol = self.settings['tol.forces']
-                for edge in self.diagram.edges_where({'is_external': False}):
-                    if self.diagram.edge_attribute(edge, 'f') > + tol:
-                        color[edge] = self.settings['color.tension']
-                    elif self.diagram.edge_attribute(edge, 'f') < - tol:
-                        color[edge] = self.settings['color.compression']
+            # # force colors
+            # if self.settings['show.forcecolors']:
+            #     tol = self.settings['tol.forces']
+            #     for edge in self.diagram.edges_where({'is_external': False}):
+            #         if self.diagram.edge_attribute(edge, 'f') > + tol:
+            #             color[edge] = self.settings['color.tension']
+            #         elif self.diagram.edge_attribute(edge, 'f') < - tol:
+            #             color[edge] = self.settings['color.compression']
 
             self.artist.draw_edgelabels(text=text, color=color)
 
@@ -163,11 +181,3 @@ class FormObject(DiagramObject):
                 tol=self.settings['tol.forces'])
 
         self.redraw()
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == '__main__':
-    pass

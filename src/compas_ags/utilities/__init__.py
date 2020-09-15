@@ -9,9 +9,9 @@ compas_ags.utilities
 .. autosummary::
     :toctree: generated/
 
-    calculate_drawingscale
-    find_anchor_point
-    calculate_drawingscale_forces
+    compute_force_drawingscale
+    compute_force_drawinglocation
+    compute_form_forcescale
 
 """
 from __future__ import absolute_import

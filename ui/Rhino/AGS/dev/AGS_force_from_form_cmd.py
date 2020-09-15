@@ -6,9 +6,10 @@ import scriptcontext as sc
 
 import compas_rhino
 from compas_ags.diagrams import ForceDiagram
-from compas_ags.utilities import calculate_drawingscale_forces
-from compas_ags.utilities import calculate_drawingscale
-from compas_ags.utilities import initial_position_anchor_point
+
+from compas_ags.utilities import compute_force_drawinglocation
+from compas_ags.utilities import compute_force_drawingscale
+from compas_ags.utilities import compute_form_forcescale
 
 
 __commandname__ = "AGS_force_from_form"
@@ -64,18 +65,10 @@ def RunCommand(is_interactive):
     form.diagram.data = proxy.form_update_q_from_qind_proxy(form.diagram.data)
     force.diagram.data = proxy.force_update_from_form_proxy(force.diagram.data, form.diagram.data)
 
-    print('force scale', force.scale)
+    force.scale = compute_force_drawingscale(form, force)
+    force.location = compute_force_drawinglocation(form, force)
 
-    if not force.scale:
-        scale = calculate_drawingscale(form.diagram, force.diagram)
-        force.scale = scale
-
-    initial_position_anchor_point(form, force)
-
-    print('pipes scale', form.settings['scale.forces'])
-
-    if not form.settings['scale.forces']:
-        form.settings['scale.forces'] = calculate_drawingscale_forces(form.diagram)
+    form.settings['scale.forces'] = compute_form_forcescale(form)
 
     scene.update()
     scene.save()
