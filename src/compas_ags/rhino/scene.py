@@ -193,7 +193,7 @@ class Scene(object):
                 print("running ags redo")
                 if self.redo():
                     sc.doc.AddCustomUndoEvent("Custom_undo_redo", undo_redo, "undo")
-        
+
         sc.doc.AddCustomUndoEvent("Custom_undo_redo", undo_redo, "undo")
 
     def undo(self):
