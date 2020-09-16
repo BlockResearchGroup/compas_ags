@@ -12,6 +12,8 @@ __commandname__ = "AGS_scene_redraw"
 
 def RunCommand(is_interactive):
 
+    sc.doc.EndUndoRecord(sc.doc.CurrentUndoRecordSerialNumber)
+
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return

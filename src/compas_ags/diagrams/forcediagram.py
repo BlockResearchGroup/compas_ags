@@ -44,6 +44,7 @@ class ForceDiagram(Diagram):
         """
         forcediagram = mesh_dual(formdiagram, cls)
         forcediagram.dual = formdiagram
+        formdiagram.dual = forcediagram
         return forcediagram
 
     # --------------------------------------------------------------------------

@@ -6,7 +6,7 @@ from uuid import uuid4
 
 import compas_rhino
 from compas_ags.rhino.diagramobject import DiagramObject
-
+import scriptcontext as sc
 
 __all__ = ['Scene']
 
@@ -42,11 +42,12 @@ class Scene(object):
 
     """
 
-    def __init__(self, db=None, depth=10):
+    def __init__(self, db=None, depth=10, settings=None):
         self._current = -1
         self._depth = depth
         self._db = db
         self.objects = {}
+        self.settings = settings or {}
 
     def add(self, item, name=None, layer=None, visible=True, settings=None):
         """Add an object to the scene matching the provided item.
@@ -181,6 +182,19 @@ class Scene(object):
         if len(states) > self._depth:
             del states[0]
         self._db['states'] = states
+
+        # Insert custom undo/redo event
+        def undo_redo(sender, e):
+            if e.Tag == "undo":
+                print("running ags undo")
+                if self.undo():
+                    sc.doc.AddCustomUndoEvent("Custom_undo_redo", undo_redo, "redo")
+            if e.Tag == "redo":
+                print("running ags redo")
+                if self.redo():
+                    sc.doc.AddCustomUndoEvent("Custom_undo_redo", undo_redo, "undo")
+
+        sc.doc.AddCustomUndoEvent("Custom_undo_redo", undo_redo, "undo")
 
     def undo(self):
         """Undo scene updates.
