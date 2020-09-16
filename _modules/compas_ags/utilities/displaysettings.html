@@ -79,6 +79,8 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">absolute_import</span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">distance_point_point_xy</span>
+
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;compute_force_drawingscale&#39;</span><span class="p">,</span>
@@ -100,18 +102,20 @@
 <span class="sd">    scale: float</span>
 <span class="sd">        Appropriate scale factor to draw form and force diagram next to each other</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">form_x</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-    <span class="n">form_y</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
-    <span class="n">form_xdim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">form_x</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">form_x</span><span class="p">)</span>
-    <span class="n">form_ydim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">form_y</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">form_y</span><span class="p">)</span>
-
-    <span class="n">force_x</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
-    <span class="n">force_y</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">)</span>
-    <span class="n">force_xdim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">force_x</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">force_x</span><span class="p">)</span>
-    <span class="n">force_ydim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">force_y</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">force_y</span><span class="p">)</span>
-
-    <span class="n">scale</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="nb">max</span><span class="p">([</span><span class="n">force_xdim</span> <span class="o">/</span> <span class="n">form_xdim</span><span class="p">,</span> <span class="n">force_ydim</span> <span class="o">/</span> <span class="n">form_ydim</span><span class="p">])</span>
-    <span class="k">return</span> <span class="n">scale</span></div>
+    <span class="c1"># form_x = form.diagram.vertices_attribute(&#39;x&#39;)</span>
+    <span class="c1"># form_y = form.diagram.vertices_attribute(&#39;y&#39;)</span>
+    <span class="c1"># form_xdim = max(form_x) - min(form_x)</span>
+    <span class="c1"># form_ydim = max(form_y) - min(form_y)</span>
+    <span class="c1"># force_x = force.diagram.vertices_attribute(&#39;x&#39;)</span>
+    <span class="c1"># force_y = force.diagram.vertices_attribute(&#39;y&#39;)</span>
+    <span class="c1"># force_xdim = max(force_x) - min(force_x)</span>
+    <span class="c1"># force_ydim = max(force_y) - min(force_y)</span>
+    <span class="c1"># scale = 1 / max([force_xdim / form_xdim, force_ydim / form_ydim])</span>
+    <span class="n">form_bbox</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">bounding_box_xy</span><span class="p">()</span>
+    <span class="n">force_bbox</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">diagram</span><span class="o">.</span><span class="n">bounding_box_xy</span><span class="p">()</span>
+    <span class="n">form_diagonal</span> <span class="o">=</span> <span class="n">distance_point_point_xy</span><span class="p">(</span><span class="n">form_bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">form_bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">force_diagonal</span> <span class="o">=</span> <span class="n">distance_point_point_xy</span><span class="p">(</span><span class="n">force_bbox</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">force_bbox</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">form_diagonal</span> <span class="o">/</span> <span class="n">force_diagonal</span></div>
 
 
 <div class="viewcode-block" id="compute_force_drawinglocation"><a class="viewcode-back" href="../../../api/generated/compas_ags.utilities.compute_force_drawinglocation.html#compas_ags.utilities.compute_force_drawinglocation">[docs]</a><span class="k">def</span> <span class="nf">compute_force_drawinglocation</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
