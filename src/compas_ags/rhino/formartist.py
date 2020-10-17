@@ -37,31 +37,10 @@ class FormArtist(DiagramArtist):
 
     def __init__(self, form, layer=None):
         super(FormArtist, self).__init__(form, layer=layer)
-        self._guid_force = {}
         self.color_compression = (0, 0, 255)
         self.color_tension = (255, 0, 0)
         self.scale_forces = 0.01
         self.tol_forces = 0.001
-
-    @property
-    def guids(self):
-        guids = super(FormArtist, self).guids
-        guids += list(self.guid_force.keys())
-        return guids
-
-    @property
-    def guid_force(self):
-        """Map between Rhino object GUIDs and form diagram edge force identifiers."""
-        return self._guid_force
-
-    @guid_force.setter
-    def guid_force(self, values):
-        self._guid_force = dict(values)
-
-    def clear(self):
-        super(FormArtist, self).clear()
-        compas_rhino.delete_objects(self.guids, purge=True)
-        self._guid_force = {}
 
     def draw_edges(self, edges=None, color=None):
         """Draw a selection of edges.
@@ -100,9 +79,7 @@ class FormArtist(DiagramArtist):
                 'color': edge_color[edge],
                 'name': "{}.edge.{}-{}".format(self.diagram.name, *edge),
                 'arrow': arrow})
-        guids = compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
-        self.guid_edge = zip(guids, edges)
-        return guids
+        return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
 
     def draw_forcepipes(self, color_compression=None, color_tension=None, scale=None, tol=None):
         """Draw the forces in the internal edges as pipes with color and thickness matching the force value.
@@ -139,6 +116,4 @@ class FormArtist(DiagramArtist):
                           'color': color,
                           'radius': radius,
                           'name': "{}.force.{}-{}".format(self.diagram.name, *edge)})
-        guids = compas_rhino.draw_pipes(pipes, layer=self.layer, clear=False, redraw=False)
-        self.guid_force = zip(guids, edges)
-        return guids
+        return compas_rhino.draw_pipes(pipes, layer=self.layer, clear=False, redraw=False)
