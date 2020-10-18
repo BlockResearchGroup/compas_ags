@@ -85,16 +85,27 @@ class ForceObject(DiagramObject):
 
         # vertices
         if self.settings['show.vertices']:
+            vertices = list(self.diagram.vertices())
             color = {}
-            color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
+            color.update({vertex: self.settings['color.vertices'] for vertex in vertices})
             color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
+            guids = self.artist.draw_vertices(color=color)
+            self.guid_vertex = zip(guids, vertices)
 
-            self.artist.draw_vertices(color=color)
+            # vertex labels
+            if self.settings['show.vertexlabels']:
+                text = {vertex: index for index, vertex in enumerate(vertices)}
+                color = {}
+                color.update({vertex: self.settings['color.vertexlabels'] for vertex in vertices})
+                color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
+                guids = self.artist.draw_vertexlabels(text=text, color=color)
+                self.guid_vertexlabel = zip(guids, vertices)
 
         # edges
         if self.settings['show.edges']:
+            edges = list(self.diagram.edges())
             color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
+            color.update({edge: self.settings['color.edges'] for edge in edges})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
             color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where_dual({'is_load': True})})
             color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where_dual({'is_reaction': True})})
@@ -109,67 +120,61 @@ class ForceObject(DiagramObject):
                     elif self.diagram.dual_edge_f(edge) < - tol:
                         color[edge] = self.settings['color.compression']
 
-            self.artist.draw_edges(color=color)
+            guids = self.artist.draw_edges(color=color)
+            self.guid_edge = zip(guids, edges)
 
-        # vertex labels
-        if self.settings['show.vertexlabels']:
-            text = {vertex: index for index, vertex in enumerate(self.diagram.vertices())}
-            color = {}
-            color.update({vertex: self.settings['color.vertexlabels'] for vertex in self.diagram.vertices()})
-            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
+            # edge labels
+            if self.settings['show.edgelabels']:
+                edge_index = self.diagram.edge_index(self.diagram.dual)
+                edge_index.update({(v, u): index for (u, v), index in edge_index.items()})
+                text = {edge: edge_index[edge] for edge in edges}
+                color = {}
+                color.update({edge: self.settings['color.edges'] for edge in edges})
+                color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
+                color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where_dual({'is_load': True})})
+                color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where_dual({'is_reaction': True})})
+                color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where_dual({'is_ind': True})})
 
-            self.artist.draw_vertexlabels(text=text, color=color)
+                # force colors
+                if self.settings['show.forcecolors']:
+                    tol = self.settings['tol.forces']
+                    for edge in self.diagram.edges_where_dual({'is_external': False}):
+                        if self.diagram.dual_edge_f(edge) > + tol:
+                            color[edge] = self.settings['color.tension']
+                        elif self.diagram.dual_edge_f(edge) < - tol:
+                            color[edge] = self.settings['color.compression']
 
-        # edge labels
-        if self.settings['show.edgelabels']:
-            edge_index = self.diagram.edge_index(self.diagram.dual)
-            edge_index.update({(v, u): index for (u, v), index in edge_index.items()})
-            text = {edge: edge_index[edge] for edge in self.diagram.edges()}
-            color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where_dual({'is_load': True})})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where_dual({'is_reaction': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where_dual({'is_ind': True})})
+                guids = self.artist.draw_edgelabels(text=text, color=color)
+                self.guid_edgelabel = zip(guids, edges)
 
-            # force colors
-            if self.settings['show.forcecolors']:
-                tol = self.settings['tol.forces']
-                for edge in self.diagram.edges_where_dual({'is_external': False}):
-                    if self.diagram.dual_edge_f(edge) > + tol:
-                        color[edge] = self.settings['color.tension']
-                    elif self.diagram.dual_edge_f(edge) < - tol:
-                        color[edge] = self.settings['color.compression']
+            # force labels
+            if self.settings['show.forcelabels']:
+                text = {}
+                dual_edges = list(self.diagram.dual.edges())
+                for index, (u, v) in enumerate(self.diagram.ordered_edges(self.diagram.dual)):
+                    f = self.diagram.dual.edge_attribute(dual_edges[index], 'f')
+                    if (u, v) in edges:
+                        text[(u, v)] = "{:.4g}kN".format(abs(f))
+                    else:
+                        text[(v, u)] = "{:.4g}kN".format(abs(f))
 
-            self.artist.draw_edgelabels(text=text, color=color)
+                color = {}
+                color.update({edge: self.settings['color.edges'] for edge in edges})
+                color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
+                color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where_dual({'is_load': True})})
+                color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where_dual({'is_reaction': True})})
+                color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where_dual({'is_ind': True})})
 
-        # force labels
-        if self.settings['show.forcelabels']:
-            text = {}
-            dual_edges = list(self.diagram.dual.edges())
-            for index, (u, v) in enumerate(self.diagram.ordered_edges(self.diagram.dual)):
-                f = self.diagram.dual.edge_attribute(dual_edges[index], 'f')
-                if (u, v) in self.diagram.edges():
-                    text[(u, v)] = "{:.4g}kN".format(abs(f))
-                else:
-                    text[(v, u)] = "{:.4g}kN".format(abs(f))
+                # force colors
+                if self.settings['show.forcecolors']:
+                    tol = self.settings['tol.forces']
+                    for edge in self.diagram.edges_where_dual({'is_external': False}):
+                        if self.diagram.dual_edge_f(edge) > + tol:
+                            color[edge] = self.settings['color.tension']
+                        elif self.diagram.dual_edge_f(edge) < - tol:
+                            color[edge] = self.settings['color.compression']
 
-            color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where_dual({'is_load': True})})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where_dual({'is_reaction': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where_dual({'is_ind': True})})
-
-            # force colors
-            if self.settings['show.forcecolors']:
-                tol = self.settings['tol.forces']
-                for edge in self.diagram.edges_where_dual({'is_external': False}):
-                    if self.diagram.dual_edge_f(edge) > + tol:
-                        color[edge] = self.settings['color.tension']
-                    elif self.diagram.dual_edge_f(edge) < - tol:
-                        color[edge] = self.settings['color.compression']
-
-            self.artist.draw_edgelabels(text=text, color=color)
+                guids = self.artist.draw_edgelabels(text=text, color=color)
+                self.guid_edgelabel = zip(guids, edges)
 
         self.redraw()

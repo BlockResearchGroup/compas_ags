@@ -44,8 +44,8 @@ class DiagramObject(MeshObject):
         """
         pointfilter = compas_rhino.rs.filter.point
         guid = compas_rhino.rs.GetObject(message=message, preselect=True, select=True, filter=pointfilter)
-        if guid and guid in self.artist.guid_vertex:
-            return self.artist.guid_vertex[guid]
+        if guid and guid in self.guid_vertex:
+            return self.guid_vertex[guid]
 
     def select_edge(self, message="Select Edge."):
         """Manually select one edge in the Rhino view.
@@ -57,8 +57,8 @@ class DiagramObject(MeshObject):
         """
         curvefilter = compas_rhino.rs.filter.curve
         guid = compas_rhino.rs.GetObject(message=message, preselect=True, select=True, filter=curvefilter)
-        if guid and guid in self.artist.guid_edge:
-            return self.artist.guid_edge[guid]
+        if guid and guid in self.guid_edge:
+            return self.guid_edge[guid]
 
     def move(self):
         """Move the entire diagram.
