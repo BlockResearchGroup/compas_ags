@@ -24,6 +24,7 @@ def RunCommand(is_interactive):
     form = objects[0]
 
     form.inspector_off()
+    compas_rhino.display_message("Form inspector: [OFF]")
 
 
 # ==============================================================================

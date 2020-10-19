@@ -25,7 +25,7 @@ def RunCommand(is_interactive):
     form = objects[0]
 
     while True:
-        edges = form.select_edges("Mark selected edges as independent (all others as dependent).")
+        edges = form.select_edges("Mark selected edges as independent (all others as dependent)")
         if not edges:
             break
 
