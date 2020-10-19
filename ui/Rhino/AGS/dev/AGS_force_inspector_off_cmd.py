@@ -24,6 +24,7 @@ def RunCommand(is_interactive):
     force = objects[0]
 
     force.inspector_off()
+    compas_rhino.display_message("Force inspector: [OFF]")
 
 
 # ==============================================================================

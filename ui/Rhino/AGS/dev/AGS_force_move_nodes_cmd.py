@@ -55,7 +55,7 @@ def RunCommand(is_interactive):
         if force.move_vertices(vertices):
             scene.update()
 
-    if scene.settings['autoupdate']:
+    if scene.settings['AGS']['autoupdate']:
         form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
 
     form.settings['show.edgelabels'] = False
