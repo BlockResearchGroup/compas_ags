@@ -135,6 +135,8 @@ class SettingsForm(forms.Dialog[bool]):
             node_type = node.__class__.__name__
             if node_type in all_settings:
                 all_settings[node_type] = node.settings
+                if node_type == 'ForceObject':
+                    all_settings[node_type]['scale.diagram'] = node.scale
 
         settingsForm = cls()
         settingsForm.scene = scene
@@ -202,6 +204,12 @@ class SettingsForm(forms.Dialog[bool]):
         try:
             for page in self.TabControl.Pages:
                 page.apply()
+                if page.Text == 'ForceObject':
+                    objects = self.scene.find_by_name('Force')
+                    if objects:
+                        scale = page.settings['scale.diagram']
+                        force = objects[0]
+                        force.scale = scale
             if hasattr(self, 'scene'):
                 self.scene.update()
         except Exception as e:
@@ -212,6 +220,12 @@ class SettingsForm(forms.Dialog[bool]):
         try:
             for page in self.TabControl.Pages:
                 page.apply()
+                if page.Text == 'ForceObject':
+                    objects = self.scene.find_by_name('Force')
+                    if objects:
+                        scale = page.settings['scale.diagram']
+                        force = objects[0]
+                        force.scale = scale
             if hasattr(self, 'scene'):
                 self.scene.update()
         except Exception as e:
@@ -226,5 +240,5 @@ if __name__ == "__main__":
     from compas_ags.rhino import FormObject
     from compas_ags.rhino import ForceObject
     scene = get_scene()
-    SettingsForm.from_scene(scene, object_types=[FormObject, ForceObject])
+    SettingsForm.from_scene(scene, object_types=[FormObject, ForceObject], global_settings=['AGS'])
     # SettingsForm.from_settings(scene.settings, "solver")
