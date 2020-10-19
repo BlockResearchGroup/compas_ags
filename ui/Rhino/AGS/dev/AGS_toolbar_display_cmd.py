@@ -23,7 +23,7 @@ def RunCommand(is_interactive):
         return
 
     # TODO: deal with undo redo
-    SettingsForm.from_scene(scene, object_types=[FormObject, ForceObject])
+    SettingsForm.from_scene(scene, object_types=[FormObject, ForceObject], global_settings=['AGS'])
 
 
 # ==============================================================================
