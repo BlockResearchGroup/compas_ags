@@ -30,6 +30,7 @@ def RunCommand(is_interactive):
 
     if force:
         form.inspector_on(force)
+        compas_rhino.display_message("Form inspector: [ON]")
     # else:
     #     # turn on the normal mesh inspector
 

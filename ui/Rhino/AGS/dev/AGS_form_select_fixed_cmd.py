@@ -25,7 +25,7 @@ def RunCommand(is_interactive):
     form = objects[0]
 
     while True:
-        vertices = form.select_vertices("Fix selected vertices (unfix all others).")
+        vertices = form.select_vertices("Fix selected vertices (unfix all others)")
         if not vertices:
             break
 

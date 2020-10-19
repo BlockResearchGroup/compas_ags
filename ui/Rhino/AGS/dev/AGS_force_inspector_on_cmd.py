@@ -30,6 +30,7 @@ def RunCommand(is_interactive):
     force = objects[0]
 
     force.inspector_on(form)
+    compas_rhino.display_message("Force inspector: [ON]")
 
 
 # ==============================================================================
