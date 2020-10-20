@@ -51,6 +51,7 @@ class Tree_Table(forms.TreeGridView):
                     items_where = getattr(sceneNode.diagram, '%s_where' % table_type)
                     color.update({str(key): settings.get(full_setting_key) for key in items_where({sub_setting_key: True})})
                     color.update({str(key): settings.get(full_setting_key) for key in items_where({'_'+sub_setting_key: True})})  # including read-only ones
+                    color.update({str(key): settings.get("color.edges:is_ind") for key in items_where({"is_ind": True})})  # overwrite is_ind lastly
 
             # Additional settings for AGS
             tol = 0.001
