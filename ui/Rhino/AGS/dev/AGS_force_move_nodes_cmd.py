@@ -5,6 +5,7 @@ from __future__ import division
 import scriptcontext as sc
 
 import compas_rhino
+from compas_ags.utilities.equilibrium import check_deviations
 
 
 __commandname__ = "AGS_force_move_nodes"
@@ -33,7 +34,7 @@ def RunCommand(is_interactive):
 
     fixed = list(form.diagram.vertices_where({'is_fixed': True}))
     if len(fixed) < 2:
-        answer = compas_rhino.rs.GetString("You only have {} fixed vertices in the Form Diagram. Continue?", "No", ["Yes", "No"])
+        answer = compas_rhino.rs.GetString("You only have {0} fixed vertices in the Form Diagram. Continue?".format(len(form.diagram.fixed())), "No", ["Yes", "No"])
         if not answer:
             return
         if answer == "No":
@@ -57,6 +58,8 @@ def RunCommand(is_interactive):
 
     if scene.settings['AGS']['autoupdate']:
         form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
+        if not check_deviations(form.diagram, force.diagram):
+            compas_rhino.display_message('Error: Diagrams are not parallel.\nWrong movement on force diagram nodes or insuficient constraints in the form diagram.')
 
     form.settings['show.edgelabels'] = False
     form.settings['show.forcelabels'] = True
