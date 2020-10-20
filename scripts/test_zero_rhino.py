@@ -58,16 +58,15 @@ scene = Scene()
 form_id = scene.add(form, name="Form", layer="AGS::FormDiagram")
 force_id = scene.add(force, name="Force", layer="AGS::ForceDiagram")
 
-scene.clear()
+scene.clear_layers()
 
 form_obj = scene.find(form_id)
 force_obj = scene.find(force_id)
 
-# this should become part of "add"
-force_obj.artist.anchor_vertex = 0
-force_obj.artist.anchor_point = [35, 0, 0]
-force_obj.artist.scale = 0.5
+force_obj.anchor = 0
+force_obj.location = [35, 0, 0]
+force_obj.scale = 0.5
 
-form_obj.artist.settings['scale.forces'] = 0.02
+form_obj.settings['scale.forces'] = 0.02
 
 scene.update()

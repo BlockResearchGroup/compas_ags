@@ -30,19 +30,16 @@ def RunCommand(is_interactive):
     lines = compas_rhino.get_line_coordinates(guids)
     graph = FormGraph.from_lines(lines)
 
-    # check planarity
     if not graph.is_planar_embedding():
-        compas_rhino.display_message('The graph is not planar. Check your graph!')
+        compas_rhino.display_message('The graph is not planar. Therefore, a form diagram cannot be created.')
         return
 
     form = FormDiagram.from_graph(graph)
 
+    scene.purge()
     scene.add(form, name='Form', layer='AGS::FormDiagram')
-
-    print("FormDiagram successfully created!")
-
-    scene.clear()
     scene.update()
+    scene.save()
 
 
 # ==============================================================================

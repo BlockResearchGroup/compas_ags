@@ -38,32 +38,22 @@ force.data = graphstatics.force_update_from_form_proxy(force.data, form.data)
 form_object = FormObject(form, name="Form", layer="AGS::FormDiagram")
 force_object = ForceObject(force, name="Force", layer="AGS::ForceDiagram")
 
-form_object.artist.anchor_vertex = 9
+form_object.clear_layer()
+force_object.clear_layer()
 
-force_object.artist.anchor_vertex = 5
-force_object.artist.anchor_point = [35, 0, 0]
-force_object.artist.scale = 5.0
+form_object.anchor = 9
 
-form_object.clear()
+force_object.anchor = 5
+force_object.location = [35, 0, 0]
+force_object.scale = 5.0
+
 form_object.draw()
-form_object.redraw()
-
-force_object.clear()
 force_object.draw()
-force_object.redraw()
 
 vertices = form_object.select_vertices()
 if vertices and form_object.move_vertices(vertices):
-    form_object.clear()
     form_object.draw()
-    form_object.redraw()
-
-form_object.unselect()
 
 vertices = force_object.select_vertices()
 if vertices and force_object.move_vertices(vertices):
-    force_object.clear()
     force_object.draw()
-    force_object.redraw()
-
-force_object.unselect()

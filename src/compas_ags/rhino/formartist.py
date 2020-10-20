@@ -4,8 +4,12 @@ from __future__ import division
 
 import compas_rhino
 
+from functools import partial
 from math import fabs
 from compas_ags.rhino.diagramartist import DiagramArtist
+from compas.utilities import color_to_colordict
+
+colordict = partial(color_to_colordict, colorformat='rgb', normalize=False)
 
 
 __all__ = ['FormArtist']
@@ -18,135 +22,84 @@ class FormArtist(DiagramArtist):
     ----------
     form: compas_ags.diagrams.FormDiagram
         The form diagram to draw.
-    scale : float, optional
-        The drawing scale.
-        Default is ``1.0``.
-    settings : dict, optional
-        Customisation of the artist settings.
-
-    Other Parameters
-    ----------------
-    See the parent artists for other parameters.
 
     Attributes
     ----------
-    guid_force : dict
-        Map between Rhino object GUIDs and force diagram force identifiers.
-
+    color_compression : 3-tuple
+        Default color for compression.
+    color_tension : 3-tuple
+        Default color for tension.
+    scale_forces : float
+        Scale factor for the force pipes.
+    tol_forces : float
+        Tolerance for force magnitudes.
     """
 
-    def __init__(self, form, scale=None, settings=None, **kwargs):
-        super(FormArtist, self).__init__(form, **kwargs)
-        self._guid_force = {}
-        self.scale = scale
-        if settings:
-            self.settings.update(settings)
+    def __init__(self, form, layer=None):
+        super(FormArtist, self).__init__(form, layer=layer)
+        self.color_compression = (0, 0, 255)
+        self.color_tension = (255, 0, 0)
+        self.scale_forces = 0.01
+        self.tol_forces = 0.001
 
-    @property
-    def guid_force(self):
-        """Map between Rhino object GUIDs and form diagram edge force identifiers."""
-        return self._guid_force
-
-    @guid_force.setter
-    def guid_force(self, values):
-        self._guid_force = dict(values)
-
-    def clear(self):
-        super(FormArtist, self).clear()
-        guids = []
-        guids += list(self.guid_force.keys())
-        compas_rhino.delete_objects(guids, purge=True)
-        self._guid_force = {}
-
-    def draw(self):
-        """Draw the form diagram.
-
-        The visible components, display properties and visual style of the form diagram
-        drawn by this method can be fully customised using the configuration items
-        in the settings dict: ``FormArtist.settings``.
-
-        The method will clear the scene of any objects it has previously drawn
-        and keep track of any newly created objects using their GUID.
+    def draw_edges(self, edges=None, color=None):
+        """Draw a selection of edges.
 
         Parameters
         ----------
-        None
+        edges : list, optional
+            A selection of edges to draw.
+            The default is ``None``, in which case all edges are drawn.
+        color : tuple or dict of tuple, optional
+            The color specififcation for the edges.
+            The default color is black, ``(0, 0, 0)``.
 
         Returns
         -------
-        None
+        list
+            The GUIDs of the created Rhino objects.
 
         """
-        self.clear()
-        self.clear_layer()
-        # vertices
-        if self.settings['show.vertices']:
-            color = {}
-            color.update({vertex: self.settings['color.vertices'] for vertex in self.diagram.vertices()})
-            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
-            self.draw_vertices(color=color)
-        # edges
-        if self.settings['show.edges']:
-            color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
-            color.update({edge: self.settings['color.edges:deviation'] for edge in self.diagram.edges_where_predicate(lambda key, attr: attr['a'] > 0.0)})
-            self.draw_edges(color=color)
-        # vertex labels
-        if self.settings['show.vertexlabels']:
-            text = {vertex: index for index, vertex in enumerate(self.diagram.vertices())}
-            color = {}
-            color.update({vertex: self.settings['color.vertexlabels'] for vertex in self.diagram.vertices()})
-            color.update({vertex: self.settings['color.vertices:is_fixed'] for vertex in self.diagram.vertices_where({'is_fixed': True})})
-            self.draw_vertexlabels(text=text, color=color)
-        # edge labels
-        if self.settings['show.edgelabels']:
-            text = {edge: index for index, edge in enumerate(self.diagram.edges())}
-            color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
-            color.update({edge: self.settings['color.edges:deviation'] for edge in self.diagram.edges_where_predicate(lambda key, attr: attr['a'] > 0.0)})
-            self.draw_edgelabels(text=text, color=color)
-        # force magnitude labels
-        if self.settings['show.forcelabels']:
-            text = {}
-            for index, edge in enumerate(self.diagram.edges()):
+        leaves = set(self.diagram.leaves())
+        edges = edges or list(self.diagram.edges())
+        vertex_xyz = self.vertex_xyz
+        edge_color = colordict(color, edges, default=self.color_edges)
+        lines = []
+        for edge in edges:
+            arrow = None
+            if self.diagram.edge_attribute(edge, 'is_external'):
                 f = self.diagram.edge_attribute(edge, 'f')
-                text[edge] = "%s kN {%s}" % (round(f, 2), index)
-            color = {}
-            color.update({edge: self.settings['color.edges'] for edge in self.diagram.edges()})
-            color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where({'is_external': True})})
-            color.update({edge: self.settings['color.edges:is_load'] for edge in self.diagram.edges_where({'is_load': True})})
-            color.update({edge: self.settings['color.edges:is_reaction'] for edge in self.diagram.edges_where({'is_reaction': True})})
-            color.update({edge: self.settings['color.edges:is_ind'] for edge in self.diagram.edges_where({'is_ind': True})})
-            color.update({edge: self.settings['color.edges:deviation'] for edge in self.diagram.edges_where_predicate(lambda key, attr: attr['a'] > 0.0)})
-            self.draw_edgelabels(text=text, color=color)
-        # forces
-        if self.settings['show.forces']:
-            self.draw_forces()
+                if f > 0:
+                    arrow = 'start' if edge[0] in leaves else 'end'
+                elif f < 0:
+                    arrow = 'start' if edge[1] in leaves else 'end'
+            lines.append({
+                'start': vertex_xyz[edge[0]],
+                'end': vertex_xyz[edge[1]],
+                'color': edge_color[edge],
+                'name': "{}.edge.{}-{}".format(self.diagram.name, *edge),
+                'arrow': arrow})
+        return compas_rhino.draw_lines(lines, layer=self.layer, clear=False, redraw=False)
 
-    def draw_forces(self):
+    def draw_forcepipes(self, color_compression=None, color_tension=None, scale=None, tol=None):
         """Draw the forces in the internal edges as pipes with color and thickness matching the force value.
 
         Parameters
         ----------
-        None
+        color_compression
+        color_tension
+        scale
+        tol
 
         Returns
         -------
         list
             The GUIDs of the created Rhino objects.
         """
-        color_compression = self.settings['color.compression']
-        color_tension = self.settings['color.tension']
-        scale = self.settings['scale.forces']
-        tol = self.settings['tol.forces']
+        color_compression = color_compression or self.color_compression
+        color_tension = color_tension or self.color_tension
+        scale = scale or self.scale_forces
+        tol = tol or self.tol_forces
         vertex_xyz = self.vertex_xyz
         edges = []
         pipes = []
@@ -163,14 +116,4 @@ class FormArtist(DiagramArtist):
                           'color': color,
                           'radius': radius,
                           'name': "{}.force.{}-{}".format(self.diagram.name, *edge)})
-        guids = compas_rhino.draw_pipes(pipes, layer=self.layer, clear=False, redraw=False)
-        self.guid_force = zip(guids, edges)
-        return guids
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass
+        return compas_rhino.draw_pipes(pipes, layer=self.layer, clear=False, redraw=False)

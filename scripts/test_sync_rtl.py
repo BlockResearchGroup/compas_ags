@@ -54,15 +54,15 @@ scene = Scene()
 form_id = scene.add(form, name="Form", layer="AGS::FormDiagram")
 force_id = scene.add(force, name="Force", layer="AGS::ForceDiagram")
 
-scene.clear()
+scene.clear_layers()
 
 form_obj = scene.find(form_id)
 force_obj = scene.find(force_id)
 
 # this should become part of "add"
-force_obj.artist.anchor_vertex = 3
-force_obj.artist.anchor_point = [15, 0, 0]
-force_obj.artist.scale = 0.3
+force_obj.anchor = 3
+force_obj.location = [15, 0, 0]
+force_obj.scale = 0.3
 
 scene.update()
 
@@ -78,5 +78,4 @@ while True:
         # update form diagram
         form.data = graphstatics.form_update_from_force_proxy(form.data, force.data, kmax=100)
         # update the scene
-        scene.clear()
         scene.update()

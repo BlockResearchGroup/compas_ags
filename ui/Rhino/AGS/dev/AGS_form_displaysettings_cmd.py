@@ -18,55 +18,62 @@ def RunCommand(is_interactive):
 
     scene = sc.sticky['AGS']['scene']
 
-    form = scene.find_by_name('Form')[0]
-
-    if not form:
-        print("There is no FormDiagram in the scene.")
+    objects = scene.find_by_name('Form')
+    if not objects:
+        compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
+    form = objects[0]
 
-    options = ["Vertexlabels", "Edgelabels", "Forcelabels", "CompressionTension", ]
+    options = ["VertexLabels", "EdgeLabels", "ForceLabels", "CompressionTension", "AxialForces", "AxialForceScale"]
 
     while True:
         option = compas_rhino.rs.GetString("FormDiagram Display", strings=options)
-
         if not option:
             return
 
-        if option == "Vertexlabels":
-            current = str(form.artist.settings['show.vertexlabels'])
-            show = compas_rhino.rs.GetString("Vertex labels", defaultString=current, strings=["True", "False"])
-            if show == "True":
-                form.artist.settings['show.vertexlabels'] = True
-            elif show == "False":
-                form.artist.settings['show.vertexlabels'] = False
+        if option == "VertexLabels":
+            if form.settings['show.vertexlabels'] is True:
+                form.settings['show.vertexlabels'] = False
+            else:
+                form.settings['show.vertexlabels'] = True
 
-        elif option == "Edgelabels":
-            current = str(form.artist.settings['show.edgelabels'])
-            show = compas_rhino.rs.GetString("Edge labels", defaultString=current, strings=["True", "False"])
-            if show == "True":
-                form.artist.settings['show.edgelabels'] = True
-                form.artist.settings['show.forcelabels'] = False
-            elif show == "False":
-                form.artist.settings['show.edgelabels'] = False
+        elif option == "EdgeLabels":
+            if form.settings['show.edgelabels'] is True:
+                form.settings['show.edgelabels'] = False
+            else:
+                form.settings['show.edgelabels'] = True
+                form.settings['show.forcelabels'] = False
 
-        elif option == "Forcelabels":
-            current = str(form.artist.settings['show.forcelabels'])
-            show = compas_rhino.rs.GetString("Force labels", defaultString=current, strings=["True", "False"])
-            if show == "True":
-                form.artist.settings['show.forcelabels'] = True
-                form.artist.settings['show.edgelabels'] = False
-            elif show == "False":
-                form.artist.settings['show.forcelabels'] = False
+        elif option == "ForceLabels":
+            if form.settings['show.forcelabels'] is True:
+                form.settings['show.forcelabels'] = False
+            else:
+                form.settings['show.forcelabels'] = True
+                form.settings['show.edgelabels'] = False
 
         elif option == "CompressionTension":
-            current = str(form.artist.settings['show.forces'])
-            show = compas_rhino.rs.GetString("Compression / Tension", defaultString=current, strings=["True", "False"])
-            if show == "True":
-                form.artist.settings['show.forces'] = True
-            elif show == "False":
-                form.artist.settings['show.forces'] = False
+            if form.settings['show.forcecolors'] is True:
+                form.settings['show.forcecolors'] = False
+            else:
+                form.settings['show.forcecolors'] = True
+
+        elif option == "AxialForces":
+            if form.settings['show.forcepipes'] is True:
+                form.settings['show.forcepipes'] = False
+            else:
+                form.settings['show.forcepipes'] = True
+
+        elif option == "AxialForceScale":
+            scale = compas_rhino.rs.GetReal("Scale Forces", form.settings['scale.forces'])
+            scale = float(scale)
+            form.settings['scale.forces'] = scale
+
+        else:
+            raise NotImplementedError
 
         scene.update()
+
+    scene.save()
 
 
 # ==============================================================================

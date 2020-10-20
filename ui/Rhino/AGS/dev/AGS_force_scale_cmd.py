@@ -3,7 +3,6 @@ from __future__ import absolute_import
 from __future__ import division
 
 import scriptcontext as sc
-import rhinoscriptsyntax as rs
 
 import compas_rhino
 
@@ -18,21 +17,28 @@ def RunCommand(is_interactive):
         return
 
     scene = sc.sticky['AGS']['scene']
-    force = scene.find_by_name('Force')[0]
 
-    if not force:
-        print("There is no ForceDiagram in the scene.")
+    objects = scene.find_by_name('Force')
+    if not objects:
+        compas_rhino.display_message("There is no ForceDiagram in the scene.")
+        return
+    force = objects[0]
+
+    options = ["Factor", "3Points"]
+    option = compas_rhino.rs.GetString("Scale ForceDiagram:", strings=options)
+
+    if not option:
         return
 
-    vertex = force.select_vertex(message="Pick base node.")
-    if vertex:
-        force.artist.anchor_point = force.artist.vertex_xyz[vertex]
-        force.artist.anchor_vertex = vertex
+    if option == "Factor":
+        scale_factor = compas_rhino.rs.GetReal("Scale factor", force.scale)
+        force.scale = scale_factor
 
-        scale_factor = compas_rhino.rs.GetReal("Scale factor", force.artist.scale)
-        force.artist.scale = scale_factor
+    elif option == "3Points":
+        force.scale_from_3_points(message="Select the base node of the Force Diagram for the scaling opetation.")
 
     scene.update()
+    scene.save()
 
 
 # ==============================================================================

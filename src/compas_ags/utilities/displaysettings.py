@@ -2,90 +2,95 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+from compas.geometry import distance_point_point_xy
+
 
 __all__ = [
-    'calculate_drawingscale',
-    'find_anchor_point',
-    'calculate_drawingscale_forces',
+    'compute_force_drawingscale',
+    'compute_force_drawinglocation',
+    'compute_form_forcescale',
 ]
 
 
-def calculate_drawingscale(form, force):
-    """Calculate an appropriate scale factor to create the force diagram.
+def compute_force_drawingscale(form, force):
+    """Compute an appropriate scale factor to create the force diagram.
 
     Parameters
     ----------
-    form: compas_ags.diagrams.FormDiagram
-        The form diagram to draw.
-    force: compas_ags.diagrams.ForceDiagram
-        The force diagram to draw.
+    form: :class:`compas_ags.rhino.FormObject`
+    force: :class:`compas_ags.rhino.ForceObject`
 
     Returns
     -------
-    scale : float
+    scale: float
         Appropriate scale factor to draw form and force diagram next to each other
-
     """
+    # form_x = form.diagram.vertices_attribute('x')
+    # form_y = form.diagram.vertices_attribute('y')
+    # form_xdim = max(form_x) - min(form_x)
+    # form_ydim = max(form_y) - min(form_y)
+    # force_x = force.diagram.vertices_attribute('x')
+    # force_y = force.diagram.vertices_attribute('y')
+    # force_xdim = max(force_x) - min(force_x)
+    # force_ydim = max(force_y) - min(force_y)
+    # scale = 1 / max([force_xdim / form_xdim, force_ydim / form_ydim])
+    form_bbox = form.diagram.bounding_box_xy()
+    force_bbox = force.diagram.bounding_box_xy()
+    form_diagonal = distance_point_point_xy(form_bbox[0], form_bbox[2])
+    force_diagonal = distance_point_point_xy(force_bbox[0], force_bbox[2])
+    return 0.75 * form_diagonal / force_diagonal
 
-    form_x = form.vertices_attribute('x')
-    form_y = form.vertices_attribute('y')
-    form_xdim = max(form_x) - min(form_x)
-    form_ydim = max(form_y) - min(form_y)
 
-    force_x = force.vertices_attribute('x')
-    force_y = force.vertices_attribute('y')
-    force_xdim = max(force_x) - min(force_x)
-    force_ydim = max(force_y) - min(force_y)
-
-    scale = 1 / max([force_xdim / form_xdim, force_ydim / form_ydim])
-
-    return scale
-
-
-def find_anchor_point(form, force):
-    """Calculate an appropriate position to draw the force diagram.
+def compute_force_drawinglocation(form, force):
+    """Compute an appropriate location for the force diagram.
 
     Parameters
     ----------
-    form: compas_ags.diagrams.FormDiagram
-        The form diagram to draw.
-    force: compas_ags.diagrams.ForceDiagram
-        The force diagram to draw.
+    form: :class:`compas_ags.rhino.FormObject`
+    force: :class:`compas_ags.rhino.ForceObject`
 
     Returns
     -------
-    [X, Y, Z] : list
-        Proposed position hang the anchor point of the force diagram
-
+    :class:`compas.geometry.Point`
     """
+    point = force.location
 
-    form_x = form.vertices_attribute('x')
-    form_y = form.vertices_attribute('y')
-    form_xdim = max(form_x) - min(form_x)
-    form_xmax = max(form_x)
-    form_ymid = 0.5 * (max(form_y) - min(form_y)) + min(form_y)
+    form_xyz = list(form.vertex_xyz.values())
+    force_xyz = list(force.vertex_xyz.values())
+    form_xmax = max([xyz[0] for xyz in form_xyz])
+    form_xmin = min([xyz[0] for xyz in form_xyz])
+    form_ymin = min([xyz[1] for xyz in form_xyz])
+    force_xmin = min([xyz[0] for xyz in force_xyz])
+    force_ymin = min([xyz[1] for xyz in force_xyz])
 
-    return [form_xdim + form_xmax, form_ymid, 0]
+    spacing = 0.5 * (form_xmax - form_xmin)
+
+    point[0] += form_xmax + spacing - force_xmin
+    point[1] += form_ymin - force_ymin
+    return point
 
 
-def calculate_drawingscale_forces(form):
+def compute_form_forcescale(form):
     """Calculate an appropriate scale to the thickness of the forces in the form diagram.
 
     Parameters
     ----------
-    form: compas_ags.diagrams.FormDiagram
-        The form diagram to draw.
-    force: compas_ags.diagrams.ForceDiagram
-        The force diagram to draw.
+    form: :class:`compas_ags.rhino.FormObject`
 
     Returns
     -------
-    scale : float
+    scale: float
         Appropriate scale factor to thickness of form diagram lines.
-
     """
+    q = [abs(form.diagram.edge_attribute(uv, 'q')) for uv in form.diagram.edges_where({'is_external': False})]
 
-    q = [abs(form.edge_attribute(uv, 'q')) for uv in form.edges_where({'is_external': False})]
-    scale = 0.1/max(q)  # highest force/length radio equals 10% of length
-
+    scale = 0.1 / max(q)
     return scale
+
+
+# ==============================================================================
+# Main
+# ==============================================================================
+
+if __name__ == '__main__':
+    pass

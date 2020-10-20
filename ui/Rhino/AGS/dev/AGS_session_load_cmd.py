@@ -14,9 +14,6 @@ from compas.utilities import DataDecoder
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
-from compas_ags.utilities import calculate_drawingscale
-from compas_ags.utilities import calculate_drawingscale_forces
-
 
 __commandname__ = "AGS_session_load"
 
@@ -50,36 +47,51 @@ def RunCommand(is_interactive):
     with open(filepath, "r") as f:
         session = json.load(f, cls=DataDecoder)
 
-    if 'data' in session:
-        data = session['data']
+    if not session['data']['form']:
+        compas_rhino.display_message('The session file has no form diagram.')
 
-        if 'form' in data and data['form']:
-            form = FormDiagram.from_data(data['form'])
-            form_id = scene.add(form, name='Form', layer='AGS::FormDiagram')
-            form = scene.find(form_id)
+    scene.clear()
 
-            # calculate the scale factor for FormDiagram
-            drawingscale_forces = calculate_drawingscale_forces(form.diagram)
-            form.artist.settings['scale.forces'] = drawingscale_forces
+    formdiagram = FormDiagram.from_data(session['data']['form'])
 
-        scene.clear()
-        scene.update()
+    form_id = scene.add(formdiagram, name='Form', layer='AGS::FormDiagram')
+    form = scene.find(form_id)
 
-        if 'force' in data and data['force']:
-            force = ForceDiagram.from_data(data['force'])
-            force.dual = form.diagram
-            force_id = scene.add(force, name='Force', layer='AGS::ForceDiagram')
-            force = scene.find(force_id)
+    if 'settings' in session['scene']['form']:
+        form.settings.update(session['scene']['form']['settings'])
 
-            # choose location of ForceDiagram
-            force.artist.anchor_vertex = 0
-            force.artist.anchor_point = compas_rhino.rs.GetPoint("Set Force Diagram Location")
+    if 'anchor' in session['scene']['form']:
+        form.anchor = session['scene']['form']['anchor']
 
-            # calculate the scale factor for ForceDiagram
-            scale_factor = calculate_drawingscale(form.diagram, force.diagram)
-            force.artist.scale = scale_factor
+    if 'location' in session['scene']['form']:
+        form.location = session['scene']['form']['location']
 
-        scene.update()
+    if 'scale' in session['scene']['form']:
+        form.scale = session['scene']['form']['scale']
+
+    if session['data']['force']:
+        forcediagram = ForceDiagram.from_data(session['data']['force'])
+
+        forcediagram.dual = formdiagram
+        formdiagram.dual = forcediagram
+
+        force_id = scene.add(forcediagram, name='Force', layer='AGS::ForceDiagram')
+        force = scene.find(force_id)
+
+        if 'settings' in session['scene']['force']:
+            force.settings.update(session['scene']['force']['settings'])
+
+        if 'anchor' in session['scene']['force']:
+            force.anchor = session['scene']['force']['anchor']
+
+        if 'location' in session['scene']['force']:
+            force.location = session['scene']['force']['location']
+
+        if 'scale' in session['scene']['form']:
+            force.scale = session['scene']['force']['scale']
+
+    scene.update()
+    scene.save()
 
 
 # ==============================================================================
