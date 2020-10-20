@@ -49,10 +49,12 @@
             {"name": "AGS_form_from_layer",             "menu_text": "FormDiagram From Layer"},
             {"name": "AGS_form_from_lines",             "menu_text": "FormDiagram From Lines"},
 
-            {"name": "AGS_form_assign_forces",          "menu_text": "Assign Forces",                   "icon": 4,      "tooltip": "Assign Forces"},
+            {"name": "AGS_toolbar_form_assign_forces",  "menu_text": "Select and Assign Forces",         "icon": 4,      "tooltip": "Select and Assign Forces"},
+            {"name": "AGS_form_select_ind",             "menu_text": "Select Independents Edges"},
+            {"name": "AGS_form_assign_forces",          "menu_text": "Assign Forces to Independent Edges"},
+
             {"name": "AGS_form_move_nodes",             "menu_text": "Move FormDiagram Nodes",          "icon": 7,      "tooltip": "Move FormDiagram Nodes"},
             {"name": "AGS_form_select_fixed",           "menu_text": "Fix FormDiagram Nodes",           "icon": 8,      "tooltip": "Fix FormDiagram Nodes"},
-            {"name": "AGS_form_select_ind",             "menu_text": "Select Independent Edges"},
 
             {"name": "AGS_form_check_dof",              "menu_text": "Check Degree of Freedom",         "icon": 5,      "tooltip": "Check DoF"},
             {"name": "AGS_form_update_from_force",      "menu_text": "Update FormDiagram"},
@@ -116,7 +118,14 @@
                         ]
                     },
 
-                    {"command": "AGS_form_assign_forces"},
+                    {
+                        "name": "Select and Assign Forces",
+                        "items":
+                        [
+                            {"command": "AGS_form_select_ind"},
+                            {"command": "AGS_form_assign_forces"}
+                        ]
+                    },
 
                     {"type": "separator"},
 
@@ -206,7 +215,8 @@
                     {"type": "separator"},
 
                     {"left": "AGS_toolbar_form"},
-                    {"left": "AGS_form_assign_forces"},
+
+                    {"left": "AGS_toolbar_form_assign_forces"},
 
                     {"type": "separator"},
 
