@@ -90,7 +90,6 @@ class Tree_Table(forms.TreeGridView):
         attributes = list(datastructure.default_edge_attributes.keys())
         attributes = table.sort_attributes(attributes)
 
-
         Allowed = ["is_ind", "f", "is_external"]
         attributes = filter(lambda attr: attr in Allowed, attributes)
 
@@ -101,12 +100,12 @@ class Tree_Table(forms.TreeGridView):
 
         treecollection = forms.TreeGridItemCollection()
         for index, edge in enumerate(datastructure.edges()):
-            values = [index,str(edge)]
+            values = [index, str(edge)]
 
             for attr in attributes:
                 value = datastructure.edge_attribute(edge, attr)
                 if isinstance(value, float):
-                    value = float("%.4g"%(value))
+                    value = float("%.4g" % (value))
                 values.append(value)
 
             edge_item = forms.TreeGridItem(Values=tuple(values))
