@@ -17,11 +17,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="Diagram.face_plane" href="compas_ags.diagrams.Diagram.face_plane.html" />
+    <link rel="next" title="FormDiagram.face_skewness" href="compas_ags.diagrams.FormDiagram.face_skewness.html" />
   
   
   
-    <link rel="prev" title="Diagram.face_neighbors" href="compas_ags.diagrams.Diagram.face_neighbors.html" />
+    <link rel="prev" title="FormDiagram.face_normal" href="compas_ags.diagrams.FormDiagram.face_normal.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -78,22 +78,18 @@
       <main class="col-12 col-md-9 col-xl-7 px-2 px-md-5 py-5 compas-content" role="main">
         
         
-        <div class="detail section" id="diagram-face-normal">
-<h1 class="display-4 p-0 mb-5">Diagram.face_normal</h1>
+        <div class="detail section" id="formdiagram-face-plane">
+<h1 class="display-4 p-0 mb-5">FormDiagram.face_plane</h1>
 <dl class="method">
-<dt id="compas_ags.diagrams.Diagram.face_normal">
-<code class="sig-prename descclassname">Diagram.</code><code class="sig-name descname">face_normal</code><span class="sig-paren">(</span><em class="sig-param">fkey</em>, <em class="sig-param">unitized=True</em><span class="sig-paren">)</span></dt>
-<dd><p>Compute the normal of a face.</p>
+<dt id="compas_ags.diagrams.FormDiagram.face_plane">
+<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">face_plane</code><span class="sig-paren">(</span><em class="sig-param">face</em><span class="sig-paren">)</span></dt>
+<dd><p>A plane defined by the centroid and the normal of the face.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fkey</strong> (<em>int</em>) – The identifier of the face.</p></li>
-<li><p><strong>unitized</strong> (<em>bool, optional</em>) – Unitize the normal vector.
-Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>face</strong> (<em>int</em>) – The face identifier.</p>
 </dd>
 <dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>list</em> – The components of the normal vector.</p>
+<dd class="field-even"><p><em>tuple</em> – point, vector</p>
 </dd>
 </dl>
 </dd></dl>
@@ -143,7 +139,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.face_normal</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">FormDiagram.face_plane</a></li>
 </ul>
 
       </div>

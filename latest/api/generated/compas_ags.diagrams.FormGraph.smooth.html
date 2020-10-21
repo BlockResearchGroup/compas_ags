@@ -17,11 +17,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="Diagram.face_plane" href="compas_ags.diagrams.Diagram.face_plane.html" />
+    <link rel="next" title="FormGraph.split_edge" href="compas_ags.diagrams.FormGraph.split_edge.html" />
   
   
   
-    <link rel="prev" title="Diagram.face_neighbors" href="compas_ags.diagrams.Diagram.face_neighbors.html" />
+    <link rel="prev" title="FormGraph.shortest_path" href="compas_ags.diagrams.FormGraph.shortest_path.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -78,24 +78,31 @@
       <main class="col-12 col-md-9 col-xl-7 px-2 px-md-5 py-5 compas-content" role="main">
         
         
-        <div class="detail section" id="diagram-face-normal">
-<h1 class="display-4 p-0 mb-5">Diagram.face_normal</h1>
+        <div class="detail section" id="formgraph-smooth">
+<h1 class="display-4 p-0 mb-5">FormGraph.smooth</h1>
 <dl class="method">
-<dt id="compas_ags.diagrams.Diagram.face_normal">
-<code class="sig-prename descclassname">Diagram.</code><code class="sig-name descname">face_normal</code><span class="sig-paren">(</span><em class="sig-param">fkey</em>, <em class="sig-param">unitized=True</em><span class="sig-paren">)</span></dt>
-<dd><p>Compute the normal of a face.</p>
+<dt id="compas_ags.diagrams.FormGraph.smooth">
+<code class="sig-prename descclassname">FormGraph.</code><code class="sig-name descname">smooth</code><span class="sig-paren">(</span><em class="sig-param">fixed=None</em>, <em class="sig-param">kmax=100</em>, <em class="sig-param">damping=0.5</em>, <em class="sig-param">callback=None</em>, <em class="sig-param">callback_args=None</em><span class="sig-paren">)</span></dt>
+<dd><p>Smooth a network by moving every free node to the centroid of its neighbors.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>fkey</strong> (<em>int</em>) – The identifier of the face.</p></li>
-<li><p><strong>unitized</strong> (<em>bool, optional</em>) – Unitize the normal vector.
-Default is <code class="docutils literal notranslate"><span class="pre">True</span></code>.</p></li>
+<li><p><strong>network</strong> (<em>Mesh</em>) – A network object.</p></li>
+<li><p><strong>fixed</strong> (<em>list, optional</em>) – The fixed nodes of the network.</p></li>
+<li><p><strong>kmax</strong> (<em>int, optional</em>) – The maximum number of iterations.</p></li>
+<li><p><strong>damping</strong> (<em>float, optional</em>) – The damping factor.</p></li>
+<li><p><strong>callback</strong> (<em>callable, optional</em>) – A user-defined callback function to be executed after every iteration.</p></li>
+<li><p><strong>callback_args</strong> (<em>list, optional</em>) – A list of arguments to be passed to the callback.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>list</em> – The components of the normal vector.</p>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.9)"><strong>Exception</strong></a> – If a callback is provided, but it is not callable.</p>
 </dd>
 </dl>
+<p class="rubric">Examples</p>
+<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="go">&gt;&gt;&gt;</span>
+</code></pre></div>
+</div>
 </dd></dl>
 
 </div>
@@ -143,7 +150,7 @@ Default is <code class="docutils literal notranslate"><span class="pre">True</sp
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.face_normal</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">FormGraph.smooth</a></li>
 </ul>
 
       </div>
