@@ -70,6 +70,8 @@
             {"name": "AGS_form_edge_attributes",         "menu_text": "Table Edge Attributes"},
             {"name": "AGS_form_inspector_control",       "menu_text": "Form Dual Inspector"},
             {"name": "AGS_force_inspector_control",      "menu_text": "Force Dual Inspector"},
+            {"name": "AGS_form_measure_forces",          "menu_text": "Form Measure Forces"},
+            {"name": "AGS_force_measure_forces",         "menu_text": "Force Measure Forces"},
 
             {"name": "AGS_form_displaysettings",        "menu_text": "FormDiagram Display Settings"},
             {"name": "AGS_form_move",                   "menu_text": "FormDiagram Location"},
@@ -171,8 +173,10 @@
                             {"command": "AGS_form_edge_attributes"},
                             {"type": "separator"},
                             {"command": "AGS_form_inspector_control"},
+                            {"command": "AGS_form_measure_forces"},
                             {"type": "separator"},
-                            {"command": "AGS_force_inspector_control"}
+                            {"command": "AGS_force_inspector_control"},
+                            {"command": "AGS_force_measure_forces"}
                         ]
                     },
 
