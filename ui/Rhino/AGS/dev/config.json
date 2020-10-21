@@ -57,21 +57,19 @@
             {"name": "AGS_form_select_fixed",           "menu_text": "Fix FormDiagram Nodes",           "icon": 8,      "tooltip": "Fix FormDiagram Nodes"},
 
             {"name": "AGS_form_check_dof",              "menu_text": "Check Degree of Freedom",         "icon": 5,      "tooltip": "Check DoF"},
-            {"name": "AGS_form_update_from_force",      "menu_text": "Update FormDiagram"},
-            {"name": "AGS_form_update_from_qind",       "menu_text": "Update Equilibrium"},
+            {"name": "AGS_form_update_from_force",      "menu_text": "Update FormDiagram from Force"},
+            {"name": "AGS_form_update_from_qind",       "menu_text": "Update FormDiagram Internal Eq."},
 
             {"name": "AGS_force_from_form",             "menu_text": "Create ForceDiagram",             "icon": 6,      "tooltip": "Create ForceDiagram"},
-            {"name": "AGS_force_update",                "menu_text": "Update ForceDiagram"},
+            {"name": "AGS_force_update",                "menu_text": "Update ForceDiagram from Form"},
 
             {"name": "AGS_force_move_nodes",            "menu_text": "Move Nodes",                      "icon": 9,      "tooltip": "Move ForceDiagram Nodes"},
 
             {"name": "AGS_form_compute_loadpath",       "menu_text": "Compute Loadpath",                "icon": 10,     "tooltip": "Compute Loadpath"},
 
-            {"name": "AGS_form_measure_forces",          "menu_text": "Form Measure Forces",                            "tooltip": "Form Measure Forces"},
-            {"name": "AGS_force_measure_forces",         "menu_text": "Force Measure Forces",                           "tooltip": "Force Measure Forces"},
-            {"name": "AGS_form_edge_attributes",         "menu_text": "Table with Edge Attributes",                     "tooltip": "Table with Edge Attributes"},
-            {"name": "AGS_form_inspector_control",       "menu_text": "Form Dual Inspector",                            "tooltip": "Form Dual Inspector"},
-            {"name": "AGS_force_inspector_control",      "menu_text": "Force Dual Inspector",                           "tooltip": "Force Dual Inspector"},
+            {"name": "AGS_form_edge_attributes",         "menu_text": "Table Edge Attributes"},
+            {"name": "AGS_form_inspector_control",       "menu_text": "Form Dual Inspector"},
+            {"name": "AGS_force_inspector_control",      "menu_text": "Force Dual Inspector"},
 
             {"name": "AGS_form_displaysettings",        "menu_text": "FormDiagram Display Settings"},
             {"name": "AGS_form_move",                   "menu_text": "FormDiagram Location"},
@@ -79,6 +77,9 @@
             {"name": "AGS_force_move",                  "menu_text": "ForceDiagram Location"},
             {"name": "AGS_force_select_anchor",         "menu_text": "Select ForceDiagram Anchor Point"},
             {"name": "AGS_force_scale",                 "menu_text": "ForceDiagram Scale"},
+
+            {"name": "AGS__undo",                       "menu_text": "AGS Undo",                                         "tooltip": "Undo last action"},
+            {"name": "AGS__redo",                       "menu_text": "AGS Redo",                                         "tooltip": "Redo last action"},
 
             {"name": "AGS_toolbar_form",                "menu_text": "FormDiagram Create",              "icon": 3,      "tooltip": "Create FormDiagram"},
             {"name": "AGS_toolbar_display",             "menu_text": "Display Settings",                "icon": 11,     "tooltip": "Display Settings"},
@@ -123,7 +124,8 @@
                         [
                             {"command": "AGS_form_select_ind"},
                             {"command": "AGS_form_assign_forces"}
-                        ]
+                        ],
+                        "icon": 4
                     },
 
                     {"type": "separator"},
@@ -146,6 +148,7 @@
                     },
 
                     {"command": "AGS_form_update_from_force"},
+                    {"command": "AGS_form_update_from_qind"},
 
                     {"type": "separator"},
 
@@ -161,21 +164,19 @@
 
                     {"type": "separator"},
 
-                    {"command": "AGS_form_compute_loadpath"},
-
                     {
                         "name": "Inspect Diagrams",
                         "items":
                         [
                             {"command": "AGS_form_edge_attributes"},
                             {"type": "separator"},
-                            {"command": "AGS_form_measure_forces"},
                             {"command": "AGS_form_inspector_control"},
                             {"type": "separator"},
-                            {"command": "AGS_force_measure_forces"},
                             {"command": "AGS_force_inspector_control"}
                         ]
                     },
+
+                    {"command": "AGS_form_compute_loadpath"},
 
                     {"type": "separator"},
 
@@ -192,6 +193,13 @@
                             {"command": "AGS_force_scale"}
                         ]
                     },
+
+                    {"type": "separator"},
+
+                    {"command": "AGS__undo"},
+                    {"command": "AGS__redo"},
+
+                    {"type": "separator"},
 
                     {"command": "AGS_scene_redraw"},
                     {"command": "AGS__restart"}

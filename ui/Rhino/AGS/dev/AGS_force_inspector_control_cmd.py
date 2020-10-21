@@ -9,7 +9,7 @@ import compas_rhino
 import AGS_force_inspector_on_cmd
 import AGS_force_inspector_off_cmd
 
-__commandname__ = "AGS_form_inspector_control"
+__commandname__ = "AGS_force_inspector_control"
 
 
 def RunCommand(is_interactive):

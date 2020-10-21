@@ -51,6 +51,7 @@ class Tree_Table(forms.TreeGridView):
                     items_where = getattr(sceneNode.diagram, '%s_where' % table_type)
                     color.update({str(key): settings.get(full_setting_key) for key in items_where({sub_setting_key: True})})
                     color.update({str(key): settings.get(full_setting_key) for key in items_where({'_'+sub_setting_key: True})})  # including read-only ones
+                    color.update({str(key): settings.get("color.edges:is_ind") for key in items_where({"is_ind": True})})  # overwrite is_ind lastly
 
             # Additional settings for AGS
             tol = 0.001
@@ -67,8 +68,8 @@ class Tree_Table(forms.TreeGridView):
                 # if not e.Column.Editable and attr != 'key':
                 #     e.ForegroundColor = drawing.Colors.DarkGray
 
-                if attr == 'key':
-                    key = e.Item.Values[0]
+                if attr == 'EdgeLabel':
+                    key = e.Item.Values[1]
                     if key in color:
                         rgb = color[key]
                         rgb = [c/255. for c in rgb]
@@ -83,24 +84,30 @@ class Tree_Table(forms.TreeGridView):
     def create_force_table(cls, sceneNode):
         datastructure = sceneNode.diagram
         table = cls(sceneNode=sceneNode, table_type='edges')
-        table.add_column('key')
+        table.add_column('EdgeLabel')
+        table.add_column('Vertices')
 
         attributes = list(datastructure.default_edge_attributes.keys())
         attributes = table.sort_attributes(attributes)
 
-        print(attributes)
+        Allowed = ["is_ind", "f", "is_external"]
+        attributes = filter(lambda attr: attr in Allowed, attributes)
 
         for attr in attributes:
             checkbox = type(datastructure.default_edge_attributes[attr]) == bool
-            print(attr)
             attr = attr.replace("_", "-")
             table.add_column(attr, Editable=False, checkbox=checkbox)
 
         treecollection = forms.TreeGridItemCollection()
-        for key, edge in enumerate(datastructure.edges()):
-            values = [str(edge)]
+        for index, edge in enumerate(datastructure.edges()):
+            values = [index, str(edge)]
+
             for attr in attributes:
-                values.append(datastructure.edge_attribute(edge, attr))
+                value = datastructure.edge_attribute(edge, attr)
+                if isinstance(value, float):
+                    value = float("%.4g" % (value))
+                values.append(value)
+
             edge_item = forms.TreeGridItem(Values=tuple(values))
             treecollection.Add(edge_item)
             # for key in edge:
@@ -186,17 +193,17 @@ class Tree_Table(forms.TreeGridView):
         def on_selected(sender, event):
             try:
                 rs.UnselectAllObjects()
-                key = event.Item.Values[0]
-                guid2key = getattr(sceneNode.artist, guid_field)
+                key = event.Item.Values[1]
+                guid2key = getattr(sceneNode, guid_field)
                 key2guid = {str(guid2key[guid]): guid for guid in guid2key}
                 if key in key2guid:
                     find_object(key2guid[key]).Select(True)
-                elif children_guid_field:
-                    if key == '':
-                        key = event.Item.Values[1]
-                    guid2key = getattr(sceneNode.artist, children_guid_field)
-                    key2guid = {str(guid2key[guid]): guid for guid in guid2key}
-                    find_object(key2guid[key]).Select(True)
+                # elif children_guid_field:
+                #     if key == '':
+                #         key = event.Item.Values[1]
+                #     guid2key = getattr(sceneNode.artist, children_guid_field)
+                #     key2guid = {str(guid2key[guid]): guid for guid in guid2key}
+                #     find_object(key2guid[key]).Select(True)
                 print('selected', key, key2guid[key])
                 rs.Redraw()
             except Exception as e:
