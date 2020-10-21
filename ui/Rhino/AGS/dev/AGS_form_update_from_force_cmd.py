@@ -5,6 +5,7 @@ from __future__ import division
 import scriptcontext as sc
 
 import compas_rhino
+from compas_ags.utilities.equilibrium import check_deviations
 
 
 __commandname__ = "AGS_force_move_nodes"
@@ -34,6 +35,8 @@ def RunCommand(is_interactive):
     proxy.package = 'compas_ags.ags.graphstatics'
 
     form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
+    if not check_deviations(form.diagram, force.diagram):
+        compas_rhino.display_message('Error: Diagrams are not parallel.\nInvalid movement on force diagram nodes or insuficient constraints in the form diagram.')
 
     scene.update()
     scene.save()
