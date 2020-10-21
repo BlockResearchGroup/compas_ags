@@ -36,7 +36,7 @@ def RunCommand(is_interactive):
 
     form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
     if not check_deviations(form.diagram, force.diagram):
-        compas_rhino.display_message('Error: Diagrams are not parallel.\nWrong movement on force diagram nodes or insuficient constraints in the form diagram.')
+        compas_rhino.display_message('Error: Diagrams are not parallel.\nInvalid movement on force diagram nodes or insuficient constraints in the form diagram.')
 
     scene.update()
     scene.save()
