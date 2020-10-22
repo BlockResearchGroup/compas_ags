@@ -35,7 +35,7 @@ class Tree_Table(forms.TreeGridView):
         if sceneNode and table_type:
             settings = sceneNode.settings
 
-            print(sceneNode.settings)
+            # print(sceneNode.settings)
 
             # update general color settings for this table
             general_setting_key = "color.%s" % table_type
@@ -204,7 +204,8 @@ class Tree_Table(forms.TreeGridView):
                 #     guid2key = getattr(sceneNode.artist, children_guid_field)
                 #     key2guid = {str(guid2key[guid]): guid for guid in guid2key}
                 #     find_object(key2guid[key]).Select(True)
-                print('selected', key, key2guid[key])
+
+                # print('selected', key, key2guid[key])
                 rs.Redraw()
             except Exception as e:
                 print(e)

@@ -18,9 +18,18 @@ def RunCommand(is_interactive):
         return
 
     scene = sc.sticky['AGS']['scene']
-    
     form = scene.find_by_name("Form")[0]
+
+    # Turn on edge labels
+    original_setting = form.settings["show.edgelabels"]
+    form.settings["show.edgelabels"] = True
+    scene.update()
+
     AttributesForm.from_sceneNode(form)
+
+    # Revert to original setting
+    form.settings["show.edgelabels"] = original_setting
+    scene.update()
 
     
 
