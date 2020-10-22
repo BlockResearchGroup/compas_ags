@@ -209,7 +209,7 @@ class ForceDiagram(Diagram):
         """
         return self.dual.edge_attribute(self.dual_edge(edge), 'is_ind')
 
-    def dual_edge_f(self, edge):
+    def dual_edge_force(self, edge):
         """Retrieve the force in the corresponding edge of the diagram's dual.
 
         Parameters
@@ -223,7 +223,7 @@ class ForceDiagram(Diagram):
         """
         return self.dual.edge_attribute(self.dual_edge(edge), 'f')
 
-    def dual_edge_a(self, edge):
+    def dual_edge_angledeviation(self, edge):
         """Retrieve the angle deviation in the corresponding edge of the diagram's dual.
 
         Parameters
