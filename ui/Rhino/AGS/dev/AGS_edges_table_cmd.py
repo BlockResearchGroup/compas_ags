@@ -8,7 +8,7 @@ import compas_rhino
 from compas_ags.rhino import AttributesForm
 
 
-__commandname__ = "AGS_form_edge_attributes"
+__commandname__ = "AGS_edges_table"
 
 
 def RunCommand(is_interactive):
@@ -18,11 +18,11 @@ def RunCommand(is_interactive):
         return
 
     scene = sc.sticky['AGS']['scene']
-    
+
     form = scene.find_by_name("Form")[0]
     AttributesForm.from_sceneNode(form)
 
-    
+
 
 
 # ==============================================================================
