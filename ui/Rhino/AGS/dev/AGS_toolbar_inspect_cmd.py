@@ -6,29 +6,34 @@ import scriptcontext as sc
 
 import compas_rhino
 
-import AGS_form_inspector_on_cmd
-import AGS_form_inspector_off_cmd
+import AGS_edges_table_cmd
+import AGS_edge_information_cmd
+import AGS_form_inspector_control_cmd
 
-__commandname__ = "AGS_form_inspector_control"
+
+__commandname__ = "AGS_toolbar_form"
 
 
 def RunCommand(is_interactive):
+
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    scene = sc.sticky['AGS']['scene']
+    options = ["FromObj", "FromLines", "FromLayer"]
+    option = compas_rhino.rs.GetString("Create Form:", strings=options)
 
-    objects = scene.find_by_name('Form')
-    if not objects:
-        compas_rhino.display_message("There is no FormDiagram in the scene.")
+    if not option:
         return
 
-    answer = compas_rhino.rs.GetString("Force Polygons Inspector", "Cancel", ["ON", "OFF", "Cancel"])
-    if answer == "ON":
-        AGS_form_inspector_on_cmd.RunCommand(True)
-    if answer == "OFF":
-        AGS_form_inspector_off_cmd.RunCommand(True)
+    if option == "EdgesTable":
+        AGS_edges_table_cmd.RunCommand(True)
+
+    elif option == "EdgeInformation":
+        AGS_edge_information_cmd.RunCommand(True)
+
+    elif option == "ForcePolygons":
+        AGS_form_inspector_control_cmd.RunCommand(True)
 
 
 # ==============================================================================
