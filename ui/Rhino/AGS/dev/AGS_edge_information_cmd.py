@@ -7,7 +7,7 @@ import scriptcontext as sc
 import compas_rhino
 
 
-__commandname__ = "AGS_force_measure_forces"
+__commandname__ = "AGS_edge_information"
 
 
 def RunCommand(is_interactive):
@@ -34,43 +34,46 @@ def RunCommand(is_interactive):
     form.settings['show.edges'] = True
     form.settings['show.forcelabels'] = False
     form.settings['show.edgelabels'] = False
+    force.settings['show.edges'] = True
+    force.settings['show.forcelabels'] = False
+    force.settings['show.edgelabels'] = False
     scene.update()
 
+    curvefilter = compas_rhino.rs.filter.curve
+
     while True:
-        edge = form.select_edge()
-        if not edge:
+        guid = compas_rhino.rs.GetObject(message="Select an edge in Form or Force Diagrams", preselect=True, select=True, filter=curvefilter)
+
+        if not guid:
+            break
+        elif guid not in form.guid_edge and guid not in force.guid_edge:
+            compas_rhino.display_message("Edge does not belog to form or force diagram.")
             break
 
-        edge_index = form.diagram.edge_index()
-        index = edge_index[edge]
+        if guid in form.guid_edge:
+            edge_form = form.guid_edge[guid]
+            index = form.diagram.edge_index()[edge_form]
+            edge_force = list(force.diagram.ordered_edges(form.diagram))[index]
+        if guid in force.guid_edge:
+            edge_force = force.guid_edge[guid]
+            edge_form = force.diagram.dual_edge(edge_force)
+            index = form.diagram.edge_index()[edge_form]
 
-        f = form.diagram.edge_attribute(edge, 'f')
-        l = f * scale
+        f = form.diagram.edge_attribute(edge_form, 'f')
+        l = abs(f * scale)
 
-        text = {edge: "{:.4g}kN".format(abs(f))}
-        color = {}
         tol = form.settings['tol.forces']
-
-        if form.diagram.edge_attribute(edge, 'is_external'):
-            color[edge] = form.settings['color.edges:is_external']
-        if form.diagram.edge_attribute(edge, 'is_load'):
-            color[edge] = form.settings['color.edges:is_load']
-        if form.diagram.edge_attribute(edge, 'is_reaction'):
-            color[edge] = form.settings['color.edges:is_reaction']
-        if form.diagram.edge_attribute(edge, 'is_ind'):
-            color[edge] = form.settings['color.edges:is_ind']
-
-        if not form.diagram.edge_attribute(edge, 'is_external'):
+        state = ''
+        if not form.diagram.edge_attribute(edge_form, 'is_external'):
             if f > + tol:
-                color[edge] = form.settings['color.tension']
+                state = 'in tension'
             elif f < - tol:
-                color[edge] = form.settings['color.compression']
+                state = 'in compression'
 
-        guid_edgelabel = form.artist.draw_edgelabels(text=text, color=color)
-        form.guid_edgelabel = zip(guid_edgelabel, edge)
-        form.redraw()
+        form.draw_highlight_edge(edge_form)
+        force.draw_highlight_edge(edge_force)
 
-        compas_rhino.display_message("Edge Index: {0}\nForce Diagram Edge Length: {1:.3g}m\nForce Drawing Scale: {2:.3g}\nForce Magnitude: {3:.3g}kN".format(index, l, scale, f))
+        compas_rhino.display_message("Edge Index: {0}\nForce Diagram Edge Length: {1:.3g}\nForce Drawing Scale: {2:.3g}\nForce Magnitude: {3:.3g}kN {4}".format(index, l, scale, abs(f), state))
 
         answer = compas_rhino.rs.GetString("Continue selecting edges?", "No", ["Yes", "No"])
         if not answer:
