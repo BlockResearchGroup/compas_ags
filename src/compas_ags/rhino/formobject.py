@@ -5,6 +5,7 @@ from __future__ import division
 import compas_rhino
 from compas_ags.rhino.diagramobject import DiagramObject
 from compas_ags.rhino.forminspector import FormDiagramVertexInspector
+from compas.utilities import geometric_key
 
 
 __all__ = ['FormObject']
@@ -148,7 +149,18 @@ class FormObject(DiagramObject):
                         color[edge] = self.settings['color.compression']
 
             guids = self.artist.draw_edges(color=color)
-            self.guid_edge = zip(guids, edges)
+            if len(guids) == len(edges):
+                self.guid_edge = zip(guids, edges)
+            else:
+                drawn_edges = []
+                for edge in edges:
+                    u, v = edge
+                    pt1, pt2 = self.diagram.edge_coordinates(u, v)
+                    if geometric_key(pt1) == geometric_key(pt2):
+                        pass
+                    else:
+                        drawn_edges.append(edge)
+                self.guid_edge = zip(guids, drawn_edges)
 
             guid_edgelabel = []
 
@@ -211,5 +223,36 @@ class FormObject(DiagramObject):
                 tol=self.settings['tol.forces'])
 
             self.guid_force = zip(guids, edges)
+
+        self.redraw()
+
+    def draw_highlight_edge(self, edge):
+
+        f = self.diagram.edge_attribute(edge, 'f')
+
+        text = {edge: "{:.4g}kN".format(abs(f))}
+
+        color = {}
+
+        color[edge] = self.settings['color.edges']
+
+        if self.diagram.edge_attribute(edge, 'is_external'):
+            color[edge] = self.settings['color.edges:is_external']
+        if self.diagram.edge_attribute(edge, 'is_load'):
+            color[edge] = self.settings['color.edges:is_load']
+        if self.diagram.edge_attribute(edge, 'is_reaction'):
+            color[edge] = self.settings['color.edges:is_reaction']
+        if self.diagram.edge_attribute(edge, 'is_ind'):
+            color[edge] = self.settings['color.edges:is_ind']
+
+        tol = self.settings['tol.forces']
+        for edge in self.diagram.edges_where({'is_external': False}):
+            if f > + tol:
+                color[edge] = self.settings['color.tension']
+            elif f < - tol:
+                color[edge] = self.settings['color.compression']
+
+        guid_edgelabel = self.artist.draw_edgelabels(text=text, color=color)
+        self.guid_edgelabel = zip(guid_edgelabel, edge)
 
         self.redraw()

@@ -58,7 +58,6 @@
 
             {"name": "AGS_form_check_dof",              "menu_text": "Check Degree of Freedom",         "icon": 5,      "tooltip": "Check DoF"},
             {"name": "AGS_form_update_from_force",      "menu_text": "Update FormDiagram from Force"},
-            {"name": "AGS_form_update_from_qind",       "menu_text": "Update FormDiagram Internal Eq."},
 
             {"name": "AGS_force_from_form",             "menu_text": "Create ForceDiagram",             "icon": 6,      "tooltip": "Create ForceDiagram"},
             {"name": "AGS_force_update",                "menu_text": "Update ForceDiagram from Form"},
@@ -67,9 +66,9 @@
 
             {"name": "AGS_form_compute_loadpath",       "menu_text": "Compute Loadpath",                "icon": 10,     "tooltip": "Compute Loadpath"},
 
-            {"name": "AGS_form_edge_attributes",         "menu_text": "Table Edge Attributes"},
-            {"name": "AGS_form_inspector_control",       "menu_text": "Form Dual Inspector"},
-            {"name": "AGS_force_inspector_control",      "menu_text": "Force Dual Inspector"},
+            {"name": "AGS_edge_table",                   "menu_text": "Edges Table"},
+            {"name": "AGS_edge_information",             "menu_text": "Highlight Edge Information"},
+            {"name": "AGS_form_inspector_control",       "menu_text": "Highlight Force Polygons"},
 
             {"name": "AGS_form_displaysettings",        "menu_text": "FormDiagram Display Settings"},
             {"name": "AGS_form_move",                   "menu_text": "FormDiagram Location"},
@@ -81,6 +80,7 @@
             {"name": "AGS__undo",                       "menu_text": "AGS Undo",                                         "tooltip": "Undo last action"},
             {"name": "AGS__redo",                       "menu_text": "AGS Redo",                                         "tooltip": "Redo last action"},
 
+            {"name": "AGS_toolbar_inspector",           "menu_text": "Inspect Diagrams",                                "tooltip": "Inspect Diagrams"},
             {"name": "AGS_toolbar_form",                "menu_text": "FormDiagram Create",              "icon": 3,      "tooltip": "Create FormDiagram"},
             {"name": "AGS_toolbar_display",             "menu_text": "Display Settings",                "icon": 11,     "tooltip": "Display Settings"},
 
@@ -148,7 +148,6 @@
                     },
 
                     {"command": "AGS_form_update_from_force"},
-                    {"command": "AGS_form_update_from_qind"},
 
                     {"type": "separator"},
 
@@ -168,11 +167,9 @@
                         "name": "Inspect Diagrams",
                         "items":
                         [
-                            {"command": "AGS_form_edge_attributes"},
-                            {"type": "separator"},
-                            {"command": "AGS_form_inspector_control"},
-                            {"type": "separator"},
-                            {"command": "AGS_force_inspector_control"}
+                            {"command": "AGS_edge_table"},
+                            {"command": "AGS_edge_information"},
+                            {"command": "AGS_form_inspector_control"}
                         ]
                     },
 
@@ -241,6 +238,7 @@
 
                     {"type": "separator"},
 
+                    {"left": "AGS_toolbar_inspect"},
                     {"left": "AGS_form_compute_loadpath"},
 
                     {"type": "separator"},
