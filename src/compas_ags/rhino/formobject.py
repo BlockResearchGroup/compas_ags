@@ -150,6 +150,8 @@ class FormObject(DiagramObject):
             guids = self.artist.draw_edges(color=color)
             self.guid_edge = zip(guids, edges)
 
+            guid_edgelabel = []
+
             # edge labels
             if self.settings['show.edgelabels']:
                 text = {edge: index for index, edge in enumerate(edges)}
@@ -170,7 +172,7 @@ class FormObject(DiagramObject):
                             color[edge] = self.settings['color.compression']
 
                 guids = self.artist.draw_edgelabels(text=text, color=color)
-                self.guid_edgelabel = zip(guids, edges)
+                guid_edgelabel += zip(guids, edges)
 
             # force labels
             if self.settings['show.forcelabels']:
@@ -196,7 +198,9 @@ class FormObject(DiagramObject):
                 #             color[edge] = self.settings['color.compression']
 
                 guids = self.artist.draw_edgelabels(text=text, color=color)
-                self.guid_edgelabel = zip(guids, edges)
+                guid_edgelabel += zip(guids, edges)
+
+            self.guid_edgelabel = guid_edgelabel
 
         # force pipes
         if self.settings['show.forcepipes']:

@@ -123,6 +123,8 @@ class ForceObject(DiagramObject):
             guids = self.artist.draw_edges(color=color)
             self.guid_edge = zip(guids, edges)
 
+            guid_edgelabel = []
+
             # edge labels
             if self.settings['show.edgelabels']:
                 edge_index = self.diagram.edge_index(self.diagram.dual)
@@ -145,7 +147,7 @@ class ForceObject(DiagramObject):
                             color[edge] = self.settings['color.compression']
 
                 guids = self.artist.draw_edgelabels(text=text, color=color)
-                self.guid_edgelabel = zip(guids, edges)
+                guid_edgelabel += zip(guids, edges)
 
             # force labels
             if self.settings['show.forcelabels']:
@@ -175,6 +177,10 @@ class ForceObject(DiagramObject):
                             color[edge] = self.settings['color.compression']
 
                 guids = self.artist.draw_edgelabels(text=text, color=color)
-                self.guid_edgelabel = zip(guids, edges)
+
+                guid_edgelabel += zip(guids, edges)
+            
+            self.guid_edgelabel = guid_edgelabel
+
 
         self.redraw()
