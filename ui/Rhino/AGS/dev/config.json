@@ -66,7 +66,7 @@
 
             {"name": "AGS_form_compute_loadpath",       "menu_text": "Compute Loadpath",                "icon": 10,     "tooltip": "Compute Loadpath"},
 
-            {"name": "AGS_edge_table",                   "menu_text": "Edges Table"},
+            {"name": "AGS_edges_table",                   "menu_text": "Edges Table"},
             {"name": "AGS_edge_information",             "menu_text": "Highlight Edge Information"},
             {"name": "AGS_form_inspector_control",       "menu_text": "Highlight Force Polygons"},
 
@@ -85,7 +85,9 @@
             {"name": "AGS_toolbar_display",             "menu_text": "Display Settings",                "icon": 11,     "tooltip": "Display Settings"},
 
             {"name": "AGS_scene_redraw",                "menu_text": "Redraw",                          "icon": 12,     "tooltip": "Refresh Scene"},
-            {"name": "AGS__restart",                    "menu_text": "Clear All",                       "icon": 13,     "tooltip": "Clear Scene"}
+            {"name": "AGS__restart",                    "menu_text": "Clear All",                       "icon": 13,     "tooltip": "Clear Scene"},
+
+            {"name": "AGS_docs",                        "menu_text": "Web Documentation"}
         ],
 
         "menus":
@@ -167,7 +169,7 @@
                         "name": "Inspect Diagrams",
                         "items":
                         [
-                            {"command": "AGS_edge_table"},
+                            {"command": "AGS_edges_table"},
                             {"command": "AGS_edge_information"},
                             {"command": "AGS_form_inspector_control"}
                         ]
@@ -199,7 +201,11 @@
                     {"type": "separator"},
 
                     {"command": "AGS_scene_redraw"},
-                    {"command": "AGS__restart"}
+                    {"command": "AGS__restart"},
+
+                    {"type": "separator"},
+                    {"command": "AGS_docs"}
+
                 ]
             }
         ],
@@ -238,7 +244,7 @@
 
                     {"type": "separator"},
 
-                    {"left": "AGS_toolbar_inspect"},
+                    {"left": "AGS_toolbar_inspector"},
                     {"left": "AGS_form_compute_loadpath"},
 
                     {"type": "separator"},
