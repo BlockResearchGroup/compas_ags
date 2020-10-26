@@ -60,6 +60,7 @@ def RunCommand(is_interactive):
         form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
         if not check_deviations(form.diagram, force.diagram, tol=scene.settings['AGS']['max_deviation']):
             compas_rhino.display_message('Error: Diagrams are not parallel.\nInvalid movement on force diagram nodes or insuficient constraints in the form diagram.')
+            print('Maximum angle deviation: {0:.2g} deg'.format(max(form.diagram.edges_attribute('a'))))
 
     form.settings['show.edgelabels'] = False
     form.settings['show.forcelabels'] = True
