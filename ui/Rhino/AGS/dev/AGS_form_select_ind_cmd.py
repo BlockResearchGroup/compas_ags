@@ -24,16 +24,13 @@ def RunCommand(is_interactive):
         return
     form = objects[0]
 
-    while True:
-        edges = form.select_edges("Mark selected edges as independent (all others as dependent)")
-        if not edges:
-            break
+    edges = form.select_edges("Mark selected edges as independent (all others as dependent)")
 
+    if edges:
         form.diagram.edges_attribute('is_ind', False)
         form.diagram.edges_attribute('is_ind', True, keys=edges)
         scene.update()
-
-    scene.save()
+        scene.save()
 
 
 # ==============================================================================
