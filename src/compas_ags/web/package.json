@@ -1,0 +1,17 @@
+{
+  "name": "compas_rv2.web",
+  "version": "1.0.0",
+  "description": "RV2 front page",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "node build.js"
+  },
+  "author": "Li Chen",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^8.5.2",
+    "electron-packager": "^14.2.1",
+    "zip-folder": "^1.0.0"
+  }
+}
