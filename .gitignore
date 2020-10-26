@@ -117,3 +117,8 @@ docsource/api/generated
 
 docs/api/generated
 dist/docs
+
+
+# electron
+node_modules
+src/compas_ags/web/electron
