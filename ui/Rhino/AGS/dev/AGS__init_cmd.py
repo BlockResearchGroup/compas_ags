@@ -29,6 +29,7 @@ CWD = HERE or HOME
 SETTINGS = {
     'AGS': {
         'autoupdate': True,
+        'max_deviation': 0.1,
     }
 }
 
