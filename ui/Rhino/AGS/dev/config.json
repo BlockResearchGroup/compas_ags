@@ -28,11 +28,12 @@
                 "8_form_fix_nodes",
                 "9_force_move_nodes",
 
-                "10_loadpath",
+                "10_inspect",
+                "11_loadpath",
 
-                "11_display_settings",
-                "12_redraw",
-                "13_clear"
+                "12_display_settings",
+                "13_redraw",
+                "14_clear"
 
             ]
         },
@@ -64,7 +65,7 @@
 
             {"name": "AGS_force_move_nodes",            "menu_text": "Move Nodes",                      "icon": 9,      "tooltip": "Move ForceDiagram Nodes"},
 
-            {"name": "AGS_form_compute_loadpath",       "menu_text": "Compute Loadpath",                "icon": 10,     "tooltip": "Compute Loadpath"},
+            {"name": "AGS_form_compute_loadpath",       "menu_text": "Compute Loadpath",                "icon": 11,     "tooltip": "Compute Loadpath"},
 
             {"name": "AGS_edges_table",                   "menu_text": "Edges Table"},
             {"name": "AGS_edge_information",             "menu_text": "Highlight Edge Information"},
@@ -80,12 +81,12 @@
             {"name": "AGS__undo",                       "menu_text": "AGS Undo",                                         "tooltip": "Undo last action"},
             {"name": "AGS__redo",                       "menu_text": "AGS Redo",                                         "tooltip": "Redo last action"},
 
-            {"name": "AGS_toolbar_inspector",           "menu_text": "Inspect Diagrams",                                "tooltip": "Inspect Diagrams"},
+            {"name": "AGS_toolbar_inspector",           "menu_text": "Inspect Diagrams",                "icon": 10,     "tooltip": "Inspect Diagrams"},
             {"name": "AGS_toolbar_form",                "menu_text": "FormDiagram Create",              "icon": 3,      "tooltip": "Create FormDiagram"},
-            {"name": "AGS_toolbar_display",             "menu_text": "Display Settings",                "icon": 11,     "tooltip": "Display Settings"},
+            {"name": "AGS_toolbar_display",             "menu_text": "Display Settings",                "icon": 12,     "tooltip": "Display Settings"},
 
-            {"name": "AGS_scene_redraw",                "menu_text": "Redraw",                          "icon": 12,     "tooltip": "Refresh Scene"},
-            {"name": "AGS__restart",                    "menu_text": "Clear All",                       "icon": 13,     "tooltip": "Clear Scene"},
+            {"name": "AGS_scene_redraw",                "menu_text": "Redraw",                          "icon": 13,     "tooltip": "Refresh Scene"},
+            {"name": "AGS__restart",                    "menu_text": "Clear All",                       "icon": 14,     "tooltip": "Clear Scene"},
 
             {"name": "AGS_docs",                        "menu_text": "Web Documentation"}
         ],
