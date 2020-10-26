@@ -11,7 +11,7 @@ import AGS_edge_information_cmd
 import AGS_form_inspector_control_cmd
 
 
-__commandname__ = "AGS_toolbar_form"
+__commandname__ = "AGS_toolbar_inspector"
 
 
 def RunCommand(is_interactive):
@@ -20,7 +20,7 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    options = ["FromObj", "FromLines", "FromLayer"]
+    options = ["EdgesTable", "EdgeInformation", "ForcePolygons"]
     option = compas_rhino.rs.GetString("Create Form:", strings=options)
 
     if not option:
