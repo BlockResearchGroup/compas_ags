@@ -2,6 +2,7 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+from compas.geometry import length_vector
 from compas_ags.rhino.diagramobject import DiagramObject
 from compas_ags.rhino.forceinspector import ForceDiagramVertexInspector
 from compas.utilities import geometric_key
@@ -104,7 +105,7 @@ class ForceObject(DiagramObject):
 
         # edges
         if self.settings['show.edges']:
-            edges = list(self.diagram.edges())
+            edges = [edge for edge in self.diagram.edges() if self.diagram.edge_length(*edge)]
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in edges})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
@@ -121,19 +122,8 @@ class ForceObject(DiagramObject):
                     elif self.diagram.dual_edge_force(edge) < - tol:
                         color[edge] = self.settings['color.compression']
 
-            guids = self.artist.draw_edges(color=color)
-            if len(guids) == len(edges):
-                self.guid_edge = zip(guids, edges)
-            else:
-                drawn_edges = []
-                for edge in edges:
-                    u, v = edge
-                    pt1, pt2 = self.diagram.edge_coordinates(u, v)
-                    if geometric_key(pt1) == geometric_key(pt2):
-                        pass
-                    else:
-                        drawn_edges.append(edge)
-                self.guid_edge = zip(guids, drawn_edges)
+            guids = self.artist.draw_edges(edges=edges, color=color)
+            self.guid_edge = zip(guids, edges)
 
             guid_edgelabel = []
 
@@ -197,6 +187,9 @@ class ForceObject(DiagramObject):
         self.redraw()
 
     def draw_highlight_edge(self, edge):
+
+        if not self.diagram.has_edge(*edge, directed=True):
+            edge = edge[1], edge[0]
 
         if edge in self.diagram.edges_where_dual({'_is_edge': True}):
             pass
