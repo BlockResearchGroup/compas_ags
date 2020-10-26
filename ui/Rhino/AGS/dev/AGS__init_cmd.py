@@ -13,6 +13,7 @@ import compas_rhino
 
 from compas.rpc import Proxy
 from compas_ags.rhino import Scene
+from compas_ags.web import Browser
 
 
 __commandname__ = "AGS__init"
@@ -61,7 +62,8 @@ def RunCommand(is_interactive):
     scene.update()
 
     # would be useful to add a notification about the cloud: new / reconnect
-    compas_rhino.display_message("AGS has started.")
+    # compas_rhino.display_message("AGS has started.")
+    Browser()
 
 
 # ==============================================================================

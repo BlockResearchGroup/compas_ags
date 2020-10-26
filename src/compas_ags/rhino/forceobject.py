@@ -116,9 +116,9 @@ class ForceObject(DiagramObject):
             if self.settings['show.forcecolors']:
                 tol = self.settings['tol.forces']
                 for edge in self.diagram.edges_where_dual({'is_external': False}):
-                    if self.diagram.dual_edge_force(edge) > + tol:
+                    if self.diagram.dual_edge_f(edge) > + tol:
                         color[edge] = self.settings['color.tension']
-                    elif self.diagram.dual_edge_force(edge) < - tol:
+                    elif self.diagram.dual_edge_f(edge) < - tol:
                         color[edge] = self.settings['color.compression']
 
             guids = self.artist.draw_edges(color=color)
@@ -153,9 +153,9 @@ class ForceObject(DiagramObject):
                 if self.settings['show.forcecolors']:
                     tol = self.settings['tol.forces']
                     for edge in self.diagram.edges_where_dual({'is_external': False}):
-                        if self.diagram.dual_edge_force(edge) > + tol:
+                        if self.diagram.dual_edge_f(edge) > + tol:
                             color[edge] = self.settings['color.tension']
-                        elif self.diagram.dual_edge_force(edge) < - tol:
+                        elif self.diagram.dual_edge_f(edge) < - tol:
                             color[edge] = self.settings['color.compression']
 
                 guids = self.artist.draw_edgelabels(text=text, color=color)
@@ -183,9 +183,9 @@ class ForceObject(DiagramObject):
                 if self.settings['show.forcecolors']:
                     tol = self.settings['tol.forces']
                     for edge in self.diagram.edges_where_dual({'is_external': False}):
-                        if self.diagram.dual_edge_force(edge) > + tol:
+                        if self.diagram.dual_edge_f(edge) > + tol:
                             color[edge] = self.settings['color.tension']
-                        elif self.diagram.dual_edge_force(edge) < - tol:
+                        elif self.diagram.dual_edge_f(edge) < - tol:
                             color[edge] = self.settings['color.compression']
 
                 guids = self.artist.draw_edgelabels(text=text, color=color)
@@ -193,7 +193,6 @@ class ForceObject(DiagramObject):
                 guid_edgelabel += zip(guids, edges)
 
             self.guid_edgelabel = guid_edgelabel
-
 
         self.redraw()
 
@@ -204,7 +203,7 @@ class ForceObject(DiagramObject):
         else:
             edge = (edge[1], edge[0])
 
-        f = self.diagram.dual_edge_force(edge)
+        f = self.diagram.dual_edge_f(edge)
 
         text = {edge: "{:.4g}kN".format(abs(f))}
 
