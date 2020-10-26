@@ -35,9 +35,8 @@ jobs:
       - name: ags-install
         shell: PowerShell
         run: |
+          python ui/Rhino/ags/dev/rui.py
           pip install -r requirements.lock.txt
-      
-      # REMEMBER TO ADD python ui/Rhino/ags/dev/rui.py
 
       - name: rv2-pack
         run: |
