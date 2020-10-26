@@ -5,7 +5,6 @@ from __future__ import division
 import compas_rhino
 from compas_ags.rhino.diagramobject import DiagramObject
 from compas_ags.rhino.forminspector import FormDiagramVertexInspector
-from compas.utilities import geometric_key
 
 
 __all__ = ['FormObject']
@@ -149,18 +148,7 @@ class FormObject(DiagramObject):
                         color[edge] = self.settings['color.compression']
 
             guids = self.artist.draw_edges(color=color)
-            if len(guids) == len(edges):
-                self.guid_edge = zip(guids, edges)
-            else:
-                drawn_edges = []
-                for edge in edges:
-                    u, v = edge
-                    pt1, pt2 = self.diagram.edge_coordinates(u, v)
-                    if geometric_key(pt1) == geometric_key(pt2):
-                        pass
-                    else:
-                        drawn_edges.append(edge)
-                self.guid_edge = zip(guids, drawn_edges)
+            self.guid_edge = zip(guids, edges)
 
             guid_edgelabel = []
 
@@ -231,9 +219,7 @@ class FormObject(DiagramObject):
         f = self.diagram.edge_attribute(edge, 'f')
 
         text = {edge: "{:.4g}kN".format(abs(f))}
-
         color = {}
-
         color[edge] = self.settings['color.edges']
 
         if self.diagram.edge_attribute(edge, 'is_external'):

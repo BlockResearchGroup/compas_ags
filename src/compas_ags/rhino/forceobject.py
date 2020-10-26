@@ -103,7 +103,8 @@ class ForceObject(DiagramObject):
 
         # edges
         if self.settings['show.edges']:
-            edges = [edge for edge in self.diagram.edges() if self.diagram.edge_length(*edge)]
+            tol = self.settings['tol.forces']
+            edges = [edge for edge in self.diagram.edges() if self.diagram.edge_length(*edge) > tol]
             color = {}
             color.update({edge: self.settings['color.edges'] for edge in edges})
             color.update({edge: self.settings['color.edges:is_external'] for edge in self.diagram.edges_where_dual({'is_external': True})})
@@ -186,7 +187,7 @@ class ForceObject(DiagramObject):
 
     def draw_highlight_edge(self, edge):
 
-        if not self.diagram.has_edge(*edge, directed=True):
+        if not self.diagram.has_edge(edge):
             edge = edge[1], edge[0]
 
         f = self.diagram.dual_edge_force(edge)
