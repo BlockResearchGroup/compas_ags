@@ -18,3 +18,5 @@ zf.extractall(os.path.join(ELECTRON_FOLDER, "electron"))
 zf.close()
 
 assert os.path.exists(os.path.join(ELECTRON_FOLDER, "electron"))
+
+print("Successfully Extracted to ", os.path.exists(os.path.join(ELECTRON_FOLDER, "electron")))

@@ -25,12 +25,17 @@ jobs:
         shell: PowerShell
         run: |
           conda install conda-pack cython -y
+
+      
+      - name: extract-electron
+        shell: PowerShell
+        run: |
+          python scripts/unzip_electron.py
       
       - name: ags-install
         shell: PowerShell
         run: |
           pip install -r requirements.lock.txt
-          python scripts/unzip_electron.py
       
       # REMEMBER TO ADD python ui/Rhino/ags/dev/rui.py
 
