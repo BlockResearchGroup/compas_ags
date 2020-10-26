@@ -1,0 +1,84 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+ conda:
+    name: Release-Windows
+    runs-on: "windows-latest"
+    steps:
+      - uses: olegtarasov/get-tag@v2
+        id: tagName
+
+      - uses: actions/checkout@v2
+      
+      - uses: goanpeca/setup-miniconda@v1
+        with:
+          miniconda-version: "latest"
+          activate-environment: rv2
+          python-version: 3.7
+      
+      - name: conda-install
+        shell: PowerShell
+        run: |
+          conda install conda-pack cython -y
+
+      
+      - name: extract-electron
+        shell: PowerShell
+        run: |
+          python scripts/unzip_electron.py
+      
+      - name: ags-install
+        shell: PowerShell
+        run: |
+          python ui/Rhino/ags/dev/rui.py
+          pip install -r requirements.lock.txt
+
+      - name: rv2-pack
+        run: |
+          python scripts/pack.py --version ${{ steps.tagName.outputs.tag }}
+
+      - name: Check out compas_installer
+        uses: actions/checkout@master
+        with:
+          repository: BlockResearchGroup/compas_installer
+          ref: ags
+          path: compas_installer
+
+      - name: Use Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      
+      - name: wrap installer
+        run: |
+          cd compas_installer
+          npm install
+          copy ../dist/AGS_${{ steps.tagName.outputs.tag }}.zip src/plugins/AGS.zip
+          npm run build
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset 
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} 
+          asset_path: compas_installer/dist/rhinoGS Setup 0.0.1.exe
+          asset_name: rhinoGS_${{ steps.tagName.outputs.tag }}.exe
+          asset_content_type: application/octet-stream
