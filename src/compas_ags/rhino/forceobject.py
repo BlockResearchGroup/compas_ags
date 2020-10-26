@@ -2,10 +2,8 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-from compas.geometry import length_vector
 from compas_ags.rhino.diagramobject import DiagramObject
 from compas_ags.rhino.forceinspector import ForceDiagramVertexInspector
-from compas.utilities import geometric_key
 
 
 __all__ = ['ForceObject']
@@ -191,17 +189,10 @@ class ForceObject(DiagramObject):
         if not self.diagram.has_edge(*edge, directed=True):
             edge = edge[1], edge[0]
 
-        if edge in self.diagram.edges_where_dual({'_is_edge': True}):
-            pass
-        else:
-            edge = (edge[1], edge[0])
-
         f = self.diagram.dual_edge_force(edge)
 
         text = {edge: "{:.4g}kN".format(abs(f))}
-
         color = {}
-
         color[edge] = self.settings['color.edges']
 
         if edge in self.diagram.edges_where_dual({'is_external': True}):
