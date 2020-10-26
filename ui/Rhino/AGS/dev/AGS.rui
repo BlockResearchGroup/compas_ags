@@ -1,228 +1,236 @@
-<?xml version="1.0" ?>
-<RhinoUI default_language_id="1033" guid="ddb48d1d-56ce-452b-b967-ccd9308c60da" localize="False" major_ver="2" minor_ver="0">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RhinoUI major_ver="3" minor_ver="0" guid="801fc87a-b6f3-43eb-a882-ab3a7f25e534" localize="False" default_language_id="1033" dpi_scale="200">
   <extend_rhino_menus>
-    <menu guid="d1b07cde-59e1-4764-959f-a0363c51dc99">
+    <menu guid="ab243b7f-5140-4b92-8a19-cd450a76890c">
       <text>
         <locale_1033>Extend Rhino Menus</locale_1033>
       </text>
     </menu>
   </extend_rhino_menus>
   <menus>
-    <menu guid="476db893-745b-4b87-9004-4e8a80bc3429">
+    <menu guid="60f8cbed-1f3b-4e9e-8d11-0643e43260a4">
       <text>
         <locale_1033>AGS</locale_1033>
       </text>
-      <menu_item guid="9ca828a8-e056-4405-9a67-06b3dfa9cfd6" item_type="normal">
-        <macro_id>3ea0ec87-76d1-4a5e-b821-6f28ebb37fad</macro_id>
+      <menu_item guid="2964d780-7763-49a1-ac44-4d8438bd48c8">
+        <macro_id>da3927c7-bf71-4ed4-b554-ebabc0ca8f14</macro_id>
       </menu_item>
-      <menu_item guid="6ddd41d2-7d10-4fec-a25a-9b246c3aceb6" item_type="normal">
-        <macro_id>a2e9eda6-9713-488e-a07e-0b85a74c8d03</macro_id>
+      <menu_item guid="aefa4be9-612f-4be8-a2b6-59e786a037ea">
+        <macro_id>b46b63b3-fa3a-4316-bc86-970acee361eb</macro_id>
       </menu_item>
-      <menu guid="d8535716-0e6f-45c9-8645-a677f5e2f6f2">
+      <menu guid="eb01aa6e-d97a-4106-8e62-87fc86903081">
         <text>
           <locale_1033>Session</locale_1033>
         </text>
-        <menu_item guid="9c2fb057-3a7d-4ae2-8ca5-1d29ee590c4d" item_type="normal">
-          <macro_id>234eb618-43f6-43d0-bdb1-34d432fd82d8</macro_id>
+        <menu_item guid="1f7110fc-6ec6-4679-ba00-2c01228d53e0">
+          <macro_id>b220adbd-cf82-4de5-a30b-9b83ca12f10d</macro_id>
         </menu_item>
-        <menu_item guid="e922ba46-e85a-48a2-9706-8ea5969d613b" item_type="normal">
-          <macro_id>f77d032c-0b1e-491d-b610-79fdebee5379</macro_id>
+        <menu_item guid="ec7ae838-484e-4686-9a54-7a0dd294a50d">
+          <macro_id>2a79a2b4-1d7c-4360-8c41-f3b7ccfb206a</macro_id>
         </menu_item>
       </menu>
-      <menu_item guid="6f0daef4-58b1-4afc-8d12-c1fa219572ab" item_type="separator"/>
-      <menu guid="b5d95557-4d2a-41f4-9c3f-2d65175be1f1">
+      <menu_item guid="7b6161f1-5623-4097-a12e-350f60801a68" item_type="separator" />
+      <menu guid="8211352a-7c3b-469f-ba97-bdffcc89bf68">
         <text>
           <locale_1033>Create FormDiagram</locale_1033>
         </text>
-        <menu_item guid="587572bc-030c-48c7-9d0b-7ebbdfe86a41" item_type="normal">
-          <macro_id>d5fe0a9c-6718-493e-98eb-36bcbb04226c</macro_id>
+        <menu_item guid="31f84b61-d14e-4af9-8023-bdf4e59ce621">
+          <macro_id>2df12959-d7eb-4640-93ca-6616c4b96307</macro_id>
         </menu_item>
-        <menu_item guid="c3a49a66-3b40-465b-b6cb-04360cc3e414" item_type="normal">
-          <macro_id>a0497c52-9cb9-442a-b94a-8671057a287b</macro_id>
+        <menu_item guid="140351c8-097e-4688-a7cf-2478fb0d79dc">
+          <macro_id>8ccfad2f-2071-4f30-b22d-a2213a6cc655</macro_id>
         </menu_item>
-        <menu_item guid="e55bd2f2-9bd0-49d9-8199-6459493db086" item_type="normal">
-          <macro_id>1f37f298-3d90-4dfe-bcfe-8275214af205</macro_id>
+        <menu_item guid="087475e7-04f2-4f59-9970-888c70e5a1a0">
+          <macro_id>383a00d0-0929-4e64-818d-922503244eda</macro_id>
         </menu_item>
       </menu>
-      <menu guid="00152791-c6c7-424a-98aa-711d72ede8de">
+      <menu guid="dd5a0e15-1b58-49be-be5a-c0b55ebe788e">
         <text>
           <locale_1033>Select and Assign Forces</locale_1033>
         </text>
-        <menu_item guid="3421bb37-ff51-4a8f-9f78-20a2340cbf8c" item_type="normal">
-          <macro_id>309fab26-5d08-4c58-bac5-1c6ac5429675</macro_id>
+        <menu_item guid="981f3a4a-26e4-4759-a01b-d8c40d34b552">
+          <macro_id>041d8be2-0e2e-45ab-a5ae-b71e3fc56285</macro_id>
         </menu_item>
-        <menu_item guid="2c1a079a-8107-43cb-b88d-fc6bc185ed2d" item_type="normal">
-          <macro_id>4ecd51cf-3b6e-48df-a128-3a7ea2d9a4ca</macro_id>
+        <menu_item guid="d75fabba-9753-4a17-b8b3-3fcade64731e">
+          <macro_id>10cf1784-c1ea-4d73-895f-e35a73d8f58f</macro_id>
         </menu_item>
       </menu>
-      <menu_item guid="6d55a7a4-c0fb-438b-88c1-7bba5a685ff1" item_type="separator"/>
-      <menu_item guid="41981361-62ab-476d-a896-91016e5f59d7" item_type="normal">
-        <macro_id>27584bad-be05-421e-baf4-9408e4c4471d</macro_id>
+      <menu_item guid="8861e9d4-53ba-4de8-85a3-fc5222ed64f9" item_type="separator" />
+      <menu_item guid="f4e23211-0342-42ad-95dc-a4fb5d2fcf4d">
+        <macro_id>2bb12f41-f289-4dbb-a8ac-1141541e33b0</macro_id>
       </menu_item>
-      <menu_item guid="09ac325f-1ff7-45bd-aff5-4bbca3d8488c" item_type="separator"/>
-      <menu_item guid="9843ca7c-3623-43e2-9042-04c2149c78de" item_type="normal">
-        <macro_id>e431aee7-0ebe-4e37-b68f-fc0191cd08e6</macro_id>
+      <menu_item guid="c5546aec-b1c6-41aa-8caf-0dc29f9f4072" item_type="separator" />
+      <menu_item guid="32fda7f7-d343-4d8a-bbc3-aba23b48fcc9">
+        <macro_id>61986ae4-af8c-4765-bb77-75cdc7effc6f</macro_id>
       </menu_item>
-      <menu_item guid="eb913179-88c6-4cc1-9c9a-ba53ae87c115" item_type="separator"/>
-      <menu guid="b58d84df-43b1-4b03-95cb-4e222d0ad303">
+      <menu_item guid="0929eb35-8dda-4dcc-8b28-fdd473714ec9" item_type="separator" />
+      <menu guid="6e50ff9f-9e07-4ca8-a6ad-783db8b1b83c">
         <text>
           <locale_1033>Modify FormDiagram</locale_1033>
         </text>
-        <menu_item guid="a69fa9d7-c94b-443e-86a8-3615c931885f" item_type="normal">
-          <macro_id>ba589b77-fbed-48b2-b1b6-28fa16e8860b</macro_id>
+        <menu_item guid="a955038c-44f6-4710-96bb-5ba4bcf1a24b">
+          <macro_id>ea270a5d-6651-4b64-92ac-fcb784451f5d</macro_id>
         </menu_item>
-        <menu_item guid="2de1eff4-db8c-4a51-b5d5-93de84ee0cb3" item_type="normal">
-          <macro_id>ca75f845-4d34-480d-a2f8-edb43ca0d2a7</macro_id>
+        <menu_item guid="eb012452-ff1b-475f-875d-5e3e40321045">
+          <macro_id>e2197a3d-906c-4190-b208-121b94b50513</macro_id>
         </menu_item>
       </menu>
-      <menu_item guid="8fbdd1c2-db38-4b39-86f0-948675e98a9e" item_type="normal">
-        <macro_id>5510f8e8-eb03-4b4f-ad53-b47dbd9e3cc0</macro_id>
+      <menu_item guid="720dc40a-3861-4f8e-a251-3c3e373f84f9">
+        <macro_id>2ca49c09-541a-4e88-84d8-ee85255440cc</macro_id>
       </menu_item>
-      <menu_item guid="96de490d-5896-4163-81ac-f5f1dcb15d92" item_type="separator"/>
-      <menu guid="e7610a13-3b80-4089-bad0-e6fb015192bb">
+      <menu_item guid="9db935dc-279b-4e98-91e2-7899d1704f1b" item_type="separator" />
+      <menu guid="76566322-947c-4d37-9359-784a020e986b">
         <text>
           <locale_1033>Modify ForceDiagram</locale_1033>
         </text>
-        <menu_item guid="44f9d650-a5ff-4a13-b57e-b002cec9a52d" item_type="normal">
-          <macro_id>81383dfc-ab99-48d4-b58f-d8c53e28a9db</macro_id>
+        <menu_item guid="ffea19c1-5835-455f-9fb5-1313150ce030">
+          <macro_id>47fd49fe-9e2c-4715-bb9f-4e779bfc7e0d</macro_id>
         </menu_item>
       </menu>
-      <menu_item guid="57bfad50-fc38-45f0-9dbb-16ab0798c10a" item_type="normal">
-        <macro_id>9d259d72-a187-4832-85be-7231b6af56e2</macro_id>
+      <menu_item guid="a2d570ce-2e64-47c5-8881-0db7d4eeda06">
+        <macro_id>6c3efb10-d2a4-4cc3-81d2-74c21eda62d0</macro_id>
       </menu_item>
-      <menu_item guid="92e30c46-7e9a-4c53-9681-0c1262d79a36" item_type="separator"/>
-      <menu_item guid="db52acdc-ae31-4ed3-8bc6-6079355a21ca" item_type="normal">
-        <macro_id>b0caa65d-5680-4916-a5e1-7985a6071446</macro_id>
+      <menu_item guid="64416027-5691-41a3-ad4d-675ddfac1981" item_type="separator" />
+      <menu guid="3c0690f5-8744-4653-b2b8-07deccec3699">
+        <text>
+          <locale_1033>Inspect Diagrams</locale_1033>
+        </text>
+        <menu_item guid="dd08ddb5-b067-4a55-b9b3-fa6c8991d49b">
+          <macro_id>6e139114-d4ca-4a38-a50a-65bc97edce0e</macro_id>
+        </menu_item>
+        <menu_item guid="ca156346-512e-47f4-a061-b0bf816b1551">
+          <macro_id>d93802c4-9fd1-416e-812c-9119108733c8</macro_id>
+        </menu_item>
+        <menu_item guid="61f34244-3013-4265-b172-607e91ac870d">
+          <macro_id>baa681c7-57c6-4cab-9abb-22e8dc43e654</macro_id>
+        </menu_item>
+      </menu>
+      <menu_item guid="660c8276-e88e-4dc8-9167-bf5821d2e867">
+        <macro_id>f5cee0d7-706c-42b3-aba4-117294959532</macro_id>
       </menu_item>
-      <menu_item guid="5c1cc037-d220-4a72-ad7d-fde5607390b3" item_type="separator"/>
-      <menu guid="724fbf84-287a-4673-9124-e4070d2c3c09">
+      <menu_item guid="3c3d8831-9c20-4281-a7a3-ab060472cc16" item_type="separator" />
+      <menu guid="31e680f0-bf85-43d5-96dc-f6952d3db11d">
         <text>
           <locale_1033>Display</locale_1033>
         </text>
-        <menu_item guid="371a48d3-a0f9-47df-a872-cd08830f3c02" item_type="normal">
-          <macro_id>b9f72ae1-0f86-4d0b-a18b-e301e71d70be</macro_id>
+        <menu_item guid="a59d861e-dbde-4443-acff-ca0b363494a9">
+          <macro_id>83f5cfe8-5b4c-402e-bb21-0d066a8134a9</macro_id>
         </menu_item>
-        <menu_item guid="45f07ccb-be1b-437d-ad6e-df7ec4fff553" item_type="normal">
-          <macro_id>684029d6-e404-47f1-aab3-1d64bed81def</macro_id>
+        <menu_item guid="7614d5b4-4433-46db-91c4-d6dc2b157377">
+          <macro_id>d70502bc-fb4c-4cd6-b757-cfbe732131c1</macro_id>
         </menu_item>
-        <menu_item guid="b889b897-2cae-4a89-a35c-e1b1e92b4b45" item_type="separator"/>
-        <menu_item guid="08a5afe1-d242-4347-b50b-68d93ced51cb" item_type="normal">
-          <macro_id>2bc69058-30f3-4846-89a2-0e2412782a2c</macro_id>
+        <menu_item guid="6da3f4aa-bf31-4317-9309-f9a9f5737fec" item_type="separator" />
+        <menu_item guid="dfea6c86-0e8c-4285-a55a-8155e23bdcec">
+          <macro_id>72f10802-f11a-4840-b0e5-5cef292c08e4</macro_id>
         </menu_item>
-        <menu_item guid="53700528-5b4f-4e6b-a7ba-78f6acc544ee" item_type="normal">
-          <macro_id>ffd334e1-5e2b-4d6d-9d86-e2a38241b825</macro_id>
+        <menu_item guid="69bea01c-165f-4220-adcd-dc97276db43f">
+          <macro_id>86eccf9b-8389-4c09-82d2-10c5bcb55fae</macro_id>
         </menu_item>
-        <menu_item guid="6c471a83-ccf3-4a27-af5d-9bd069a6af6e" item_type="normal">
-          <macro_id>b1b342e6-6ba4-4e1a-abc8-2ea06eafff41</macro_id>
+        <menu_item guid="d8f3bbe9-bb6f-4c90-a1d2-477864549c0d">
+          <macro_id>9c2eb2ee-f587-4565-a0b9-332a418f055e</macro_id>
         </menu_item>
-        <menu_item guid="b804bcd0-d2b0-49f2-ac6c-4caba21aa486" item_type="normal">
-          <macro_id>7e1b6503-ba80-4bb7-b227-74464802b28e</macro_id>
+        <menu_item guid="db8d15c7-dd7b-4423-acdf-a7f26268964d">
+          <macro_id>f4c720b9-cd54-425b-9e70-1724abbdc3ef</macro_id>
         </menu_item>
       </menu>
-      <menu_item guid="04393389-05b0-449e-bb5f-1798290d3e81" item_type="normal">
-        <macro_id>87ed8afc-2465-48c0-b614-2d0b4e4d85dd</macro_id>
+      <menu_item guid="09f0e917-900e-449e-aafb-5409c6b196e4" item_type="separator" />
+      <menu_item guid="55116d0d-a1cd-4aba-b537-671f3b521e99">
+        <macro_id>a3a0c163-47bf-47e3-a65f-ef67378cfa76</macro_id>
       </menu_item>
-      <menu_item guid="e5009c42-ca39-43d3-b499-fa396b63d925" item_type="normal">
-        <macro_id>4827da18-ddfd-413b-9ef6-05c01afce535</macro_id>
+      <menu_item guid="664be457-2a16-45b7-a086-eb733d48ec74">
+        <macro_id>d412301e-65e0-4b46-8ac8-5aeb2a201a49</macro_id>
+      </menu_item>
+      <menu_item guid="91ce9da1-753b-467d-b03e-12d23703462f" item_type="separator" />
+      <menu_item guid="717dd9ba-ab9a-4a66-b9a3-c7dfbc36b62e">
+        <macro_id>c88e0d46-be56-4b2b-9faf-67ad12f59d53</macro_id>
+      </menu_item>
+      <menu_item guid="be0567ed-aab2-4bb1-bea0-40032eb628e5">
+        <macro_id>42d271a6-7ef8-41ce-9c9e-2d368ea4dc7e</macro_id>
+      </menu_item>
+      <menu_item guid="76131e4d-8936-4ed4-83b8-95b31d41bceb" item_type="separator" />
+      <menu_item guid="3e3e6b58-50f1-4485-a5e7-3388667afda7">
+        <macro_id>2fbbed7d-bc51-4d0c-89ea-0f29bd5830ae</macro_id>
       </menu_item>
     </menu>
   </menus>
   <tool_bar_groups>
-    <tool_bar_group active_tool_bar_group="" dock_bar_guid32="" dock_bar_guid64="" guid="0ac82c88-fa30-4cb8-be87-1d63c74db321" hide_single_tab="False" point_floating="0,0" single_file="False">
+    <tool_bar_group guid="3e796523-aa16-494c-86ba-cfd7ccb00a5c" dock_bar_guid32="00000000-0000-0000-0000-000000000000" dock_bar_guid64="dfce07ba-6c59-485d-97a3-4a2cc8fd0a2e" active_tool_bar_group="7a7e64f9-b015-448a-a06a-348a3db8582b" single_file="False" hide_single_tab="False" point_floating="-2147483648,0">
       <text>
         <locale_1033>AGS</locale_1033>
       </text>
-      <tool_bar_group_item guid="0737d6ac-0e45-4f19-861e-e4aba54fd2db" major_version="1" minor_version="1">
+      <tool_bar_group_item guid="7a7e64f9-b015-448a-a06a-348a3db8582b" major_version="1" minor_version="1">
         <text>
           <locale_1033>AGS</locale_1033>
         </text>
-        <tool_bar_id>5581a1b5-d8a2-4b02-b852-4473e3f52c43</tool_bar_id>
+        <tool_bar_id>52e95686-df18-44e8-afd2-cdb8b2ba1071</tool_bar_id>
       </tool_bar_group_item>
+      <dock_bar_info dpi_scale="200" dock_bar="False" docking="True" horz="False" visible="False" floating="False" mru_float_style="4096" bar_id="59462" mru_width="32767" point_pos="-1,-1" float_point="-2147483648,0" rect_mru_dock_pos="0,0,58,168" dock_location_u="59420" dock_location="left" float_size="90,66" />
     </tool_bar_group>
   </tool_bar_groups>
   <tool_bars>
-    <tool_bar guid="5581a1b5-d8a2-4b02-b852-4473e3f52c43" item_display_style="control">
+    <tool_bar guid="52e95686-df18-44e8-afd2-cdb8b2ba1071">
       <text>
         <locale_1033>AGS</locale_1033>
       </text>
-      <tool_bar_item button_style="normal" guid="c04f62b3-f3a7-4467-a171-6b680c24b359">
-        <left_macro_id>3ea0ec87-76d1-4a5e-b821-6f28ebb37fad</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="fe2e026d-6b7e-4bd8-8949-c66d3328e97d">
+        <left_macro_id>da3927c7-bf71-4ed4-b554-ebabc0ca8f14</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="df8092d2-4cc2-4b63-bd26-f769d376e2ab">
-</tool_bar_item>
-      <tool_bar_item button_style="normal" guid="737ef6ae-cf7b-4c20-ae2b-2621f9b0f7d6">
-        <left_macro_id>234eb618-43f6-43d0-bdb1-34d432fd82d8</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="22e29593-47e8-4748-9eee-08eda460dc86" button_style="spacer" />
+      <tool_bar_item guid="275afca4-7f1a-43a6-a52e-7ad3267e904e">
+        <left_macro_id>b220adbd-cf82-4de5-a30b-9b83ca12f10d</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="38cd6c2d-8571-4a60-96a8-5711bc14bf3d">
-        <left_macro_id>f77d032c-0b1e-491d-b610-79fdebee5379</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="840ef11c-8185-426f-82fe-c8ed07b161a6">
+        <left_macro_id>2a79a2b4-1d7c-4360-8c41-f3b7ccfb206a</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="58efb510-f3ca-449d-8d60-ffbac36001d3">
-</tool_bar_item>
-      <tool_bar_item button_style="normal" guid="b9195be8-0c32-448c-b503-9dd420c25972">
-        <left_macro_id>5ffd5c92-2668-45a8-932f-4a225064236b</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="e8bc739a-500e-4046-bd77-3ca456b41cde" button_style="spacer" />
+      <tool_bar_item guid="e543e30a-4e0d-40d5-9224-0b5f973cd14f">
+        <left_macro_id>7dc9e96d-2db9-43a1-a351-7b727fe50393</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="2d4c9f21-52dd-41b8-a3d4-393d9418103c">
-        <left_macro_id>dbbf20a0-484d-4154-b699-b23b5ef1dc55</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="fbad75de-2c7c-407d-aa3d-038e4e80b80f">
+        <left_macro_id>502a2dc6-0f56-45e8-8c6c-c31c13d97bd4</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="f7a6d917-a2c0-4835-a0a2-1921809db9f8">
-</tool_bar_item>
-      <tool_bar_item button_style="normal" guid="32355681-3669-427f-9937-817ea20997eb">
-        <left_macro_id>27584bad-be05-421e-baf4-9408e4c4471d</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="57b9d47e-db5c-4512-bfdf-bc762cd46eb5" button_style="spacer" />
+      <tool_bar_item guid="194b6c14-d768-43c3-882c-b03498818edb">
+        <left_macro_id>2bb12f41-f289-4dbb-a8ac-1141541e33b0</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="141071e1-8982-4d52-8958-816b28e652ee">
-</tool_bar_item>
-      <tool_bar_item button_style="normal" guid="b3adbd24-f1fb-4f21-876b-2e77b3f00afe">
-        <left_macro_id>e431aee7-0ebe-4e37-b68f-fc0191cd08e6</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="2a3abde1-5516-4ce9-9f46-83f6eeaf5f0f" button_style="spacer" />
+      <tool_bar_item guid="345e57c4-1cde-426c-9bdd-eb145c5857d0">
+        <left_macro_id>61986ae4-af8c-4765-bb77-75cdc7effc6f</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="3a83b23b-139e-4fd6-820c-4884aac8a05d">
-</tool_bar_item>
-      <tool_bar_item button_style="normal" guid="c4957106-3a7a-4d2b-a1e3-ddcc447a89bc">
-        <left_macro_id>ba589b77-fbed-48b2-b1b6-28fa16e8860b</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="7b2b7e18-20e1-4290-a9b6-824c6b193292" button_style="spacer" />
+      <tool_bar_item guid="df85508d-c260-4d4f-ad2e-38cf3b10cc0c">
+        <left_macro_id>ea270a5d-6651-4b64-92ac-fcb784451f5d</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="064d3240-aae0-43fa-b5d2-a5a3f7b5797f">
-        <left_macro_id>ca75f845-4d34-480d-a2f8-edb43ca0d2a7</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="fd9231aa-a8e5-4ee9-a336-05b312837a4b">
+        <left_macro_id>e2197a3d-906c-4190-b208-121b94b50513</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="fc70dd43-70aa-4b5b-9b02-f87fd98e3b96">
-        <left_macro_id>81383dfc-ab99-48d4-b58f-d8c53e28a9db</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="d62fa9d6-3c16-4a4e-9e65-534c57861318">
+        <left_macro_id>47fd49fe-9e2c-4715-bb9f-4e779bfc7e0d</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="a497d29a-7051-43ed-ac89-e5289b49ff14">
-</tool_bar_item>
-      <tool_bar_item button_style="normal" guid="33fca09c-2b88-4f36-988d-e39530132111">
-        <left_macro_id>b0caa65d-5680-4916-a5e1-7985a6071446</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="be59ff8b-b5a9-49e4-a55c-75661bcd49f8" button_style="spacer" />
+      <tool_bar_item guid="cb8f64e7-199b-4c61-8cd6-455225c6e608">
+        <left_macro_id>1ee21839-5692-4389-a209-038b8bea1ee7</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_display_mode="control_only" button_style="spacer" guid="b3709765-13cb-4649-8c4e-a221ce2fbda0">
-</tool_bar_item>
-      <tool_bar_item button_style="normal" guid="fd22ae9a-b4c0-4f92-a5b7-6cbfcefcc4e4">
-        <left_macro_id>7551a0d7-0e26-405b-ba05-02e38b9ea946</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="a5cc9fce-1f26-4108-87f5-9949cb6d155e">
+        <left_macro_id>f5cee0d7-706c-42b3-aba4-117294959532</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="5d1a627b-8e52-4abe-b525-3cc90fa069fb">
-        <left_macro_id>87ed8afc-2465-48c0-b614-2d0b4e4d85dd</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="9c0b5d10-f619-4f31-b362-4a66fa3b532a" button_style="spacer" />
+      <tool_bar_item guid="bfbb920c-b9d7-41c1-a6d3-f851430f2a29">
+        <left_macro_id>90c2b3a3-ed61-4be4-b133-c622def35f79</left_macro_id>
       </tool_bar_item>
-      <tool_bar_item button_style="normal" guid="e864dea7-71ad-45ce-9f2c-8bebc99cec3f">
-        <left_macro_id>4827da18-ddfd-413b-9ef6-05c01afce535</left_macro_id>
-        <right_macro_id>None</right_macro_id>
+      <tool_bar_item guid="3432c03d-6768-4408-bf28-b42b4c9cc116">
+        <left_macro_id>c88e0d46-be56-4b2b-9faf-67ad12f59d53</left_macro_id>
+      </tool_bar_item>
+      <tool_bar_item guid="e1355f96-55b9-4b08-a1d5-6a9caebd243c">
+        <left_macro_id>42d271a6-7ef8-41ce-9c9e-2d368ea4dc7e</left_macro_id>
       </tool_bar_item>
     </tool_bar>
   </tool_bars>
   <macros>
-    <macro_item bitmap_id="c515756b-e967-4399-b90f-fbbc6d1d884b" guid="3ea0ec87-76d1-4a5e-b821-6f28ebb37fad">
+    <macro_item guid="da3927c7-bf71-4ed4-b554-ebabc0ca8f14" bitmap_id="acef0312-16c2-40d3-a512-5b9b9eedd652">
       <text>
         <locale_1033>AGS__init</locale_1033>
       </text>
-      <script>-_AGS__init</script>
       <tooltip>
         <locale_1033>InitialiseAGS</locale_1033>
       </tooltip>
@@ -235,12 +243,12 @@
       <menu_text>
         <locale_1033>Initialise AGS</locale_1033>
       </menu_text>
+      <script>-_AGS__init</script>
     </macro_item>
-    <macro_item guid="a2e9eda6-9713-488e-a07e-0b85a74c8d03">
+    <macro_item guid="b46b63b3-fa3a-4316-bc86-970acee361eb">
       <text>
         <locale_1033>AGS_server_restart</locale_1033>
       </text>
-      <script>-_AGS_server_restart</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -253,12 +261,12 @@
       <menu_text>
         <locale_1033>Restart server</locale_1033>
       </menu_text>
+      <script>-_AGS_server_restart</script>
     </macro_item>
-    <macro_item bitmap_id="e1a7f8f1-c070-4d92-b6de-a8577eb2cbf0" guid="234eb618-43f6-43d0-bdb1-34d432fd82d8">
+    <macro_item guid="b220adbd-cf82-4de5-a30b-9b83ca12f10d" bitmap_id="8986ecd5-9e2d-41af-b1b7-9b556c008be6">
       <text>
         <locale_1033>AGS_session_load</locale_1033>
       </text>
-      <script>-_AGS_session_load</script>
       <tooltip>
         <locale_1033>Load AGS Session</locale_1033>
       </tooltip>
@@ -271,12 +279,12 @@
       <menu_text>
         <locale_1033>Load Session</locale_1033>
       </menu_text>
+      <script>-_AGS_session_load</script>
     </macro_item>
-    <macro_item bitmap_id="de4ca43a-815a-4bd2-977a-e312e3c51caf" guid="f77d032c-0b1e-491d-b610-79fdebee5379">
+    <macro_item guid="2a79a2b4-1d7c-4360-8c41-f3b7ccfb206a" bitmap_id="3ecdd25f-5434-4db7-b134-2af0534b1110">
       <text>
         <locale_1033>AGS_session_save</locale_1033>
       </text>
-      <script>-_AGS_session_save</script>
       <tooltip>
         <locale_1033>Save AGS Session</locale_1033>
       </tooltip>
@@ -289,12 +297,12 @@
       <menu_text>
         <locale_1033>Save Session</locale_1033>
       </menu_text>
+      <script>-_AGS_session_save</script>
     </macro_item>
-    <macro_item guid="d5fe0a9c-6718-493e-98eb-36bcbb04226c">
+    <macro_item guid="2df12959-d7eb-4640-93ca-6616c4b96307">
       <text>
         <locale_1033>AGS_form_from_obj</locale_1033>
       </text>
-      <script>-_AGS_form_from_obj</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -307,12 +315,12 @@
       <menu_text>
         <locale_1033>FormDiagram From Obj</locale_1033>
       </menu_text>
+      <script>-_AGS_form_from_obj</script>
     </macro_item>
-    <macro_item guid="a0497c52-9cb9-442a-b94a-8671057a287b">
+    <macro_item guid="8ccfad2f-2071-4f30-b22d-a2213a6cc655">
       <text>
         <locale_1033>AGS_form_from_layer</locale_1033>
       </text>
-      <script>-_AGS_form_from_layer</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -325,12 +333,12 @@
       <menu_text>
         <locale_1033>FormDiagram From Layer</locale_1033>
       </menu_text>
+      <script>-_AGS_form_from_layer</script>
     </macro_item>
-    <macro_item guid="1f37f298-3d90-4dfe-bcfe-8275214af205">
+    <macro_item guid="383a00d0-0929-4e64-818d-922503244eda">
       <text>
         <locale_1033>AGS_form_from_lines</locale_1033>
       </text>
-      <script>-_AGS_form_from_lines</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -343,12 +351,12 @@
       <menu_text>
         <locale_1033>FormDiagram From Lines</locale_1033>
       </menu_text>
+      <script>-_AGS_form_from_lines</script>
     </macro_item>
-    <macro_item bitmap_id="d08c9473-9315-40cc-a6ce-c70eabf5e838" guid="dbbf20a0-484d-4154-b699-b23b5ef1dc55">
+    <macro_item guid="502a2dc6-0f56-45e8-8c6c-c31c13d97bd4" bitmap_id="08ab88e5-9a49-418e-99a9-fb9b876cbb9d">
       <text>
         <locale_1033>AGS_toolbar_form_assign_forces</locale_1033>
       </text>
-      <script>-_AGS_toolbar_form_assign_forces</script>
       <tooltip>
         <locale_1033>Select and Assign Forces</locale_1033>
       </tooltip>
@@ -361,12 +369,12 @@
       <menu_text>
         <locale_1033>Select and Assign Forces</locale_1033>
       </menu_text>
+      <script>-_AGS_toolbar_form_assign_forces</script>
     </macro_item>
-    <macro_item guid="309fab26-5d08-4c58-bac5-1c6ac5429675">
+    <macro_item guid="041d8be2-0e2e-45ab-a5ae-b71e3fc56285">
       <text>
         <locale_1033>AGS_form_select_ind</locale_1033>
       </text>
-      <script>-_AGS_form_select_ind</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -379,12 +387,12 @@
       <menu_text>
         <locale_1033>Select Independents Edges</locale_1033>
       </menu_text>
+      <script>-_AGS_form_select_ind</script>
     </macro_item>
-    <macro_item guid="78314626-681d-42a1-b5d8-95a90adece0c">
+    <macro_item guid="10cf1784-c1ea-4d73-895f-e35a73d8f58f">
       <text>
         <locale_1033>AGS_form_assign_forces</locale_1033>
       </text>
-      <script>-_AGS_form_assign_forces</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -397,12 +405,12 @@
       <menu_text>
         <locale_1033>Assign Forces to Independent Edges</locale_1033>
       </menu_text>
+      <script>-_AGS_form_assign_forces</script>
     </macro_item>
-    <macro_item bitmap_id="1b0ce0c7-6a98-405b-bab9-da0587e6eab1" guid="ba589b77-fbed-48b2-b1b6-28fa16e8860b">
+    <macro_item guid="ea270a5d-6651-4b64-92ac-fcb784451f5d" bitmap_id="d8f94075-84a0-4738-88ed-24273588e917">
       <text>
         <locale_1033>AGS_form_move_nodes</locale_1033>
       </text>
-      <script>-_AGS_form_move_nodes</script>
       <tooltip>
         <locale_1033>Move FormDiagram Nodes</locale_1033>
       </tooltip>
@@ -415,12 +423,12 @@
       <menu_text>
         <locale_1033>Move FormDiagram Nodes</locale_1033>
       </menu_text>
+      <script>-_AGS_form_move_nodes</script>
     </macro_item>
-    <macro_item bitmap_id="be5b6c90-88e6-4abe-97dd-c25d8c5d9861" guid="ca75f845-4d34-480d-a2f8-edb43ca0d2a7">
+    <macro_item guid="e2197a3d-906c-4190-b208-121b94b50513" bitmap_id="c753b6f7-6662-4749-b01d-84b83f982c36">
       <text>
         <locale_1033>AGS_form_select_fixed</locale_1033>
       </text>
-      <script>-_AGS_form_select_fixed</script>
       <tooltip>
         <locale_1033>Fix FormDiagram Nodes</locale_1033>
       </tooltip>
@@ -433,12 +441,12 @@
       <menu_text>
         <locale_1033>Fix FormDiagram Nodes</locale_1033>
       </menu_text>
+      <script>-_AGS_form_select_fixed</script>
     </macro_item>
-    <macro_item bitmap_id="926059c5-55fa-4d29-9c89-23afdb8dbf1b" guid="27584bad-be05-421e-baf4-9408e4c4471d">
+    <macro_item guid="2bb12f41-f289-4dbb-a8ac-1141541e33b0" bitmap_id="c97e90ae-e311-4254-aea4-3468f634eb63">
       <text>
         <locale_1033>AGS_form_check_dof</locale_1033>
       </text>
-      <script>-_AGS_form_check_dof</script>
       <tooltip>
         <locale_1033>Check DoF</locale_1033>
       </tooltip>
@@ -451,48 +459,30 @@
       <menu_text>
         <locale_1033>Check Degree of Freedom</locale_1033>
       </menu_text>
+      <script>-_AGS_form_check_dof</script>
     </macro_item>
-    <macro_item guid="5510f8e8-eb03-4b4f-ad53-b47dbd9e3cc0">
+    <macro_item guid="2ca49c09-541a-4e88-84d8-ee85255440cc">
       <text>
         <locale_1033>AGS_form_update_from_force</locale_1033>
       </text>
+      <tooltip>
+        <locale_1033>None</locale_1033>
+      </tooltip>
+      <help_text>
+        <locale_1033>None</locale_1033>
+      </help_text>
+      <button_text>
+        <locale_1033>None</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Update FormDiagram from Force</locale_1033>
+      </menu_text>
       <script>-_AGS_form_update_from_force</script>
-      <tooltip>
-        <locale_1033>None</locale_1033>
-      </tooltip>
-      <help_text>
-        <locale_1033>None</locale_1033>
-      </help_text>
-      <button_text>
-        <locale_1033>None</locale_1033>
-      </button_text>
-      <menu_text>
-        <locale_1033>Update FormDiagram</locale_1033>
-      </menu_text>
     </macro_item>
-    <macro_item guid="cf8f1d57-e785-4740-bf1a-aba7233cf117">
-      <text>
-        <locale_1033>AGS_form_update_from_qind</locale_1033>
-      </text>
-      <script>-_AGS_form_update_from_qind</script>
-      <tooltip>
-        <locale_1033>None</locale_1033>
-      </tooltip>
-      <help_text>
-        <locale_1033>None</locale_1033>
-      </help_text>
-      <button_text>
-        <locale_1033>None</locale_1033>
-      </button_text>
-      <menu_text>
-        <locale_1033>Update Equilibrium</locale_1033>
-      </menu_text>
-    </macro_item>
-    <macro_item bitmap_id="c6966e72-d90f-43ac-8410-de796be04c1d" guid="e431aee7-0ebe-4e37-b68f-fc0191cd08e6">
+    <macro_item guid="61986ae4-af8c-4765-bb77-75cdc7effc6f" bitmap_id="46cdd998-2b8c-426e-b30a-32feb7430545">
       <text>
         <locale_1033>AGS_force_from_form</locale_1033>
       </text>
-      <script>-_AGS_force_from_form</script>
       <tooltip>
         <locale_1033>Create ForceDiagram</locale_1033>
       </tooltip>
@@ -505,12 +495,12 @@
       <menu_text>
         <locale_1033>Create ForceDiagram</locale_1033>
       </menu_text>
+      <script>-_AGS_force_from_form</script>
     </macro_item>
-    <macro_item guid="9d259d72-a187-4832-85be-7231b6af56e2">
+    <macro_item guid="6c3efb10-d2a4-4cc3-81d2-74c21eda62d0">
       <text>
         <locale_1033>AGS_force_update</locale_1033>
       </text>
-      <script>-_AGS_force_update</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -521,14 +511,14 @@
         <locale_1033>None</locale_1033>
       </button_text>
       <menu_text>
-        <locale_1033>Update ForceDiagram</locale_1033>
+        <locale_1033>Update ForceDiagram from Form</locale_1033>
       </menu_text>
+      <script>-_AGS_force_update</script>
     </macro_item>
-    <macro_item bitmap_id="aa41bb2e-92ce-49b4-99aa-3091f5395741" guid="81383dfc-ab99-48d4-b58f-d8c53e28a9db">
+    <macro_item guid="47fd49fe-9e2c-4715-bb9f-4e779bfc7e0d" bitmap_id="a23dad41-33ed-4dad-9fee-151698c7735c">
       <text>
         <locale_1033>AGS_force_move_nodes</locale_1033>
       </text>
-      <script>-_AGS_force_move_nodes</script>
       <tooltip>
         <locale_1033>Move ForceDiagram Nodes</locale_1033>
       </tooltip>
@@ -541,12 +531,12 @@
       <menu_text>
         <locale_1033>Move Nodes</locale_1033>
       </menu_text>
+      <script>-_AGS_force_move_nodes</script>
     </macro_item>
-    <macro_item bitmap_id="45a28bf8-0d85-478b-9f19-1630ec4a5c5c" guid="b0caa65d-5680-4916-a5e1-7985a6071446">
+    <macro_item guid="f5cee0d7-706c-42b3-aba4-117294959532" bitmap_id="47a78baf-36bb-442a-9065-eae3b7f1fbfa">
       <text>
         <locale_1033>AGS_form_compute_loadpath</locale_1033>
       </text>
-      <script>-_AGS_form_compute_loadpath</script>
       <tooltip>
         <locale_1033>Compute Loadpath</locale_1033>
       </tooltip>
@@ -559,12 +549,66 @@
       <menu_text>
         <locale_1033>Compute Loadpath</locale_1033>
       </menu_text>
+      <script>-_AGS_form_compute_loadpath</script>
     </macro_item>
-    <macro_item guid="b9f72ae1-0f86-4d0b-a18b-e301e71d70be">
+    <macro_item guid="6e139114-d4ca-4a38-a50a-65bc97edce0e">
+      <text>
+        <locale_1033>AGS_edges_table</locale_1033>
+      </text>
+      <tooltip>
+        <locale_1033>None</locale_1033>
+      </tooltip>
+      <help_text>
+        <locale_1033>None</locale_1033>
+      </help_text>
+      <button_text>
+        <locale_1033>None</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Edges Table</locale_1033>
+      </menu_text>
+      <script>-_AGS_edges_table</script>
+    </macro_item>
+    <macro_item guid="d93802c4-9fd1-416e-812c-9119108733c8">
+      <text>
+        <locale_1033>AGS_edge_information</locale_1033>
+      </text>
+      <tooltip>
+        <locale_1033>None</locale_1033>
+      </tooltip>
+      <help_text>
+        <locale_1033>None</locale_1033>
+      </help_text>
+      <button_text>
+        <locale_1033>None</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Highlight Edge Information</locale_1033>
+      </menu_text>
+      <script>-_AGS_edge_information</script>
+    </macro_item>
+    <macro_item guid="baa681c7-57c6-4cab-9abb-22e8dc43e654">
+      <text>
+        <locale_1033>AGS_form_inspector_control</locale_1033>
+      </text>
+      <tooltip>
+        <locale_1033>None</locale_1033>
+      </tooltip>
+      <help_text>
+        <locale_1033>None</locale_1033>
+      </help_text>
+      <button_text>
+        <locale_1033>None</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Highlight Force Polygons</locale_1033>
+      </menu_text>
+      <script>-_AGS_form_inspector_control</script>
+    </macro_item>
+    <macro_item guid="83f5cfe8-5b4c-402e-bb21-0d066a8134a9">
       <text>
         <locale_1033>AGS_form_displaysettings</locale_1033>
       </text>
-      <script>-_AGS_form_displaysettings</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -577,12 +621,12 @@
       <menu_text>
         <locale_1033>FormDiagram Display Settings</locale_1033>
       </menu_text>
+      <script>-_AGS_form_displaysettings</script>
     </macro_item>
-    <macro_item guid="684029d6-e404-47f1-aab3-1d64bed81def">
+    <macro_item guid="d70502bc-fb4c-4cd6-b757-cfbe732131c1">
       <text>
         <locale_1033>AGS_form_move</locale_1033>
       </text>
-      <script>-_AGS_form_move</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -595,12 +639,12 @@
       <menu_text>
         <locale_1033>FormDiagram Location</locale_1033>
       </menu_text>
+      <script>-_AGS_form_move</script>
     </macro_item>
-    <macro_item guid="2bc69058-30f3-4846-89a2-0e2412782a2c">
+    <macro_item guid="72f10802-f11a-4840-b0e5-5cef292c08e4">
       <text>
         <locale_1033>AGS_force_displaysettings</locale_1033>
       </text>
-      <script>-_AGS_force_displaysettings</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -613,12 +657,12 @@
       <menu_text>
         <locale_1033>ForceDiagram Display Settings</locale_1033>
       </menu_text>
+      <script>-_AGS_force_displaysettings</script>
     </macro_item>
-    <macro_item guid="ffd334e1-5e2b-4d6d-9d86-e2a38241b825">
+    <macro_item guid="86eccf9b-8389-4c09-82d2-10c5bcb55fae">
       <text>
         <locale_1033>AGS_force_move</locale_1033>
       </text>
-      <script>-_AGS_force_move</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -631,12 +675,12 @@
       <menu_text>
         <locale_1033>ForceDiagram Location</locale_1033>
       </menu_text>
+      <script>-_AGS_force_move</script>
     </macro_item>
-    <macro_item guid="b1b342e6-6ba4-4e1a-abc8-2ea06eafff41">
+    <macro_item guid="9c2eb2ee-f587-4565-a0b9-332a418f055e">
       <text>
         <locale_1033>AGS_force_select_anchor</locale_1033>
       </text>
-      <script>-_AGS_force_select_anchor</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -649,12 +693,12 @@
       <menu_text>
         <locale_1033>Select ForceDiagram Anchor Point</locale_1033>
       </menu_text>
+      <script>-_AGS_force_select_anchor</script>
     </macro_item>
-    <macro_item guid="7e1b6503-ba80-4bb7-b227-74464802b28e">
+    <macro_item guid="f4c720b9-cd54-425b-9e70-1724abbdc3ef">
       <text>
         <locale_1033>AGS_force_scale</locale_1033>
       </text>
-      <script>-_AGS_force_scale</script>
       <tooltip>
         <locale_1033>None</locale_1033>
       </tooltip>
@@ -667,12 +711,66 @@
       <menu_text>
         <locale_1033>ForceDiagram Scale</locale_1033>
       </menu_text>
+      <script>-_AGS_force_scale</script>
     </macro_item>
-    <macro_item bitmap_id="893c87b0-01cb-45c5-b383-9148b0ebbe41" guid="5ffd5c92-2668-45a8-932f-4a225064236b">
+    <macro_item guid="a3a0c163-47bf-47e3-a65f-ef67378cfa76">
+      <text>
+        <locale_1033>AGS__undo</locale_1033>
+      </text>
+      <tooltip>
+        <locale_1033>Undo last action</locale_1033>
+      </tooltip>
+      <help_text>
+        <locale_1033>None</locale_1033>
+      </help_text>
+      <button_text>
+        <locale_1033>None</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>AGS Undo</locale_1033>
+      </menu_text>
+      <script>-_AGS__undo</script>
+    </macro_item>
+    <macro_item guid="d412301e-65e0-4b46-8ac8-5aeb2a201a49">
+      <text>
+        <locale_1033>AGS__redo</locale_1033>
+      </text>
+      <tooltip>
+        <locale_1033>Redo last action</locale_1033>
+      </tooltip>
+      <help_text>
+        <locale_1033>None</locale_1033>
+      </help_text>
+      <button_text>
+        <locale_1033>None</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>AGS Redo</locale_1033>
+      </menu_text>
+      <script>-_AGS__redo</script>
+    </macro_item>
+    <macro_item guid="1ee21839-5692-4389-a209-038b8bea1ee7" bitmap_id="e44e02d7-d0da-4b6a-a5f7-67e4cf0b5063">
+      <text>
+        <locale_1033>AGS_toolbar_inspector</locale_1033>
+      </text>
+      <tooltip>
+        <locale_1033>Inspect Diagrams</locale_1033>
+      </tooltip>
+      <help_text>
+        <locale_1033>None</locale_1033>
+      </help_text>
+      <button_text>
+        <locale_1033>None</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Inspect Diagrams</locale_1033>
+      </menu_text>
+      <script>-_AGS_toolbar_inspector</script>
+    </macro_item>
+    <macro_item guid="7dc9e96d-2db9-43a1-a351-7b727fe50393" bitmap_id="5bcb1e54-d39d-4d91-b263-98dd1afe133b">
       <text>
         <locale_1033>AGS_toolbar_form</locale_1033>
       </text>
-      <script>-_AGS_toolbar_form</script>
       <tooltip>
         <locale_1033>Create FormDiagram</locale_1033>
       </tooltip>
@@ -685,48 +783,30 @@
       <menu_text>
         <locale_1033>FormDiagram Create</locale_1033>
       </menu_text>
+      <script>-_AGS_toolbar_form</script>
     </macro_item>
-    <macro_item bitmap_id="b45d551f-f00a-4b85-9c10-b92a6f64df13" guid="7551a0d7-0e26-405b-ba05-02e38b9ea946">
+    <macro_item guid="90c2b3a3-ed61-4be4-b133-c622def35f79" bitmap_id="9c336596-da55-4330-8aec-4e0a88700db4">
       <text>
         <locale_1033>AGS_toolbar_display</locale_1033>
       </text>
+      <tooltip>
+        <locale_1033>Display Settings</locale_1033>
+      </tooltip>
+      <help_text>
+        <locale_1033>None</locale_1033>
+      </help_text>
+      <button_text>
+        <locale_1033>None</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Display Settings</locale_1033>
+      </menu_text>
       <script>-_AGS_toolbar_display</script>
-      <tooltip>
-        <locale_1033>Display Settings</locale_1033>
-      </tooltip>
-      <help_text>
-        <locale_1033>None</locale_1033>
-      </help_text>
-      <button_text>
-        <locale_1033>None</locale_1033>
-      </button_text>
-      <menu_text>
-        <locale_1033>Display Settings</locale_1033>
-      </menu_text>
     </macro_item>
-    <macro_item bitmap_id="d08c9473-9315-40cc-a6ce-c70eabf5e838" guid="4ecd51cf-3b6e-48df-a128-3a7ea2d9a4ca">
-      <text>
-        <locale_1033>AGS_form_assign_forces</locale_1033>
-      </text>
-      <script>-_AGS_form_assign_forces</script>
-      <tooltip>
-        <locale_1033>Assign Forces</locale_1033>
-      </tooltip>
-      <help_text>
-        <locale_1033>None</locale_1033>
-      </help_text>
-      <button_text>
-        <locale_1033>None</locale_1033>
-      </button_text>
-      <menu_text>
-        <locale_1033>Assign Forces</locale_1033>
-      </menu_text>
-    </macro_item>
-    <macro_item bitmap_id="45f19918-2427-46e0-9f7b-b9cc94e22dbd" guid="87ed8afc-2465-48c0-b614-2d0b4e4d85dd">
+    <macro_item guid="c88e0d46-be56-4b2b-9faf-67ad12f59d53" bitmap_id="3f8ab053-9367-43e8-a749-034037bc6d73">
       <text>
         <locale_1033>AGS_scene_redraw</locale_1033>
       </text>
-      <script>-_AGS_scene_redraw</script>
       <tooltip>
         <locale_1033>Refresh Scene</locale_1033>
       </tooltip>
@@ -739,12 +819,12 @@
       <menu_text>
         <locale_1033>Redraw</locale_1033>
       </menu_text>
+      <script>-_AGS_scene_redraw</script>
     </macro_item>
-    <macro_item bitmap_id="4e958edf-3517-46f7-b8d7-4453155bc83a" guid="4827da18-ddfd-413b-9ef6-05c01afce535">
+    <macro_item guid="42d271a6-7ef8-41ce-9c9e-2d368ea4dc7e" bitmap_id="0993c6c5-0494-4c6e-8864-687ea12c6c61">
       <text>
         <locale_1033>AGS__restart</locale_1033>
       </text>
-      <script>-_AGS__restart</script>
       <tooltip>
         <locale_1033>Clear Scene</locale_1033>
       </tooltip>
@@ -757,68 +837,309 @@
       <menu_text>
         <locale_1033>Clear All</locale_1033>
       </menu_text>
+      <script>-_AGS__restart</script>
+    </macro_item>
+    <macro_item guid="2fbbed7d-bc51-4d0c-89ea-0f29bd5830ae">
+      <text>
+        <locale_1033>AGS_docs</locale_1033>
+      </text>
+      <tooltip>
+        <locale_1033>None</locale_1033>
+      </tooltip>
+      <help_text>
+        <locale_1033>None</locale_1033>
+      </help_text>
+      <button_text>
+        <locale_1033>None</locale_1033>
+      </button_text>
+      <menu_text>
+        <locale_1033>Web Documentation</locale_1033>
+      </menu_text>
+      <script>-_AGS_docs</script>
     </macro_item>
   </macros>
   <bitmaps>
-    <small_bitmap item_height="16" item_width="16">
+    <small_bitmap item_width="16" item_height="16">
+      <bitmap_item guid="acef0312-16c2-40d3-a512-5b9b9eedd652" index="0" />
+      <bitmap_item guid="8986ecd5-9e2d-41af-b1b7-9b556c008be6" index="1" />
+      <bitmap_item guid="3ecdd25f-5434-4db7-b134-2af0534b1110" index="2" />
+      <bitmap_item guid="5bcb1e54-d39d-4d91-b263-98dd1afe133b" index="3" />
+      <bitmap_item guid="08ab88e5-9a49-418e-99a9-fb9b876cbb9d" index="4" />
+      <bitmap_item guid="c97e90ae-e311-4254-aea4-3468f634eb63" index="5" />
+      <bitmap_item guid="46cdd998-2b8c-426e-b30a-32feb7430545" index="6" />
+      <bitmap_item guid="d8f94075-84a0-4738-88ed-24273588e917" index="7" />
+      <bitmap_item guid="c753b6f7-6662-4749-b01d-84b83f982c36" index="8" />
+      <bitmap_item guid="a23dad41-33ed-4dad-9fee-151698c7735c" index="9" />
+      <bitmap_item guid="e44e02d7-d0da-4b6a-a5f7-67e4cf0b5063" index="10" />
+      <bitmap_item guid="47a78baf-36bb-442a-9065-eae3b7f1fbfa" index="11" />
+      <bitmap_item guid="9c336596-da55-4330-8aec-4e0a88700db4" index="12" />
+      <bitmap_item guid="3f8ab053-9367-43e8-a749-034037bc6d73" index="13" />
+      <bitmap_item guid="0993c6c5-0494-4c6e-8864-687ea12c6c61" index="14" />
       <bitmap>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlz
 AAAOvAAADrwBlbxySQAAABNJREFUOE9jGAWjYBSMAjBgYAAABBAAAadEfGMAAAAASUVORK5CYIIA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</bitmap>
-      <bitmap_item guid="c515756b-e967-4399-b90f-fbbc6d1d884b" index="0"/>
-      <bitmap_item guid="e1a7f8f1-c070-4d92-b6de-a8577eb2cbf0" index="1"/>
-      <bitmap_item guid="de4ca43a-815a-4bd2-977a-e312e3c51caf" index="2"/>
-      <bitmap_item guid="893c87b0-01cb-45c5-b383-9148b0ebbe41" index="3"/>
-      <bitmap_item guid="d08c9473-9315-40cc-a6ce-c70eabf5e838" index="4"/>
-      <bitmap_item guid="926059c5-55fa-4d29-9c89-23afdb8dbf1b" index="5"/>
-      <bitmap_item guid="c6966e72-d90f-43ac-8410-de796be04c1d" index="6"/>
-      <bitmap_item guid="1b0ce0c7-6a98-405b-bab9-da0587e6eab1" index="7"/>
-      <bitmap_item guid="be5b6c90-88e6-4abe-97dd-c25d8c5d9861" index="8"/>
-      <bitmap_item guid="aa41bb2e-92ce-49b4-99aa-3091f5395741" index="9"/>
-      <bitmap_item guid="45a28bf8-0d85-478b-9f19-1630ec4a5c5c" index="10"/>
-      <bitmap_item guid="b45d551f-f00a-4b85-9c10-b92a6f64df13" index="11"/>
-      <bitmap_item guid="45f19918-2427-46e0-9f7b-b9cc94e22dbd" index="12"/>
-      <bitmap_item guid="4e958edf-3517-46f7-b8d7-4453155bc83a" index="13"/>
     </small_bitmap>
-    <normal_bitmap item_height="24" item_width="24">
+    <normal_bitmap item_width="24" item_height="24">
+      <bitmap_item guid="acef0312-16c2-40d3-a512-5b9b9eedd652" index="0" />
+      <bitmap_item guid="8986ecd5-9e2d-41af-b1b7-9b556c008be6" index="1" />
+      <bitmap_item guid="3ecdd25f-5434-4db7-b134-2af0534b1110" index="2" />
+      <bitmap_item guid="5bcb1e54-d39d-4d91-b263-98dd1afe133b" index="3" />
+      <bitmap_item guid="08ab88e5-9a49-418e-99a9-fb9b876cbb9d" index="4" />
+      <bitmap_item guid="c97e90ae-e311-4254-aea4-3468f634eb63" index="5" />
+      <bitmap_item guid="46cdd998-2b8c-426e-b30a-32feb7430545" index="6" />
+      <bitmap_item guid="d8f94075-84a0-4738-88ed-24273588e917" index="7" />
+      <bitmap_item guid="c753b6f7-6662-4749-b01d-84b83f982c36" index="8" />
+      <bitmap_item guid="a23dad41-33ed-4dad-9fee-151698c7735c" index="9" />
+      <bitmap_item guid="e44e02d7-d0da-4b6a-a5f7-67e4cf0b5063" index="10" />
+      <bitmap_item guid="47a78baf-36bb-442a-9065-eae3b7f1fbfa" index="11" />
+      <bitmap_item guid="9c336596-da55-4330-8aec-4e0a88700db4" index="12" />
+      <bitmap_item guid="3f8ab053-9367-43e8-a749-034037bc6d73" index="13" />
+      <bitmap_item guid="0993c6c5-0494-4c6e-8864-687ea12c6c61" index="14" />
       <bitmap>iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAALGPC/xhBQAAAAlwSFlz
 AAAOvAAADrwBlbxySQAAABNJREFUOE9jGAWjYBSMAjBgYAAABBAAAadEfGMAAAAASUVORK5CYIIA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</bitmap>
-      <bitmap_item guid="c515756b-e967-4399-b90f-fbbc6d1d884b" index="0"/>
-      <bitmap_item guid="e1a7f8f1-c070-4d92-b6de-a8577eb2cbf0" index="1"/>
-      <bitmap_item guid="de4ca43a-815a-4bd2-977a-e312e3c51caf" index="2"/>
-      <bitmap_item guid="893c87b0-01cb-45c5-b383-9148b0ebbe41" index="3"/>
-      <bitmap_item guid="d08c9473-9315-40cc-a6ce-c70eabf5e838" index="4"/>
-      <bitmap_item guid="926059c5-55fa-4d29-9c89-23afdb8dbf1b" index="5"/>
-      <bitmap_item guid="c6966e72-d90f-43ac-8410-de796be04c1d" index="6"/>
-      <bitmap_item guid="1b0ce0c7-6a98-405b-bab9-da0587e6eab1" index="7"/>
-      <bitmap_item guid="be5b6c90-88e6-4abe-97dd-c25d8c5d9861" index="8"/>
-      <bitmap_item guid="aa41bb2e-92ce-49b4-99aa-3091f5395741" index="9"/>
-      <bitmap_item guid="45a28bf8-0d85-478b-9f19-1630ec4a5c5c" index="10"/>
-      <bitmap_item guid="b45d551f-f00a-4b85-9c10-b92a6f64df13" index="11"/>
-      <bitmap_item guid="45f19918-2427-46e0-9f7b-b9cc94e22dbd" index="12"/>
-      <bitmap_item guid="4e958edf-3517-46f7-b8d7-4453155bc83a" index="13"/>
     </normal_bitmap>
-    <large_bitmap item_height="32" item_width="32">
-      <bitmap>iVBORw0KGgoAAAANSUhEUgAAAcAAAAAgCAYAAAHyEZjTAAAACXBIWXMAAAsSAAALEgHS3X78AAAgAElEQVR4nO19B3gU1fr3b1LZJJBQQkkooQVFCAECV6UFLoiAC6FXEYWrgoJSLDRBEUWqoiKIVOkECCwoXpGECFKykFBChwQCKQTSezvfc2bPWU4msy0J4nef//s8k8zOmdPL299BBcFekV38LSnS7NhlDpTl8XIcVMq3GSShUeTRo0ckLi6OmPitVpnxd8PtuAWgcZnyc3KuCL81pvIzaLZ169b27HlVAJ7KBscufmRsH/s/jqc1aOBtvLerv/w4qfPBphn0P89w9OItcv36dfn35p+30P/G3wwcAWSIFer1+lR221zxm4KTon1NT58+LaY77t+/P4PNVkNlZ4C0nkBxNr2j7fR4rj3R9HidlH0PIISQ48flvmwQnxtnsCCyP6FX9KG+J9lokMO7x4cK7zVVzLga+AGobXi+cghycy8L7zgr6ixT3v79+983VV/NN74k8mS41+MDVGomp0yZQgJ8Qbq3geoAWAvm9p8SnFnjnM28o5ZfI3SsQvuvFGRkZJDExEQSExMjj4DytwyFyCyVqbBQ/s32n51iedIl5y3MkEaRjpCQELE8ehjVY/fV5P3HyucwpMc2kr3jNBFmzwhjxox6/IxONb28PtWt81r465GixOFyZ+b+cp6cjrokF3Dz1m3xNxSNVUKDso96daIbQ3jgqWiYsTxieO6s0+l8HieHD+Hpzb//i+zcuZMI50UpIAIA8C/zQrf2NYlhD2rlAjq/8GzqsGFDxMKc2XKRQEqPnl6v579r0EOF/abvvqCoRkYXJ06cIGJ5Op2OsA5eNVnfmDUEU4+QbnM/E+umHdlH//MDJnKV7fuP5ObmErpcKcqgs6yYBUvpItBTtr6ZupTp9GT19P4ea8yUCZbWlG2JQJV3LR2MpupXAh3wMax8F/a/C/tPLOV/J+RZsqZoCgkpWqFsH8+/Ty0fwwxloWqP0b1Yx2uzpd2U/q895Yc5YsEdfzwtTwzF91P3RxnRIsUi4qVMV0BvANtNDWR4eHi7I0eOrFU8poNUB4Zd4K/X61eYGJuGwLiWAGoBqKKS7r5mzZrOZvJj5syZvX/88Udl+xzZGAyni0mn03nodLpA9RKufwCknlP2r/P206R///7y0bHN/3Vye/5zJPf2m3x85qssNrrrPCAcKydP/jVfbRKreARNGVpvbvAW1+e1z9AK6s7cvoD+9/7qD5mwKowbTI7sn0mykw6QrMT9JDMhhKTH7yVRUVFG9Orv70+6du1qpHeio6N5urOwslqw3dGQLRj6TKJHkXA8GYE/s5Ru2BEr6Tn7vNrksffE3UHfmcJ+VxGOtlLtY88k9p8ei21peXQCheKN/ZuF0V8cBYbR6xAwivevzvQNhF4//fQT/R3JNom4y5QLapw4oXwC33//fdK5cyf5CJ09ezZ5u5+Vx2j+bw2J8gIQxNNf/FeLVLrzPpk3n+zZODzURDFEQV1LxICoJMVkPM4gIE6WXoPRf868Xyp1uKhVbql8Oonm2segCbts7t9/TrHFPvWIuUH3YLtR2c5xK6a35Hhvg3rWvxeUbJISLKWrgSTQu+J9ecCa+u3Z5SD851Ce9j9ZyM/PJ1lZWSQtLY0kJyeXWf2W0gWQ+NFiZTr9b8fo96qMRlcrmx9l4vGsZFzkQTaR31g/241l2ic8d/X29k5g5DN91ko4oquY6x8lYKbcDpSJGAXeCxTKKAMtWvhS+kKVuIGiMknlGcTJiY+PJ3fu3ClVmaV0AagQw9XMACrTq/kckMvxZPIApUxAbHdDA8FRlMEYrFJAzFOwpuo3lr9jxw65T7t27dossOL02KvOjnfaxmbm+kcZvJ8GnCRM0CKy6DHCa5SJlPkoQojxyFQjYChidqq//HiJ/H9peAa9rz1t3UfsWVXWQFJUVIRW6y/hq9OJKCwsxIIzD+UCOPX57LMt0Lr1c2jXzr9UugIoNTdKTXLEYc+ePUF79uwRiZCM2P5yZ1KoGEWv14/S6/UeJrI7AvmRKDLkU04A/XPmzJlx5vIvWbJk1KhRozwV+ShL0MbR0ZHuwjCNRjNlwIABX7P0NDbgKcDDpkDMbOBaH2XBVL7SokULMijld9SLGYWSnK7KVwYK99U5BUoJGk7E6PURdLzLtN2bUVdetJHeX/73jOfkVYMZpaShnD29dp2LkXdW9M0YEnXlOpmlOyevoDtXt0beibsXqr9yg8Tdu0duXt5bKr304OISu/dQI/P1en2kyqBKjGCyN5HOwQmI309ZBRMsBKcmCXtHecQ57tu3r0z7aB6Wbws7QlFaysDhcgOgkO2i39oBEfQYx+D/npVZh7Fjx5IFCxYQLjkx0w8Ocl9FycTy5cvIjz/+SG8piyETi3b1l4ZTViGp3id7F9VffjxKcnbp4Fi70ShWCCGFRfhsWSpeqX8J1ez1aOh2Hk3co9EqeZf8wv07+rRBQQP8p701HqNHjULqw9twRjFGNDLidE6eFwDoy445erx1pytbZBUCAgLa8kx8l+j1enoS6PR6fZFaOoP6QMQ0wGs+ioriAOQJ73FcWCIBHdnupzxlEl28bFJaEKBg4MCBxva1aNFCbp8EuNDrjTfeeIWidcr/abXaWKFu1r+Wdw+j2iwDG9G72QT8+CHN/8s0w0mblZWFnJwc+T51+xfKyVKjpsuIkT75ZB5atmxJJTyRVTUw8qHmiAlk/NqWcPEvF0Ed3dyD8DOaioGfe+5ZQsVRVCwliIU5ODPiQRTZSux4djNRt6n2EIGpFqWjdAI/BtBHQQ2KedUIGnsr2ifj3b1796Zt3rzZFPFkMr9T19dIzYBu8q7zW3OCoH4bYmQpSkMpqRb/TbdbaGiozPv17duXhC+DbeyEh5tdGR4w9AdvY2WT3+x8pX37tuTLxUsJ5QdN8IEalVXWlF0yWKAMRWbckR35Slzgak7MZqF8DT8eTbXPBF9ozG+hf/PpxMmLvv+n5toxn1GjpYBOYO6fXSqsf7AWKMFDKFtBZaOUOqXyUUqhUhkppVItyTMrmF8NOCFCLEjiKyO/HUMR1djOdOenhaVFKoAovWoqSIcaMkkSTzOn3ykDNtSvBLn/bJFbPX4qmwJsTBoLY8n7Sqn4RgCeZb+rMqGMMxvTcs8fZd1E9k2QQ1f6hqCq2nbt/MnWrVusKtuSkrxcQLkIflHuQ/xNLwaEUd9loKL5VcAeZzGaTXBSOQbeHmfPmstfrcEGHKAsYMPtuNFwu0xAcpY1jWmexgUEBFi7cAoZO0kvSi9RuizRkFR0FjdurGIYo8BMGU6MeJbZZhvrL9P/r7/+erRWq7Vp/Jgohx9CVP9J5s6dO23r1q2RrP2Jwhp8xDBRCftNucBsRo+6Whh/s3Aix0++YvL6IuziO/J1/cjkMs1lIuhU4YDbwLBajPCsrIpSgLi4+xuTk5M3Nmrkg4ULF1rdTn5q12TcD9eAuzO5fU02OBp2X0s82ZUdoRjrXV002XD6toyxfjp5Q6bB1vx5lRy5cFO+/y70oqkTqKL5leAqDJ6qmNsCaIT8piScdPyqu7yAdowF54tKtugxpUsxA5KA8ZwMp35etMys3LjxnpUHp4ZtQE056hfBVeCELY2fPRsjujZ69uvXj+ahG8c1JCRkE1PCxajkk0xfV7vaOH+RDjXqGftqp6maSmVfovyLXirGDqFCPeZo/BVKdYPAqMcQQmTSukED71TKN/Tu3cviuNPOe3gvPhpfb/7+cM93v/+EbkYqU6sxeu4EShp4ff7LYq8FB5fQhe/6vJbKe5p7f3X0L04CtWnlQbi4hrYnNiHZKG6gopv+P+tlwSj9PWH3WVlZyEQRhDVWvk9JTQ3du28fiU96QA5djCW/XbknP6fp5vKbAEdGzuxii5guissmRDCqQCUFer1+A18cZsRAEiu3G4DnBJKT5wdMi5lMldcY6NwTSN0lL+qhQ/1x4sRgKzefA980bOPQQ8g5IiLC2vopOPbq1evZHTt2GMdv7969auNH72uyevzYnDRjWm+i0+kiufJUp9NZS7EAiG8F6F8DskMNBm0feAEFsUBUoMr8xdi5VKMbe5xH0BQyevRoEhkZKV/OzdoSxcZSXhwCbaCoSvF5xATQdUs3YYMG3mqHjhEcPd/+ejLfMGxhP0v/u3Ue/Ao9dasP+2ii1xe/RXgvDj3B6PcO7D1Kt0tFCcMIvbq9WNtSZ43XmDFjjBvobNhH8ulz4+at0LU/rSPRV66Q6MtXyK3bt+V3zp/6hty8eVPeeFdoWnQ0uXDhAs/PJSzcMMiFSYii2cIRT1dHhlWi2aI0aedmbrOopNGy6wJozQwNzcpsLWxkJ2BPb+DuQaY4dsQvv4zEW2+1sGLz8bFwCw4OppvlVSrBE8ad3vv+/vvvF9k42Zsav71795ocP5bmKuR3J4/lyxQDTtyzZ0+ayAOa2XyK+jfXA34bARTEGDaesv6QVwxpX9Xm80elWiP2/SKvXbfXv5FlztTyYebMmaTViNGk3pxg4vnOt7KhGIYuM3VoEzVFugI81NR9pjYgBW49QTdjcHCwfM8vWh8fVCruKwaQI6D5HJZGfxex3w5COqXP82n9edEvk89X3cS86f3Mtj48IgXdnvcJc2i0wJ+RajKEHphkygLDCN37r+puIslZkFs/I1jrNWO8lBIkRkLrGU8Rx2TloDwSJ9Us8UtM7l7KEkSR34Et4BKBV7Nn40zE/Aw0bIxLK4LDw+eha9dvGS+puniEOqsIY0E3733FGHBMTQU7EUyw8Uin0+XSRK1W+wxh4ydZGD8C6CU2fpRtIUAOlfcTQnKCg4Nlmf3YsWMhSRLVjcdotVqlHbvZ+QtBlbHVkJevfLkEkO4B7uMgGyfK9XfdfrrkuD4LbVtqkJEH5OaXIOO39XCoUQ8uHfogK7MYQ3u742ZcAUKXfwec3Gxqbimm2qSyEQO54kcxDjJwu4XY2Fi0bt0as2fPRpcuXYwvJiYmYvLkyRjQLgFvsS0Seh6YtgZTy8uUl4KNr2nIyFdVlGMK+Ot2MbTv3yrKyil2FFMObB0T+tW3ev+qHo08oqMvYcEXS+BZqwa++PT9tI8mB0TRd/qP3mJqA4rgwAwbwLSORSrvSDLmJngISd6IKeWRhqlsIGUdtOwH1JaQLXZ7vsHo4UONtlXyswNxd3egSnccr94QnTu/Y27zlRdMtN/q8dPpdA+1Wi0fP4iHC8XUGzduTM3KyqpWs2bN4yNHjuxqZfvLO3/ubIzmD//j3Lzdv6SiJC0RvjXSkFGrNR5G6lG0Y5rEKKNYlTJF8FHYRYgQxhSgEMsSDYfSwl7CmYtJiI6+gO5tDM/YZgPLG6bsTGWArQKGUsC8bNSY3hDqAkLT4uLuW9NWe0YKgknYik3U78Y0uskCiVbZYK+CAZ0Ypss00TYODoIO6paJhfgkoLLGr7xjXFn1e7ANCWbGEfI3jR8HziOGWXqx8nx9/tkgCRrzknK01Nb8FT3Y7AV7HqLggxwUesK/Ayo6fiIoy7IXeFsHdi8p+laZ9f+jQM1spEJQXFxMiouLUVJSIl/8nv+vVYtSDXidUq5q9VQ0vwlwEviMKox3tQVsye/EVDoZwvjminymhXolpjOLYxYjqcJilNjJz/m3eGs3obW8rak+6XQ6uf9ardaq8eMCGK1Wq5SYugmWnhqmcHdgWJ6S7L4Mq6WzvhWw9PLOH1XCw95PdonCcw39UIe5VQc5VA4LJgIVtgwZMhTBwbtj4+Lum+J7jVDpinhzm4f+p7Bhw4YNoqN3ZeY3ARXF9Jbyc+8IZ40/OvgckEkjdyYlrlGO+vi8KKMNuANbxwm/rWlTZUBFy+EYrAY7NERwY/wUF8pdZ5L2bMYz134SiMIC7FOR3JtwIiwDnw4ePARz586zLBR5EpCXl0dycnJIZmYmSU9PJykpKeThw4ckKSmJJCQkmNLBGKGi+VVA1nMiW5auVS2nGZoHsrNN5bd3eRFtNe3wfJXW6EadNzT+6MQWHFemm9MhqoEb8+l24x49Br7m5Gyclj3oLS1Kjik9BZ89W+ov0//g4ODyjJ8dw3KeTAc7ef369ek///zzF4KJGR2ffwkmds8yP/UuTIDVUN6cpsffEhD/bcOJ9vJi+RoZeY0sPlwkX0K+QCZ4Eb2KYpg0dIPwzCo9oaB6MOk9zEGcRCXdDaGzSnpc+cwIpjAXx2p37941PmvatGml51dpvxvWYQRc0Y+dqrYKjNywbt0IuLqazl8IhzrzIQcqSfoEnXOjZBKRivBl8f7p06cDRVcAK4ALH/j/qkDyOmDHNtSqvYxJ/iwJZoxWO3q93tb6S/V/ypQpI4YMGWLL+HH1Vm3mKU1jCHTcu3fvPQcHh5j+/fvPEt57yAQm9szKqpCRomyd/dsF60YNNzv+FqDZTwPwclUDNdizUy14Njwr33/4OFsYw8Jc1aCUVr7OhDkebGOWIi0JIT6SJBmlq3fuxNJ7n27dur2/Zcu2qda00YmRB+6CcrWKwuzMSWGaVkXtNOKYiypFOebquOY06bDmFLl79y7psPoUCVh9kty4cUN1ICuaXwH0hPVlYuIW5cR+TVj+ZmbyO7kFohW9FC6LMhloxr/VFGgYBnQxjPnDYGBMK+Tn37PS4Vc0ZZPKUT8HW8aPk5k8BoU341XpWnE+cOCAjIF1Op0a62DCFC3YCdg/xlD/7B5WzN98R+/mor0m/W80Q+OmaNQMjZmiiaCkrtS8DoPYRjVlCSPrD6nX3+zZszgWNGs7yjtfS47v89nBUG7NUOejLV9wy5i6M7dT49/69Zcey5CfLQ3PYEpQzhtE8obTzbPxTAy5EJtAom7fJ2N2RZL79+/Lmyc2NpY88+1fZMOfl8jVq1e5Gdp8ZWAS5fX222+ZzG+hX+6M4W/PSCBT/rwmy4iIiKCnc5MzZ85cMLMA7Nlp76O0V+RBmmwkAfkGrAtknQLmNMbgwW1tMUVjJF1zHsOsHCSoPH4s5ln7PXv2mBs/eyFCDr02swXsvGPHjurUHA02m6LR+q/3M8RU+2shkB8L7DXLT9drFyCvV/fa9cjbb79tNEOjgVwO+TWWLx7QRQjqwoG33dI4bVBuThUDmEhuhkY9Iyx1VJ4swQyNStc82X0j2U50SdhFwU23DQ3EVfv9H7uwxRD58Pogoy0o5dl4WT02RJAZBy8YN8+e01fI7lPR5OylK2T78fNGO9BtG2ZGhoSERCY+eBD6IDlZtgOl1/e7DpLN25bIm9BUftOTV8r205nxFssYaWQVsEUrn8bHjh2jynNTpkoODEOUOjnFRc/sQi2ZOnFwMWxAGvHwy4ZymUWyo7+aq7Fa32sIdqCU/9IEBwfXtKF+SWH76UztQjdv3qw2fk7MgqWNsIipFFhixteyftd8NCS1+unmo7af9H9EQ4NdaNouYFoZCsC1Q19a5wo7jZtscsbtQMPDw621A4XgDWEJgpTpaiZou3btIvv27ZMvc+XJQQ3qztk9rzDh9k+kqCChavdRLT0nr+pakptJw0PZeX/5399QVJCb/O2kP0lx0X3qdm1XtfobD75+8zorw9+j2uM5ofzZsm5eiBjZFP18XDHFzwMHYzJxKCYLfjUckJBVhF/v5qK1x2PBWttW7lTsjLS0dGRmZqGOfSFauJTAU+OAf7U0HHrm8pedPHkB7GbMfAYTW99k5mddrcEier1+H+Ob5Mnq1q0bPb3DaGgvldftmQlVD863CfllCAgISDOTX9l+F7Sle9elCzAzAZ9/7oe1a3tacD/iINt8rl+37qhkwPyUBMwZMmSIe1JS0l+nTp2yxAvK47dz587dgwYNMo7f77//fjMmJkY/b968rgpvDzcCXCFAFCN5qVuW644dO+hBtEKr1b7O3k3VarUWFdNs8/UFvOcDse8A9S8AHe4CAduAB9eAdycq5i+07bR5NErj+14LD6OwgODOnTt0/LF9+3Y0XnmCphkvxt9JKtSMZKVqK9YaiejQoUPx8ccfwdPTExMmvEFYdJEgJsjhEU0MUiqHGvVGO9ZrMkFycKpXrc+EjVnhu2/ZaapS1xrn+zNf+g+Nc+A5eVWXkpyMnfemdW5ZnJL4a93ZO+caB4LZ3TvU3Snr6Ya3b4J69epheveWaNiwISZ1ew7vdG+F5s2bY0rPNpjTt51RpUAhJztVFijk5uYgLz8fGhQhLz8PHs52yM+T9yZequ8s5+np5Yighk5ifu4C48AuumPXUxtdZnHCB5dmOARgEsPsJgM3MQ+G15XPAwIC6AJ6z0RUEuoJcIfWU8780mO3sKLbiJT3icE29+OPD2LixAtWKKFlUvDgwYOblixZ8jmAJbRalkbdg/rdu3dv5rRp07yF/pcZv61bt67X6XRlxm/evHmHfH19Jw0fPryR4AycIQG+kkF/R61XFk6dOvU5jUZj3HwM81VXb7Ky/vNaoM5HQNJSoP5twOXe4/kbtwKoFQRcGyTO37ONnZG8yuDfl5ZWKCOB1NRUxMfHo309g0HMvZ8W4F5cnokmGKWglmADI1GtwuT9+hkMPxs3borhw4ePO378+L7jx497HD9+fEWXLl2MmLEuIy0p/+LD7r28Fx+9bPSQMPB83qLHhFvXoc3ZgiE0duHYoY1I4YPlJOeBjmQ/OGCIY5i0n2SyWIYZCftIRvw+Oaahl5eXTCKAkaB//TY11NfXN7N9+/apNL4hv/z8/Ig+fKlMglKe7/Lly+TSpUvk/PnzPL8kBLfyZ4prTkr4KDzJG7KN11ogQeRFJPrKMd85s1hK6V/H7h1Y4F6b87N+VDUooWVSs4WRBzx8eCQmTfI1h7VZWcaxqFmzJj2lqbtYS9Zvd/bfT0GCVRECq8jjR4/SkSNHmh0/gbzlm8Ao8Fm9enVHCI7AsOwJIczfkhH0PggLt32BgbN4nEd+HQGGr0b9dxXzt4+6IPF1ScnQvXv3ksWLF5MBAwbIfCB9TsMqMT9BU/o5SySo6KhbyjC7DAMYGUl8fHzIsGHDCA2mzL0fDh8+TJo3b076P/+Y16SLJuvetM41mYgX96Z1phgk5/6HPdowxtqBncRF96Z19mA8QCGzVpBP5OKMbKDEBci6A0cZCZgYbftqYSci4tzi4+N7tW3bltvq0ah4WLO0p14tT2babfov8JlnnlHDVspnfJFeNCGuJoJBtEkICDAYgNsIRrVAQEDAebYA7RnZWCwIrExhMU9CyDVIcpeu0qZKkJqiR4/FePnlJraYYD169GgIsyFNFxZNBsNQtKzbJrLK47d9+/ZyjZ9Op5PbuHz5ckrtcGuV17VarSnsp4APbkA+fc7d64h9t1QaRxrgXor4rMm/e3kktByItLg8DO5THacXHsZbf0Qi/+ZVuHZ4FZ7d6oIUlqDn6N442aoL7k7rbMoguy3bFCGCHSmHGIXgRfWAbdu2Lby8vDBr1ixs2bLF+HzlypU4/scurH0f2MWUEvob8I9/xDagQgdYINynK9KUv2XYsP4KfprTBiTdFBY3nJd2Gld0G7IjQNlBugFX/BQXePlyNOrXb4AGDeojPT0DUyc0sMQzELaoXNihoGGWk9dZv9TAjqkUwN1tbDXPUr5vwquAL0BPFm6hBmvnw4CAADuVBZ4sSVILoEgPOHQApKs4fnwYnJxaW9L5CfUnnjhxAp06dYoSPBPEsSpgZDIX5tDfiVqt1jh+B3U6aj9mdvwkxfhxfadWq7Xbt2+ff0lJSVetVkv54WE6ne6UGd5Kdf6+kvYs+Mr8/J3m9d/+4/dj8PsoEJF7cfbcFWDAAqS6tERRy2dRs7YGWdfOIS8lHVXad4Oncy7uGnhVNYhibEMq24RioMGBCumoamDEpKQkzJljiEgeGRlJQ3Xjg0FZmBloIFqpV0S/uXKyUc/IFfHKiVIOkrnfWLQlHm/0sRwt4BGcHHiIaREKCvIxYsQIfPLJXPi2eAbd//0SSFEeCgqOWiyTLbTcx86sMvD/aqc4J/fAJvNJG/c6CjaQvszG85rC0p+wBX8TcGgA0Nh8DkDr1i/a6K1R7OwsU9XmNmyJwpayouNXJLgkkYEDB0auXr3acfr06W5eXl6LtFptgEoZpdpcwfrnY0VPWbrbatVPJNHFAffORQOeTdGzoyu2PWiF7O+7f7ppu2zV8r4KdhOBHhSvMWGJWt2NzQlhEhISMNhnPd7/8hjG/Tsbfy42PKeuSKHn5bLLyAUqxcbuzKo6/BM4ZqHNqOsBKHsCpdFAS2FhBrI6MysLCQnxuBp9Hv27q/mDmgUPYiDdPIRFoQRH4TRzUS7W9u3bW6zEnGGzSv5CNpm5HFPQIJkq+TmpmEkxIAG5KrlLoy24LZWBCrbf45VXXgE74U2OH9frMcxZpGzj22+/fVHAUrN4v62ACs3foxvXUJc64W15S8YwB48FkOxui8S8X5cprSxwf79AYaN9rdi4SsqMktgbfLw0QbEJuXhviBtCwrJN+gBWNljStYiXKpNrSgEvpFmjv+InYxMLNoP2jPH3foLuWJLg+8frsGdY0MUKixIPJr30qESfTWvaXFnjV54xrqz6Rf7s6RhEWw5tYYS/a3IrAuU1oxKBnl5TbXRh4vC067cWuBrDhelBnRmpmcEEJyVP2H/wSdYvKfwEOdugfPak+qfsWxVG2fCwLKaoFJ7PmcXQcWRuVX/XnPyd8LTXnykQVW3cpJa3i1NmToJwuUiwZXYS2m3H8hWYme+n1f+K7Kt/NDRo4O2jgkipq5+lyBb/GwMA9mURqlulJrniZc0z+rtOnTrUhRCvvy6zwLb68j7t+q0Fbj9PKbMbtG7JoNGgHiMJ7OB90giwMuoXhex2TExRzaUDGlcfhwn338FiFomikFH0D5gZbjpntymLS1nhs2fPltf/2FTf6AdUbhr7ZstoSoY4xZU4J2rOSzI8gf5b2x6uVr5BRQkHDx6kYoJKX39Ubc3LV4LodkBtdaiCJTk5WY6LtXDhQuUcsFjXsrHYXRZRNHzyaUEAABhPSURBVI9p8KjK/AJLp15xx4V0Ishv85i9Sh5DmF5PYf/JPuccuO85mP85hzqCD0+Qg6wOK8/a8GBcnlIOGcbEe+ZknOUCGtWzT5++PmPHviZnX716FY4dO9Y9Lu5+hUUr/18gQLqIy4N4+D01iuMbY+PGjbYioqddv7XAXV/rohBR2IwPMB6/MW+7v4MCF+ovjMLmzR9g/Hhr65cYotOwQ6SQUdkuGn809/wIm+1c0aQkG7cfLseInAhZy1vMNKt3mH1OMj9kmP/JQGb4VxnAuQh3+TveBJGQZBFZvEp4Ld4XF8Nh8d/R8Og1B4eLsvBxLy3CwmKYfLc8cyJylJxjyVeW8wT6bw0Y5z8kJCTq6NGjH6xcufKJrT+KBFmwE/FyEAKpUg/UY1Tp2alTp88GDBhQz9XVNXPt2rXdo6KikhjBlMvGsg5DemBK0gy2DumHx9qxcs+wQz+MfSia9u0lAP9lHEoyG4M65Vj/FQXqcm4sooH/Yz2IW/4A433bpMfe0x++LKu/lOc/57bCFM822BAPgkMYO+MqzKkxLjDm7bcnoVu3bvKzKVPepYRN44pygk/kyyyVDWKAGNE1Xu2Z2jtxcXHyRV3pu3fvjpgY2VzH6m8FP+36LQDf+K4yJZuNQ7iAzzEeO5jGP0vFJKYyQVF/9iFcuPA5xo+3tn4jcmmwAVtoMJ2G2xDp2hmDG27DqTqfyZS3HGbg7kg8nxOB8wLS4aJQoyUF8/+aWsmHPxGiVnOjVu7Gn80O0jwmPnM0iMAerAKKzuDDWs54WJyJdZM6ICzsdCXMiRPzNUtjBEApB80n1H9zUGr+g4ODD8XGxn6+cuXKJ7n+JOaJoRG++jMDkNc8HROqyf5r7dq1H2zfvn3ppEmTVvj6+qa5uLj4REVFnWPRqnm7igSTr2ZsTm8JbkfJjIPj92D5IQQ3KmBtqVGO9f9PAg+VD6TECMgvhBEIJrzn5TQe/5N7N9gSuEsVGJLrTjm/O3cM+G7Roq/g6upa3hg7RpAU96KuBQrdCjHzHlTet+YdaxYF/T6gTRyXNc+aNWsGKzngp12/OeDKfk+22Tj4sk2a+zeIPSujfq5zqaZph+aeH+JnyRl1ST4Skxfj1dxzuMGo8iK2dspwQnq93miG9YTEflzE5wmCO5CMXGe+EA3ADXi4EnB9Fvj8XZzo+yI6dHgLTk5+7CAsquB8GNtAgDuSwPnykJd4cv031R4n1p444WFlrD/l2WTHLjny4IwZM1KXLl16lvn3LmdicOrvm7V3797vHRwc/AoLCwc5ODh0s7Ozm2fmswhK/bLST1TUN6vkXVAd6NAFeHm38Lyy958H48TUbJipODJySI9txgc89hHk+Ee+xnvPhjeN964jaAw01fMn1ZSdM4NYxtlZIrA8GPJbwfIMNNF+GYSQObTcbyRJKhNImwdvX7duPVxcXGXR9pQp70bFxd0vT6wrGbgZqCRsYg/2305Q4mYyKkfiH97R+AV6u7Tv1RqEyIOYfeaXy3mX/3okGAY4a/wCvVza9TQKoYV3MoUyLdpBi4jkhS1X0L2hGzLzi7E80FtOC4vLwvxTSVjcuQ7aeVbBwduZWBGVgo096+Cb82lwc5DwcVt37L6VjY3XMnGgt6fZ+gghFDslSpKUZar+rIISfN2jgfzt0Mqu30rgSINS3h0UWeozqtWknqgyYenSpS1nzJhhLHH69Ok1ly1bdteGKriTRkruOZy7O0KmJB2E5wUKKlrkyGi0xzZiYXq93icgIKBSlORmgI8/M3B5+A1Q9Rlg+iDguzxcuDARzZsPgJNTK7YnKoMLkBQHtHx//PjxUp5Rf3P/XSdOnNgBP/xgTBgxYkT9HTt2lHf9iUYr3JiEI6YdbK33pt+/YZweN6++eeDAAeqD30aSpO5arZZ+mIva3b9mBvlBWEuWQPGO3hFo1A5I8gTyni2ddrIfkKQDgmIqMufVmvgSt/ErYadxQ/6tSCR/P5k76/CvLmyoM32Df9Ky1zEo5XdjPveHj3FTSdvH/jF2HTtZU22UCXGnrYZ8acx8OlbwYf+alWEOZPNrRQg5WucmSZI2Nmjg3e3jjz8at3Lld3KgibffnuS/evUq+tWSMj4O1oCIACklV7XunN1f0OAUPO/DH2e8kHf11C1GwTrXnbl9uoNnA9ndqTgzJQQlxbGSU5X6Gr9AeWAK7kS/lfVn8MkaY+bJCuTitAeHSGH+XTtN1br8naxjO19M2//tJcGTTGa927Ty8P9jbw+I0WVogAsuSnz/aBz6N62GGQG1MeJgLLZcfoQRvu7YdjUNw5tXg39NJ/x4MQXrLqfLeeMzC/F5Bw/8ejcHs0+nIOpRAepo7JGRX9pPh5p679mzV9+hQ8csSZIC9+/fHzVgwIA0OglhYWHQaAwRgG6k5uHgyNZoUNUJlx/l4Zc/T2DMgD64mJSBZXkpeEvbFW+sPWxz/TaCqGPyYjqI3YwL41ZoO9gCHM7dqJ8EItTr9VT8FFlSUrKZcSayYcCIESN+GzlyZFpAQECZ0EVmQBL0SKLvfCuGzDOUSIQF9aAba5PI9ej1+lC9Xk/rH2hl3bYAr6cqMKgmsHULYFcCLO4HzE2Rn9+8OQt16wZAo3mhEpGfvRAkVP50ja+vb/MlS5Ycz83N3dy5c2fjFzMiIiJC2Xe3nlT/5fXXq1cvr3feeee/6enpu6UffjCuv92DB+8YNGhQ2rBhw6xdf9zYqYoQqpn6llwRjElaMwcxeg7lVq8ue3cn0ahDrq6u3OdGRnww6AipKXw3rVZbbu7AdP/jnwOyGgF3agH+S4DMMCAyCCixB9JdAH/q+zMKuDIXWBsOLLfGAIYTMUYuydFBQq0b+5BcvxecD3+L8PBw/6pVqxrFfkuXLsWhWxWWAirhmAIBbmRIq7zGLSGMe32NOQLuL4dfEOX8xnGkOHz4UCxbthTTp8+QdYIPHyaPCw7efT4u7r41fk6lwEGU4XsMmvo8RX4kP+dGZviuBdV6jdtcc9yCTfc/7iV7h9V+b00XivxIfu71+zN7DWXK/DxWxrus4BK3zoOrg5RkQLKrZu9Rux/Jz71RnJ0WkX/x/GuPNsz+gx1meQL3l/rw+qBSiE8EKu/ffzMNV1PysKSLj/x7SZe66H/gDrrU02DRi7UwKSwJZx/kom0tZ/m6kV4IF3uCby+m43BcLgb5aECII84/KkRxcVmms7i4OODimdXGxRefmEjj48v/4xMS8TC3EPFZhWhdS4P4LAJ3e0ek5xuIQinuAFLTDZ/TopNUnvqtACXi28M+ntdKOGTA3unNQlFTLuxTAGsZlVwpugiGeKiuICogIKAMdd2hQ4dAGhCHGWNQfZQtxj72QlyIfwscoNGIwFL9AQEB3StQvyngnIkT0mj1cXuB/AuAjOTyjN8NSEr6Hvb2xXBz612JyE8cG/rRfxpeANeuX/9dGjCgFTucvNncF3To0EF75MgR34iIiFRCyNSOHTtWVv+NiG/ixIl7CgoKLgUFBZVZf0OHDu09c+bM5/fv33/3/v37n06aNMnc+rNnUox65PFXdWll1MiolSRJ/LNZucKHQoopUtTpdFSfF6VEcjwGplarteZjojb0P64FkNsUiK8F+H0KFMYAt18HaucDvtGAa6JhjLacAToOAHz3Ah9uBIatB54/b2YtzK/W+4151Xq/If/IvfQn8i7+CYeuQ5Hi3RxFtyLRr3tXqvMqlal3794I/myFHOaPhndPC1mJ4pQEODfTQtOqKySNGxI/H5pWkpvZWF4j86Ot6SdFTgMYp1memDxq8LWVTrhWwc6du/Hiiy9g8+ZNoJah9CMsyckPVjRv7tvok0/mfSpJktXIWlRge3ovPhpOQxIW3L28oujB3StVnvnXaDu36t0K7l1b+mD5+O89J37T0bl5+50lOZnn4uf0GU+psbpzdr/nUKMeR34g+TkR92e+pOWxPTwnrQxy8GzQ287VPUCys68KO3u3wvibHyUtHbeGLWiZOixKHK7aQMoBUllvRdwQ1N7x8/Pj/Zc5QN22cTJV4t9lYSC1YvPz90/Lzs5BRMSZwE6dOrFlS/g/VKnijOvXruGll17CpYjv5Gd9Bn+JsLBwm+s3IYsX9RHcQpKa/X/DAuD2ZZyRGnVtxzh6LoefyQLmxivet/lgZqEWKbXancU4tfQ+1wM0tvA+12/VUYQGpH1N4sYEer1+/ROq31y7GOGxuTMwdC3G7aiHja/7svHPNY51UtIqGfnVqjW+kpCfUg/m8Ntvv23Iysrynzt37qTLly/zMCV0XRwTuKUujDjN2Ldvn7ZOnTpf3rp1q9mrr76q/Ao0UalHTCuz/rZt2/aNRqN5JiQkpO+mTZssrr8VK1aMa9KkycydO3e22bZtm9r6EzlbigRPSQbiLYFZatozIo5yEC1Xr17t5eXltVOSJB/FJ+9kEJCfLSIxC/0/7w1o/IBEDdB2MlClIRD/EeCeAmjuA85X1Pt/qDPQahhQfzQQMx54dAz4V5LK/gv9z6koI9e1bfIsVB9p+GxKcRFBQsQZjNWcR1BQEFJSUuSLhttMS0tDyOkItJ2/GhduGkJtFqckIvP2NRT7vIj8/BKU3I0Cdk+3NRpDICOqKgMB8v3nYS4qhK2fzcjIyECrVi2htAydOnU6/vjjD4SEhMgi0j59+shB0m7evCnHZwoPD0dWVlYsW1Mb+YdInet9emApRX4UuUnOLi5OjZ5rW5ydflWq4urrVL/FDI+g904n//Ce3uuzg/vs3DwGei/6fWf+jXNrUnd+udut85A7VXwD3pScXZrTftR+f21/pwYtllIOsODO5dmpOxd96dzUv4lb58Hz6DuSo3PVMj0SuKKo6DT0HHocN6K+wpGD/nC1vyxvA+MIEVLqHnwlmbpnaa0DxmDa9I8RGFhWxE1dHUSo6uYGZycnVHWriqqubjCWxuJgOjo6GF0bCgsKjfcc4VlCzgzMOVgXCt/4pKJGGoP2PQC9mHl2kRBDVw0kRi1T6j8YwGEWtPtD9jzdFvNsAZG0tUW/xLivjdQ6Ua/XU47N3MFUwPz6arJ2ccfkojNnzrxqZ2f3pOuHMCd8bJ2B3R2AQbuA2M2Aph824Bw2Gg9IZ3l+MjL2IzX1JBo1+qQSkJ+4LuRPtCxcuHCYl5fXRxMmTAiJi4tbwzi+H2HgBilR0EGSpAK2Zrqwgydx4MCBn9H+f/fdd+d//PHHiDfffPMDhrTTBUdwjaX1t2DBgkF+fn7v/frrr71Wr15t9fqbOnWqvP6Cg4MPv/zyy1fHjh2rtv5ymVUtR0SJ7DfnrGdNmzZtv7u7e7Srq+v3/fv3b3bgwIEyegSdTkelAse0Wq0tX14ws//GVwcG/As47w4EdAE6DQauzwCc7gCFD4BGnKVS+06SBPQ7A4yIMUSz7bsYqHkX2P4NMDMCiH0k9H//5pe6+dRr2052+C7Jfdy1jN1fAg61YtG8bFQVGm/a3tEx5Pb6LwOLW430sK9RF0WpCcgK3wUUVgHunQdunoAN4ksPQb/4GntWHiToz/R+yqidgZUVFun27dt48cVOsk8gRXQtW7aULUOpaHTu3HmYMGFCmTw3btwQf8pnCF0AmurDP36uSvOAsYSUSIkLhy0TvqLg7K6d9KymTfcRpDA/JumrMRvYAnGsO3PHa3YuVbtIDo4NSgry7pPcrOjMsO1bsk/pktjmr1JnxsbX7KvVfEFydK5PioszSrLTTmad2Ls5K3z3fYX/Eim4ZfBXuXM/B827/o6bJ6egUYPqCD/9sDLGC9M+CcH56PvKx0YOcNuaQfLEfP3DsVILLSe3wGI4nz49DTrwJd+foSa7tjTLjm06asZ9S9XBurQDdYVBKKsZ4wi575zReVoJpp6XB0w5aIv1K/v7d9T/eLTlQ59+eO/e48eHvgT6BbO0k8L7reR1nJt7AAkJu9CkybLyipqV/S8oKMDDhw8xYMAA43hs27YN169fB4tXZzXwsXvrrbdMOYLX1el0t9Scy1/Rag3EpCRBjhRbARDLkkqvP6hZt+p0OmPo55iYmMlTpkxZSFVfOp3uM/6cc4EsPt8mrVZri6hNsmX/VYYF0+Px92oBxFPL2bwm/+511G3UZ4Ep6QaVCuXcqrnagZsKUAOY1O1foH41ZzncMxWFXrt2TY4+a9e8I6qPnC0bytjbAU6OdsjNf8xMJO/+Gvkng23hAAMZ8vuG/T8muDaYAw9GIJtzewgTYg2WAlMcYGxsrMzNbdq0Sebiunbtii5dusgXhcuXL8sIkF4c/vzzT/n65ZdfQEMjBrYB+j//uMyu04HMXENgUdEEmJv5qrkycChRiE1MuUyopSvfKSWKyT7dFelZxXg26DT+2NwHbZ4pz/fUH8Of59LR7V9e8qQPfPvXZw4ciVljKkYcRYAbVvaT341PzKqSlJxt8dtfdTxd87zqupX6xMfrUw4FxsXdtwVTmaNAi4z6PgK9Gcdra8CexffjZbVlbgvp1hzW9HCuLNP68pQl5LHnVsiM6pYUkThKBPcIJzaGhYL7BLFQv60IsDvy8rbi7t0l8PVdIxB1FYVS6yIkJOReUFBQI8HnUGkVawoe6y0N4+UaEhJyJygoqL4iFJgaB2hcfzqdTs+iKld4/bGylOsPXAxK3SkkGmwAeCQiwPT09DfHjBlDsfM4nU73BX9OQ7DrdDr6fYVPtVqtrbpOG/bf9IHA3UvA7sTK3n/VGzc92mTOz4FnLz3+1EP7Vi5o1agYe955Dx5vrTRbOEWO2X6jUa9ZfbzS3d34/Fx0Ds7+tBo4udlWEagP08Fzi80VTCdoDSIMZNyfKcZBde8pESA1PnzzzTflCFqmgLqncUR382qkjOy0LwABzUtnoN99oEH5D5yS72MZcqdrJc1B2LBqk0rMbGhzadakl4K86Bg8/1EC1s1qBr/aKSAppoIhK2ow3irOgvwCSDnZeG/RNZ8DR+4ethQglYtA12yOfGbBwu89vv/+W5w5c0Z+Nn7CfzBh/H/ke6r7u3DhAubOfidt1nsdKyoj5ybYWSrfX5BYGhdfpLHDJ6cchywnYnhZmWoRRP7hIB5WdZmu8L/M2CdW+I6JkxDaqiOL4OHNLEvzLXSRu10kssOQiUBzOgDFocDZRUDHjiA4g/btBuHMmQP466830LXrQWtdeqyEUuvC25s23+hnZ8t8ES5CZsguhZUVL6TjH7D+JO4GIxk4CYqECihy4+lbt25tt3379is///zzVa1We3T9+vU9wsPDG4SEhKQUFxcPCgoKCjVTv7nxsXL/LbvIdNGV3v/UmFsDz77TOwbObkB6AkUyx84CPpeatZ3nOelbOUNGRhEy0h+LRimCrFbNATfiCmR9YdGqyUhYFxmyFnKgiAE+3br75xcQ4GTY1HKIHWOZFa4/Mzajc7JPkR7GojCBRWIKVEF6acz/jz6fJ3zS3WJ7/P39ZU733Tf6gkaY17jVknV5VI8nFSTIyG5Ud2CINzDkP4/zUWS35pA6slOr5+9ymLUE5MWm9nhjoAde7eVWKQX+dbsYkdfyrk77+mGiKbabA+UAv/m8izwpS1dF+vd6ebhHaOhRHrEFXQN7oGu3HvI9FTPE3YnB74d3ps2Y1LYUAnxvzp+2coCmgHMidYRFBrbQkhQfrXqiZYmfLqwoF1ieshR5nJhOzEsFAaawA8tZxZCG+o7d0ev1D8rRF+7v5gas7AFMeezwHBw8DkOG7CnnoWgVPKXxN64ZnU5nXDNarbZC68/Kskz5Dsr61okTJwb+8MMPv/KHH3/88bBFixYdsLFNVrf5Ke6/+a+s+mlevXYBSHhQiIP7rwPrRscynZzsGP/Kqp98Dt5gOIfq+3ZP/9SWLyHYCIHMBsGSa1MIQzo2IV36JU1RZ0gNfKirC9H3lX/n5WYi4d51pKcmGfOY4+ysrbdSvodUGfDvF93wai/XSlvDx8/nYu7qR1UsIT8Gr783588NQX0ay2bYoaGhePDAeFbi6uVLSHmYbPydnZ2NuPgsD4rwnJ3si94a+1xlmQsrQXmoVuSQrcyynhaUMGSTyMRHjZnoM0vgJgpYdJR6jFt0Yu+a+sKgJSCMI8kBppwp9e6QIaHC967+F+FprD9zY0l++OGHi+KDRYsW/VWBNlmCp7n/Nh6cNMHduZp7kFvduj64fq3MB+0OTpqwAU07jUNGIpB8K+QJf3cr7EmWL0mSmr/mOCngF2ocEtiwrrNHB187nIwuP7JTrbcimf8PniiI1og88nxROcWWlVnW0wZTa1bJRaCSP5ckugM4MUSb+6SCDPwD4J+4/v7Odfx/++9/HQD8P8eZghGCcHjcAAAAAElFTkSuQmCC</bitmap>
-      <bitmap_item guid="c515756b-e967-4399-b90f-fbbc6d1d884b" index="0"/>
-      <bitmap_item guid="e1a7f8f1-c070-4d92-b6de-a8577eb2cbf0" index="1"/>
-      <bitmap_item guid="de4ca43a-815a-4bd2-977a-e312e3c51caf" index="2"/>
-      <bitmap_item guid="893c87b0-01cb-45c5-b383-9148b0ebbe41" index="3"/>
-      <bitmap_item guid="d08c9473-9315-40cc-a6ce-c70eabf5e838" index="4"/>
-      <bitmap_item guid="926059c5-55fa-4d29-9c89-23afdb8dbf1b" index="5"/>
-      <bitmap_item guid="c6966e72-d90f-43ac-8410-de796be04c1d" index="6"/>
-      <bitmap_item guid="1b0ce0c7-6a98-405b-bab9-da0587e6eab1" index="7"/>
-      <bitmap_item guid="be5b6c90-88e6-4abe-97dd-c25d8c5d9861" index="8"/>
-      <bitmap_item guid="aa41bb2e-92ce-49b4-99aa-3091f5395741" index="9"/>
-      <bitmap_item guid="45a28bf8-0d85-478b-9f19-1630ec4a5c5c" index="10"/>
-      <bitmap_item guid="b45d551f-f00a-4b85-9c10-b92a6f64df13" index="11"/>
-      <bitmap_item guid="45f19918-2427-46e0-9f7b-b9cc94e22dbd" index="12"/>
-      <bitmap_item guid="4e958edf-3517-46f7-b8d7-4453155bc83a" index="13"/>
+    <large_bitmap item_width="32" item_height="32">
+      <bitmap_item guid="acef0312-16c2-40d3-a512-5b9b9eedd652" index="0" />
+      <bitmap_item guid="8986ecd5-9e2d-41af-b1b7-9b556c008be6" index="1" />
+      <bitmap_item guid="3ecdd25f-5434-4db7-b134-2af0534b1110" index="2" />
+      <bitmap_item guid="5bcb1e54-d39d-4d91-b263-98dd1afe133b" index="3" />
+      <bitmap_item guid="08ab88e5-9a49-418e-99a9-fb9b876cbb9d" index="4" />
+      <bitmap_item guid="c97e90ae-e311-4254-aea4-3468f634eb63" index="5" />
+      <bitmap_item guid="46cdd998-2b8c-426e-b30a-32feb7430545" index="6" />
+      <bitmap_item guid="d8f94075-84a0-4738-88ed-24273588e917" index="7" />
+      <bitmap_item guid="c753b6f7-6662-4749-b01d-84b83f982c36" index="8" />
+      <bitmap_item guid="a23dad41-33ed-4dad-9fee-151698c7735c" index="9" />
+      <bitmap_item guid="e44e02d7-d0da-4b6a-a5f7-67e4cf0b5063" index="10" />
+      <bitmap_item guid="47a78baf-36bb-442a-9065-eae3b7f1fbfa" index="11" />
+      <bitmap_item guid="9c336596-da55-4330-8aec-4e0a88700db4" index="12" />
+      <bitmap_item guid="3f8ab053-9367-43e8-a749-034037bc6d73" index="13" />
+      <bitmap_item guid="0993c6c5-0494-4c6e-8864-687ea12c6c61" index="14" />
+      <bitmap>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</bitmap>
     </large_bitmap>
   </bitmaps>
-  <scripts/>
+  <scripts />
 </RhinoUI>

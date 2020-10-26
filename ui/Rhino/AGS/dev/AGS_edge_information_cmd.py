@@ -34,12 +34,15 @@ def RunCommand(is_interactive):
     form.settings['show.edges'] = True
     form.settings['show.forcelabels'] = False
     form.settings['show.edgelabels'] = False
+    form.settings['show.forcepipes'] = False
     force.settings['show.edges'] = True
     force.settings['show.forcelabels'] = False
     force.settings['show.edgelabels'] = False
     scene.update()
 
     curvefilter = compas_rhino.rs.filter.curve
+
+    edge_index = form.diagram.edge_index()
 
     while True:
         guid = compas_rhino.rs.GetObject(message="Select an edge in Form or Force Diagrams", preselect=True, select=True, filter=curvefilter)
@@ -52,12 +55,12 @@ def RunCommand(is_interactive):
 
         if guid in form.guid_edge:
             edge_form = form.guid_edge[guid]
-            index = form.diagram.edge_index()[edge_form]
+            index = edge_index[edge_form]
             edge_force = list(force.diagram.ordered_edges(form.diagram))[index]
         if guid in force.guid_edge:
             edge_force = force.guid_edge[guid]
             edge_form = force.diagram.dual_edge(edge_force)
-            index = form.diagram.edge_index()[edge_form]
+            index = edge_index[edge_form]
 
         f = form.diagram.edge_attribute(edge_form, 'f')
         l = abs(f * scale)
