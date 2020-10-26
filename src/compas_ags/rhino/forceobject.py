@@ -153,13 +153,9 @@ class ForceObject(DiagramObject):
             # force labels
             if self.settings['show.forcelabels']:
                 text = {}
-                dual_edges = list(self.diagram.dual.edges())
-                for index, (u, v) in enumerate(self.diagram.ordered_edges(self.diagram.dual)):
-                    f = self.diagram.dual.edge_attribute(dual_edges[index], 'f')
-                    if (u, v) in edges:
-                        text[(u, v)] = "{:.4g}kN".format(abs(f))
-                    else:
-                        text[(v, u)] = "{:.4g}kN".format(abs(f))
+                for edge in edges:
+                    f = self.diagram.dual_edge_force(edge)
+                    text[edge] = "{:.4g}kN".format(abs(f))
 
                 color = {}
                 color.update({edge: self.settings['color.edges'] for edge in edges})
