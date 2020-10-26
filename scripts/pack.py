@@ -9,7 +9,7 @@ import argparse
 parser = argparse.ArgumentParser(description='AGS release package tool.')
 parser.add_argument('--skip_packing', action='store_true', help="skip packaging to dist folder")
 parser.add_argument('--rhi', action='store_true', help="pack into rhi installer")
-parser.add_argument('--version', default="v0.0.0", help="version number")
+parser.add_argument('--version', default="v1.0.0", help="version number")
 
 args = parser.parse_args()
 

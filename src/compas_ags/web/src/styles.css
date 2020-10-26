@@ -6,15 +6,29 @@ body{
     font-size: x-small;
     font-weight: 100;
     overflow: hidden;
+    background-color: black;
 }
 
-img{
+#background{
     position: absolute;
     left: 0;
     width: 100%;
     top: 0;
     z-index: -100;
     -webkit-app-region: drag;
+    opacity: 0.4;
+}
+
+#logo{
+    position: fixed;
+    right: 8%;
+    bottom: 12%;
+    z-index: 100;
+}
+
+#logo img{
+    margin-left: 20px;
+    height: 25px;
 }
 
 #content{
@@ -94,4 +108,5 @@ a:link:visited{
 
 #title h1{
     font-size: 40pt;
+    font-weight: 100;
 }
