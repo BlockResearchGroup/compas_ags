@@ -21,18 +21,22 @@ def RunCommand(is_interactive):
 
     form = scene.find_by_name("Form")[0]
 
+    objects = scene.find_by_name("Force")
+    if objects:
+        force = objects[0]
+    else:
+        force = None
+
     # Turn on edge labels
     original_setting = form.settings["show.edgelabels"]
     form.settings["show.edgelabels"] = True
     scene.update()
 
-    AttributesForm.from_sceneNode(form)
+    AttributesForm.from_sceneNode(form, dual=force)
 
     # Revert to original setting
     form.settings["show.edgelabels"] = original_setting
     scene.update()
-
-
 
 
 # ==============================================================================

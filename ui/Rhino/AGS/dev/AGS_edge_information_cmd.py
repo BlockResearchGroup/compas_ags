@@ -2,9 +2,10 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import scriptcontext as sc
 
 import compas_rhino
+import scriptcontext as sc
+find_object = sc.doc.Objects.Find
 
 
 __commandname__ = "AGS_edge_information"
@@ -73,10 +74,18 @@ def RunCommand(is_interactive):
             elif f < - tol:
                 state = 'in compression'
 
+        key2guid = {form.guid_edge[guid]: guid for guid in form.guid_edge}
+        key2guid.update({(v, u): key2guid[(u, v)] for u, v in key2guid})
+        find_object(key2guid[edge_form]).Select(True)
+        key2guid = {force.guid_edge[guid]: guid for guid in force.guid_edge}
+        key2guid.update({(v, u): key2guid[(u, v)] for u, v in key2guid})
+        find_object(key2guid[edge_force]).Select(True)
+
         form.draw_highlight_edge(edge_form)
         force.draw_highlight_edge(edge_force)
 
-        compas_rhino.display_message("Edge Index: {0}\nForce Diagram Edge Length: {1:.3g}\nForce Drawing Scale: {2:.3g}\nForce Magnitude: {3:.3g}kN {4}".format(index, l, scale, abs(f), state))
+        compas_rhino.display_message(
+            "Edge Index: {0}\nForce Diagram Edge Length: {1:.3g}\nForce Drawing Scale: {2:.3g}\nForce Magnitude: {3:.3g}kN {4}".format(index, l, scale, abs(f), state))
 
         answer = compas_rhino.rs.GetString("Continue selecting edges?", "No", ["Yes", "No"])
         if not answer:

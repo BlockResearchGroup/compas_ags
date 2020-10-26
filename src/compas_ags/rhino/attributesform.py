@@ -81,7 +81,7 @@ class Tree_Table(forms.TreeGridView):
         self.CellFormatting += OnCellFormatting
 
     @classmethod
-    def create_force_table(cls, sceneNode):
+    def create_force_table(cls, sceneNode, dual=[]):
         datastructure = sceneNode.diagram
         table = cls(sceneNode=sceneNode, table_type='edges')
         table.add_column('EdgeLabel')
@@ -115,7 +115,7 @@ class Tree_Table(forms.TreeGridView):
             #     edge_item.Children.Add(vertex_item)
 
         table.DataStore = treecollection
-        table.Activated += table.SelectEvent(sceneNode, 'guid_edge')
+        table.Activated += table.SelectEvent(sceneNode, 'guid_edge', dual=dual)
         table.ColumnHeaderClick += table.HeaderClickEvent()
         table.CellEdited += table.EditEvent()
         return table
@@ -189,7 +189,7 @@ class Tree_Table(forms.TreeGridView):
 
         return sorted_attributes
 
-    def SelectEvent(self, sceneNode, guid_field, children_guid_field=None):
+    def SelectEvent(self, sceneNode, guid_field, children_guid_field=None, dual=None):
         def on_selected(sender, event):
             try:
                 rs.UnselectAllObjects()
@@ -198,6 +198,19 @@ class Tree_Table(forms.TreeGridView):
                 key2guid = {str(guid2key[guid]): guid for guid in guid2key}
                 if key in key2guid:
                     find_object(key2guid[key]).Select(True)
+
+                if dual:
+                    force_edge_index = int(event.Item.Values[0])
+                    force_edge_key2index = dual.diagram.edge_index(dual.diagram.dual)
+                    force_edge_index2key = {force_edge_key2index[key]: key for key in force_edge_key2index}
+                    force_edge_key = force_edge_index2key[force_edge_index]
+
+                    guid2key = getattr(dual, guid_field)
+                    key2guid = {guid2key[guid]: guid for guid in guid2key}
+                    key2guid.update({(v, u): key2guid[(u, v)] for u, v in key2guid})
+                    if force_edge_key in key2guid:
+                        find_object(key2guid[force_edge_key]).Select(True)
+
                 # elif children_guid_field:
                 #     if key == '':
                 #         key = event.Item.Values[1]
@@ -307,11 +320,11 @@ class Tree_Table(forms.TreeGridView):
 class Tree_Tab(forms.TabPage):
 
     @classmethod
-    def from_sceneNode(cls, sceneNode, tab_type):
+    def from_sceneNode(cls, sceneNode, tab_type, dual=None):
         tab = cls()
         tab.Text = tab_type
         # create_table = getattr(Tree_Table, "create_%s_table" % tab_type)
-        tab.Content = Tree_Table.create_force_table(sceneNode)
+        tab.Content = Tree_Table.create_force_table(sceneNode, dual=dual)
         return tab
 
     def apply(self):
@@ -321,20 +334,20 @@ class Tree_Tab(forms.TabPage):
 class AttributesForm(forms.Dialog[bool]):
 
     @classmethod
-    def from_sceneNode(cls, sceneNode):
+    def from_sceneNode(cls, sceneNode, dual=None):
         attributesForm = cls()
-        attributesForm.setup(sceneNode)
+        attributesForm.setup(sceneNode, dual=dual)
         Rhino.UI.EtoExtensions.ShowSemiModal(attributesForm, Rhino.RhinoDoc.ActiveDoc, Rhino.UI.RhinoEtoApp.MainWindow)
         return attributesForm
 
-    def setup(self, sceneNode):
+    def setup(self, sceneNode, dual=None):
         self.Title = "Attributes"
         self.sceneNode = sceneNode
 
         control = forms.TabControl()
         control.TabPosition = forms.DockPosition.Top
 
-        tab = Tree_Tab.from_sceneNode(sceneNode, 'Edges')
+        tab = Tree_Tab.from_sceneNode(sceneNode, 'Edges', dual=dual)
         control.Pages.Add(tab)
 
         self.TabControl = control
@@ -402,4 +415,5 @@ if __name__ == "__main__":
 
     scene = get_scene()
     form = scene.find_by_name("Form")[0]
-    AttributesForm.from_sceneNode(form)
+    force = scene.find_by_name("Force")[0]
+    AttributesForm.from_sceneNode(form, dual=force)
