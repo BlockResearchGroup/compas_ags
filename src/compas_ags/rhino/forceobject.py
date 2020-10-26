@@ -2,7 +2,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-from compas.geometry import length_vector
 from compas_ags.rhino.diagramobject import DiagramObject
 from compas_ags.rhino.forceinspector import ForceDiagramVertexInspector
 from compas.utilities import geometric_key

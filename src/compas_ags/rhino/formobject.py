@@ -219,9 +219,7 @@ class FormObject(DiagramObject):
         f = self.diagram.edge_attribute(edge, 'f')
 
         text = {edge: "{:.4g}kN".format(abs(f))}
-
         color = {}
-
         color[edge] = self.settings['color.edges']
 
         if self.diagram.edge_attribute(edge, 'is_external'):
