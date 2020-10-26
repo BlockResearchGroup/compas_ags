@@ -191,9 +191,8 @@ class ForceObject(DiagramObject):
                 guids = self.artist.draw_edgelabels(text=text, color=color)
 
                 guid_edgelabel += zip(guids, edges)
-            
-            self.guid_edgelabel = guid_edgelabel
 
+            self.guid_edgelabel = guid_edgelabel
 
         self.redraw()
 
