@@ -5,7 +5,6 @@ from __future__ import division
 import compas_rhino
 from compas_ags.rhino.diagramobject import DiagramObject
 from compas_ags.rhino.forminspector import FormDiagramVertexInspector
-from compas.utilities import geometric_key
 
 
 __all__ = ['FormObject']
