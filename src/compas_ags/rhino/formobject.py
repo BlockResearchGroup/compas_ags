@@ -149,18 +149,7 @@ class FormObject(DiagramObject):
                         color[edge] = self.settings['color.compression']
 
             guids = self.artist.draw_edges(color=color)
-            if len(guids) == len(edges):
-                self.guid_edge = zip(guids, edges)
-            else:
-                drawn_edges = []
-                for edge in edges:
-                    u, v = edge
-                    pt1, pt2 = self.diagram.edge_coordinates(u, v)
-                    if geometric_key(pt1) == geometric_key(pt2):
-                        pass
-                    else:
-                        drawn_edges.append(edge)
-                self.guid_edge = zip(guids, drawn_edges)
+            self.guid_edge = zip(guids, edges)
 
             guid_edgelabel = []
 
