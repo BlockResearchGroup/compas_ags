@@ -7,6 +7,7 @@
 from sphinx.ext.napoleon.docstring import NumpyDocstring
 
 import sphinx_compas_theme
+import urllib
 
 # -- General configuration ------------------------------------------------
 
