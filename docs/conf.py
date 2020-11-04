@@ -7,7 +7,6 @@
 from sphinx.ext.napoleon.docstring import NumpyDocstring
 
 import sphinx_compas_theme
-import urllib
 
 # -- General configuration ------------------------------------------------
 
@@ -132,12 +131,6 @@ intersphinx_mapping = {
 
 # -- Options for HTML output ----------------------------------------------
 
-docs_site = "https://blockresearchgroup.github.io/compas_ags/"
-f = urllib.request. urlopen(docs_site + "doc_versions.txt")
-version_names = [version.decode("utf-8").strip() for version in f.readlines()]
-package_docs_versions = [(version, "{}{}".format(docs_site, version))
-                            for version in version_names if version]
-
 html_theme = 'compaspkg'
 html_theme_path = sphinx_compas_theme.get_html_theme_path()
 html_theme_options = {
@@ -148,7 +141,7 @@ html_theme_options = {
     "package_description": "COMPAS package for Algebraic Graph Statics",
     "package_repo": "https://github.com/BlockResearchGroup/compas_ags",
     "package_docs": "https://blockresearchgroup.github.io/compas_ags",
-    "package_old_versions": package_docs_versions
+    "package_old_versions_txt": "https://blockresearchgroup.github.io/compas_ags/doc_versions.txt"
 }
 html_context = {}
 html_static_path = []
