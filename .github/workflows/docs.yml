@@ -39,7 +39,7 @@ jobs:
             if [[ $BASH_REMATCH = pull* ]]; then
               BRANCH_OR_TAG=pull_${BASH_REMATCH##*/}
             else
-              BRANCH_OR_TAG=${BASH_REMATCH##*/}
+              BRANCH_OR_TAG=${BASH_REMATCH##*/v}
             fi;
             if [[ $BRANCH_OR_TAG = master ]]; then
               BRANCH_OR_TAG=latest
