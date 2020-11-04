@@ -72,7 +72,7 @@ jobs:
       - name: update doc versions
         run: |
           >doc_versions.txt
-          for folder in $(ls -d */ | tr -d '/')
+          for folder in $(ls -rd */ | tr -d '/')
           do 
               if [[ $folder =~ ^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}$|^latest$ ]]
               then 
