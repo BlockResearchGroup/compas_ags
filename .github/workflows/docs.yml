@@ -34,7 +34,7 @@ jobs:
         run: |
           invoke docs
           # Get branch/tag/latest name from git
-          GITHUB_REF_REGEX="tags/([0-9a-zA-Z\.\-]+)|(pull/[0-9]+)|heads/(.+)"
+          GITHUB_REF_REGEX="tags/v([0-9a-zA-Z\.\-]+)|(pull/[0-9]+)|heads/(.+)"
           if [[ $GITHUB_REF =~ $GITHUB_REF_REGEX ]]; then
             if [[ $BASH_REMATCH = pull* ]]; then
               BRANCH_OR_TAG=pull_${BASH_REMATCH##*/}
@@ -54,5 +54,40 @@ jobs:
           target_branch: gh-pages
           build_dir: deploy
           keep_history: true
+        env:
+          GH_PAT: ${{ secrets.GH_PAT }}
+
+  docVersions:
+    needs: build
+    name: update doc versions
+    runs-on: ubuntu-latest
+    env:
+      GH_PAT: ${{secrets.GH_PAT}}
+    steps:
+
+      - uses: actions/checkout@v2
+        with:
+          ref: gh-pages
+
+      - name: update doc versions
+        run: |
+          >doc_versions.txt
+          for folder in $(ls -rd */ | tr -d '/')
+          do 
+              if [[ $folder =~ ^[0-9]{1,2}\.[0-9]{1,2}\.[0-9]{1,2}$|^latest$ ]]
+              then 
+                  echo ${folder}  >> doc_versions.txt
+              fi
+          done
+          echo found available doc versions:
+          cat doc_versions.txt
+
+      - name: Deploy docs
+        if: success() && env.GH_PAT != ''
+        uses: crazy-max/ghaction-github-pages@v2
+        with:
+          target_branch: gh-pages
+          build_dir: ./
+          keep_history: false  
         env:
           GH_PAT: ${{ secrets.GH_PAT }}

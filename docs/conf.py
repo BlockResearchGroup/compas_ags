@@ -140,7 +140,8 @@ html_theme_options = {
     "package_author": "Tom Van Mele",
     "package_description": "COMPAS package for Algebraic Graph Statics",
     "package_repo": "https://github.com/BlockResearchGroup/compas_ags",
-    "package_docs": "https://blockresearchgroup.github.io/compas_ags"
+    "package_docs": "https://blockresearchgroup.github.io/compas_ags/",
+    "package_old_versions_txt": "https://blockresearchgroup.github.io/compas_ags/doc_versions.txt"
 }
 html_context = {}
 html_static_path = []
