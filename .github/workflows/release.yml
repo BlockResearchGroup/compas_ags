@@ -36,7 +36,7 @@ jobs:
         shell: PowerShell
         run: |
           python ui/Rhino/ags/dev/rui.py
-          pip install -r requirements.lock.txt
+          pip install .
 
       - name: rv2-pack
         run: |
