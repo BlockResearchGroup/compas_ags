@@ -1,2 +1,0 @@
-git+git://github.com/compas-dev/compas.git#egg=compas
-.
