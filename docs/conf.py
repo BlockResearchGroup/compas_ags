@@ -13,7 +13,7 @@ import sphinx_compas_theme
 project = 'COMPAS AGS'
 copyright = '2017, Block Research Group - ETH Zurich'
 author = 'Tom Van Mele'
-release = '0.1.0'
+release = '1.0.0'
 
 version = '.'.join(release.split('.')[0:2])
 
