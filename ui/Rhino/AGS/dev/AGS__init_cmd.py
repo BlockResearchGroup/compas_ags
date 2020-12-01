@@ -14,6 +14,8 @@ import compas_rhino
 from compas.rpc import Proxy
 from compas_ags.rhino import Scene
 from compas_ags.web import Browser
+from compas_ags.activate import check
+from compas_ags.activate import activate
 
 
 __commandname__ = "AGS__init"
@@ -35,6 +37,16 @@ SETTINGS = {
 
 
 def RunCommand(is_interactive):
+
+    if check():
+        print("Current plugin is already activated")
+    else:
+        compas_rhino.rs.MessageBox("Detected environment change, re-activating plugin", 0, "Re-activating Needed")
+        if activate():
+            compas_rhino.rs.MessageBox("Restart Rhino for the change to take effect", 0, "Restart Rhino")
+        else:
+            compas_rhino.rs.MessageBox("Someting wrong during re-activation", 0, "Error")
+        return
 
     shelvepath = os.path.join(compas.APPTEMP, 'AGS', '.history')
     if not os.path.exists(os.path.dirname(shelvepath)):
