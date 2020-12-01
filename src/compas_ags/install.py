@@ -19,11 +19,8 @@ if __name__ == '__main__':
             print(p, "ERROR: cannot be imported, make sure it is installed")
             raise ImportError(e)
 
-    import compas_rhino
     from compas_rhino.install import install
-    # from compas_rhino.uninstall import uninstall
     from compas_rhino.install_plugin import install_plugin
-    from compas_rhino.uninstall_plugin import uninstall_plugin
     import argparse
     import os
 
@@ -33,7 +30,6 @@ if __name__ == '__main__':
     parser.add_argument('--dev', action='store_true', help="install dev version of AGS from current env")
     parser.add_argument('--plugin_path', help="The path to the plugin directory.")
     args = parser.parse_args()
-
 
     print("\n", "-"*10, "Installing AGS python plugin", "-"*10)
 
