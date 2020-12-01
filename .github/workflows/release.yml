@@ -21,7 +21,7 @@ jobs:
       - name: build electron front page
         shell: PowerShell
         run: |
-          cd src/compas_3gs/web
+          cd src/compas_ags/web
           npm install
           npm run build -- ${{ steps.tagName.outputs.tag }}
       
