@@ -49,6 +49,7 @@ def check():
         package = importlib.import_module(name)
         current = package.__version__
         required = plugin_info["packages"][name]["version"]
+        required = required.split("-")[0]
         passed = current == required
         print(name, current, " -> ", required, "Passed:", passed)
 
