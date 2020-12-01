@@ -1,7 +1,7 @@
 {
-  "name": "compas_rv2.web",
+  "name": "compas_ags.web",
   "version": "1.0.0",
-  "description": "RV2 front page",
+  "description": "RGS front page",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -11,7 +11,9 @@
   "license": "MIT",
   "devDependencies": {
     "electron": "^8.5.2",
-    "electron-packager": "^14.2.1",
-    "zip-folder": "^1.0.0"
+    "electron-packager": "^15.1.0"
+  },
+  "dependencies": {
+    "zip-a-folder": "0.0.12"
   }
 }
