@@ -10,15 +10,25 @@ jobs:
     name: Release-Windows
     runs-on: "windows-latest"
     steps:
-      - uses: olegtarasov/get-tag@v2
+      - name: Get the tag version
+        uses: dawidd6/action-get-tag@v1
         id: tagName
 
       - uses: actions/checkout@v2
+
+      - uses: actions/setup-node@v1
+
+      - name: build electron front page
+        shell: PowerShell
+        run: |
+          cd src/compas_3gs/web
+          npm install
+          npm run build -- ${{ steps.tagName.outputs.tag }}
       
-      - uses: goanpeca/setup-miniconda@v1
+      - uses: conda-incubator/setup-miniconda@v2.0.0
         with:
           miniconda-version: "latest"
-          activate-environment: rv2
+          activate-environment: ags
           python-version: 3.7
       
       - name: conda-install
@@ -26,19 +36,13 @@ jobs:
         run: |
           conda install conda-pack cython -y
 
-      
-      - name: extract-electron
-        shell: PowerShell
-        run: |
-          python scripts/unzip_electron.py
-      
       - name: ags-install
         shell: PowerShell
         run: |
           python ui/Rhino/ags/dev/rui.py
           pip install .
 
-      - name: rv2-pack
+      - name: ags-pack
         run: |
           python scripts/pack.py --version ${{ steps.tagName.outputs.tag }}
 
