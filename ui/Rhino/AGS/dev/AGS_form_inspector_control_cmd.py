@@ -25,9 +25,9 @@ def RunCommand(is_interactive):
         return
 
     answer = compas_rhino.rs.GetString("Force Polygons Inspector", "Cancel", ["On", "Off", "Cancel"])
-    if answer == "ON":
+    if answer == "On":
         AGS_form_inspector_on_cmd.RunCommand(True)
-    if answer == "OFF":
+    if answer == "Off":
         AGS_form_inspector_off_cmd.RunCommand(True)
 
 
