@@ -24,7 +24,7 @@ def RunCommand(is_interactive):
         compas_rhino.display_message("There is no FormDiagram in the scene.")
         return
 
-    answer = compas_rhino.rs.GetString("Force Polygons Inspector", "Cancel", ["ON", "OFF", "Cancel"])
+    answer = compas_rhino.rs.GetString("Force Polygons Inspector", "Cancel", ["On", "Off", "Cancel"])
     if answer == "ON":
         AGS_form_inspector_on_cmd.RunCommand(True)
     if answer == "OFF":

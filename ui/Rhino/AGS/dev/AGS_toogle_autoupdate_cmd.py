@@ -6,29 +6,25 @@ import scriptcontext as sc
 
 import compas_rhino
 
-import AGS_force_inspector_on_cmd
-import AGS_force_inspector_off_cmd
 
-__commandname__ = "AGS_force_inspector_control"
+__commandname__ = "AGS_toggle_autoupdate"
 
 
 def RunCommand(is_interactive):
+
     if 'AGS' not in sc.sticky:
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
     scene = sc.sticky['AGS']['scene']
 
-    objects = scene.find_by_name('Force')
-    if not objects:
-        compas_rhino.display_message("There is no ForceDiagram in the scene.")
-        return
-
-    answer = compas_rhino.rs.GetString("Force Dual Inspector", "Cancel", ["On", "Off", "Cancel"])
+    answer = compas_rhino.rs.GetString("Autoupdate of Form/Force Diagram", "Cancel", ["On", "Off", "Cancel"])
     if answer == "ON":
-        AGS_force_inspector_on_cmd.RunCommand(True)
+        scene.settings['AGS']['autoupdate'] = True
+        compas_rhino.display_message("Autoupdate Form/Force: [On]")
     if answer == "OFF":
-        AGS_force_inspector_off_cmd.RunCommand(True)
+        scene.settings['AGS']['autoupdate'] = False
+        compas_rhino.display_message("Autoupdate Form/Force: [Off]")
 
 
 # ==============================================================================
