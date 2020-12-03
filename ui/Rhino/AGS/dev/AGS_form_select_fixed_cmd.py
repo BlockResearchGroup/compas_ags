@@ -24,14 +24,15 @@ def RunCommand(is_interactive):
         return
     form = objects[0]
 
-    while True:
-        vertices = form.select_vertices("Fix selected vertices (unfix all others)")
-        if not vertices:
-            break
+    form.diagram.vertices_attribute('is_fixed', False)
+    scene.update()
 
-        form.diagram.vertices_attribute('is_fixed', False)
-        form.diagram.vertices_attribute('is_fixed', True, keys=vertices)
-        scene.update()
+    vertices = form.select_vertices("Fix selected vertices (unfix all others)")
+    if not vertices:
+        return
+
+    form.diagram.vertices_attribute('is_fixed', True, keys=vertices)
+    scene.update()
 
     scene.save()
 
