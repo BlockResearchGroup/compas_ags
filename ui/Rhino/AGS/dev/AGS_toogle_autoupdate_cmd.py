@@ -19,10 +19,10 @@ def RunCommand(is_interactive):
     scene = sc.sticky['AGS']['scene']
 
     answer = compas_rhino.rs.GetString("Autoupdate of Form/Force Diagram", "Cancel", ["On", "Off", "Cancel"])
-    if answer == "ON":
+    if answer == "On":
         scene.settings['AGS']['autoupdate'] = True
         compas_rhino.display_message("Autoupdate Form/Force: [On]")
-    if answer == "OFF":
+    if answer == "Off":
         scene.settings['AGS']['autoupdate'] = False
         compas_rhino.display_message("Autoupdate Form/Force: [Off]")
 
