@@ -79,7 +79,8 @@ def RunCommand(is_interactive):
         find_object(key2guid[edge_form]).Select(True)
         key2guid = {force.guid_edge[guid]: guid for guid in force.guid_edge}
         key2guid.update({(v, u): key2guid[(u, v)] for u, v in key2guid})
-        find_object(key2guid[edge_force]).Select(True)
+        if abs(f) > 10e-4:
+            find_object(key2guid[edge_force]).Select(True)
 
         form.draw_highlight_edge(edge_form)
         force.draw_highlight_edge(edge_force)
