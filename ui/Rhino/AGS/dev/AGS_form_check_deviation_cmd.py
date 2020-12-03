@@ -5,11 +5,10 @@ from __future__ import division
 import scriptcontext as sc
 
 import compas_rhino
-import AGS_form_check_deviation_cmd
 from compas_ags.utilities.equilibrium import check_deviations
 
 
-__commandname__ = "AGS_force_move_nodes"
+__commandname__ = "AGS_form_check_deviation"
 
 
 def RunCommand(is_interactive):
@@ -18,7 +17,6 @@ def RunCommand(is_interactive):
         compas_rhino.display_message('AGS has not been initialised yet.')
         return
 
-    proxy = sc.sticky['AGS']['proxy']
     scene = sc.sticky['AGS']['scene']
 
     objects = scene.find_by_name('Form')
@@ -33,15 +31,14 @@ def RunCommand(is_interactive):
         return
     force = objects[0]
 
-    proxy.package = 'compas_ags.ags.graphstatics'
+    threshold = scene.settings['AGS']['max_deviation']
+    check = check_deviations(form.diagram, force.diagram, tol=threshold)
+    max_dev = max(form.diagram.edges_attribute('a'))
 
-    form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
-    if not check_deviations(form.diagram, force.diagram, tol=scene.settings['AGS']['max_deviation']):
-        compas_rhino.display_message('Error: Invalid movement on force diagram nodes or insuficient constraints in the form diagram.')
-        AGS_form_check_deviation_cmd.RunCommand(True)
-
-    scene.update()
-    scene.save()
+    if check:
+        compas_rhino.display_message('Diagrams are parallel!\nMax. angle deviation: {0:.2g} deg\nThreshold assumed: {1:.2g} deg.'.format(max_dev, threshold))
+    else:
+        compas_rhino.display_message('Diagrams are not parallel!\nMax. angle deviation: {0:.2g} deg\nThreshold assumed: {1:.2g} deg.'.format(max_dev, threshold))
 
 
 # ==============================================================================
