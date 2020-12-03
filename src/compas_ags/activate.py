@@ -32,6 +32,11 @@ def get_register_json():
 
 
 def check():
+
+    if not compas.WINDOWS:
+        print("checking skipped on non-windows systems")
+        return True
+
     register_json = get_register_json()
     if not register_json:
         print("register json not found")
