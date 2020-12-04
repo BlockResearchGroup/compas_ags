@@ -20,10 +20,10 @@ def RunCommand(is_interactive):
 
     scene = sc.sticky['AGS']['scene']
 
-    layer_name = compas_rhino.rs.GetString("Type name of layer  with lines to construct FormDiagram")
-    if not layer_name:
+    layer = compas_rhino.rs.GetString("Type name of layer  with lines to construct FormDiagram")
+    if not layer:
         return
-    guids = compas_rhino.get_lines(layer=layer_name)
+    guids = compas_rhino.get_lines(layer=layer)
     if not guids:
         compas_rhino.display_message("Layer is empty.")
         return
