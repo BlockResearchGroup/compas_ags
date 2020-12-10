@@ -5,6 +5,7 @@ from __future__ import division
 import scriptcontext as sc
 
 import compas_rhino
+import AGS_form_check_deviation_cmd
 from compas_ags.utilities.equilibrium import check_deviations
 
 
@@ -59,8 +60,9 @@ def RunCommand(is_interactive):
     if scene.settings['AGS']['autoupdate']:
         form.diagram.data = proxy.form_update_from_force_proxy(form.diagram.data, force.diagram.data)
         if not check_deviations(form.diagram, force.diagram, tol=scene.settings['AGS']['max_deviation']):
-            compas_rhino.display_message('Error: Diagrams are not parallel.\nInvalid movement on force diagram nodes or insuficient constraints in the form diagram.')
-            print('Maximum angle deviation: {0:.2g} deg'.format(max(form.diagram.edges_attribute('a'))))
+            compas_rhino.display_message('Error: Invalid movement on force diagram nodes or insuficient constraints in the form diagram.')
+            max_dev, limit = max(form.diagram.edges_attribute('a')), scene.settings['AGS']['max_deviation']
+            compas_rhino.display_message('Diagrams are not parallel!\nMax. angle deviation: {0:.2g} deg\nThreshold assumed: {1:.2g} deg.'.format(max_dev, limit))
 
     form.settings['show.edgelabels'] = False
     form.settings['show.forcelabels'] = True

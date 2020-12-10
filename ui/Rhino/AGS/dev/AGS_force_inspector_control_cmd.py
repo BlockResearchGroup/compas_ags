@@ -24,10 +24,10 @@ def RunCommand(is_interactive):
         compas_rhino.display_message("There is no ForceDiagram in the scene.")
         return
 
-    answer = compas_rhino.rs.GetString("Force Dual Inspector", "Cancel", ["ON", "OFF", "Cancel"])
-    if answer == "ON":
+    answer = compas_rhino.rs.GetString("Force Dual Inspector", "Cancel", ["On", "Off", "Cancel"])
+    if answer == "On":
         AGS_force_inspector_on_cmd.RunCommand(True)
-    if answer == "OFF":
+    if answer == "Off":
         AGS_force_inspector_off_cmd.RunCommand(True)
 
 
