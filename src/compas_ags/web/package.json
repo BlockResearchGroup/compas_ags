@@ -10,7 +10,7 @@
   "author": "Li Chen",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^8.5.2",
+    "electron": "^9.4.0",
     "electron-packager": "^15.1.0"
   },
   "dependencies": {
