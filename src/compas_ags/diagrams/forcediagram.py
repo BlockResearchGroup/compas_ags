@@ -70,13 +70,18 @@ class ForceDiagram(Diagram):
         return list(self.vertices_where({'is_fixed': True}))
 
     def anchor(self):
-        """The identifiers of the fixed vertices.
+        """Get either the first anchored point or return key 0 if no anchor is set.
 
         Returns
         -------
         list
         """
-        return list(self.vertices_where({'is_anchor': True}))
+        anchors = list(self.vertices_where({'is_anchor': True}))
+        if anchors:
+            return anchors[0]
+        else:
+            return 0
+        return
 
     # --------------------------------------------------------------------------
     # Helpers

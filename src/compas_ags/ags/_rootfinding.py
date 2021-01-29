@@ -350,6 +350,10 @@ def compute_jacobian(form, force):
     Eid = E[:, independent_edges_idx]
     qid = q[independent_edges_idx]
 
+    print('Ed - rank:', np.linalg.matrix_rank(Ed))
+    print('Eid - rank:', np.linalg.matrix_rank(Eid))
+    print('free:', len(free))
+
     # --------------------------------------------------------------------------
     # force diagram
     # --------------------------------------------------------------------------
