@@ -69,6 +69,15 @@ class ForceDiagram(Diagram):
         """
         return list(self.vertices_where({'is_fixed': True}))
 
+    def anchor(self):
+        """The identifiers of the fixed vertices.
+
+        Returns
+        -------
+        list
+        """
+        return list(self.vertices_where({'is_anchor': True}))
+
     # --------------------------------------------------------------------------
     # Helpers
     # --------------------------------------------------------------------------
