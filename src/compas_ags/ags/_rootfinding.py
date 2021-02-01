@@ -210,6 +210,10 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e5, constraints=No
 def get_red_residual_and_jacobian_rpc(form, force, _X_goal, cj=None, cr=None):
     jacobian = compute_jacobian(form, force)
 
+    print('Jacobian-after:', jacobian)
+    print('Jacobian-shape-after:', jacobian.shape)
+    print('Jacobian-rank-after:', np.linalg.matrix_rank(jacobian))
+
     _vcount = force.number_of_vertices()
     _k_i = force.key_index()
     _known = _k_i[force.anchor()]
@@ -264,17 +268,32 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
 
     jacobian = compute_jacobian(form, force)
 
+    # print('Jacobian:', jacobian)
+    # print('Jacobian-shape:', jacobian.shape)
+    # print('Jacobian-rank:', np.linalg.matrix_rank(jacobian))
+
     _vcount = force.number_of_vertices()
     _k_i = force.key_index()
     _known = _k_i[force.anchor()]
     _bc = [_known, _vcount + _known]
     _xy = array(force.xy(), dtype=float64)
+    print('_xy', _xy)
+    print('_X_goal', _X_goal)
     r = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose())) - _X_goal
 
     if constraints:
         (cj, cr) = constraints.compute_constraints()
         jacobian = np.vstack((jacobian, cj))
         r = np.vstack((r, cr))
+        print('Cj:', cj)
+        print('Cr:', cr)
+        print('Jacobian-after:', jacobian)
+        print('Jacobian-shape-after:', jacobian.shape)
+        print('Jacobian-rank-after:', np.linalg.matrix_rank(jacobian))
+
+    print('r:', r)
+    print('r-shape:', r.shape)
+    print('r-rank:', np.linalg.matrix_rank(r))
 
     check_solutions(jacobian, r)
 
@@ -365,6 +384,8 @@ def compute_jacobian(form, force):
     _Ct = np.asmatrix(_Ct)
     _k_i   = force.key_index()
     _known = [_k_i[force.anchor()]]
+    # _vertex_index = force.vertex_index()
+    # _known = [_vertex_index[next(force.vertices())]]
 
     # --------------------------------------------------------------------------
     # Jacobian
