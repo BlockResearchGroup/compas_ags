@@ -1,6 +1,6 @@
 """Simple example to compute the form diagram after modifying the
-force diagram without constraints. Both a direct solution
-and root finding with Newton's method are supported.
+force diagram with constraints. Solved using root finding with
+Newton's method.
 
 author: Vedad Alic
 email: vedad.alic@construction.lth.se
@@ -11,6 +11,8 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
+import numpy as np
+
 import compas_ags
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
@@ -18,9 +20,13 @@ from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
 from compas_ags.ags import graphstatics
 
+from compas_ags.ags import compute_form_from_force_newton
+from compas_ags.ags import ConstraintsCollection
+from compas_ags.ags import AngleFix
+
+
 # ------------------------------------------------------------------------------
-#   1. get lines of an orthogonal grid and its boundary conditions
-#      make form and force diagrams
+#   1. get lines of a plane triangle frame in equilibrium, its applied loads and reaction forces
 # ------------------------------------------------------------------------------
 graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
 
@@ -33,20 +39,19 @@ force = ForceDiagram.from_formdiagram(form)
 left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 fixed = [left, right]
-
-for key in fixed:
-    form.vertex_attribute(key, 'is_fixed', True)
-form.vertex_attribute(key, 'is_anchor', True)
+form.vertex_attribute(left, 'is_fixed', True)
+form.vertex_attribute(right, 'is_fixed', True)
 
 # ------------------------------------------------------------------------------
 #   3. set applied load
 # ------------------------------------------------------------------------------
 # set the magnitude of the applied load
-e1 =  {'v': list(form.vertices_where({'x': 3.0, 'y': 3.0}))[0],
-       'u': list(form.vertices_where({'x': 3.669563106796117, 'y': 5.008689320388349}))[0]}
-# form.set_edge_forcedensity(e1['v'], e1['u', -1.0)
-form.edge_attribute((e1['v'], e1['u']), 'q', -1.0)
-form.edge_attribute((e1['v'], e1['u']), 'is_ind', True)
+u_edge = list(form.vertices_where({'x': 3.0, 'y': 3.0}))[0]
+v_edge = list(form.vertices_where({'x': 3.669563106796117, 'y': 5.008689320388349}))[0]
+f = -5.0
+l = form.edge_length(u_edge, v_edge)
+form.edge_attribute((u_edge, v_edge), 'q', f/l)
+form.edge_attribute((u_edge, v_edge), 'is_ind', True)
 
 # update the diagrams
 graphstatics.form_update_q_from_qind(form)
@@ -80,31 +85,25 @@ for u, v in force.edges():
 # --------------------------------------------------------------------------
 #   4. force diagram manipulation and modify the form diagram
 # --------------------------------------------------------------------------
-import compas_ags.ags._rootfinding as rf
-import numpy as np
+# set constraints
+C = ConstraintsCollection(form)
+
+# Add angle constraints to the vertices (manually)
+C.add_constraint(AngleFix(form, 0, 20))
+C.add_constraint(AngleFix(form, 5, 90))
+
+# fix the length of edges connecting leaf vertices
+C.constrain_dependent_leaf_edges_lengths()
+
+constraint_lines = C.get_lines()
+
+# modify the geometry of the force diagram and update the form diagram using Newton's method
 translation = 0.5
-direct = False
-if direct:
-    # example reference: COMPAS_AGS\examples\rtl.py
-    # modify the geometry of the force diagram
-    force.vertex[4]['x'] -= translation
-    _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-    print('xy-after', _xy)
-    # update the form diagram
-    graphstatics.form_update_from_force(form, force, kmax=100)
-else:
-    # modify the geometry of the force diagram and update the form diagram using Newton's method
-    xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
-    _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-    print('xy-before', _xy)
-    _xy[force.key_index()[4], 0] -= translation
-    print('xy-after', _xy)
-    _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
-    # note that no constraint is defined, thus shift may happen of the form diagram
-    # force.vertex_attribute(0, 'is_anchor', True)
-    force.vertex_attribute(0, 'is_anchor', True)
-    # force.vertex_attribute(2, 'is_anchor', True)
-    rf.compute_form_from_force_newton(form, force, _X_goal, constraints=None)
+force.vertex[4]['x'] -= translation
+_xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
+_X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
+
+compute_form_from_force_newton(form, force, _X_goal, constraints=C)
 
 # add arrow to lines to indicate movement
 force_lines.append({
@@ -115,6 +114,7 @@ force_lines.append({
     'style': '-',
 })
 
+form_lines = form_lines + constraint_lines
 
 # ------------------------------------------------------------------------------
 #   5. display the orginal configuration

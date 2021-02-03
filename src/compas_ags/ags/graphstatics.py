@@ -372,7 +372,6 @@ def force_update_from_form(force, form):
     # --------------------------------------------------------------------------
     _vertex_index = force.vertex_index()
 
-    # _known = [_vertex_index[next(force.vertices())]]
     _known = [_vertex_index[force.anchor()]]
     _xy = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)

@@ -4,7 +4,8 @@ from __future__ import division
 
 from abc import ABC, abstractmethod
 import numpy as np
-from compas_ags.diagrams.formdiagram import FormDiagram
+import math
+from compas_ags.diagrams import FormDiagram
 
 
 __author__ = ['Vedad Alic']
@@ -15,6 +16,7 @@ __all__ = [
     'ConstraintsCollection',
     'HorizontalFix',
     'VerticalFix',
+    'AngleFix',
     'LengthFix',
     'SetLength'
 ]
@@ -89,6 +91,20 @@ class ConstraintsCollection(object):
     def update_constraints(self):
         for constraint in self.constraints:
             constraint.update_constraint_goal()
+
+    def constraints_from_form(self):
+        # fix x and y coordinates of the fixed vertices
+        for key in self.form.vertices_where({'is_fixed': True}):
+            self.add_constraint(HorizontalFix(self.form, key))
+            self.add_constraint(VerticalFix(self.form, key))
+
+        # fix only x or only y coordinates of non fixed vertices based on properties fix_x/fix_y
+        for key in self.form.vertices_where({'fix_x': True}):
+            self.add_constraint(HorizontalFix(self.form, key))
+        for key in self.form.vertices_where({'fix_y': True}):
+            self.add_constraint(VerticalFix(self.form, key))
+
+        self.constrain_dependent_leaf_edges_lengths()
 
     def get_lines(self):
         """Get lines to draw in viewer."""
@@ -184,6 +200,51 @@ class VerticalFix(AbstractConstraint):
         return constraint_lines
 
 
+class AngleFix(AbstractConstraint):
+    """Keeps the vertex fixed along an inclined line defined by its angle (deg) with the horizontal"""
+
+    def __init__(self, form, vertex, angle):
+        super().__init__(form)
+        self.vertex = vertex
+        self.angle = angle
+        self.set_initial_position()
+
+    def set_initial_position(self):
+        self.P = self.form.vertex_coordinates(self.vertex, 'xy')[1]
+
+    def compute_constraint(self):
+        constraint_jac_row = np.zeros((1, self.number_of_cols))
+
+        idx = self.form.key_index()[self.vertex]
+        constraint_jac_row[0, idx] = 1 * math.sin(math.radians(self.angle))
+        r = (self.form.vertex_coordinates(self.vertex, 'xy')[0] - self.P) * math.sin(math.radians(self.angle))
+
+        idx = self.form.key_index()[self.vertex] + self.form.number_of_vertices()
+        constraint_jac_row[0, idx] = 1 * math.cos(math.radians(self.angle))
+        r = (self.form.vertex_coordinates(self.vertex, 'xy')[1] - self.P) * math.cos(math.radians(self.angle))
+        return constraint_jac_row, r
+
+    def update_constraint_goal(self):
+        self.set_initial_position()
+
+    def get_lines(self):
+        constraint_lines = []
+        s = self.form.vertex_coordinates(self.vertex, 'xy')
+        e = self.form.vertex_coordinates(self.vertex, 'xy')
+        s[0] += 1 * math.sin(math.radians(90 - self.angle))
+        s[1] -= 1 * math.cos(math.radians(90 - self.angle))
+        e[0] -= 1 * math.sin(math.radians(90 - self.angle))
+        e[1] += 1 * math.cos(math.radians(90 - self.angle))
+        constraint_lines.append({
+            'start': s,
+            'end': e,
+            'width': self._width,
+            'color': self._color,
+            'style': self._style,
+        })
+        return constraint_lines
+
+
 class LengthFix(AbstractConstraint):
     """Keeps the edge length fixed"""
 
@@ -201,7 +262,7 @@ class LengthFix(AbstractConstraint):
         e = self.form.vertex_coordinates(v, 'xy')
         dx = s[0] - e[0]
         dy = s[1] - e[1]
-        self.L = np.sqrt(dx ** 2 + dy ** 2)  # Initial length
+        self.L = math.sqrt(dx ** 2 + dy ** 2)  # Initial length
 
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
@@ -211,7 +272,7 @@ class LengthFix(AbstractConstraint):
         e = self.form.vertex_coordinates(v, 'xy')
         dx = s[0] - e[0]
         dy = s[1] - e[1]
-        l = np.sqrt(dx ** 2 + dy ** 2)  # Current length
+        l = math.sqrt(dx ** 2 + dy ** 2)  # Current length
 
         constraint_jac_row[0, u] = dx / l  # x0
         constraint_jac_row[0, v] = -dx / l  # x1
@@ -231,6 +292,14 @@ class SetLength(LengthFix):
 
     def update_constraint_goal(self):
         pass
+
+
+class OrientationFix(AbstractConstraint):
+    """WIP - Keeps the edge orientation fixed"""
+
+    def __init__(self, form, edge):
+        super().__init__(form)
+        self.edge = edge
 
 
 # ==============================================================================

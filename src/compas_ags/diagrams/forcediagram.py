@@ -76,12 +76,7 @@ class ForceDiagram(Diagram):
         -------
         list
         """
-        anchors = list(self.vertices_where({'is_anchor': True}))
-        if anchors:
-            return anchors[0]
-        else:
-            return 0
-        return
+        return next(self.vertices())
 
     # --------------------------------------------------------------------------
     # Helpers

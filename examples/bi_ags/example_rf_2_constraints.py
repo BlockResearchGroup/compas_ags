@@ -20,8 +20,8 @@ from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
 from compas_ags.ags import graphstatics
 
-import compas_ags.ags2.rootfinding as rf
-from compas_ags.ags2.constraints import ConstraintsCollection, HorizontalFix, VerticalFix
+from compas_ags.ags import compute_form_from_force_newton
+from compas_ags.ags import ConstraintsCollection
 
 
 # ------------------------------------------------------------------------------
@@ -38,17 +38,19 @@ force = ForceDiagram.from_formdiagram(form)
 left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 fixed = [left, right]
-
-form.set_fixed(fixed)
-force.set_anchor([5])
+form.vertex_attribute(left, 'is_fixed', True)
+form.vertex_attribute(right, 'is_fixed', True)
 
 # ------------------------------------------------------------------------------
 #   3. set applied load
 # ------------------------------------------------------------------------------
 # set the magnitude of the applied load
-e1 ={'v': list(form.vertices_where({'x': 3.0, 'y': 3.0}))[0],
-     'u': list(form.vertices_where({'x': 3.669563106796117, 'y': 5.008689320388349}))[0]}
-form.set_edge_forcedensity(e1['v'], e1['u'], -1.0)
+u_edge = list(form.vertices_where({'x': 3.0, 'y': 3.0}))[0]
+v_edge = list(form.vertices_where({'x': 3.669563106796117, 'y': 5.008689320388349}))[0]
+f = -5.0
+l = form.edge_length(u_edge, v_edge)
+form.edge_attribute((u_edge, v_edge), 'q', f/l)
+form.edge_attribute((u_edge, v_edge), 'is_ind', True)
 
 # update the diagrams
 graphstatics.form_update_q_from_qind(form)
@@ -82,35 +84,30 @@ for u, v in force.edges():
 # --------------------------------------------------------------------------
 #   4. force diagram manipulation and modify the form diagram
 # --------------------------------------------------------------------------
-# set constraints
+# set constraints according to fixity predefined
 C = ConstraintsCollection(form)
-# fix x and y coordinates of the left and right vertices
-C.add_constraint(HorizontalFix(form, left))
-C.add_constraint(VerticalFix(form, left))
-C.add_constraint(HorizontalFix(form, right))
-C.add_constraint(VerticalFix(form, right))
-# fix the length of edges connecting leaf vertices
-C.constrain_dependent_leaf_edges_lengths()
+C.constraints_from_form()
+
 constraint_lines = C.get_lines()
 
 # modify the geometry of the force diagram and update the form diagram using Newton's method
-xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
+translation = 0.5
+force.vertex[4]['x'] -= translation
 _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-_xy[force.key_index()[3], 0] -= 0.5
 _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
-rf.compute_form_from_force_newton(form, force, _X_goal, constraints=C)
+
+compute_form_from_force_newton(form, force, _X_goal, constraints=C)
 
 # add arrow to lines to indicate movement
 force_lines.append({
-    'start': force_key_xyz[3],
-    'end': force.vertex_coordinates(3),
+    'start': force_key_xyz[4],
+    'end': force.vertex_coordinates(4),
     'color': '#ff0000',
     'width': 10.0,
     'style': '-',
 })
 
 form_lines = form_lines + constraint_lines
-
 
 # ------------------------------------------------------------------------------
 #   5. display the orginal configuration

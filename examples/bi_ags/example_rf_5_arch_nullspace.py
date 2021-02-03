@@ -12,61 +12,22 @@ from __future__ import division
 
 import numpy as np
 
+import compas_ags
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
 from compas_ags.ags import graphstatics
 
-from compas_ags.ags2.constraints import ConstraintsCollection, HorizontalFix, VerticalFix
-import compas_ags.ags2.rootfinding as rf
+from compas_ags.ags import ConstraintsCollection, HorizontalFix, VerticalFix
+from compas_ags.ags import compute_nullspace
 
 
 # ------------------------------------------------------------------------------
 #   1. create a simple arch from nodes and edges, make form and force diagrams
 # ------------------------------------------------------------------------------
-edges = [
-        (0, 10),
-        (1, 9),
-        (2, 11),
-        (3, 2),
-        (4, 12),
-        (5, 13),
-        (6, 14),
-        (7, 15),
-        (8, 16),
-        (2, 0),
-        (0, 8),
-        (8, 7),
-        (7, 6),
-        (6, 5),
-        (5, 4),
-        (4, 9),
-        (9, 17),
-]
 
-vertices = [
-    [3.62477467512,     2.99447312681,  0.0],
-    [43.4972961014,     -7.27758178128, 0.0],
-    [0.0,               0.0,            0.0],
-    [0.0,               -7.27758178128, 0.0],
-    [39.8725214263,     2.99447312681,  0.0],
-    [32.6229720760,     6.81140730234,  0.0],
-    [25.3734227258,     8.54514654776,  0.0],
-    [18.1238733756,     8.54514654776,  0.0],
-    [10.8743240253,     6.81140730234,  0.0],
-    [43.4972961014,     0.0,            0.0],
-    [3.62477467512,     10.2720549081,  0.0],
-    [-3.52953624469,    0.0,            0.0],
-    [39.8725214263,     10.2720549081,  0.0],
-    [32.6229720760,     14.0889890836,  0.0],
-    [25.3734227258,     15.8227283290,  0.0],
-    [18.1238733756,     15.8227283290,  0.0],
-    [10.8743240253,     14.0889890836,  0.0],
-    [47.4502140636,     0.0,            0.0],
-]
-
-graph = FormGraph.from_nodes_and_edges(vertices, edges)
+graph = FormGraph.from_json(compas_ags.get('paper/gs_arch.json'))
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
@@ -85,8 +46,8 @@ for index in edges_ind:
 left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 43.4972961014, 'y': 0.0}))[0]
 fixed = [left, right]
-form.set_fixed(fixed)
-force.set_anchor([5])
+for key in fixed:
+    form.vertex_attribute(key, 'is_fixed', True)
 
 # update the diagrams
 graphstatics.form_update_q_from_qind(form)
@@ -127,14 +88,10 @@ for i, v in enumerate(_xy):
        move_vertices.append(i)
 
 C = ConstraintsCollection(form)
-C.add_constraint(HorizontalFix(form, left))
-C.add_constraint(VerticalFix(form, left))
-C.add_constraint(HorizontalFix(form, right))
-C.add_constraint(VerticalFix(form, right))
-C.constrain_dependent_leaf_edges_lengths()
+C.constraints_from_form()
 constraint_lines = C.get_lines()
 
-ns = rf.compute_nullspace(form, force, C)
+ns = compute_nullspace(form, force, C)
 print("Dimension of nullspace: " + str(len(ns)))
 
 
