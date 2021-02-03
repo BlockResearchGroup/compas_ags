@@ -6,6 +6,7 @@ __all__ = [
     'check_solutions',
 ]
 
+
 def check_solutions(A, rhs, eps=1e-7):
     """
     Compares the rank of the matrix A to the rank of the augmentet matrix [A rhs].

@@ -2,20 +2,12 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import sys
-
 import numpy as np
 from numpy import array
-from numpy import eye
-from numpy import zeros
 from numpy import float64
-from numpy import matrix
-from numpy.linalg import cond
-
-from scipy.linalg import solve
-from scipy.linalg import lstsq
-
-from scipy.sparse import diags
+# from numpy.linalg import cond
+# from scipy.linalg import solve
+# from scipy.linalg import lstsq
 
 from compas.numerical import nullspace
 from compas.numerical import connectivity_matrix
@@ -60,7 +52,8 @@ def compute_form_from_force_newton(form, force, _X_goal, tol=1e-10, constraints=
     force : compas_bi_ags.diagrams.forcediagram.ForceDiagram
         The force diagram on which the update is based.
     _X_goal
-        Contains the target force diagram coordinates (:math:`\mathbf{X}^*`) in *Fortran* order (first all :math:`\mathbf{x}^*`-coordinates, then all :math:`\mathbf{y}^*`-coordinates).
+        Contains the target force diagram coordinates (:math:`\mathbf{X}^*`) in *Fortran* order
+        (first all :math:`\mathbf{x}^*`-coordinates, then all :math:`\mathbf{y}^*`-coordinates).
     tol
         Stopping criteria tolerance.
     constraints : compas_bi_ags.bi_ags.constraints.ConstraintsCollection
@@ -112,7 +105,8 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
     force : compas_ags.forcediagram.ForceDiagram
         The force diagram on which the update is based.
     _X_goal
-        Contains the target force diagram coordinates (:math:`\mathbf{X}^*`) in *Fortran* order (first all :math:`\mathbf{x}^*`-coordinates, then all :math:`\mathbf{y}^*`-coordinates).
+        Contains the target force diagram coordinates (:math:`\mathbf{X}^*`) in *Fortran* order
+        (first all :math:`\mathbf{x}^*`-coordinates, then all :math:`\mathbf{y}^*`-coordinates).
     constraints : compas_ags.ags.constraints.ConstraintsCollection
         A collection of form diagram constraints.
 
@@ -258,7 +252,7 @@ def compute_jacobian(form, force):
 def compute_nullspace(form, force, constraints=None):
     jacobian = compute_jacobian(form, force)
     if constraints:
-        (cj, cr) = constraints.compute_constraints()
+        (cj, _) = constraints.compute_constraints()
         jacobian = np.vstack((jacobian, cj))
 
     _vcount = force.number_of_vertices()

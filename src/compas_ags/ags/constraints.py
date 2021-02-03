@@ -272,13 +272,13 @@ class LengthFix(AbstractConstraint):
         e = self.form.vertex_coordinates(v, 'xy')
         dx = s[0] - e[0]
         dy = s[1] - e[1]
-        l = math.sqrt(dx ** 2 + dy ** 2)  # Current length
+        length = math.sqrt(dx ** 2 + dy ** 2)  # Current length
 
-        constraint_jac_row[0, u] = dx / l  # x0
-        constraint_jac_row[0, v] = -dx / l  # x1
-        constraint_jac_row[0, u + self.form.number_of_vertices()] = dy / l  # y0
-        constraint_jac_row[0, v + self.form.number_of_vertices()] = -dy / l  # y1
-        r = l - self.L
+        constraint_jac_row[0, u] = dx / length  # x0
+        constraint_jac_row[0, v] = -dx / length  # x1
+        constraint_jac_row[0, u + self.form.number_of_vertices()] = dy / length  # y0
+        constraint_jac_row[0, v + self.form.number_of_vertices()] = -dy / length  # y1
+        r = length - self.L
 
         return constraint_jac_row, r
 
