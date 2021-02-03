@@ -70,11 +70,11 @@ class ForceDiagram(Diagram):
         return list(self.vertices_where({'is_fixed': True}))
 
     def anchor(self):
-        """Get either the first anchored point or return key 0 if no anchor is set.
+        """Get an anchor to the force diagram.
 
         Returns
         -------
-        list
+        int
         """
         return next(self.vertices())
 

@@ -32,7 +32,7 @@ force = ForceDiagram.from_formdiagram(form)
 # ------------------------------------------------------------------------------
 #   2. set the fixed vertices
 # ------------------------------------------------------------------------------
-left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
+left = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
 fixed = [left, right]
 form.vertex_attribute(left, 'is_fixed', True)
@@ -61,7 +61,7 @@ form_lines = []
 for u, v in form.edges():
     form_lines.append({
         'start': form.vertex_coordinates(u, 'xy'),
-        'end'  : form.vertex_coordinates(v, 'xy'),
+        'end': form.vertex_coordinates(v, 'xy'),
         'width': 1.0,
         'color': '#cccccc',
         'style': '--'
@@ -71,7 +71,7 @@ force_lines = []
 for u, v in force.edges():
     force_lines.append({
         'start': force.vertex_coordinates(u, 'xy'),
-        'end'  : force.vertex_coordinates(v, 'xy'),
+        'end': force.vertex_coordinates(v, 'xy'),
         'width': 1.0,
         'color': '#cccccc',
         'style': '--'
@@ -117,12 +117,12 @@ viewer.draw_form(lines=form_lines,
                  vertexsize=0.2,
                  vertexcolor={key: '#000000' for key in fixed},
                  edgelabel={uv: index for index, uv in enumerate(form.edges())}
-)
+                 )
 
 viewer.draw_force(lines=force_lines,
                   vertexlabel={key: key for key in force.vertices()},
                   vertexsize=0.2,
                   edgelabel={uv: index for index, uv in enumerate(force.edges())}
-)
+                  )
 
 viewer.show()

@@ -43,7 +43,7 @@ for index in edges_ind:
     form.edge_attribute((u, v), 'q', -1.)
 
 # set the fixed points
-left  = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
+left = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
 right = list(form.vertices_where({'x': 43.4972961014, 'y': 0.0}))[0]
 fixed = [left, right]
 for key in fixed:
@@ -58,7 +58,7 @@ form_lines = []
 for u, v in form.edges():
     form_lines.append({
         'start': form.vertex_coordinates(u, 'xy'),
-        'end'  : form.vertex_coordinates(v, 'xy'),
+        'end': form.vertex_coordinates(v, 'xy'),
         'width': 1.0,
         'color': '#cccccc',
         'style': '--'
@@ -68,7 +68,7 @@ force_lines = []
 for u, v in force.edges():
     force_lines.append({
         'start': force.vertex_coordinates(u, 'xy'),
-        'end'  : force.vertex_coordinates(v, 'xy'),
+        'end': force.vertex_coordinates(v, 'xy'),
         'width': 1.0,
         'color': '#cccccc',
         'style': '--'
@@ -80,12 +80,12 @@ for u, v in force.edges():
 # --------------------------------------------------------------------------
 # set constraints
 _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-_x_min = min(_xy[:,0])
+_x_min = min(_xy[:, 0])
 
 move_vertices = []
 for i, v in enumerate(_xy):
     if v[0] > (_x_min-.1) and v[0] < (_x_min+.1):
-       move_vertices.append(i)
+        move_vertices.append(i)
 
 C = ConstraintsCollection(form)
 C.constraints_from_form()
@@ -107,7 +107,7 @@ def show(i):
     for u, v in form.edges():
         form_lines.append({
             'start': [x + y for x, y in zip(form.vertex_coordinates(u, 'xy'),  nsi[u])],
-            'end'  : [x + y for x, y in zip(form.vertex_coordinates(v, 'xy'),  nsi[v])],
+            'end': [x + y for x, y in zip(form.vertex_coordinates(v, 'xy'),  nsi[v])],
             'width': 1.0,
             'color': '#cccccc',
             'style': '--'
@@ -125,13 +125,14 @@ def show(i):
                      vertexsize=0.2,
                      vertexcolor={key: '#000000' for key in fixed},
                      edgelabel={uv: index for index, uv in enumerate(form.edges())}
-    )
+                     )
 
     viewer.draw_force(vertexlabel={key: key for key in force.vertices()},
                       vertexsize=0.2,
                       edgelabel={uv: index for index, uv in enumerate(force.edges())}
-    )
+                      )
 
     viewer.show()
+
 
 show(2)

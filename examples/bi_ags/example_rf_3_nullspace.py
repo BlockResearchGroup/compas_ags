@@ -77,6 +77,8 @@ print("Dimension of nullspace: " + str(len(ns)))
 # --------------------------------------------------------------------------
 #   5. display force diagram and a specific solution of form diagram
 # --------------------------------------------------------------------------
+
+
 def show(i):
     # i is the index of nullspace mode
     c = 10
