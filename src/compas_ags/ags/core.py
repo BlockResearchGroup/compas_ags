@@ -15,8 +15,6 @@ from numpy import diag
 from numpy import transpose
 from numpy import hstack
 from numpy.linalg import inv
-from numpy.linalg import lstsq
-from numpy.linalg import norm
 from numpy.linalg import cond
 
 from scipy.linalg import solve

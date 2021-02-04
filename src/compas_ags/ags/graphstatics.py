@@ -17,7 +17,6 @@ from scipy.sparse import diags
 from compas.geometry import angle_vectors_xy
 
 from compas.numerical import connectivity_matrix
-from compas.numerical import laplacian_matrix
 from compas.numerical import equilibrium_matrix
 from compas.numerical import spsolve_with_known
 from compas.numerical import normrow
