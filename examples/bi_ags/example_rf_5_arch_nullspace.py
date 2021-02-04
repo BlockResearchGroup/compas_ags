@@ -17,10 +17,10 @@ from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
-from compas_ags.ags import graphstatics
-
+from compas_ags.ags import form_update_q_from_qind
+from compas_ags.ags import force_update_from_form
 from compas_ags.ags import ConstraintsCollection, HorizontalFix, VerticalFix
-from compas_ags.ags import compute_nullspace
+from compas_ags.ags import form_constraint_nullspace
 
 
 # ------------------------------------------------------------------------------
@@ -50,8 +50,8 @@ for key in fixed:
     form.vertex_attribute(key, 'is_fixed', True)
 
 # update the diagrams
-graphstatics.form_update_q_from_qind(form)
-graphstatics.force_update_from_form(force, form)
+form_update_q_from_qind(form)
+force_update_from_form(force, form)
 
 # store lines representing the current state of equilibrium
 form_lines = []
@@ -91,7 +91,7 @@ C = ConstraintsCollection(form)
 C.constraints_from_form()
 constraint_lines = C.get_lines()
 
-ns = compute_nullspace(form, force, C)
+ns = form_constraint_nullspace(form, force, C)
 print("Dimension of nullspace: " + str(len(ns)))
 
 

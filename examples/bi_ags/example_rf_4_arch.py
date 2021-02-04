@@ -18,10 +18,11 @@ from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
-from compas_ags.ags import graphstatics
-
+from compas_ags.ags import form_update_from_force
+from compas_ags.ags import form_update_q_from_qind
+from compas_ags.ags import force_update_from_form
 from compas_ags.ags import ConstraintsCollection
-from compas_ags.ags import compute_form_from_force_newton
+from compas_ags.ags import form_update_from_force_newton
 
 # ------------------------------------------------------------------------------
 #   1. create a simple arch from nodes and edges, make form and force diagrams
@@ -58,8 +59,8 @@ for key in internal:
     form.vertex_attribute(key, 'fix_x', True)
 
 # update the diagrams
-graphstatics.form_update_q_from_qind(form)
-graphstatics.force_update_from_form(force, form)
+form_update_q_from_qind(form)
+force_update_from_form(force, form)
 
 # store lines representing the current state of equilibrium
 form_lines = []
@@ -105,7 +106,7 @@ translation = 2
 _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
 _xy[move_vertices, 0] += translation
 _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
-compute_form_from_force_newton(form, force, _X_goal, constraints=C)
+form_update_from_force_newton(form, force, _X_goal, constraints=C)
 
 constraint_lines = C.get_lines()
 form_lines = form_lines + constraint_lines

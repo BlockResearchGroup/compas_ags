@@ -13,15 +13,15 @@ from __future__ import division
 
 import numpy as np
 
+import compas_ags
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
-from compas_ags.ags import graphstatics
-import compas_ags
-
+from compas_ags.ags import form_update_q_from_qind
+from compas_ags.ags import force_update_from_form
 from compas_ags.ags import ConstraintsCollection
-from compas_ags.ags import compute_form_from_force_newton
+from compas_ags.ags import form_update_from_force_newton
 
 # ------------------------------------------------------------------------------
 #   1. create a funicular structure from nodes and edges, make form and force diagrams
@@ -51,8 +51,8 @@ for key in fixed:
     form.vertex_attribute(key, 'is_fixed', True)
 
 # update the diagrams
-graphstatics.form_update_q_from_qind(form)
-graphstatics.force_update_from_form(force, form)
+form_update_q_from_qind(form)
+force_update_from_form(force, form)
 
 # store lines representing the current state of equilibrium
 form_lines = []
@@ -96,7 +96,7 @@ xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
 _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
 _xy[move_vertices, 0] += 6
 _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
-compute_form_from_force_newton(form, force, _X_goal, constraints=C)
+form_update_from_force_newton(form, force, _X_goal, constraints=C)
 
 constraint_lines = C.get_lines()
 form_lines = form_lines + constraint_lines

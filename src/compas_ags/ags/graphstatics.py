@@ -5,25 +5,36 @@ from __future__ import division
 import sys
 
 from numpy import array
+from numpy import asmatrix
 from numpy import float64
+from numpy import delete
+from numpy import vstack
+from numpy.linalg import lstsq
+from numpy.linalg import norm
 
 from scipy.sparse import diags
 
 from compas.geometry import angle_vectors_xy
 
 from compas.numerical import connectivity_matrix
+from compas.numerical import laplacian_matrix
 from compas.numerical import equilibrium_matrix
 from compas.numerical import spsolve_with_known
 from compas.numerical import normrow
 from compas.numerical import dof
 from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
+from compas.numerical import nullspace
 
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
 from compas_ags.ags.core import update_q_from_qind
 from compas_ags.ags.core import update_form_from_force
+from compas_ags.ags.core import compute_jacobian
+from compas_ags.ags.core import get_red_residual_and_jacobian
+
+from compas_ags.exceptions import SolutionError
 
 
 __all__ = [
@@ -31,10 +42,13 @@ __all__ = [
     'form_count_dof',
     'form_update_q_from_qind',
     'form_update_from_force',
+    'form_update_from_force_newton',
     'force_update_from_form',
+    'form_constraint_nullspace',
 
     'form_update_q_from_qind_proxy',
     'form_update_from_force_proxy',
+    'form_update_from_force_newton_proxy',
     'force_update_from_form_proxy',
 ]
 
@@ -64,6 +78,13 @@ def force_update_from_form_proxy(forcedata, formdata, *args, **kwargs):
     form = FormDiagram.from_data(formdata)
     force = ForceDiagram.from_data(forcedata)
     force_update_from_form(force, form, *args, **kwargs)
+    return force.to_data()
+
+
+def form_update_from_force_newton_proxy(forcedata, formdata, *args, **kwargs):
+    form = FormDiagram.from_data(formdata)
+    force = ForceDiagram.from_data(forcedata)
+    form_update_from_force_newton(force, form, *args, **kwargs)  # Still need dealing with constraints
     return force.to_data()
 
 
@@ -337,6 +358,134 @@ def form_update_from_force(form, force, kmax=100):
         attr['l'] = forces[index, 0]
 
 
+def form_update_from_force_newton(form, force, _X_goal=None, tol=1e-10, constraints=None, max_iter=20):
+    r"""Update the form diagram after a modification of the force diagram.
+
+    Compute the geometry of the form diagram from the geometry of the force diagram
+    and some constraints, including non-linear.
+    The form diagram is computed by formulating the root-finding approach presented
+    in bi-dir AGS. Newton's method is used to solve for the form diagram.
+
+    The algorithm fails if it is over-constrained or if the initial guess is too far
+    from any root.
+
+    Parameters
+    ----------
+    form : FormDiagram
+        The form diagram to update.
+    force : ForceDiagram
+        The force diagram on which the update is based.
+    _X_goal: array [2*n]
+        Contains the target force diagram coordinates (:math:`\mathbf{X}^*`) in *Fortran* order
+        (first all :math:`\mathbf{x}^*`-coordinates, then all :math:`\mathbf{y}^*`-coordinates).
+        If None is given, the goal will be considered the current node coordinates in the force diagram.
+    tol: float (1e-10)
+        Stopping criteria tolerance.
+    constraints : ConstraintsCollection (None)
+        A collection of form diagram constraints.
+    max_iter : int (20)
+        Maximum number of iterations before stop Newton Method.
+
+    Returns
+    -------
+    None
+        The form and force diagram are updated in-place.
+
+    Reference
+    ----------
+        [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+
+    Examples
+    --------
+    >>>
+
+    """
+    xy = array(form.xy(), dtype=float64).reshape((-1, 2))
+    X = vstack((asmatrix(xy[:, 0]).transpose(), asmatrix(xy[:, 1]).transpose()))
+
+    if isinstance(_X_goal, type(None)):
+        _xy = array(force.xy(), dtype=float64).reshape((-1, 2))
+        _X_goal = vstack((asmatrix(_xy[:, 0]).transpose(), asmatrix(_xy[:, 1]).transpose()))
+    else:
+        _xy_goal = _X_goal.reshape((2, -1)).T
+        _update_coordinates(force, _xy_goal)
+
+    # Begin Newton
+    diff = 100
+    n_iter = 1
+    while diff > tol:
+        # Update force diagram based on form at each iteration
+        form_update_q_from_qind(form)
+        force_update_from_form(force, form)
+
+        # Get jacobian maxtrix and residual vector considering constraints
+        red_jacobian, red_r = get_red_residual_and_jacobian(form, force, _X_goal, constraints)
+
+        # Do the least squares solution
+        dx = lstsq(red_jacobian, -red_r)[0]
+
+        X = X + dx
+        xy = X.reshape((2, -1)).T
+        _update_coordinates(form, xy)
+
+        diff = norm(red_r)
+        if n_iter > max_iter:
+            raise SolutionError('Did not converge')
+
+        print('i: {0:0} diff: {1:.2e}'.format(n_iter, float(diff)))
+        n_iter += 1
+
+    print('Converged in {0} iterations'.format(n_iter))
+
+
+def form_constraint_nullspace(form, force, constraints=None):
+    """Return the null space of a form diagram assuming constraints.
+    It returns displacement vectors that shows how the form diagram can
+    be changed without affecting the force diagram.
+
+    Parameters
+    ----------
+    form : FormDiagram
+        The form diagram.
+    form : ForceDiagram
+        The force diagram.
+    constraints : ConstraintCollection
+        The constraints of the form diagram.
+
+    Returns
+    -------
+    nullspace [list of arrays]
+        The modified diagrams thart require not movement in the force diagram.
+
+    Reference
+    ----------
+        [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+
+    Examples
+    --------
+    >>>
+    """
+    jacobian = compute_jacobian(form, force)
+    if constraints:
+        (cj, _) = constraints.compute_constraints()
+        jacobian = vstack((jacobian, cj))
+
+    _vcount = force.number_of_vertices()
+    _k_i = force.key_index()
+    _known = _k_i[force.anchor()]
+    _bc = [_known, _vcount + _known]
+
+    red_jacobian = delete(jacobian, _bc, axis=0)
+
+    null_states = nullspace(red_jacobian).T
+
+    null_space = []
+    for null_state in null_states:
+        xy = null_state.reshape((2, -1)).T
+        null_space.append(xy)
+    return null_space
+
+
 # ==============================================================================
 # update force diagram
 # ==============================================================================
@@ -389,6 +538,28 @@ def force_update_from_form(force, form):
         index = _vertex_index[vertex]
         attr['x'] = _xy[index, 0]
         attr['y'] = _xy[index, 1]
+
+
+# To remove
+def _update_coordinates(diagram, xy):
+    r"""Update diagram coordinates.
+
+    Parameters
+    ----------
+    diagram : compas_ags.diagrams.formdiagram.FormDiagram or compas_bi_ags.diagrams.forcediagram.ForceDiagram
+        The form or force diagram.
+    xy
+        Form or force coordinates array, size (nvertices x 2).
+
+    Returns
+    -------
+    None
+    """
+    k_i = diagram.key_index()
+    for key, attr in diagram.vertices(True):
+        index = k_i[key]
+        attr['x'] = xy[index, 0]
+        attr['y'] = xy[index, 1]
 
 
 # ==============================================================================

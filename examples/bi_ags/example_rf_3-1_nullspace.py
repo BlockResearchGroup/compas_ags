@@ -14,9 +14,10 @@ from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
-from compas_ags.ags import graphstatics
-
-from compas_ags.ags import compute_nullspace
+from compas_ags.ags import form_update_from_force
+from compas_ags.ags import form_update_q_from_qind
+from compas_ags.ags import force_update_from_form
+from compas_ags.ags import form_constraint_nullspace
 from compas_ags.ags import ConstraintsCollection, HorizontalFix, VerticalFix, AngleFix
 
 
@@ -48,8 +49,8 @@ form.edge_attribute((e1['v'], e1['u']), 'q', -1.0)
 form.edge_attribute((e1['v'], e1['u']), 'is_ind', True)
 
 # update the diagrams
-graphstatics.form_update_q_from_qind(form)
-graphstatics.force_update_from_form(force, form)
+form_update_q_from_qind(form)
+force_update_from_form(force, form)
 
 # store the original vertex locations
 force_key_xyz = {key: force.vertex_coordinates(key) for key in force.vertices()}
@@ -71,7 +72,7 @@ constraint_lines = C.get_lines()
 
 # compute the amount of nullspace modes
 # which means the amount of independent solutions of form diagrams
-ns = compute_nullspace(form, force, C)
+ns = form_constraint_nullspace(form, force, C)
 print("Dimension of nullspace: " + str(len(ns)))
 
 

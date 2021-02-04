@@ -18,9 +18,9 @@ from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
-from compas_ags.ags import graphstatics
-
-from compas_ags.ags import compute_form_from_force_newton
+from compas_ags.ags import form_update_q_from_qind
+from compas_ags.ags import force_update_from_form
+from compas_ags.ags import form_update_from_force_newton
 from compas_ags.ags import ConstraintsCollection
 
 
@@ -53,8 +53,8 @@ form.edge_attribute((u_edge, v_edge), 'q', f/l)
 form.edge_attribute((u_edge, v_edge), 'is_ind', True)
 
 # update the diagrams
-graphstatics.form_update_q_from_qind(form)
-graphstatics.force_update_from_form(force, form)
+form_update_q_from_qind(form)
+force_update_from_form(force, form)
 
 # store the original vertex locations
 force_key_xyz = {key: force.vertex_coordinates(key) for key in force.vertices()}
@@ -96,7 +96,7 @@ force.vertex[4]['x'] -= translation
 _xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
 _X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
 
-compute_form_from_force_newton(form, force, _X_goal, constraints=C)
+form_update_from_force_newton(form, force, _X_goal, constraints=C)
 
 # add arrow to lines to indicate movement
 force_lines.append({

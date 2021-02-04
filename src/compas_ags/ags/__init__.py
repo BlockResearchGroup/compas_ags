@@ -52,6 +52,5 @@ if not compas.IPY:
     from .graphstatics import *  # noqa: F401 F403
     from .loadpath import *  # noqa: F401 F403
     from .constraints import *  # noqa: F401 F403
-    from .rootfinding import *  # noqa: F401 F403
 
 __all__ = [name for name in dir() if not name.startswith('_')]

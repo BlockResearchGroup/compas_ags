@@ -8,6 +8,15 @@ from numpy import array
 from numpy import eye
 from numpy import zeros
 from numpy import float64
+from numpy import delete
+from numpy import asmatrix
+from numpy import vstack
+from numpy import diag
+from numpy import transpose
+from numpy import hstack
+from numpy.linalg import inv
+from numpy.linalg import lstsq
+from numpy.linalg import norm
 from numpy.linalg import cond
 
 from scipy.linalg import solve
@@ -15,13 +24,21 @@ from scipy.linalg import lstsq
 
 from compas.numerical import normrow
 from compas.numerical import normalizerow
+from compas.numerical import connectivity_matrix
+from compas.numerical import equilibrium_matrix
+from compas.numerical import laplacian_matrix
+from compas.numerical import solve_with_known
 
 from compas.geometry import midpoint_point_point_xy
+
+from compas_ags.utilities import check_solutions
 
 
 __all__ = [
     'update_q_from_qind',
-    'update_form_from_force'
+    'update_form_from_force',
+    'get_red_residual_and_jacobian',
+    'compute_jacobian',
 ]
 
 
@@ -289,6 +306,178 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
 
         if callback:
             callback(k, xy, edges)
+
+
+def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
+    r"""Compute the Jacobian matrix and residual.
+
+    Computes the residual and the Jacobian matrix :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`
+    where :math:`\mathbf{X}` contains the form diagram coordinates in *Fortran* order
+    (first all :math:`\mathbf{x}`-coordinates, then all :math:`\mathbf{y}`-coordinates) and :math:`\mathbf{X}^*` contains the
+    force diagram coordinates in *Fortran* order (first all :math:`\mathbf{x}^*`-coordinates,
+    then all :math:`\mathbf{y}^*`-coordinates).
+
+    Parameters
+    ----------
+    form : FormDiagram
+        The form diagram to update.
+    force : ForceDiagram
+        The force diagram on which the update is based.
+    _X_goal: array [2*n]
+        Contains the target force diagram coordinates (:math:`\mathbf{X}^*`) in *Fortran* order
+        (first all :math:`\mathbf{x}^*`-coordinates, then all :math:`\mathbf{y}^*`-coordinates).
+    constraints : ConstraintsCollection (None)
+        A collection of form diagram constraints.
+
+    Returns
+    -------
+    red_jacobian
+        Jacobian with the rows corresponding the the force diagram anchor vertex removed.
+    red_r
+        Residual with the rows corresponding the the force diagram anchor vertex removed.
+
+    Reference
+    ----------
+        [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+
+    Examples
+    --------
+    >>>
+    """
+
+    jacobian = compute_jacobian(form, force)
+
+    _vcount = force.number_of_vertices()
+    _k_i = force.key_index()
+    _known = _k_i[force.anchor()]
+    _bc = [_known, _vcount + _known]
+    _xy = array(force.xy(), dtype=float64)
+    r = vstack((asmatrix(_xy[:, 0]).transpose(), asmatrix(_xy[:, 1]).transpose())) - _X_goal
+
+    if constraints:
+        (cj, cr) = constraints.compute_constraints()
+        jacobian = vstack((jacobian, cj))
+        r = vstack((r, cr))
+
+    check_solutions(jacobian, r)
+
+    # Remove rows due to anchored vertex in the force diagram
+    red_r = delete(r, _bc, axis=0)
+    red_jacobian = delete(jacobian, _bc, axis=0)
+
+    return red_jacobian, red_r
+
+
+def compute_jacobian(form, force):
+    r"""Compute the Jacobian matrix.
+
+    The actual computation of the Jacobian matrix :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`
+    where :math:`\mathbf{X}` contains the form diagram coordinates in *Fortran* order
+    (first all :math:`\mathbf{x}`-coordinates, then all :math:`\mathbf{y}`-coordinates) and :math:`\mathbf{X}^*` contains the
+    force diagram coordinates in *Fortran* order (first all :math:`\mathbf{x}^*`-coordinates,
+    then all :math:`\mathbf{y}^*`-coordinates).
+
+    Parameters
+    ----------
+    form : compas_ags.diagrams.formdiagram.FormDiagram
+        The form diagram.
+    force : compas_ags.diagrams.forcediagram.ForceDiagram
+        The force diagram.
+
+    Returns
+    -------
+    jacobian
+        Jacobian matrix (2 * _vcount, 2 * vcount)
+
+    Reference
+    ----------
+        [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+
+    Examples
+    --------
+    >>>
+    """
+    # --------------------------------------------------------------------------
+    # form diagram
+    # --------------------------------------------------------------------------
+    vcount = form.number_of_vertices()
+    k_i = form.key_index()
+    leaves = [k_i[key] for key in form.leaves()]
+    free = list(set(range(form.number_of_vertices())) - set(leaves))
+    vicount = len(free)
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    xy = array(form.xy(), dtype=float64).reshape((-1, 2))
+    ecount = len(edges)
+    C = connectivity_matrix(edges, 'array')
+    E = equilibrium_matrix(C, xy, free, 'array')
+    uv = C.dot(xy)
+    u = asmatrix(uv[:, 0]).transpose()
+    v = asmatrix(uv[:, 1]).transpose()
+    Ct = C.transpose()
+    Cti = Ct[free, :]
+
+    q = array(form.q(), dtype=float64).reshape((-1, 1))
+    Q = diag(asmatrix(q).getA1())
+    Q = asmatrix(Q)
+
+    independent_edges = [(k_i[u], k_i[v]) for (u, v) in list(form.edges_where({'is_ind': True}))]
+    independent_edges_idx = [edges.index(i) for i in independent_edges]
+    dependent_edges_idx = list(set(range(ecount)) - set(independent_edges_idx))
+
+    Ed = E[:, dependent_edges_idx]
+    Eid = E[:, independent_edges_idx]
+    qid = q[independent_edges_idx]
+
+    # --------------------------------------------------------------------------
+    # force diagram
+    # --------------------------------------------------------------------------
+    _vertex_index = force.vertex_index()
+    _vcount = force.number_of_vertices()
+    _edges = force.ordered_edges(form)
+    _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
+    _L = laplacian_matrix(_edges, normalize=False, rtype='array')
+    _C = connectivity_matrix(_edges, 'array')
+    _Ct = _C.transpose()
+    _Ct = asmatrix(_Ct)
+    _known = [_vertex_index[force.anchor()]]
+
+    # --------------------------------------------------------------------------
+    # Jacobian
+    # --------------------------------------------------------------------------
+    jacobian = zeros((_vcount * 2, vcount * 2))
+    for j in range(2):  # Loop for x and y
+        idx = list(range(j * vicount, (j + 1) * vicount))
+        for i in range(vcount):
+            dXdxi = diag(Ct[i, :])
+            dxdxi = transpose(asmatrix(Ct[i, :]))
+
+            dEdXi = zeros((vicount * 2, ecount))
+            dEdXi[idx, :] = asmatrix(Cti) * asmatrix(dXdxi)  # Always half the matrix 0 depending on j (x/y)
+
+            dEdXi_d = dEdXi[:, dependent_edges_idx]
+            dEdXi_id = dEdXi[:, independent_edges_idx]
+
+            EdInv = inv(asmatrix(Ed))
+            dEdXiInv = - EdInv * (asmatrix(dEdXi_d) * EdInv)
+
+            dqdXi_d = -dEdXiInv * (Eid * asmatrix(qid)) - EdInv * (dEdXi_id * asmatrix(qid))
+            dqdXi = zeros((ecount, 1))
+            dqdXi[dependent_edges_idx] = dqdXi_d
+            dqdXi[independent_edges_idx] = 0
+            dQdXi = asmatrix(diag(dqdXi[:, 0]))
+
+            d_XdXiTop = zeros((_L.shape[0]))
+            d_XdXiBot = zeros((_L.shape[0]))
+            if j == 0:
+                d_XdXiTop = solve_with_known(_L, array(_Ct * (dQdXi * u + Q * dxdxi)).flatten(), d_XdXiTop, _known)
+                d_XdXiBot = solve_with_known(_L, array(_Ct * (dQdXi * v)).flatten(), d_XdXiBot, _known)
+            elif j == 1:
+                d_XdXiTop = solve_with_known(_L, array(_Ct * (dQdXi * u)).flatten(), d_XdXiTop, _known)
+                d_XdXiBot = solve_with_known(_L, array(_Ct * (dQdXi * v + Q * dxdxi)).flatten(), d_XdXiBot, _known)
+
+            d_XdXi = hstack((d_XdXiTop, d_XdXiBot))
+            jacobian[:, i + j * vcount] = d_XdXi
+    return jacobian
 
 
 # ==============================================================================
