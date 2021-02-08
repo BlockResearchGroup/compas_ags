@@ -8,10 +8,6 @@ import math
 from compas_ags.diagrams import FormDiagram
 
 
-__author__ = ['Vedad Alic']
-__email__ = 'vedad.alic@construction.lth.se'
-
-
 __all__ = [
     'ConstraintsCollection',
     'HorizontalFix',
@@ -25,16 +21,6 @@ __all__ = [
 class AbstractConstraint(ABC):
     """Used to derive form diagram constraints. The derived constraints
     must implement the compute_constraint and update_constraint_goal methods.
-
-    Parameters
-    ----------
-    form : :class:`compas_ags.diagrams.FormDiagram`
-        The form diagram to which the constraints are applied.
-
-    Attributes
-    ----------
-    form : :class:`compas_ags.diagrams.FormDiagram`
-        The form diagram to which the constraints are applied.
     """
 
     def __init__(self, form):
@@ -70,6 +56,11 @@ class ConstraintsCollection(object):
     (first all x-coordinates, then all y-coordinates) and _X contains the
     force diagram coordinates in *Fortran* order (first all _x-coordinates,
     then all _y-coordinates)
+
+    Reference
+    ----------
+        [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+
     """
 
     def __init__(self, form):
@@ -96,12 +87,6 @@ class ConstraintsCollection(object):
         # fix x and y coordinates of the fixed vertices
         for key in self.form.vertices_where({'is_fixed': True}):
             self.add_constraint(HorizontalFix(self.form, key))
-            self.add_constraint(VerticalFix(self.form, key))
-
-        # fix only x or only y coordinates of non fixed vertices based on properties fix_x/fix_y
-        for key in self.form.vertices_where({'fix_x': True}):
-            self.add_constraint(HorizontalFix(self.form, key))
-        for key in self.form.vertices_where({'fix_y': True}):
             self.add_constraint(VerticalFix(self.form, key))
 
         self.constrain_dependent_leaf_edges_lengths()

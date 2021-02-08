@@ -16,6 +16,7 @@ from numpy import transpose
 from numpy import hstack
 from numpy.linalg import inv
 from numpy.linalg import cond
+from numpy.linalg import matrix_rank
 
 from scipy.linalg import solve
 from scipy.linalg import lstsq
@@ -29,7 +30,7 @@ from compas.numerical import solve_with_known
 
 from compas.geometry import midpoint_point_point_xy
 
-from compas_ags.utilities import check_solutions
+from compas_ags.exceptions import SolutionError
 
 
 __all__ = [
@@ -357,7 +358,12 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
         jacobian = vstack((jacobian, cj))
         r = vstack((r, cr))
 
-    check_solutions(jacobian, r)
+    # Check rank of augmented matrix
+    rank_jac = matrix_rank(jacobian)
+    rank_aug = matrix_rank(hstack([jacobian, r]))
+
+    if rank_jac < rank_aug:
+        raise SolutionError('ERROR: Rank Augmented > Rank Jacobian')
 
     # Remove rows due to anchored vertex in the force diagram
     red_r = delete(r, _bc, axis=0)
@@ -443,6 +449,7 @@ def compute_jacobian(form, force):
     # Jacobian
     # --------------------------------------------------------------------------
     jacobian = zeros((_vcount * 2, vcount * 2))
+    EdInv = inv(asmatrix(Ed))
     for j in range(2):  # Loop for x and y
         idx = list(range(j * vicount, (j + 1) * vicount))
         for i in range(vcount):
@@ -455,7 +462,6 @@ def compute_jacobian(form, force):
             dEdXi_d = dEdXi[:, dependent_edges_idx]
             dEdXi_id = dEdXi[:, independent_edges_idx]
 
-            EdInv = inv(asmatrix(Ed))
             dEdXiInv = - EdInv * (asmatrix(dEdXi_d) * EdInv)
 
             dqdXi_d = -dEdXiInv * (Eid * asmatrix(qid)) - EdInv * (dEdXi_id * asmatrix(qid))

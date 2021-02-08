@@ -1,18 +1,3 @@
-"""Example from Fig. 11 in the paper. Modify the force diagram of
-a post tensioned funicular structure with constraints and compute
-the form diagram using Newton's method.
-
-author: Vedad Alic
-email: vedad.alic@construction.lth.se
-
-"""
-
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
-import numpy as np
-
 import compas_ags
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
@@ -20,39 +5,46 @@ from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
 from compas_ags.ags import form_update_q_from_qind
 from compas_ags.ags import force_update_from_form
-from compas_ags.ags import ConstraintsCollection
 from compas_ags.ags import form_update_from_force_newton
+from compas_ags.ags import ConstraintsCollection
+
 
 # ------------------------------------------------------------------------------
-#   1. create a funicular structure from nodes and edges, make form and force diagrams
+#   1. lines from isostatic structure from paper AGS
 # ------------------------------------------------------------------------------
-
-graph = FormGraph.from_json(compas_ags.get('paper/gs_arch_2layers.json'))
+graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
 # ------------------------------------------------------------------------------
-#   2. prescribe edge force density and set fixed vertices
+#   2. set independent edge and assign load
 # ------------------------------------------------------------------------------
-edges_ind = [
-    (9,  22),
-    (10, 16),
-]
-for index in edges_ind:
-    u, v = index
-    form.edge_attribute((u, v), 'is_ind', True)
-    form.edge_attribute((u, v), 'q', -1.)
+u_edge = 0
+v_edge = 1
+f = -5.0
+l = form.edge_length(u_edge, v_edge)
+form.edge_attribute((u_edge, v_edge), 'q', f/l)
+form.edge_attribute((u_edge, v_edge), 'is_ind', True)
 
-# set the fixed points
-left = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
-right = list(form.vertices_where({'x': 40., 'y': 0.0}))[0]
+# ------------------------------------------------------------------------------
+#   3. set the fixed vertices
+# ------------------------------------------------------------------------------
+left = 5
+right = 3
+form.vertex_attribute(left, 'is_fixed', True)
+form.vertex_attribute(right, 'is_fixed', True)
 fixed = [left, right]
-for key in fixed:
-    form.vertex_attribute(key, 'is_fixed', True)
+
+# ------------------------------------------------------------------------------
+#   4. compute equilibrium
+# ------------------------------------------------------------------------------
 
 # update the diagrams
 form_update_q_from_qind(form)
 force_update_from_form(force, form)
+
+# store the original vertex locations
+force_key_xyz = {key: force.vertex_coordinates(key) for key in force.vertices()}
 
 # store lines representing the current state of equilibrium
 form_lines = []
@@ -77,33 +69,34 @@ for u, v in force.edges():
 
 
 # --------------------------------------------------------------------------
-#   3. force diagram manipulation and modify the form diagram
+#   5. force diagram manipulation and modify the form diagram
 # --------------------------------------------------------------------------
-# set constraints
-_xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-_x_min = min(_xy[:, 0])
-
-move_vertices = []
-for i, v in enumerate(_xy):
-    if v[0] > (_x_min-.1) and v[0] < (_x_min+1):
-        move_vertices.append(i)
-
+# set constraints according to fixity predefined
 C = ConstraintsCollection(form)
-C.constraints_from_form()
 
-# modify the geometry of the force diagram and update the form diagram using Newton's method
-xy = np.array(form.xy(), dtype=np.float64).reshape((-1, 2))
-_xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-_xy[move_vertices, 0] += 6
-_X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
-form_update_from_force_newton(form, force, _X_goal, constraints=C)
+C.constraints_from_form()  # alternativelly this could be break to assign each Horiz/Vert fixity
 
 constraint_lines = C.get_lines()
+
+# modify the geometry of the force diagram and update the form diagram using Newton's method
+translation = 0.5
+force.vertex[4]['x'] -= translation
+
+form_update_from_force_newton(form, force, constraints=C)
+
+# add arrow to lines to indicate movement
+force_lines.append({
+    'start': force_key_xyz[4],
+    'end': force.vertex_coordinates(4),
+    'color': '#ff0000',
+    'width': 10.0,
+    'style': '-',
+})
+
 form_lines = form_lines + constraint_lines
 
-
 # ------------------------------------------------------------------------------
-#   4. display the orginal configuration
+#   6. display the orginal configuration
 #      and the configuration after modifying the force diagram
 # ------------------------------------------------------------------------------
 viewer = Viewer(form, force, delay_setup=False)
