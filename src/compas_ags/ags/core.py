@@ -11,7 +11,6 @@ from numpy import float64
 from numpy import delete
 from numpy import vstack
 from numpy import diag
-from numpy import transpose
 from numpy import hstack
 from numpy.linalg import inv
 from numpy.linalg import cond
