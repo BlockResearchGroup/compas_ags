@@ -9,7 +9,6 @@ from numpy import eye
 from numpy import zeros
 from numpy import float64
 from numpy import delete
-from numpy import asmatrix
 from numpy import vstack
 from numpy import diag
 from numpy import transpose
@@ -415,14 +414,13 @@ def compute_jacobian(form, force):
     C = connectivity_matrix(edges, 'array')
     E = equilibrium_matrix(C, xy, free, 'array')
     uv = C.dot(xy)
-    u = asmatrix(uv[:, 0]).transpose()
-    v = asmatrix(uv[:, 1]).transpose()
+    u = uv[:, 0].reshape(-1, 1)
+    v = uv[:, 1].reshape(-1, 1)
     Ct = C.transpose()
-    Cti = Ct[free, :]
+    Cti = array(Ct[free, :])
 
     q = array(form.q(), dtype=float64).reshape((-1, 1))
-    Q = diag(asmatrix(q).getA1())
-    Q = asmatrix(Q)
+    Q = diag(q.flatten())  # TODO: Explore sparse (diags)
 
     independent_edges = [(k_i[u], k_i[v]) for (u, v) in list(form.edges_where({'is_ind': True}))]
     independent_edges_idx = [edges.index(i) for i in independent_edges]
@@ -431,7 +429,7 @@ def compute_jacobian(form, force):
     Ed = E[:, dependent_edges_idx]
     Eid = E[:, independent_edges_idx]
     qid = q[independent_edges_idx]
-    EdInv = inv(asmatrix(Ed))
+    EdInv = inv(array(Ed))  # TODO: Explore sparse (spinv)
 
     # --------------------------------------------------------------------------
     # force diagram
@@ -443,7 +441,7 @@ def compute_jacobian(form, force):
     _L = laplacian_matrix(_edges, normalize=False, rtype='array')
     _C = connectivity_matrix(_edges, 'array')
     _Ct = _C.transpose()
-    _Ct = asmatrix(_Ct)
+    _Ct = array(_Ct)
     _known = [_vertex_index[force.anchor()]]
 
     # --------------------------------------------------------------------------
@@ -454,30 +452,31 @@ def compute_jacobian(form, force):
         idx = list(range(j * vicount, (j + 1) * vicount))
         for i in range(vcount):
             dXdxi = diag(Ct[i, :])
-            dxdxi = transpose(asmatrix(Ct[i, :]))
+            dxdxi = Ct[i, :].reshape(-1, 1)
 
             dEdXi = zeros((vicount * 2, ecount))
-            dEdXi[idx, :] = asmatrix(Cti) * asmatrix(dXdxi)  # Always half the matrix 0 depending on j (x/y)
+            dEdXi[idx, :] = Cti.dot(dXdxi)
 
             dEdXi_d = dEdXi[:, dependent_edges_idx]
             dEdXi_id = dEdXi[:, independent_edges_idx]
 
-            dEdXiInv = - EdInv * (asmatrix(dEdXi_d) * EdInv)
+            dEdXiInv = - EdInv.dot(dEdXi_d.dot(EdInv))
 
-            dqdXi_d = - dEdXiInv * (Eid * asmatrix(qid)) - EdInv * (dEdXi_id * asmatrix(qid))
+            dqdXi_d = - dEdXiInv.dot(Eid.dot(qid)) - EdInv.dot(dEdXi_id.dot(qid))
             dqdXi = zeros((ecount, 1))
             dqdXi[dependent_edges_idx] = dqdXi_d
             dqdXi[independent_edges_idx] = 0
-            dQdXi = asmatrix(diag(dqdXi[:, 0]))
+            dQdXi = diag(dqdXi[:, 0])
 
             d_XdXiTop = zeros((_L.shape[0]))
             d_XdXiBot = zeros((_L.shape[0]))
+
             if j == 0:
-                d_XdXiTop = solve_with_known(_L, array(_Ct * (dQdXi * u + Q * dxdxi)).flatten(), d_XdXiTop, _known)
-                d_XdXiBot = solve_with_known(_L, array(_Ct * (dQdXi * v)).flatten(), d_XdXiBot, _known)
+                d_XdXiTop = solve_with_known(_L, (_Ct.dot(dQdXi.dot(u) + Q.dot(dxdxi))).flatten(), d_XdXiTop, _known)
+                d_XdXiBot = solve_with_known(_L, (_Ct.dot(dQdXi.dot(v))).flatten(), d_XdXiBot, _known)
             elif j == 1:
-                d_XdXiTop = solve_with_known(_L, array(_Ct * (dQdXi * u)).flatten(), d_XdXiTop, _known)
-                d_XdXiBot = solve_with_known(_L, array(_Ct * (dQdXi * v + Q * dxdxi)).flatten(), d_XdXiBot, _known)
+                d_XdXiTop = solve_with_known(_L, (_Ct.dot(dQdXi.dot(u))).flatten(), d_XdXiTop, _known)
+                d_XdXiBot = solve_with_known(_L, (_Ct.dot(dQdXi.dot(v) + Q.dot(dxdxi))).flatten(), d_XdXiBot, _known)
 
             d_XdXi = hstack((d_XdXiTop, d_XdXiBot))
             jacobian[:, i + j * vcount] = d_XdXi
