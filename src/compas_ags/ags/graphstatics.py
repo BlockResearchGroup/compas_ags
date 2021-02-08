@@ -394,7 +394,7 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
     X = array(form.vertices_attribute('x') + form.vertices_attribute('y')).reshape(-1, 1)
     _X_goal = array(force.vertices_attribute('x') + force.vertices_attribute('y')).reshape(-1, 1)
 
-    ncount = form.number_of_vertices()
+    vcount = form.number_of_vertices()
     index_vertex = form.index_vertex()
 
     # Begin Newton
@@ -413,11 +413,11 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
 
         X = X + dx
 
-        # update form diagram at end of iteration
-        for i in range(ncount):
+        # Update form diagram at end of iteration
+        for i in range(vcount):
             vertex = index_vertex[i]
             form.vertex_attribute(vertex, 'x', X[i].item())
-            form.vertex_attribute(vertex, 'y', X[i + ncount].item())
+            form.vertex_attribute(vertex, 'y', X[i + vcount].item())
 
         diff = norm(red_r)
         if n_iter > max_iter:

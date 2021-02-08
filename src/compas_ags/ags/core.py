@@ -350,8 +350,8 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
     _k_i = force.key_index()
     _known = _k_i[force.anchor()]
     _bc = [_known, _vcount + _known]
-    _xy = array(force.xy(), dtype=float64)
-    r = vstack((asmatrix(_xy[:, 0]).transpose(), asmatrix(_xy[:, 1]).transpose())) - _X_goal
+    _X_iteration = array(force.vertices_attribute('x') + force.vertices_attribute('y')).reshape(-1, 1)
+    r = _X_iteration - _X_goal
 
     if constraints:
         (cj, cr) = constraints.compute_constraints()
@@ -431,6 +431,7 @@ def compute_jacobian(form, force):
     Ed = E[:, dependent_edges_idx]
     Eid = E[:, independent_edges_idx]
     qid = q[independent_edges_idx]
+    EdInv = inv(asmatrix(Ed))
 
     # --------------------------------------------------------------------------
     # force diagram
@@ -449,7 +450,6 @@ def compute_jacobian(form, force):
     # Jacobian
     # --------------------------------------------------------------------------
     jacobian = zeros((_vcount * 2, vcount * 2))
-    EdInv = inv(asmatrix(Ed))
     for j in range(2):  # Loop for x and y
         idx = list(range(j * vicount, (j + 1) * vicount))
         for i in range(vcount):
@@ -464,7 +464,7 @@ def compute_jacobian(form, force):
 
             dEdXiInv = - EdInv * (asmatrix(dEdXi_d) * EdInv)
 
-            dqdXi_d = -dEdXiInv * (Eid * asmatrix(qid)) - EdInv * (dEdXi_id * asmatrix(qid))
+            dqdXi_d = - dEdXiInv * (Eid * asmatrix(qid)) - EdInv * (dEdXi_id * asmatrix(qid))
             dqdXi = zeros((ecount, 1))
             dqdXi[dependent_edges_idx] = dqdXi_d
             dqdXi[independent_edges_idx] = 0
