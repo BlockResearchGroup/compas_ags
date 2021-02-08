@@ -6,7 +6,6 @@ import sys
 
 from numpy import array
 from numpy import float64
-from numpy import vstack
 from numpy.linalg import lstsq
 from numpy.linalg import norm
 
@@ -27,7 +26,6 @@ from compas_ags.diagrams import ForceDiagram
 
 from compas_ags.ags.core import update_q_from_qind
 from compas_ags.ags.core import update_form_from_force
-from compas_ags.ags.core import compute_jacobian
 from compas_ags.ags.core import get_red_residual_and_jacobian
 
 from compas_ags.exceptions import SolutionError
