@@ -333,9 +333,9 @@ def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
     red_r
         Residual with the rows corresponding the the force diagram anchor vertex removed.
 
-    Reference
+    References
     ----------
-        [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
 
     Examples
     --------
@@ -391,9 +391,9 @@ def compute_jacobian(form, force):
     jacobian
         Jacobian matrix (2 * _vcount, 2 * vcount)
 
-    Reference
+    References
     ----------
-        [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
 
     Examples
     --------

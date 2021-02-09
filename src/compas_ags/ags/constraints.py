@@ -61,9 +61,9 @@ class ConstraintsCollection(object):
     -----------
     form: :class:`FormDiagram`
 
-    Reference
+    References
     ----------
-        [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
 
     """
 

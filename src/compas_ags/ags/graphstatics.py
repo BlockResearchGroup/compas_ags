@@ -91,7 +91,7 @@ def form_identify_dof(form):
 
     Parameters
     ----------
-    form : FormDiagram
+    form: :class:`FormDiagram`
         The form diagram.
 
     Returns
@@ -151,7 +151,7 @@ def form_count_dof(form):
 
     Parameters
     ----------
-    form : FormDiagram
+    form: :class:`FormDiagram`
         The form diagram.
 
     Returns
@@ -357,18 +357,18 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
     Compute the geometry of the form diagram from the geometry of the force diagram
     and some constraints, including non-linear.
     The form diagram is computed by formulating the root-finding approach presented
-    in bi-dir AGS [1]. Newton's method is used to solve for the form diagram.
+    in bi-dir AGS [1]_. Newton's method is used to solve for the form diagram.
 
     The algorithm fails if it is over-constrained or if the initial guess is too far
     from any root.
 
     Parameters
     ----------
-    form : FormDiagram
+    form: :class:`FormDiagram`
         The form diagram to update.
-    force : ForceDiagram
+    force : :class:`ForceDiagram`
         The force diagram containing the vertex modification desired.
-    constraints : ConstraintsCollection (None)
+    constraints : :class: ConstraintsCollection (None)
         A collection of form diagram constraints.
     tol: float (1e-10)
         Stopping criteria tolerance.
@@ -380,9 +380,9 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
     None
         The form and force diagram are updated in-place.
 
-    Reference
+    References
     ----------
-        [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
 
     Examples
     --------
