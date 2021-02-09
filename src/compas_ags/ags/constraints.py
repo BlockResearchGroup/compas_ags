@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
 import numpy as np
 import math
-from compas_ags.diagrams import FormDiagram
 
 
 __all__ = [
