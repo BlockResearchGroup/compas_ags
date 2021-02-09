@@ -34,7 +34,7 @@ from compas_ags.exceptions import SolutionError
 __all__ = [
     'update_q_from_qind',
     'update_form_from_force',
-    'get_red_residual_and_jacobian',
+    'get_jacobian_and_residual',
     'compute_jacobian',
 ]
 
@@ -305,33 +305,34 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
             callback(k, xy, edges)
 
 
-def get_red_residual_and_jacobian(form, force, _X_goal, constraints=None):
+def get_jacobian_and_residual(form, force, _X_goal, constraints=None):
     r"""Compute the Jacobian matrix and residual.
 
     Computes the residual and the Jacobian matrix :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`
     where :math:`\mathbf{X}` contains the form diagram coordinates in *Fortran* order
     (first all :math:`\mathbf{x}`-coordinates, then all :math:`\mathbf{y}`-coordinates) and :math:`\mathbf{X}^*` contains the
     force diagram coordinates in *Fortran* order (first all :math:`\mathbf{x}^*`-coordinates,
-    then all :math:`\mathbf{y}^*`-coordinates).
+    then all :math:`\mathbf{y}^*`-coordinates). Jacobian and residual have the rows corresponding to the
+    force diagrarm anchor vertex removed.
 
     Parameters
     ----------
-    form : FormDiagram
+    form: :class:`FormDiagram`
         The form diagram to update.
-    force : ForceDiagram
+    force: :class:`ForceDiagram`
         The force diagram on which the update is based.
     _X_goal: array [2*n]
         Contains the target force diagram coordinates (:math:`\mathbf{X}^*`) in *Fortran* order
         (first all :math:`\mathbf{x}^*`-coordinates, then all :math:`\mathbf{y}^*`-coordinates).
-    constraints : ConstraintsCollection (None)
+    constraints: :class:`ConstraintsCollection`, optional
         A collection of form diagram constraints.
+        The default is ``None``, in which case no constraints are considered.
 
     Returns
     -------
-    red_jacobian
-        Jacobian with the rows corresponding the the force diagram anchor vertex removed.
-    red_r
-        Residual with the rows corresponding the the force diagram anchor vertex removed.
+    red_jacobian, red_r: tuple of arrays
+        Jacobian matrix and residual vector as arrays.
+        The rows corresponding to the anchor of the force diagram are removed
 
     References
     ----------
@@ -381,9 +382,9 @@ def compute_jacobian(form, force):
 
     Parameters
     ----------
-    form : compas_ags.diagrams.formdiagram.FormDiagram
+    form: :class:`FormDiagram`
         The form diagram.
-    force : compas_ags.diagrams.forcediagram.ForceDiagram
+    force: :class:`ForceDiagram`
         The force diagram.
 
     Returns

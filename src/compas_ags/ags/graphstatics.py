@@ -26,7 +26,7 @@ from compas_ags.diagrams import ForceDiagram
 
 from compas_ags.ags.core import update_q_from_qind
 from compas_ags.ags.core import update_form_from_force
-from compas_ags.ags.core import get_red_residual_and_jacobian
+from compas_ags.ags.core import get_jacobian_and_residual
 
 from compas_ags.exceptions import SolutionError
 
@@ -205,7 +205,7 @@ def form_update_q_from_qind(form):
 
     Parameters
     ----------
-    form : FormDiagram
+    form: :class:`FormDiagram`
         The form diagram.
 
     Returns
@@ -249,9 +249,9 @@ def form_update_from_force(form, force, kmax=100):
 
     Parameters
     ----------
-    form : FormDiagram
+    form: :class:`FormDiagram`
         The form diagram to update.
-    force : ForceDiagram
+    force : :class:`ForceDiagram`
         The force diagram on which the update is based.
 
     Returns
@@ -366,14 +366,17 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
     ----------
     form: :class:`FormDiagram`
         The form diagram to update.
-    force : :class:`ForceDiagram`
+    force: :class:`ForceDiagram`
         The force diagram containing the vertex modification desired.
-    constraints : :class: ConstraintsCollection (None)
+    constraints: :class:`ConstraintsCollection`, optional
         A collection of form diagram constraints.
-    tol: float (1e-10)
+        The default is ``None``, in which case no constraints are considered.
+    tol: float, optional
         Stopping criteria tolerance.
-    max_iter : int (20)
+        The default value is ``1e-10``.
+    max_iter: int, optional
         Maximum number of iterations before stop Newton Method.
+        The default value is ``20``.
 
     Returns
     -------
@@ -404,7 +407,7 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
         force_update_from_form(force, form)
 
         # Get jacobian maxtrix and residual vector considering constraints
-        red_jacobian, red_r = get_red_residual_and_jacobian(form, force, _X_goal, constraints)
+        red_jacobian, red_r = get_jacobian_and_residual(form, force, _X_goal, constraints)
 
         # Do the least squares solution
         dx = lstsq(red_jacobian, -red_r)[0]
@@ -437,9 +440,9 @@ def force_update_from_form(force, form):
 
     Parameters
     ----------
-    force : ForceDiagram
+    force : :class:`ForceDiagram`
         The force diagram on which the update is based.
-    form : FormDiagram
+    form : :class:`FormDiagram`
         The form diagram to update.
 
     Returns

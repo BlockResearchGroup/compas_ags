@@ -26,6 +26,7 @@ class AbstractConstraint(ABC):
         super().__init__()
         self.form = form
         self.vcount = form.number_of_vertices()
+        self.vertex_index = form.vertex_index()
         self._color = (21, 36, 198)
         self._width = 1.0
         self._style = '--'
@@ -112,7 +113,7 @@ class ConstraintsCollection(object):
         for i, (u, v) in enumerate(self.form.edges()):
             if u in leaves or v in leaves:
                 if not self.form.edge_attribute((u, v), 'is_ind'):
-                    dependent_leaf_edges.append(i)
+                    dependent_leaf_edges.append((u, v))
         for edge in dependent_leaf_edges:
             self.add_constraint(LengthFix(self.form, edge))
 
@@ -125,25 +126,24 @@ class HorizontalFix(AbstractConstraint):
     form: :class:`FormDiagram`
         The Form Diagram to constraint
     vertex: int
-        Key of the vertex to fix.
+        Idenfifier ofthe vertex to fix.
 
     """
 
     def __init__(self, form, vertex):
         super().__init__(form)
         self.vertex = vertex
-        self.vertex_index = form.vertex_index()
-        self.P = None
+        self.x = None
         self.set_initial_position()
 
     def set_initial_position(self):
-        self.P = self.form.vertex_attribute(self.vertex, 'x')
+        self.x = self.form.vertex_attribute(self.vertex, 'x')
 
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
         idx = self.vertex_index[self.vertex]
         constraint_jac_row[0, idx] = 1
-        r = self.form.vertex_attribute(self.vertex, 'x') - self.P
+        r = self.form.vertex_attribute(self.vertex, 'x') - self.x
         return constraint_jac_row, r
 
     def update_constraint_goal(self):
@@ -173,25 +173,24 @@ class VerticalFix(AbstractConstraint):
     form: :class:`FormDiagram`
         The Form Diagram to constraint
     vertex: int
-        Key of the vertex to fix.
+        Idenfifier ofthe vertex to fix.
 
     """
 
     def __init__(self, form, vertex):
         super().__init__(form)
         self.vertex = vertex
-        self.vertex_index = form.vertex_index()
-        self.P = None
+        self.y = None
         self.set_initial_position()
 
     def set_initial_position(self):
-        self.P = self.form.vertex_attribute(self.vertex, 'y')
+        self.y = self.form.vertex_attribute(self.vertex, 'y')
 
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
         idx = self.vertex_index[self.vertex] + self.vcount
         constraint_jac_row[0, idx] = 1
-        r = self.form.vertex_attribute(self.vertex, 'y') - self.P
+        r = self.form.vertex_attribute(self.vertex, 'y') - self.y
         return constraint_jac_row, r
 
     def update_constraint_goal(self):
@@ -221,7 +220,7 @@ class AngleFix(AbstractConstraint):
     form: :class:`FormDiagram`
         The Form Diagram to constraint
     vertex: int
-        Key of the vertex to fix.
+        Idenfifier ofthe vertex to fix.
     angle: float
         Angle (clockwise) to fix the vertex to.
 
@@ -231,7 +230,6 @@ class AngleFix(AbstractConstraint):
         super().__init__(form)
         self.vertex = vertex
         self.angle = angle
-        self.vertex_index = form.vertex_index()
         self.x = None
         self.y = None
         self.set_initial_position()
@@ -243,13 +241,15 @@ class AngleFix(AbstractConstraint):
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
 
+        theta = math.radians(self.angle)
+
         idx = self.vertex_index[self.vertex]
-        constraint_jac_row[0, idx] = 1 * math.sin(math.radians(self.angle))
-        r = (self.form.vertex_attribute(self.vertex, 'x') - self.x) * math.sin(math.radians(self.angle))
+        constraint_jac_row[0, idx] = 1 * math.sin(theta)
+        r = (self.form.vertex_attribute(self.vertex, 'x') - self.x) * math.sin(theta)
 
         idx = self.vertex_index[self.vertex] + self.vcount
-        constraint_jac_row[0, idx] = 1 * math.cos(math.radians(self.angle))
-        r = (self.form.vertex_attribute(self.vertex, 'y') - self.y) * math.cos(math.radians(self.angle))
+        constraint_jac_row[0, idx] = 1 * math.cos(theta)
+        r = (self.form.vertex_attribute(self.vertex, 'y') - self.y) * math.cos(theta)
         return constraint_jac_row, r
 
     def update_constraint_goal(self):
@@ -281,64 +281,60 @@ class LengthFix(AbstractConstraint):
     -----------
     form: :class:`FormDiagram`
         The Form Diagram to constraint
-    edge: int
-        Index of the edge.
+    edge : 2-tuple of int
+        The identifier of the edge as a pair of vertex identifiers.
 
     """
 
     def __init__(self, form, edge):
         super().__init__(form)
         self.edge = edge
-        self.L = None
+        self.length = None
         self.set_initial_length()
 
     def update_constraint_goal(self):
         self.set_initial_length()
 
     def set_initial_length(self):
-        u, v = list(self.form.edges())[self.edge]
-        s = self.form.vertex_coordinates(u, 'xy')
-        e = self.form.vertex_coordinates(v, 'xy')
-        dx = s[0] - e[0]
-        dy = s[1] - e[1]
-        self.L = math.sqrt(dx ** 2 + dy ** 2)  # Initial length
+        self.length = self.form.edge_length(*self.edge)  # Initial length
 
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
 
-        u, v = list(self.form.edges())[self.edge]
-        s = self.form.vertex_coordinates(u, 'xy')
-        e = self.form.vertex_coordinates(v, 'xy')
+        s, e = self.form.edge_coordinates(*self.edge)
         dx = s[0] - e[0]
         dy = s[1] - e[1]
         length = math.sqrt(dx ** 2 + dy ** 2)  # Current length
 
-        constraint_jac_row[0, u] = dx / length  # x0
-        constraint_jac_row[0, v] = -dx / length  # x1
-        constraint_jac_row[0, u + self.vcount] = dy / length  # y0
-        constraint_jac_row[0, v + self.vcount] = -dy / length  # y1
-        r = length - self.L
+        id_u = self.vertex_index[self.edge[0]]
+        id_v = self.vertex_index[self.edge[1]]
+
+        constraint_jac_row[0, id_u] = dx / length  # x0
+        constraint_jac_row[0, id_v] = -dx / length  # x1
+        constraint_jac_row[0, id_u + self.vcount] = dy / length  # y0
+        constraint_jac_row[0, id_v + self.vcount] = -dy / length  # y1
+        r = length - self.length
 
         return constraint_jac_row, r
 
 
 class SetLength(LengthFix):
-    """Constraint that sets the edge length to L.
+    """ WIP - Constraint that sets the edge length to L.
 
     Parameters
     -----------
     form: :class:`FormDiagram`
         The Form Diagram to constraint
-    edge: int
-        Index of the edge.
-    L: float
+    edge : 2-tuple of int
+        The identifier of the edge as a pair of vertex identifiers.
+    length: float
         Length to set to the edge.
 
     """
 
-    def __init__(self, form, edge, L):
+    def __init__(self, form, edge, length):
         super().__init__(form, edge)
-        self.L = L
+        self.length = length
 
     def update_constraint_goal(self):
         pass
@@ -351,8 +347,8 @@ class SetOrientation(AbstractConstraint):
     -----------
     form: :class:`FormDiagram`
         The Form Diagram to constraint
-    edge: int
-        Index of the edge.
+    edge : 2-tuple of int
+        The identifier of the edge as a pair of vertex identifiers.
     angle: float
         Angle to orient the edge to set to the edge.
 
