@@ -6,6 +6,8 @@ import sys
 
 from numpy import array
 from numpy import float64
+from numpy.linalg import lstsq
+from numpy.linalg import norm
 
 from scipy.sparse import diags
 
@@ -24,6 +26,9 @@ from compas_ags.diagrams import ForceDiagram
 
 from compas_ags.ags.core import update_q_from_qind
 from compas_ags.ags.core import update_form_from_force
+from compas_ags.ags.core import get_jacobian_and_residual
+
+from compas_ags.exceptions import SolutionError
 
 
 __all__ = [
@@ -31,10 +36,12 @@ __all__ = [
     'form_count_dof',
     'form_update_q_from_qind',
     'form_update_from_force',
+    'form_update_from_force_newton',
     'force_update_from_form',
 
     'form_update_q_from_qind_proxy',
     'form_update_from_force_proxy',
+    'form_update_from_force_newton_proxy',
     'force_update_from_form_proxy',
 ]
 
@@ -67,6 +74,13 @@ def force_update_from_form_proxy(forcedata, formdata, *args, **kwargs):
     return force.to_data()
 
 
+def form_update_from_force_newton_proxy(forcedata, formdata, *args, **kwargs):
+    form = FormDiagram.from_data(formdata)
+    force = ForceDiagram.from_data(forcedata)
+    form_update_from_force_newton(force, form, *args, **kwargs)  # Still need dealing with constraints
+    return force.to_data()
+
+
 # ==============================================================================
 # analysis form diagram
 # ==============================================================================
@@ -77,7 +91,7 @@ def form_identify_dof(form):
 
     Parameters
     ----------
-    form : FormDiagram
+    form: :class:`FormDiagram`
         The form diagram.
 
     Returns
@@ -137,7 +151,7 @@ def form_count_dof(form):
 
     Parameters
     ----------
-    form : FormDiagram
+    form: :class:`FormDiagram`
         The form diagram.
 
     Returns
@@ -191,7 +205,7 @@ def form_update_q_from_qind(form):
 
     Parameters
     ----------
-    form : FormDiagram
+    form: :class:`FormDiagram`
         The form diagram.
 
     Returns
@@ -235,9 +249,9 @@ def form_update_from_force(form, force, kmax=100):
 
     Parameters
     ----------
-    form : FormDiagram
+    form: :class:`FormDiagram`
         The form diagram to update.
-    force : ForceDiagram
+    force : :class:`ForceDiagram`
         The force diagram on which the update is based.
 
     Returns
@@ -337,6 +351,85 @@ def form_update_from_force(form, force, kmax=100):
         attr['l'] = forces[index, 0]
 
 
+def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_iter=20):
+    r"""Update the form diagram after a modification of the force diagram.
+
+    Compute the geometry of the form diagram from the geometry of the force diagram
+    and some constraints, including non-linear.
+    The form diagram is computed by formulating the root-finding approach presented
+    in bi-dir AGS [1]_. Newton's method is used to solve for the form diagram.
+
+    The algorithm fails if it is over-constrained or if the initial guess is too far
+    from any root.
+
+    Parameters
+    ----------
+    form: :class:`FormDiagram`
+        The form diagram to update.
+    force: :class:`ForceDiagram`
+        The force diagram containing the vertex modification desired.
+    constraints: :class:`ConstraintsCollection`, optional
+        A collection of form diagram constraints.
+        The default is ``None``, in which case no constraints are considered.
+    tol: float, optional
+        Stopping criteria tolerance.
+        The default value is ``1e-10``.
+    max_iter: int, optional
+        Maximum number of iterations before stop Newton Method.
+        The default value is ``20``.
+
+    Returns
+    -------
+    None
+        The form and force diagram are updated in-place.
+
+    References
+    ----------
+    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+
+    Examples
+    --------
+    >>>
+
+    """
+    X = array(form.vertices_attribute('x') + form.vertices_attribute('y')).reshape(-1, 1)
+    _X_goal = array(force.vertices_attribute('x') + force.vertices_attribute('y')).reshape(-1, 1)
+
+    vcount = form.number_of_vertices()
+    index_vertex = form.index_vertex()
+
+    # Begin Newton
+    diff = 100
+    n_iter = 1
+    while diff > tol:
+        # Update force diagram based on form at each iteration
+        form_update_q_from_qind(form)
+        force_update_from_form(force, form)
+
+        # Get jacobian maxtrix and residual vector considering constraints
+        red_jacobian, red_r = get_jacobian_and_residual(form, force, _X_goal, constraints)
+
+        # Do the least squares solution
+        dx = lstsq(red_jacobian, -red_r)[0]
+
+        X = X + dx
+
+        # Update form diagram at end of iteration
+        for i in range(vcount):
+            vertex = index_vertex[i]
+            form.vertex_attribute(vertex, 'x', X[i].item())
+            form.vertex_attribute(vertex, 'y', X[i + vcount].item())
+
+        diff = norm(red_r)
+        if n_iter > max_iter:
+            raise SolutionError('Did not converge')
+
+        print('i: {0:0} diff: {1:.2e}'.format(n_iter, float(diff)))
+        n_iter += 1
+
+    print('Converged in {0} iterations'.format(n_iter))
+
+
 # ==============================================================================
 # update force diagram
 # ==============================================================================
@@ -347,9 +440,9 @@ def force_update_from_form(force, form):
 
     Parameters
     ----------
-    force : ForceDiagram
+    force : :class:`ForceDiagram`
         The force diagram on which the update is based.
-    form : FormDiagram
+    form : :class:`FormDiagram`
         The form diagram to update.
 
     Returns
@@ -372,7 +465,7 @@ def force_update_from_form(force, form):
     # --------------------------------------------------------------------------
     _vertex_index = force.vertex_index()
 
-    _known = [_vertex_index[next(force.vertices())]]
+    _known = [_vertex_index[force.anchor()]]
     _xy = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]

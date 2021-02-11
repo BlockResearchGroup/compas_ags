@@ -69,6 +69,15 @@ class ForceDiagram(Diagram):
         """
         return list(self.vertices_where({'is_fixed': True}))
 
+    def anchor(self):
+        """Get an anchor to the force diagram.
+
+        Returns
+        -------
+        int
+        """
+        return next(self.vertices())
+
     # --------------------------------------------------------------------------
     # Helpers
     # --------------------------------------------------------------------------

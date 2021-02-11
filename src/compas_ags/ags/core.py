@@ -8,20 +8,34 @@ from numpy import array
 from numpy import eye
 from numpy import zeros
 from numpy import float64
+from numpy import delete
+from numpy import vstack
+from numpy import diag
+from numpy import hstack
+from numpy.linalg import inv
 from numpy.linalg import cond
+from numpy.linalg import matrix_rank
 
 from scipy.linalg import solve
 from scipy.linalg import lstsq
 
 from compas.numerical import normrow
 from compas.numerical import normalizerow
+from compas.numerical import connectivity_matrix
+from compas.numerical import equilibrium_matrix
+from compas.numerical import laplacian_matrix
+from compas.numerical import solve_with_known
 
 from compas.geometry import midpoint_point_point_xy
+
+from compas_ags.exceptions import SolutionError
 
 
 __all__ = [
     'update_q_from_qind',
-    'update_form_from_force'
+    'update_form_from_force',
+    'get_jacobian_and_residual',
+    'compute_jacobian',
 ]
 
 
@@ -289,6 +303,184 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
 
         if callback:
             callback(k, xy, edges)
+
+
+def get_jacobian_and_residual(form, force, _X_goal, constraints=None):
+    r"""Compute the Jacobian matrix and residual.
+
+    Computes the residual and the Jacobian matrix :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`
+    where :math:`\mathbf{X}` contains the form diagram coordinates in *Fortran* order
+    (first all :math:`\mathbf{x}`-coordinates, then all :math:`\mathbf{y}`-coordinates) and :math:`\mathbf{X}^*` contains the
+    force diagram coordinates in *Fortran* order (first all :math:`\mathbf{x}^*`-coordinates,
+    then all :math:`\mathbf{y}^*`-coordinates). Jacobian and residual have the rows corresponding to the
+    force diagrarm anchor vertex removed.
+
+    Parameters
+    ----------
+    form: :class:`FormDiagram`
+        The form diagram to update.
+    force: :class:`ForceDiagram`
+        The force diagram on which the update is based.
+    _X_goal: array [2*n]
+        Contains the target force diagram coordinates (:math:`\mathbf{X}^*`) in *Fortran* order
+        (first all :math:`\mathbf{x}^*`-coordinates, then all :math:`\mathbf{y}^*`-coordinates).
+    constraints: :class:`ConstraintsCollection`, optional
+        A collection of form diagram constraints.
+        The default is ``None``, in which case no constraints are considered.
+
+    Returns
+    -------
+    red_jacobian, red_r: tuple of arrays
+        Jacobian matrix and residual vector as arrays.
+        The rows corresponding to the anchor of the force diagram are removed
+
+    References
+    ----------
+    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+
+    Examples
+    --------
+    >>>
+    """
+
+    jacobian = compute_jacobian(form, force)
+
+    _vcount = force.number_of_vertices()
+    _k_i = force.key_index()
+    _known = _k_i[force.anchor()]
+    _bc = [_known, _vcount + _known]
+    _X_iteration = array(force.vertices_attribute('x') + force.vertices_attribute('y')).reshape(-1, 1)
+    r = _X_iteration - _X_goal
+
+    if constraints:
+        (cj, cr) = constraints.compute_constraints()
+        jacobian = vstack((jacobian, cj))
+        r = vstack((r, cr))
+
+    # Check rank of augmented matrix
+    rank_jac = matrix_rank(jacobian)
+    rank_aug = matrix_rank(hstack([jacobian, r]))
+
+    if rank_jac < rank_aug:
+        raise SolutionError('ERROR: Rank Augmented > Rank Jacobian')
+
+    # Remove rows due to anchored vertex in the force diagram
+    red_r = delete(r, _bc, axis=0)
+    red_jacobian = delete(jacobian, _bc, axis=0)
+
+    return red_jacobian, red_r
+
+
+def compute_jacobian(form, force):
+    r"""Compute the Jacobian matrix.
+
+    The actual computation of the Jacobian matrix :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`
+    where :math:`\mathbf{X}` contains the form diagram coordinates in *Fortran* order
+    (first all :math:`\mathbf{x}`-coordinates, then all :math:`\mathbf{y}`-coordinates) and :math:`\mathbf{X}^*` contains the
+    force diagram coordinates in *Fortran* order (first all :math:`\mathbf{x}^*`-coordinates,
+    then all :math:`\mathbf{y}^*`-coordinates).
+
+    Parameters
+    ----------
+    form: :class:`FormDiagram`
+        The form diagram.
+    force: :class:`ForceDiagram`
+        The force diagram.
+
+    Returns
+    -------
+    jacobian
+        Jacobian matrix (2 * _vcount, 2 * vcount)
+
+    References
+    ----------
+    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+
+    Examples
+    --------
+    >>>
+    """
+    # --------------------------------------------------------------------------
+    # form diagram
+    # --------------------------------------------------------------------------
+    vcount = form.number_of_vertices()
+    k_i = form.key_index()
+    leaves = [k_i[key] for key in form.leaves()]
+    free = list(set(range(form.number_of_vertices())) - set(leaves))
+    vicount = len(free)
+    edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
+    xy = array(form.xy(), dtype=float64).reshape((-1, 2))
+    ecount = len(edges)
+    C = connectivity_matrix(edges, 'array')
+    E = equilibrium_matrix(C, xy, free, 'array')
+    uv = C.dot(xy)
+    u = uv[:, 0].reshape(-1, 1)
+    v = uv[:, 1].reshape(-1, 1)
+    Ct = C.transpose()
+    Cti = array(Ct[free, :])
+
+    q = array(form.q(), dtype=float64).reshape((-1, 1))
+    Q = diag(q.flatten())  # TODO: Explore sparse (diags)
+
+    independent_edges = [(k_i[u], k_i[v]) for (u, v) in list(form.edges_where({'is_ind': True}))]
+    independent_edges_idx = [edges.index(i) for i in independent_edges]
+    dependent_edges_idx = list(set(range(ecount)) - set(independent_edges_idx))
+
+    Ed = E[:, dependent_edges_idx]
+    Eid = E[:, independent_edges_idx]
+    qid = q[independent_edges_idx]
+    EdInv = inv(array(Ed))  # TODO: Explore sparse (spinv)
+
+    # --------------------------------------------------------------------------
+    # force diagram
+    # --------------------------------------------------------------------------
+    _vertex_index = force.vertex_index()
+    _vcount = force.number_of_vertices()
+    _edges = force.ordered_edges(form)
+    _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
+    _L = laplacian_matrix(_edges, normalize=False, rtype='array')
+    _C = connectivity_matrix(_edges, 'array')
+    _Ct = _C.transpose()
+    _Ct = array(_Ct)
+    _known = [_vertex_index[force.anchor()]]
+
+    # --------------------------------------------------------------------------
+    # Jacobian
+    # --------------------------------------------------------------------------
+    jacobian = zeros((_vcount * 2, vcount * 2))
+    for j in range(2):  # Loop for x and y
+        idx = list(range(j * vicount, (j + 1) * vicount))
+        for i in range(vcount):
+            dXdxi = diag(Ct[i, :])
+            dxdxi = Ct[i, :].reshape(-1, 1)
+
+            dEdXi = zeros((vicount * 2, ecount))
+            dEdXi[idx, :] = Cti.dot(dXdxi)
+
+            dEdXi_d = dEdXi[:, dependent_edges_idx]
+            dEdXi_id = dEdXi[:, independent_edges_idx]
+
+            dEdXiInv = - EdInv.dot(dEdXi_d.dot(EdInv))
+
+            dqdXi_d = - dEdXiInv.dot(Eid.dot(qid)) - EdInv.dot(dEdXi_id.dot(qid))
+            dqdXi = zeros((ecount, 1))
+            dqdXi[dependent_edges_idx] = dqdXi_d
+            dqdXi[independent_edges_idx] = 0
+            dQdXi = diag(dqdXi[:, 0])
+
+            d_XdXiTop = zeros((_L.shape[0]))
+            d_XdXiBot = zeros((_L.shape[0]))
+
+            if j == 0:
+                d_XdXiTop = solve_with_known(_L, (_Ct.dot(dQdXi.dot(u) + Q.dot(dxdxi))).flatten(), d_XdXiTop, _known)
+                d_XdXiBot = solve_with_known(_L, (_Ct.dot(dQdXi.dot(v))).flatten(), d_XdXiBot, _known)
+            elif j == 1:
+                d_XdXiTop = solve_with_known(_L, (_Ct.dot(dQdXi.dot(u))).flatten(), d_XdXiTop, _known)
+                d_XdXiBot = solve_with_known(_L, (_Ct.dot(dQdXi.dot(v) + Q.dot(dxdxi))).flatten(), d_XdXiBot, _known)
+
+            d_XdXi = hstack((d_XdXiTop, d_XdXiBot))
+            jacobian[:, i + j * vcount] = d_XdXi
+    return jacobian
 
 
 # ==============================================================================
