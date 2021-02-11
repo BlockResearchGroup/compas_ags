@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   
-  <title>compas_ags - form_count_dof</title>
+  <title>compas_ags - ForceDiagram.anchor</title>
   
 
   <meta charset="utf-8" />
@@ -19,11 +19,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="form_identify_dof" href="compas_ags.ags.form_identify_dof.html" />
+    <link rel="next" title="ForceDiagram.area" href="compas_ags.diagrams.ForceDiagram.area.html" />
   
 
   
-    <link rel="prev" title="update_form_from_force" href="compas_ags.ags.update_form_from_force.html" />
+    <link rel="prev" title="ForceDiagram.add_vertex" href="compas_ags.diagrams.ForceDiagram.add_vertex.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -86,48 +86,28 @@
             
               <li class="breadcrumb-item"><a href="../compas_ags.html">compas_ags</a></li>
             
-              <li class="breadcrumb-item"><a href="../compas_ags.ags.html">compas_ags.ags</a></li>
+              <li class="breadcrumb-item"><a href="../compas_ags.diagrams.html">compas_ags.diagrams</a></li>
             
-            <li class="breadcrumb-item active" aria-current="page">form_count_dof</li>
+              <li class="breadcrumb-item"><a href="compas_ags.diagrams.ForceDiagram.html">ForceDiagram</a></li>
+            
+            <li class="breadcrumb-item active" aria-current="page">ForceDiagram.anchor</li>
           </ol>
         </nav>
         
 
         
         
-        <div class="detail section" id="form-count-dof">
-<h1>form_count_dof</h1>
-<dl class="function">
-<dt id="compas_ags.ags.form_count_dof">
-<code class="sig-prename descclassname">compas_ags.ags.</code><code class="sig-name descname">form_count_dof</code><span class="sig-paren">(</span><em class="sig-param">form</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/ags/graphstatics.html#form_count_dof"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Count the number of degrees of freedom of a form diagram.</p>
+        <div class="detail section" id="forcediagram-anchor">
+<h1>ForceDiagram.anchor</h1>
+<dl class="method">
+<dt id="compas_ags.diagrams.ForceDiagram.anchor">
+<code class="sig-prename descclassname">ForceDiagram.</code><code class="sig-name descname">anchor</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/diagrams/forcediagram.html#ForceDiagram.anchor"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Get an anchor to the force diagram.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>form</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">FormDiagram</span></code>) – The form diagram.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><ul class="simple">
-<li><p><strong>k</strong> (<em>int</em>) – Dimension of the null space (<em>nullity</em>) of the equilibrium matrix of the
-form diagram.</p></li>
-<li><p><strong>m</strong> (<em>int</em>) – Dimension of the left null space of the equilibrium matrix of the form
-diagram.</p></li>
-</ul>
-</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>int</em></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>The equilibrium matrix of the form diagram is</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\mathbf{E}
-=
-\begin{bmatrix}
-\mathbf{C}_{i}^{t}\mathbf{U} \\
-\mathbf{C}_{i}^{t}\mathbf{V}
-\end{bmatrix}\end{split}\]</div>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="go">&gt;&gt;&gt;</span>
-</code></pre></div>
-</div>
 </dd></dl>
 
 </div>
@@ -154,8 +134,8 @@ diagram.</p></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav flex-column active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav flex-column active">
-<li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.diagrams.html">compas_ags.diagrams</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.diagrams.html">compas_ags.diagrams</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.viewers.html">compas_ags.viewers</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.utilities.html">compas_ags.utilities</a></li>
 </ul>
@@ -175,7 +155,7 @@ diagram.</p></li>
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">form_count_dof</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">ForceDiagram.anchor</a></li>
 </ul>
 
       </div>
@@ -187,20 +167,20 @@ diagram.</p></li>
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-        <a href="compas_ags.ags.update_form_from_force.html" title="update_form_from_force" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+        <a href="compas_ags.diagrams.ForceDiagram.add_vertex.html" title="ForceDiagram.add_vertex" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
           <div class="nav-title flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Previous</div>
-            update_form_from_force
+            ForceDiagram.add_vertex
           </div>
         </a>
       
 
       
-        <a href="compas_ags.ags.form_identify_dof.html" title="form_identify_dof" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <a href="compas_ags.diagrams.ForceDiagram.area.html" title="ForceDiagram.area" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
           <div class="nav-title footer-link flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Next</div>
-            form_identify_dof
+            ForceDiagram.area
           </div>
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
         </a>

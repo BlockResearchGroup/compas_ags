@@ -98,20 +98,34 @@
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">eye</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">zeros</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">float64</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">delete</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">vstack</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">diag</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">hstack</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">inv</span>
 <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">cond</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">matrix_rank</span>
 
 <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">solve</span>
 <span class="kn">from</span> <span class="nn">scipy.linalg</span> <span class="kn">import</span> <span class="n">lstsq</span>
 
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">normrow</span>
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">normalizerow</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">connectivity_matrix</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">equilibrium_matrix</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">laplacian_matrix</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">solve_with_known</span>
 
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">midpoint_point_point_xy</span>
+
+<span class="kn">from</span> <span class="nn">compas_ags.exceptions</span> <span class="kn">import</span> <span class="n">SolutionError</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;update_q_from_qind&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;update_form_from_force&#39;</span>
+    <span class="s1">&#39;update_form_from_force&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;get_jacobian_and_residual&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;compute_jacobian&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -379,6 +393,184 @@
 
         <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
             <span class="n">callback</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">get_jacobian_and_residual</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">_X_goal</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the Jacobian matrix and residual.</span>
+
+<span class="sd">    Computes the residual and the Jacobian matrix :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`</span>
+<span class="sd">    where :math:`\mathbf{X}` contains the form diagram coordinates in *Fortran* order</span>
+<span class="sd">    (first all :math:`\mathbf{x}`-coordinates, then all :math:`\mathbf{y}`-coordinates) and :math:`\mathbf{X}^*` contains the</span>
+<span class="sd">    force diagram coordinates in *Fortran* order (first all :math:`\mathbf{x}^*`-coordinates,</span>
+<span class="sd">    then all :math:`\mathbf{y}^*`-coordinates). Jacobian and residual have the rows corresponding to the</span>
+<span class="sd">    force diagrarm anchor vertex removed.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form: :class:`FormDiagram`</span>
+<span class="sd">        The form diagram to update.</span>
+<span class="sd">    force: :class:`ForceDiagram`</span>
+<span class="sd">        The force diagram on which the update is based.</span>
+<span class="sd">    _X_goal: array [2*n]</span>
+<span class="sd">        Contains the target force diagram coordinates (:math:`\mathbf{X}^*`) in *Fortran* order</span>
+<span class="sd">        (first all :math:`\mathbf{x}^*`-coordinates, then all :math:`\mathbf{y}^*`-coordinates).</span>
+<span class="sd">    constraints: :class:`ConstraintsCollection`, optional</span>
+<span class="sd">        A collection of form diagram constraints.</span>
+<span class="sd">        The default is ``None``, in which case no constraints are considered.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    red_jacobian, red_r: tuple of arrays</span>
+<span class="sd">        Jacobian matrix and residual vector as arrays.</span>
+<span class="sd">        The rows corresponding to the anchor of the force diagram are removed</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">jacobian</span> <span class="o">=</span> <span class="n">compute_jacobian</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">)</span>
+
+    <span class="n">_vcount</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()</span>
+    <span class="n">_k_i</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">_known</span> <span class="o">=</span> <span class="n">_k_i</span><span class="p">[</span><span class="n">force</span><span class="o">.</span><span class="n">anchor</span><span class="p">()]</span>
+    <span class="n">_bc</span> <span class="o">=</span> <span class="p">[</span><span class="n">_known</span><span class="p">,</span> <span class="n">_vcount</span> <span class="o">+</span> <span class="n">_known</span><span class="p">]</span>
+    <span class="n">_X_iteration</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">force</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">_X_iteration</span> <span class="o">-</span> <span class="n">_X_goal</span>
+
+    <span class="k">if</span> <span class="n">constraints</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">cj</span><span class="p">,</span> <span class="n">cr</span><span class="p">)</span> <span class="o">=</span> <span class="n">constraints</span><span class="o">.</span><span class="n">compute_constraints</span><span class="p">()</span>
+        <span class="n">jacobian</span> <span class="o">=</span> <span class="n">vstack</span><span class="p">((</span><span class="n">jacobian</span><span class="p">,</span> <span class="n">cj</span><span class="p">))</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">vstack</span><span class="p">((</span><span class="n">r</span><span class="p">,</span> <span class="n">cr</span><span class="p">))</span>
+
+    <span class="c1"># Check rank of augmented matrix</span>
+    <span class="n">rank_jac</span> <span class="o">=</span> <span class="n">matrix_rank</span><span class="p">(</span><span class="n">jacobian</span><span class="p">)</span>
+    <span class="n">rank_aug</span> <span class="o">=</span> <span class="n">matrix_rank</span><span class="p">(</span><span class="n">hstack</span><span class="p">([</span><span class="n">jacobian</span><span class="p">,</span> <span class="n">r</span><span class="p">]))</span>
+
+    <span class="k">if</span> <span class="n">rank_jac</span> <span class="o">&lt;</span> <span class="n">rank_aug</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">SolutionError</span><span class="p">(</span><span class="s1">&#39;ERROR: Rank Augmented &gt; Rank Jacobian&#39;</span><span class="p">)</span>
+
+    <span class="c1"># Remove rows due to anchored vertex in the force diagram</span>
+    <span class="n">red_r</span> <span class="o">=</span> <span class="n">delete</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">_bc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">red_jacobian</span> <span class="o">=</span> <span class="n">delete</span><span class="p">(</span><span class="n">jacobian</span><span class="p">,</span> <span class="n">_bc</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">red_jacobian</span><span class="p">,</span> <span class="n">red_r</span>
+
+
+<span class="k">def</span> <span class="nf">compute_jacobian</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the Jacobian matrix.</span>
+
+<span class="sd">    The actual computation of the Jacobian matrix :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`</span>
+<span class="sd">    where :math:`\mathbf{X}` contains the form diagram coordinates in *Fortran* order</span>
+<span class="sd">    (first all :math:`\mathbf{x}`-coordinates, then all :math:`\mathbf{y}`-coordinates) and :math:`\mathbf{X}^*` contains the</span>
+<span class="sd">    force diagram coordinates in *Fortran* order (first all :math:`\mathbf{x}^*`-coordinates,</span>
+<span class="sd">    then all :math:`\mathbf{y}^*`-coordinates).</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form: :class:`FormDiagram`</span>
+<span class="sd">        The form diagram.</span>
+<span class="sd">    force: :class:`ForceDiagram`</span>
+<span class="sd">        The force diagram.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    jacobian</span>
+<span class="sd">        Jacobian matrix (2 * _vcount, 2 * vcount)</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># form diagram</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">vcount</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()</span>
+    <span class="n">k_i</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">leaves</span> <span class="o">=</span> <span class="p">[</span><span class="n">k_i</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">leaves</span><span class="p">()]</span>
+    <span class="n">free</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">leaves</span><span class="p">))</span>
+    <span class="n">vicount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">ecount</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">)</span>
+    <span class="n">E</span> <span class="o">=</span> <span class="n">equilibrium_matrix</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">)</span>
+    <span class="n">uv</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">uv</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">uv</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">Ct</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">Cti</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">Ct</span><span class="p">[</span><span class="n">free</span><span class="p">,</span> <span class="p">:])</span>
+
+    <span class="n">q</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">q</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">diag</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">flatten</span><span class="p">())</span>  <span class="c1"># TODO: Explore sparse (diags)</span>
+
+    <span class="n">independent_edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_ind&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))]</span>
+    <span class="n">independent_edges_idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">edges</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">independent_edges</span><span class="p">]</span>
+    <span class="n">dependent_edges_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">ecount</span><span class="p">))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">independent_edges_idx</span><span class="p">))</span>
+
+    <span class="n">Ed</span> <span class="o">=</span> <span class="n">E</span><span class="p">[:,</span> <span class="n">dependent_edges_idx</span><span class="p">]</span>
+    <span class="n">Eid</span> <span class="o">=</span> <span class="n">E</span><span class="p">[:,</span> <span class="n">independent_edges_idx</span><span class="p">]</span>
+    <span class="n">qid</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">independent_edges_idx</span><span class="p">]</span>
+    <span class="n">EdInv</span> <span class="o">=</span> <span class="n">inv</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="n">Ed</span><span class="p">))</span>  <span class="c1"># TODO: Explore sparse (spinv)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># force diagram</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">_vertex_index</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">vertex_index</span><span class="p">()</span>
+    <span class="n">_vcount</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()</span>
+    <span class="n">_edges</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+    <span class="n">_edges</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">_vertex_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">_vertex_index</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_edges</span><span class="p">]</span>
+    <span class="n">_L</span> <span class="o">=</span> <span class="n">laplacian_matrix</span><span class="p">(</span><span class="n">_edges</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">rtype</span><span class="o">=</span><span class="s1">&#39;array&#39;</span><span class="p">)</span>
+    <span class="n">_C</span> <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">_edges</span><span class="p">,</span> <span class="s1">&#39;array&#39;</span><span class="p">)</span>
+    <span class="n">_Ct</span> <span class="o">=</span> <span class="n">_C</span><span class="o">.</span><span class="n">transpose</span><span class="p">()</span>
+    <span class="n">_Ct</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">_Ct</span><span class="p">)</span>
+    <span class="n">_known</span> <span class="o">=</span> <span class="p">[</span><span class="n">_vertex_index</span><span class="p">[</span><span class="n">force</span><span class="o">.</span><span class="n">anchor</span><span class="p">()]]</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># Jacobian</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">jacobian</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="n">_vcount</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">vcount</span> <span class="o">*</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>  <span class="c1"># Loop for x and y</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">j</span> <span class="o">*</span> <span class="n">vicount</span><span class="p">,</span> <span class="p">(</span><span class="n">j</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">vicount</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vcount</span><span class="p">):</span>
+            <span class="n">dXdxi</span> <span class="o">=</span> <span class="n">diag</span><span class="p">(</span><span class="n">Ct</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:])</span>
+            <span class="n">dxdxi</span> <span class="o">=</span> <span class="n">Ct</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+            <span class="n">dEdXi</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="n">vicount</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span> <span class="n">ecount</span><span class="p">))</span>
+            <span class="n">dEdXi</span><span class="p">[</span><span class="n">idx</span><span class="p">,</span> <span class="p">:]</span> <span class="o">=</span> <span class="n">Cti</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dXdxi</span><span class="p">)</span>
+
+            <span class="n">dEdXi_d</span> <span class="o">=</span> <span class="n">dEdXi</span><span class="p">[:,</span> <span class="n">dependent_edges_idx</span><span class="p">]</span>
+            <span class="n">dEdXi_id</span> <span class="o">=</span> <span class="n">dEdXi</span><span class="p">[:,</span> <span class="n">independent_edges_idx</span><span class="p">]</span>
+
+            <span class="n">dEdXiInv</span> <span class="o">=</span> <span class="o">-</span> <span class="n">EdInv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dEdXi_d</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">EdInv</span><span class="p">))</span>
+
+            <span class="n">dqdXi_d</span> <span class="o">=</span> <span class="o">-</span> <span class="n">dEdXiInv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">Eid</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">qid</span><span class="p">))</span> <span class="o">-</span> <span class="n">EdInv</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dEdXi_id</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">qid</span><span class="p">))</span>
+            <span class="n">dqdXi</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="n">ecount</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+            <span class="n">dqdXi</span><span class="p">[</span><span class="n">dependent_edges_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">dqdXi_d</span>
+            <span class="n">dqdXi</span><span class="p">[</span><span class="n">independent_edges_idx</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="n">dQdXi</span> <span class="o">=</span> <span class="n">diag</span><span class="p">(</span><span class="n">dqdXi</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+
+            <span class="n">d_XdXiTop</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="n">_L</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+            <span class="n">d_XdXiBot</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="n">_L</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+            <span class="k">if</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">d_XdXiTop</span> <span class="o">=</span> <span class="n">solve_with_known</span><span class="p">(</span><span class="n">_L</span><span class="p">,</span> <span class="p">(</span><span class="n">_Ct</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dQdXi</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">+</span> <span class="n">Q</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dxdxi</span><span class="p">)))</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">d_XdXiTop</span><span class="p">,</span> <span class="n">_known</span><span class="p">)</span>
+                <span class="n">d_XdXiBot</span> <span class="o">=</span> <span class="n">solve_with_known</span><span class="p">(</span><span class="n">_L</span><span class="p">,</span> <span class="p">(</span><span class="n">_Ct</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dQdXi</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)))</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">d_XdXiBot</span><span class="p">,</span> <span class="n">_known</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">j</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">d_XdXiTop</span> <span class="o">=</span> <span class="n">solve_with_known</span><span class="p">(</span><span class="n">_L</span><span class="p">,</span> <span class="p">(</span><span class="n">_Ct</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dQdXi</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">u</span><span class="p">)))</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">d_XdXiTop</span><span class="p">,</span> <span class="n">_known</span><span class="p">)</span>
+                <span class="n">d_XdXiBot</span> <span class="o">=</span> <span class="n">solve_with_known</span><span class="p">(</span><span class="n">_L</span><span class="p">,</span> <span class="p">(</span><span class="n">_Ct</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dQdXi</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">+</span> <span class="n">Q</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dxdxi</span><span class="p">)))</span><span class="o">.</span><span class="n">flatten</span><span class="p">(),</span> <span class="n">d_XdXiBot</span><span class="p">,</span> <span class="n">_known</span><span class="p">)</span>
+
+            <span class="n">d_XdXi</span> <span class="o">=</span> <span class="n">hstack</span><span class="p">((</span><span class="n">d_XdXiTop</span><span class="p">,</span> <span class="n">d_XdXiBot</span><span class="p">))</span>
+            <span class="n">jacobian</span><span class="p">[:,</span> <span class="n">i</span> <span class="o">+</span> <span class="n">j</span> <span class="o">*</span> <span class="n">vcount</span><span class="p">]</span> <span class="o">=</span> <span class="n">d_XdXi</span>
+    <span class="k">return</span> <span class="n">jacobian</span>
 
 
 <span class="c1"># ==============================================================================</span>

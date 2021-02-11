@@ -96,6 +96,8 @@
 
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">float64</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">lstsq</span>
+<span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">norm</span>
 
 <span class="kn">from</span> <span class="nn">scipy.sparse</span> <span class="kn">import</span> <span class="n">diags</span>
 
@@ -114,6 +116,9 @@
 
 <span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">update_q_from_qind</span>
 <span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">update_form_from_force</span>
+<span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">get_jacobian_and_residual</span>
+
+<span class="kn">from</span> <span class="nn">compas_ags.exceptions</span> <span class="kn">import</span> <span class="n">SolutionError</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
@@ -121,10 +126,12 @@
     <span class="s1">&#39;form_count_dof&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_update_q_from_qind&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_update_from_force&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;form_update_from_force_newton&#39;</span><span class="p">,</span>
     <span class="s1">&#39;force_update_from_form&#39;</span><span class="p">,</span>
 
     <span class="s1">&#39;form_update_q_from_qind_proxy&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_update_from_force_proxy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;form_update_from_force_newton_proxy&#39;</span><span class="p">,</span>
     <span class="s1">&#39;force_update_from_form_proxy&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 
@@ -157,6 +164,13 @@
     <span class="k">return</span> <span class="n">force</span><span class="o">.</span><span class="n">to_data</span><span class="p">()</span>
 
 
+<span class="k">def</span> <span class="nf">form_update_from_force_newton_proxy</span><span class="p">(</span><span class="n">forcedata</span><span class="p">,</span> <span class="n">formdata</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">formdata</span><span class="p">)</span>
+    <span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">forcedata</span><span class="p">)</span>
+    <span class="n">form_update_from_force_newton</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># Still need dealing with constraints</span>
+    <span class="k">return</span> <span class="n">force</span><span class="o">.</span><span class="n">to_data</span><span class="p">()</span>
+
+
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># analysis form diagram</span>
 <span class="c1"># ==============================================================================</span>
@@ -167,7 +181,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    form : FormDiagram</span>
+<span class="sd">    form: :class:`FormDiagram`</span>
 <span class="sd">        The form diagram.</span>
 
 <span class="sd">    Returns</span>
@@ -227,7 +241,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    form : FormDiagram</span>
+<span class="sd">    form: :class:`FormDiagram`</span>
 <span class="sd">        The form diagram.</span>
 
 <span class="sd">    Returns</span>
@@ -281,7 +295,7 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    form : FormDiagram</span>
+<span class="sd">    form: :class:`FormDiagram`</span>
 <span class="sd">        The form diagram.</span>
 
 <span class="sd">    Returns</span>
@@ -325,9 +339,9 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    form : FormDiagram</span>
+<span class="sd">    form: :class:`FormDiagram`</span>
 <span class="sd">        The form diagram to update.</span>
-<span class="sd">    force : ForceDiagram</span>
+<span class="sd">    force : :class:`ForceDiagram`</span>
 <span class="sd">        The force diagram on which the update is based.</span>
 
 <span class="sd">    Returns</span>
@@ -427,6 +441,85 @@
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;l&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forces</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span></div>
 
 
+<span class="k">def</span> <span class="nf">form_update_from_force_newton</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the form diagram after a modification of the force diagram.</span>
+
+<span class="sd">    Compute the geometry of the form diagram from the geometry of the force diagram</span>
+<span class="sd">    and some constraints, including non-linear.</span>
+<span class="sd">    The form diagram is computed by formulating the root-finding approach presented</span>
+<span class="sd">    in bi-dir AGS [1]_. Newton&#39;s method is used to solve for the form diagram.</span>
+
+<span class="sd">    The algorithm fails if it is over-constrained or if the initial guess is too far</span>
+<span class="sd">    from any root.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form: :class:`FormDiagram`</span>
+<span class="sd">        The form diagram to update.</span>
+<span class="sd">    force: :class:`ForceDiagram`</span>
+<span class="sd">        The force diagram containing the vertex modification desired.</span>
+<span class="sd">    constraints: :class:`ConstraintsCollection`, optional</span>
+<span class="sd">        A collection of form diagram constraints.</span>
+<span class="sd">        The default is ``None``, in which case no constraints are considered.</span>
+<span class="sd">    tol: float, optional</span>
+<span class="sd">        Stopping criteria tolerance.</span>
+<span class="sd">        The default value is ``1e-10``.</span>
+<span class="sd">    max_iter: int, optional</span>
+<span class="sd">        Maximum number of iterations before stop Newton Method.</span>
+<span class="sd">        The default value is ``20``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        The form and force diagram are updated in-place.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">X</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">_X_goal</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span> <span class="o">+</span> <span class="n">force</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;y&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">vcount</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()</span>
+    <span class="n">index_vertex</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">index_vertex</span><span class="p">()</span>
+
+    <span class="c1"># Begin Newton</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="mi">100</span>
+    <span class="n">n_iter</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">diff</span> <span class="o">&gt;</span> <span class="n">tol</span><span class="p">:</span>
+        <span class="c1"># Update force diagram based on form at each iteration</span>
+        <span class="n">form_update_q_from_qind</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+        <span class="n">force_update_from_form</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">)</span>
+
+        <span class="c1"># Get jacobian maxtrix and residual vector considering constraints</span>
+        <span class="n">red_jacobian</span><span class="p">,</span> <span class="n">red_r</span> <span class="o">=</span> <span class="n">get_jacobian_and_residual</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">_X_goal</span><span class="p">,</span> <span class="n">constraints</span><span class="p">)</span>
+
+        <span class="c1"># Do the least squares solution</span>
+        <span class="n">dx</span> <span class="o">=</span> <span class="n">lstsq</span><span class="p">(</span><span class="n">red_jacobian</span><span class="p">,</span> <span class="o">-</span><span class="n">red_r</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="n">X</span> <span class="o">=</span> <span class="n">X</span> <span class="o">+</span> <span class="n">dx</span>
+
+        <span class="c1"># Update form diagram at end of iteration</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">vcount</span><span class="p">):</span>
+            <span class="n">vertex</span> <span class="o">=</span> <span class="n">index_vertex</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+            <span class="n">form</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="n">vcount</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+        <span class="n">diff</span> <span class="o">=</span> <span class="n">norm</span><span class="p">(</span><span class="n">red_r</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_iter</span> <span class="o">&gt;</span> <span class="n">max_iter</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">SolutionError</span><span class="p">(</span><span class="s1">&#39;Did not converge&#39;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;i: </span><span class="si">{0:0}</span><span class="s1"> diff: </span><span class="si">{1:.2e}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_iter</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">diff</span><span class="p">)))</span>
+        <span class="n">n_iter</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Converged in </span><span class="si">{0}</span><span class="s1"> iterations&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">n_iter</span><span class="p">))</span>
+
+
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># update force diagram</span>
 <span class="c1"># ==============================================================================</span>
@@ -437,9 +530,9 @@
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
-<span class="sd">    force : ForceDiagram</span>
+<span class="sd">    force : :class:`ForceDiagram`</span>
 <span class="sd">        The force diagram on which the update is based.</span>
-<span class="sd">    form : FormDiagram</span>
+<span class="sd">    form : :class:`FormDiagram`</span>
 <span class="sd">        The form diagram to update.</span>
 
 <span class="sd">    Returns</span>
@@ -462,7 +555,7 @@
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="n">_vertex_index</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">vertex_index</span><span class="p">()</span>
 
-    <span class="n">_known</span> <span class="o">=</span> <span class="p">[</span><span class="n">_vertex_index</span><span class="p">[</span><span class="nb">next</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">())]]</span>
+    <span class="n">_known</span> <span class="o">=</span> <span class="p">[</span><span class="n">_vertex_index</span><span class="p">[</span><span class="n">force</span><span class="o">.</span><span class="n">anchor</span><span class="p">()]]</span>
     <span class="n">_xy</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">_edges</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
     <span class="n">_edges</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">_vertex_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">_vertex_index</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_edges</span><span class="p">]</span>
