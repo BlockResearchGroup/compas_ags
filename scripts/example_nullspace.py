@@ -12,24 +12,31 @@ from compas_ags.ags import HorizontalFix
 
 
 # ------------------------------------------------------------------------------
-#   1. get lines of a plane triangle frame in equilibrium, its applied loads and reaction forces
+#   1. lines from isostatic structure from paper AGS
 # ------------------------------------------------------------------------------
 graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
 
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
+# ------------------------------------------------------------------------------
+#   2. set independent edge and assign load
+# ------------------------------------------------------------------------------
+u_edge = 0
+v_edge = 1
+f = -5.0
+l = form.edge_length(u_edge, v_edge)
+form.edge_attribute((u_edge, v_edge), 'q', f/l)
+form.edge_attribute((u_edge, v_edge), 'is_ind', True)
 
 # ------------------------------------------------------------------------------
-#   2. set the fixed vertices
+#   3. set the fixed vertices
 # ------------------------------------------------------------------------------
-left = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
-right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
+left = 5
+right = 3
+form.vertex_attribute(left, 'is_fixed', True)
+form.vertex_attribute(right, 'is_fixed', True)
 fixed = [left, right]
-
-for key in fixed:
-    form.vertex_attribute(key, 'is_fixed', True)
-form.vertex_attribute(key, 'is_anchor', True)
 
 # ------------------------------------------------------------------------------
 #   3. set applied load
@@ -47,7 +54,7 @@ force_update_from_form(force, form)
 force_key_xyz = {key: force.vertex_coordinates(key) for key in force.vertices()}
 
 # --------------------------------------------------------------------------
-#   4. force diagram manipulation and ompute the nullspace
+#   4. force diagram manipulation and compute the nullspace
 # --------------------------------------------------------------------------
 # set constraints
 C = ConstraintsCollection(form)
@@ -58,17 +65,16 @@ C.add_constraint(HorizontalFix(form, right))
 
 # fix the length of edges connecting leaf vertices
 C.constrain_dependent_leaf_edges_lengths()
+
 constraint_lines = C.get_lines()
 
 # compute the amount of nullspace modes
-# which means the amount of independent solutions of form diagrams
 ns = form_compute_nullspace(form, force, C)
 print("Dimension of nullspace: " + str(len(ns)))
 
 # --------------------------------------------------------------------------
 #   5. display force diagram and a specific solution of form diagram
 # --------------------------------------------------------------------------
-
 
 def show(i):
     # i is the index of nullspace mode
@@ -107,5 +113,5 @@ def show(i):
 
     viewer.show()
 
-
-show(0)
+for i in range(len(ns)):
+    show(i)

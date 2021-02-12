@@ -203,7 +203,7 @@ def form_compute_nullspace(form, force, constraints=None):
     r"""Compute the null space of a form diagram assuming a set of constraints.
     It returns the new position of the form diagram that represents how the
     form diagram can be changed without affecting the force diagram.
-    It corresponds to the nullspace of the Jacobian :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`
+    It corresponds to the nullspace of the Jacobian :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`.
 
     Parameters
     ----------
@@ -218,7 +218,7 @@ def form_compute_nullspace(form, force, constraints=None):
     Returns
     -------
     nullspace [list of arrays]
-        The modified diagrams thart require not movement in the force diagram.
+        The modified diagrams thart require no movement in the force diagram.
 
     References
     ----------
