@@ -22,6 +22,8 @@ class FormDiagram(Diagram):
         })
         self.update_default_vertex_attributes({
             'is_fixed': False,
+            'fix_x': False,
+            'fix_y': False,
             'cx': 0.0,
             'cy': 0.0,
         })
