@@ -22,6 +22,7 @@ from compas.numerical import normrow
 from compas.numerical import dof
 from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
+from compas.numerical import nullspace
 
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
