@@ -1,5 +1,3 @@
-import numpy as np
-
 import compas_ags
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
@@ -32,8 +30,8 @@ for index in edges_ind:
     form.edge_attribute((u, v), 'q', -1.)
 
 # set the fixed corners
-left = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
-right = list(form.vertices_where({'x': 43.4972961014, 'y': 0.0}))[0]
+left = 2
+right = 9
 fixed = [left, right]
 
 for key in fixed:
@@ -70,33 +68,22 @@ for u, v in force.edges():
         'style': '--'
     })
 
-
 # --------------------------------------------------------------------------
 #   3. force diagram manipulation and modify the form diagram
 # --------------------------------------------------------------------------
-# set constraints
-# find vertices 0,8,9 in the force diagram and move them to the right
-# which means making the internal forces and boundary forces smaller
-_xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-_x_min = min(_xy[:, 0])
 
-move_vertices = []
-for i, v in enumerate(_xy):
-    if v[0] > (_x_min-.1) and v[0] < (_x_min+.1):
-        move_vertices.append(i)
+# modify the geometry of the force diagram moving nodes further at right to the left
+move_vertices = [1, 2, 3, 4, 5, 6, 7]
+translation = -2.0
+for key in move_vertices:
+    x0 = force.vertex_attribute(key, 'x')
+    force.vertex_attribute(key, 'x', x0 + translation)
 
+# set constraints automatically with the form diagram's attributes
 C = ConstraintsCollection(form)
 C.constraints_from_form()
 
-# modify the geometry of the force diagram and update the form diagram using Newton's method
-translation = 2
-_xy = np.array(force.xy(), dtype=np.float64).reshape((-1, 2))
-_xy[move_vertices, 0] += translation
-_X_goal = np.vstack((np.asmatrix(_xy[:, 0]).transpose(), np.asmatrix(_xy[:, 1]).transpose()))
-form_update_from_force_newton(form, force, _X_goal, constraints=C)
-
-constraint_lines = C.get_lines()
-form_lines = form_lines + constraint_lines
+form_update_from_force_newton(form, force, constraints=C)
 
 # ------------------------------------------------------------------------------
 #   4. display the orginal configuration
