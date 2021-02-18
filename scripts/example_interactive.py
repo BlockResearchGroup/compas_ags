@@ -83,6 +83,8 @@ translation = 0.5
 force.vertex[4]['x'] -= translation
 
 form_update_from_force_newton(form, force, constraints=C)
+from compas_ags.ags import form_update_from_force
+form_update_from_force(form, force)
 
 # add arrow to lines to indicate movement
 force_lines.append({
