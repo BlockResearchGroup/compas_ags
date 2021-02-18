@@ -299,6 +299,8 @@ def form_update_from_force(form, force, kmax=100):
     leaves = [vertex_index[vertex] for vertex in form.leaves()]
     fixed = [vertex_index[vertex] for vertex in form.fixed()]
     free = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
+    fixed_x = [vertex_index[vertex] for vertex in form.fixed_x()]
+    fixed_y = [vertex_index[vertex] for vertex in form.fixed_y()]
     # --------------------------------------------------------------------------
     # force diagram
     # --------------------------------------------------------------------------

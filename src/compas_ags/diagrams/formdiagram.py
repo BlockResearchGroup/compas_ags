@@ -210,6 +210,12 @@ class FormDiagram(Diagram):
     def fixed(self):
         return list(self.vertices_where({'is_fixed': True}))
 
+    def fixed_x(self):
+        return list(self.vertices_where({'fix_x': True}))
+
+    def fixed_y(self):
+        return list(self.vertices_where({'fix_y': True}))
+
     def constrained(self):
         return [key for key, attr in self.vertices(True) if attr['cx'] or attr['cy']]
 
