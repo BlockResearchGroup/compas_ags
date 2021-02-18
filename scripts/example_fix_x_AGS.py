@@ -7,7 +7,6 @@ from compas_ags.ags import form_update_from_force
 from compas_ags.ags import form_update_q_from_qind
 from compas_ags.ags import force_update_from_form
 from compas_ags.ags import ConstraintsCollection
-# from compas_ags.ags import form_update_from_force_newton
 from compas_ags.ags import form_update_from_force
 
 # ------------------------------------------------------------------------------
@@ -75,7 +74,7 @@ for u, v in force.edges():
 
 # modify the geometry of the force diagram moving nodes further at right to the left
 move_vertices = [1, 2, 3, 4, 5, 6, 7]
-translation = -0.5
+translation = -1.0
 for key in move_vertices:
     x0 = force.vertex_attribute(key, 'x')
     force.vertex_attribute(key, 'x', x0 + translation)
