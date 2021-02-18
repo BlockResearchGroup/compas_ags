@@ -93,10 +93,10 @@ def update_form_from_force(xy, _xy, free, fixed_x, fixed_y, leaves, i_nbrs, ij_e
         XY coordinates of the vertices of the form diagram.
     _xy : array-like
         XY coordinates of the vertices of the force diagram.
-    free_x : list
-        Vertices of the form diagram free to move in ``x``.
-    free_y : list
-        Vertices of the form diagram free to move in ``y``.
+    fixed_x : list
+        Vertices of the form diagram fixed to move in ``x``.
+    fixed_y : list
+        Vertices of the form diagram fixed to move in ``y``.
     leaves : list
         The leaves of the form diagram.
     i_nbrs : list of list of int
