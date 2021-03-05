@@ -37,12 +37,6 @@ fixed = [left, right]
 for key in fixed:
     form.vertex_attribute(key, 'is_fixed', True)
 
-# set the horizontal fix in internal nodes:
-internal = [0, 4, 5, 6, 7, 8]
-
-for key in internal:
-    form.vertex_attribute(key, 'fix_x', True)
-
 # update the diagrams
 form_update_q_from_qind(form)
 force_update_from_form(force, form)
@@ -68,22 +62,25 @@ for u, v in force.edges():
         'style': '--'
     })
 
-edge_index = form.edge_index()
-# index = edge_index[edge_form]
-edges_force = list(force.ordered_edges(form))
-vertex_leaves= form.leaves()
-
 # Detect the leaves of form diagram:
 
 form.identify_constraints()
 
-for edge in form.leaf_edges():
-    index = edge_index[edge]
-    dual = edges_force[index]
-    sp, ep = form.edge_coordinates(*edge)
-    print('INDEX -->', index)
-    print('original edge -->', edge)
-    print('dual edge -->', dual)
+# Next
+# Reflect the leaves cosntraints in the force diagram:
+
+# edge_index = form.edge_index()
+# # index = edge_index[edge_form]
+# edges_force = list(force.ordered_edges(form))
+# vertex_leaves= form.leaves()
+
+# for edge in form.leaf_edges():
+#     index = edge_index[edge]
+#     dual = edges_force[index]
+#     sp, ep = form.edge_coordinates(*edge)
+#     print('INDEX -->', index)
+#     print('original edge -->', edge)
+#     print('dual edge -->', dual)
 
 force_edge_labels1 = {(u, v): index for index, (u, v) in enumerate(force.ordered_edges(form))}
 force_edge_labels2 = {(v, u): index for index, (u, v) in enumerate(force.ordered_edges(form))}
@@ -94,13 +91,13 @@ force_edge_labels = {**force_edge_labels1, **force_edge_labels2}
 # --------------------------------------------------------------------------
 
 # modify the geometry of the force diagram moving nodes further at right to the left
-# move_vertices = [0, 9, 8]
-# translation = +1.0
-# for key in move_vertices:
-#     x0 = force.vertex_attribute(key, 'x')
-#     force.vertex_attribute(key, 'x', x0 + translation)
+move_vertices = [0, 9, 8]
+translation = +1.0
+for key in move_vertices:
+    x0 = force.vertex_attribute(key, 'x')
+    force.vertex_attribute(key, 'x', x0 + translation)
 
-# form_update_from_force(form, force)
+form_update_from_force(form, force)
 
 # ------------------------------------------------------------------------------
 #   4. display the orginal configuration
@@ -113,7 +110,7 @@ viewer.draw_form(lines=form_lines,
                  vertexlabel={key: key for key in form.vertices()},
                  external_on=False,
                  vertexsize=0.2,
-                 vertexcolor={**{key: '#000000' for key in fixed}, **{key: '#FF0000' for key in form.fixed_x()}},
+                 vertexcolor={**{key: '#000000' for key in form.fixed()}, **{key: '#FF0000' for key in form.fixed_x()}},
                  edgelabel={uv: index for index, uv in enumerate(form.edges())}
                  )
 
