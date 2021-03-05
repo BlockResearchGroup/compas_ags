@@ -73,8 +73,8 @@ for u, v in force.edges():
 # --------------------------------------------------------------------------
 
 # modify the geometry of the force diagram moving nodes further at right to the left
-move_vertices = [1, 2, 3, 4, 5, 6, 7]
-translation = -1.0
+move_vertices = [0, 9, 8]
+translation = +1.0
 for key in move_vertices:
     x0 = force.vertex_attribute(key, 'x')
     force.vertex_attribute(key, 'x', x0 + translation)
