@@ -99,14 +99,15 @@
 <h1>update_form_from_force</h1>
 <dl class="function">
 <dt id="compas_ags.ags.update_form_from_force">
-<code class="sig-prename descclassname">compas_ags.ags.</code><code class="sig-name descname">update_form_from_force</code><span class="sig-paren">(</span><em class="sig-param">xy</em>, <em class="sig-param">_xy</em>, <em class="sig-param">free</em>, <em class="sig-param">leaves</em>, <em class="sig-param">i_nbrs</em>, <em class="sig-param">ij_e</em>, <em class="sig-param">_C</em>, <em class="sig-param">kmax=100</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/ags/core.html#update_form_from_force"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">compas_ags.ags.</code><code class="sig-name descname">update_form_from_force</code><span class="sig-paren">(</span><em class="sig-param">xy</em>, <em class="sig-param">_xy</em>, <em class="sig-param">free</em>, <em class="sig-param">fixed_x</em>, <em class="sig-param">fixed_y</em>, <em class="sig-param">leaves</em>, <em class="sig-param">i_nbrs</em>, <em class="sig-param">ij_e</em>, <em class="sig-param">_C</em>, <em class="sig-param">kmax=100</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/ags/core.html#update_form_from_force"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Update the coordinates of a form diagram using the coordinates of the corresponding force diagram.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>xy</strong> (<em>array-like</em>) – XY coordinates of the vertices of the form diagram.</p></li>
 <li><p><strong>_xy</strong> (<em>array-like</em>) – XY coordinates of the vertices of the force diagram.</p></li>
-<li><p><strong>free</strong> (<em>list</em>) – The free vertices of the form diagram.</p></li>
+<li><p><strong>fixed_x</strong> (<em>list</em>) – Vertices of the form diagram fixed to move in <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></li>
+<li><p><strong>fixed_y</strong> (<em>list</em>) – Vertices of the form diagram fixed to move in <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p></li>
 <li><p><strong>leaves</strong> (<em>list</em>) – The leaves of the form diagram.</p></li>
 <li><p><strong>i_nbrs</strong> (<em>list of list of int</em>) – Vertex neighbours per vertex.</p></li>
 <li><p><strong>ij_e</strong> (<em>dict</em>) – Edge index for every vertex pair.</p></li>
