@@ -254,14 +254,14 @@ class FormDiagram(Diagram):
             sp, ep = self.edge_coordinates(*edge)
             if abs(sp[0] - ep[0]) < tol:
                 if edge[0] in leaves:
-                    self.vertex_attribute(edge[1], 'fix_x', True)
+                    self.vertex_attribute(edge[1], 'is_fixed_x', True)
                 else:
-                    self.vertex_attribute(edge[0], 'fix_x', True)
+                    self.vertex_attribute(edge[0], 'is_fixed_x', True)
             if abs(sp[1] - ep[1]) < tol:
                 if edge[0] in leaves:
-                    self.vertex_attribute(edge[1], 'fix_y', True)
+                    self.vertex_attribute(edge[1], 'is_fixed_y', True)
                 else:
-                    self.vertex_attribute(edge[0], 'fix_y', True)
+                    self.vertex_attribute(edge[0], 'is_fixed_y', True)
 
     # def identify_fixed(self, points=None, fix_degree=1):
     #     for key, attr in self.vertices(True):
