@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   
-  <title>compas_ags - FormDiagram.ind</title>
+  <title>compas_ags - FormDiagram.identify_constraints</title>
   
 
   <meta charset="utf-8" />
@@ -19,11 +19,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="FormDiagram.index_edge" href="compas_ags.diagrams.FormDiagram.index_edge.html" />
+    <link rel="next" title="FormDiagram.ind" href="compas_ags.diagrams.FormDiagram.ind.html" />
   
 
   
-    <link rel="prev" title="FormDiagram.identify_constraints" href="compas_ags.diagrams.FormDiagram.identify_constraints.html" />
+    <link rel="prev" title="FormDiagram.has_vertex" href="compas_ags.diagrams.FormDiagram.has_vertex.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -90,19 +90,30 @@
             
               <li class="breadcrumb-item"><a href="compas_ags.diagrams.FormDiagram.html">FormDiagram</a></li>
             
-            <li class="breadcrumb-item active" aria-current="page">FormDiagram.ind</li>
+            <li class="breadcrumb-item active" aria-current="page">FormDiagram.identify_constraints</li>
           </ol>
         </nav>
         
 
         
         
-        <div class="detail section" id="formdiagram-ind">
-<h1>FormDiagram.ind</h1>
+        <div class="detail section" id="formdiagram-identify-constraints">
+<h1>FormDiagram.identify_constraints</h1>
 <dl class="method">
-<dt id="compas_ags.diagrams.FormDiagram.ind">
-<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">ind</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/diagrams/formdiagram.html#FormDiagram.ind"><span class="viewcode-link">[source]</span></a></dt>
-<dd></dd></dl>
+<dt id="compas_ags.diagrams.FormDiagram.identify_constraints">
+<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">identify_constraints</code><span class="sig-paren">(</span><em class="sig-param">tol=0.001</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/diagrams/formdiagram.html#FormDiagram.identify_constraints"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>Identify constraints on the Form Diagram based on the geometry.
+External loads define a line-load which constraint vertices in x, or y.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>tol</strong> (<em>float, optional</em>) – Tolerance to define if leaves lay in a vertical, or horizontal line.
+The default value is <cite>10E-4</cite>.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p><em>None</em> – The FormDiagram is modified in place.</p>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 
@@ -149,7 +160,7 @@
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">FormDiagram.ind</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">FormDiagram.identify_constraints</a></li>
 </ul>
 
       </div>
@@ -161,20 +172,20 @@
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-        <a href="compas_ags.diagrams.FormDiagram.identify_constraints.html" title="FormDiagram.identify_constraints" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+        <a href="compas_ags.diagrams.FormDiagram.has_vertex.html" title="FormDiagram.has_vertex" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
           <div class="nav-title flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Previous</div>
-            FormDiagram.identify_constraints
+            FormDiagram.has_vertex
           </div>
         </a>
       
 
       
-        <a href="compas_ags.diagrams.FormDiagram.index_edge.html" title="FormDiagram.index_edge" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <a href="compas_ags.diagrams.FormDiagram.ind.html" title="FormDiagram.ind" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
           <div class="nav-title footer-link flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Next</div>
-            FormDiagram.index_edge
+            FormDiagram.ind
           </div>
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
         </a>

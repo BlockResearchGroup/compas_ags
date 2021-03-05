@@ -315,11 +315,43 @@
         <span class="k">return</span> <span class="n">cx</span><span class="p">,</span> <span class="n">cy</span></div>
 
 <div class="viewcode-block" id="FormDiagram.ind"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.ind.html#compas_ags.diagrams.FormDiagram.ind">[docs]</a>    <span class="k">def</span> <span class="nf">ind</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_ind&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span></div></div>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;is_ind&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Identify features of the formdiagram based on geometrical inputs.</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="FormDiagram.identify_constraints"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.identify_constraints.html#compas_ags.diagrams.FormDiagram.identify_constraints">[docs]</a>    <span class="k">def</span> <span class="nf">identify_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">10e-4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Identify constraints on the Form Diagram based on the geometry.</span>
+<span class="sd">        External loads define a line-load which constraint vertices in x, or y.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        tol : float, optional</span>
+<span class="sd">            Tolerance to define if leaves lay in a vertical, or horizontal line.</span>
+<span class="sd">            The default value is `10E-4`.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None</span>
+<span class="sd">            The FormDiagram is modified in place.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fixed</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fixed</span><span class="p">()</span>
+        <span class="n">leaves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leaves</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">leaf_edges</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">fixed</span> <span class="ow">or</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">in</span> <span class="n">fixed</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_coordinates</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ep</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;is_fixed_x&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;is_fixed_x&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ep</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;is_fixed_y&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;is_fixed_y&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div></div>
 
     <span class="c1"># def identify_fixed(self, points=None, fix_degree=1):</span>
     <span class="c1">#     for key, attr in self.vertices(True):</span>
