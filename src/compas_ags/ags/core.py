@@ -36,6 +36,7 @@ __all__ = [
     'update_form_from_force',
     'get_jacobian_and_residual',
     'compute_jacobian',
+    'parallelise_edges',
 ]
 
 
@@ -243,7 +244,7 @@ def update_form_from_force(xy, _xy, free, fixed_x, fixed_y, leaves, i_nbrs, ij_e
         xy[i] = xy[j] + xy0[i] - xy0[j]
 
 
-def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lmin=None, lmax=None, callback=None):
+def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lmin=None, lmax=None, neighbours_exclude=None, callback=None):
     """Parallelise the edges of a mesh to given target vectors.
 
     Parameters
@@ -289,12 +290,18 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
     fixed = fixed or []
     fixed = set(fixed)
 
+    fixed_y = [2, 0, 4, 5, 6]
+    # fixed_y = []
+
     n = len(xy)
 
     for k in range(kmax):
+        # print('\n-------iteration', k)
         xy0 = [[x, y] for x, y in xy]
         uv = [[xy[j][0] - xy[i][0], xy[j][1] - xy[i][1]] for i, j in edges]
         lengths = [(dx**2 + dy**2)**0.5 for dx, dy in uv]
+        # print('lengths original / imposed / k:', k)
+        # print(lengths)
 
         if lmin:
             lengths[:] = [max(a, b) for a, b in zip(lengths, lmin)]
@@ -302,32 +309,54 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
         if lmax:
             lengths[:] = [min(a, b) for a, b in zip(lengths, lmax)]
 
+        # print(lengths)
+
         for j in range(n):
+            print('----- Vertex: ', j)
             if j in fixed:
+                print('Vertex is fixed')
                 continue
+
+            print('Vertex initial coordinates:', xy[j])
 
             nbrs = i_nbrs[j]
             x, y = 0.0, 0.0
 
+            len_nbrs = 0
             for i in nbrs:
-                ax, ay = xy0[i]
 
+                print('Vertex neighbour:', i, xy0[i])
+                if (i, j) in neighbours_exclude:
+                    continue
+                elif (j, i) in neighbours_exclude:
+                    continue
+
+                len_nbrs += 1
+
+                ax, ay = xy0[i]
                 if (i, j) in ij_e:
+                    print('i, j direction (+)')
                     e = ij_e[(i, j)]
                     l = lengths[e]  # noqa: E741
                     tx, ty = targets[e]
                     x += ax + l * tx
                     y += ay + l * ty
+                    print('l, tx, ty:', l, tx, ty)
+                    print('dx, dy:', ax + l * tx, ay + l * ty)
 
                 else:
+                    print('i, j direction (-)')
                     e = ij_e[(j, i)]
                     l = lengths[e]  # noqa: E741
                     tx, ty = targets[e]
                     x += ax - l * tx
                     y += ay - l * ty
+                    print('l, tx, ty:', l, tx, ty)
+                    print('dx, dy:', ax - l * tx, ay - l * ty)
 
-            xy[j][0] = x / len(nbrs)
-            xy[j][1] = y / len(nbrs)
+            xy[j][0] = x / len_nbrs
+            if j not in fixed_y:
+                xy[j][1] = y / len_nbrs
 
         for (i, j) in ij_e:
             e = ij_e[(i, j)]
@@ -336,6 +365,18 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
                 c = midpoint_point_point_xy(xy[i], xy[j])
                 xy[i][:] = c[:][:2]
                 xy[j][:] = c[:][:2]
+
+            # if e in target_none:
+            #     print('is target none')
+            #     print(e)
+            #     print(targets[e])
+            #     sp = xy[i]
+            #     ep = xy[j]
+            #     dx = ep[0] - sp[0]
+            #     dy = ep[1] - sp[1]
+            #     l = (dx**2 + dy**2)**0.5
+            #     targets[e] = [dx/l, dy/l]
+            #     print(targets[e])
 
         if callback:
             callback(k, xy, edges)
@@ -465,6 +506,9 @@ def compute_jacobian(form, force):
     Ed = E[:, dependent_edges_idx]
     Eid = E[:, independent_edges_idx]
     qid = q[independent_edges_idx]
+    print(array(Ed).shape)
+    print(E.shape)
+    print('Number of ind / dep:', len(independent_edges), len(dependent_edges_idx))
     EdInv = inv(array(Ed))  # TODO: Explore sparse (spinv)
 
     # --------------------------------------------------------------------------
