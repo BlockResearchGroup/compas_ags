@@ -8,12 +8,13 @@ from compas_ags.ags import form_update_q_from_qind
 from compas_ags.ags import force_update_from_form
 from compas_ags.ags import ConstraintsCollection
 from compas_ags.ags import form_update_from_force_newton
+from compas_ags.ags import form_update_from_force
 
 # ------------------------------------------------------------------------------
 #   1. create a simple arch from nodes and edges, make form and force diagrams
 # ------------------------------------------------------------------------------
 
-graph = FormGraph.from_json(compas_ags.get('paper/gs_arch.json'))
+graph = FormGraph.from_obj(compas_ags.get('paper/gs_truss.obj'))
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
@@ -22,23 +23,23 @@ force = ForceDiagram.from_formdiagram(form)
 # ------------------------------------------------------------------------------
 # prescribe force density to edge
 edges_ind = [
-    (2, 11),
+    (6, 14),
 ]
 for index in edges_ind:
     u, v = index
     form.edge_attribute((u, v), 'is_ind', True)
-    form.edge_attribute((u, v), 'q', -1.)
+    form.edge_attribute((u, v), 'q', +1.)
 
 # set the fixed corners
-left = 2
-right = 9
+left = 5
+right = 1
 fixed = [left, right]
 
 for key in fixed:
     form.vertex_attribute(key, 'is_fixed', True)
 
 # set the horizontal fix in internal nodes:
-internal = [0, 4, 5, 6, 7, 8]
+internal = [0, 2, 3, 4]
 
 for key in internal:
     form.vertex_attribute(key, 'is_fixed_x', True)
@@ -68,13 +69,18 @@ for u, v in force.edges():
         'style': '--'
     })
 
+viewer = Viewer(form, force, delay_setup=False)
+viewer.draw_form(vertexlabel={key: key for key in form.vertices()})
+viewer.draw_force(vertexlabel={key: key for key in force.vertices()})
+viewer.show()
+
 # --------------------------------------------------------------------------
 #   3. force diagram manipulation and modify the form diagram
 # --------------------------------------------------------------------------
 
 # modify the geometry of the force diagram moving nodes further at right to the left
-move_vertices = [0, 9, 8]
-translation = +1.0
+move_vertices = [6, 7, 8, 9, 10]
+translation = +10.0
 for key in move_vertices:
     x0 = force.vertex_attribute(key, 'x')
     force.vertex_attribute(key, 'x', x0 + translation)
@@ -83,7 +89,8 @@ for key in move_vertices:
 C = ConstraintsCollection(form)
 C.constraints_from_form()
 
-form_update_from_force_newton(form, force, constraints=C)
+# form_update_from_force_newton(form, force, constraints=C)
+form_update_from_force(form, force)
 
 # ------------------------------------------------------------------------------
 #   4. display the orginal configuration

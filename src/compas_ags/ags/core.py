@@ -84,7 +84,7 @@ def update_q_from_qind(E, q, dep, ind):
     q[dep] = qd
 
 
-def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
+def update_form_from_force(xy, _xy, free, fixed_x, fixed_y, leaves, i_nbrs, ij_e, _C, kmax=100):
     r"""Update the coordinates of a form diagram using the coordinates of the corresponding force diagram.
 
     Parameters
@@ -93,8 +93,10 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
         XY coordinates of the vertices of the form diagram.
     _xy : array-like
         XY coordinates of the vertices of the force diagram.
-    free : list
-        The free vertices of the form diagram.
+    fixed_x : list
+        Vertices of the form diagram fixed to move in ``x``.
+    fixed_y : list
+        Vertices of the form diagram fixed to move in ``y``.
     leaves : list
         The leaves of the form diagram.
     i_nbrs : list of list of int
@@ -158,6 +160,21 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
     A = zeros((2 * len(free), 2 * len(free)), dtype=float64)
     b = zeros((2 * len(free), 1), dtype=float64)
 
+    free_x = []  # list of vertices with free x - to be updated in loop
+    free_y = []
+    is_free_x = [True] * len(free)  # bool for free vertices - to be updated in loop
+    is_free_y = [True] * len(free)
+    for i in range(len(free)):
+        vertex = free[i]
+        if vertex in fixed_x:
+            is_free_x[i] = False
+        else:
+            free_x.append(vertex)
+        if vertex in fixed_y:
+            is_free_y[i] = False
+        else:
+            free_y.append(vertex)
+
     # update the free vertices
     for k in range(kmax):
         row = 0
@@ -169,7 +186,8 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
         # edge in the force diagram.
         # the intersection is the point that minimises the distance to all connected
         # lines.
-        for i in free:
+        for count in range(len(free)):
+            i = free[count]
             R = zeros((2, 2), dtype=float64)
             q = zeros((2, 1), dtype=float64)
 
@@ -189,6 +207,22 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
                 R += r
                 q += r.dot(a.T)
 
+            if not is_free_x[count]:
+                n_ = zeros((1, 2))
+                n_[0, 1] = 1.0
+                r = I - n_.T.dot(n_)
+                pt = xy[i].reshape(1, 2) - n_
+                R += r
+                q += r.dot(pt.T)
+
+            if not is_free_y[count]:
+                n_ = zeros((1, 2))
+                n_[0, 0] = 1.0
+                r = I - n_.T.dot(n_)
+                pt = xy[i].reshape(1, 2) - n_
+                R += r
+                q += r.dot(pt.T)
+
             A[row: row + 2, row: row + 2] = R
             b[row: row + 2] = q
             row += 2
@@ -199,7 +233,9 @@ def update_form_from_force(xy, _xy, free, leaves, i_nbrs, ij_e, _C, kmax=100):
         # res = solve(A.T.dot(A), A.T.dot(b))
         # xy[free] = res.reshape((-1, 2), order='C')
         res = lstsq(A, b)
-        xy[free] = res[0].reshape((-1, 2), order='C')
+        xy_lstsq = res[0].reshape((-1, 2), order='C')
+        xy[free_x, 0] = xy_lstsq[is_free_x, 0]
+        xy[free_y, 1] = xy_lstsq[is_free_y, 1]
 
     # reconnect leaves
     for i in leaves:

@@ -7,7 +7,7 @@ from compas_ags.ags import form_update_from_force
 from compas_ags.ags import form_update_q_from_qind
 from compas_ags.ags import force_update_from_form
 from compas_ags.ags import ConstraintsCollection
-from compas_ags.ags import form_update_from_force_newton
+from compas_ags.ags import form_update_from_force
 
 # ------------------------------------------------------------------------------
 #   1. create a simple arch from nodes and edges, make form and force diagrams
@@ -79,11 +79,7 @@ for key in move_vertices:
     x0 = force.vertex_attribute(key, 'x')
     force.vertex_attribute(key, 'x', x0 + translation)
 
-# set constraints automatically with the form diagram's attributes
-C = ConstraintsCollection(form)
-C.constraints_from_form()
-
-form_update_from_force_newton(form, force, constraints=C)
+form_update_from_force(form, force)
 
 # ------------------------------------------------------------------------------
 #   4. display the orginal configuration
