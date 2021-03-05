@@ -41,7 +41,7 @@ for key in fixed:
 internal = [0, 4, 5, 6, 7, 8]
 
 for key in internal:
-    form.vertex_attribute(key, 'fix_x', True)
+    form.vertex_attribute(key, 'is_fixed_x', True)
 
 # update the diagrams
 form_update_q_from_qind(form)
