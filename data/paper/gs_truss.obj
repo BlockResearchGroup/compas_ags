@@ -1,0 +1,163 @@
+# Rhino
+
+mtllib gs_truss.mtl
+usemtl diffuse_0_0_0_255
+v 8 1.2799999999999998 0
+v 10 0 0
+cstype bspline
+deg 1
+curv 0 2.3745315327449328 1 2
+parm u 0 0 2.3745315327449328 2.3745315327449328
+end
+usemtl diffuse_0_0_0_255
+v 6 1.9199999999999997 0
+v 8 1.2799999999999998 0
+cstype bspline
+deg 1
+curv 0 2.09990475974507 3 4
+parm u 0 0 2.09990475974507 2.09990475974507
+end
+usemtl diffuse_0_0_0_255
+v 3.9999999999999991 1.9199999999999997 0
+v 6 1.9199999999999997 0
+cstype bspline
+deg 1
+curv 0 2.0000000000000009 5 6
+parm u 0 0 2.0000000000000009 2.0000000000000009
+end
+usemtl diffuse_0_0_0_255
+v 1.9999999999999996 1.2799999999999998 0
+v 3.9999999999999991 1.9199999999999997 0
+cstype bspline
+deg 1
+curv 0 2.0999047597450695 7 8
+parm u 0 0 2.0999047597450695 2.0999047597450695
+end
+usemtl diffuse_0_0_0_255
+v 0 0 0
+v 1.9999999999999996 1.2799999999999998 0
+cstype bspline
+deg 1
+curv 0 2.3745315327449323 9 10
+parm u 0 0 2.3745315327449323 2.3745315327449323
+end
+usemtl diffuse_0_0_0_255
+v 2 0 0
+v 1.9999999999999996 1.2799999999999998 0
+cstype bspline
+deg 1
+curv 0 1.2799999999999998 11 12
+parm u 0 0 1.2799999999999998 1.2799999999999998
+end
+usemtl diffuse_0_0_0_255
+v 4 0 0
+v 3.9999999999999991 1.9199999999999997 0
+cstype bspline
+deg 1
+curv 0 1.9199999999999997 13 14
+parm u 0 0 1.9199999999999997 1.9199999999999997
+end
+usemtl diffuse_0_0_0_255
+v 8 0 0
+v 8 1.2799999999999998 0
+cstype bspline
+deg 1
+curv 0 1.2799999999999998 15 16
+parm u 0 0 1.2799999999999998 1.2799999999999998
+end
+usemtl diffuse_0_0_0_255
+v 6.0000000000000009 0 0
+v 6 1.9199999999999997 0
+cstype bspline
+deg 1
+curv 0 1.9199999999999997 17 18
+parm u 0 0 1.9199999999999997 1.9199999999999997
+end
+usemtl diffuse_0_0_0_255
+v 10 0 0
+v 10 -2 0
+cstype bspline
+deg 1
+curv 0 2 19 20
+parm u 0 0 2 2
+end
+usemtl diffuse_0_0_0_255
+v 8 0 0
+v 8 -2 0
+cstype bspline
+deg 1
+curv 0 2 21 22
+parm u 0 0 2 2
+end
+usemtl diffuse_0_0_0_255
+v 6.0000000000000009 0 0
+v 6.0000000000000009 -2 0
+cstype bspline
+deg 1
+curv 0 2 23 24
+parm u 0 0 2 2
+end
+usemtl diffuse_0_0_0_255
+v 4 0 0
+v 4 -2 0
+cstype bspline
+deg 1
+curv 0 2 25 26
+parm u 0 0 2 2
+end
+usemtl diffuse_0_0_0_255
+v 2 0 0
+v 2 -2 0
+cstype bspline
+deg 1
+curv 0 2 27 28
+parm u 0 0 2 2
+end
+usemtl diffuse_0_0_0_255
+v 0 0 0
+v 0 -2 0
+cstype bspline
+deg 1
+curv 0 2 29 30
+parm u 0 0 2 2
+end
+usemtl diffuse_0_0_0_255
+v 8 0 0
+v 10 0 0
+cstype bspline
+deg 1
+curv 8 10 31 32
+parm u 8 8 10 10
+end
+usemtl diffuse_0_0_0_255
+v 6.0000000000000009 0 0
+v 8 0 0
+cstype bspline
+deg 1
+curv 6.0000000000000009 8 33 34
+parm u 6.0000000000000009 6.0000000000000009 8 8
+end
+usemtl diffuse_0_0_0_255
+v 4 0 0
+v 6.0000000000000009 0 0
+cstype bspline
+deg 1
+curv 4 6.0000000000000009 35 36
+parm u 4 4 6.0000000000000009 6.0000000000000009
+end
+usemtl diffuse_0_0_0_255
+v 2 0 0
+v 4 0 0
+cstype bspline
+deg 1
+curv 2 4 37 38
+parm u 2 2 4 4
+end
+usemtl diffuse_0_0_0_255
+v 0 0 0
+v 2 0 0
+cstype bspline
+deg 1
+curv 0 2 39 40
+parm u 0 0 2 2
+end

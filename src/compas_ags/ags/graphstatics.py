@@ -354,6 +354,8 @@ def form_update_from_force(form, force, kmax=100):
     leaves = [vertex_index[vertex] for vertex in form.leaves()]
     fixed = [vertex_index[vertex] for vertex in form.fixed()]
     free = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
+    fixed_x = [vertex_index[vertex] for vertex in form.fixed_x()]
+    fixed_y = [vertex_index[vertex] for vertex in form.fixed_y()]
     # --------------------------------------------------------------------------
     # force diagram
     # --------------------------------------------------------------------------
@@ -370,7 +372,7 @@ def form_update_from_force(form, force, kmax=100):
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # re-add the leaves and leaf-edges
     # --------------------------------------------------------------------------
-    update_form_from_force(xy, _xy, free, leaves, i_j, ij_e, _C, kmax=kmax)
+    update_form_from_force(xy, _xy, free, fixed_x, fixed_y, leaves, i_j, ij_e, _C, kmax=kmax)
     # --------------------------------------------------------------------------
     # update
     # --------------------------------------------------------------------------
