@@ -37,12 +37,6 @@ fixed = [left, right]
 for key in fixed:
     form.vertex_attribute(key, 'is_fixed', True)
 
-# set the horizontal fix in internal nodes:
-internal = [0, 4, 5, 6, 7, 8]
-
-for key in internal:
-    form.vertex_attribute(key, 'is_fixed_x', True)
-
 # update the diagrams
 form_update_q_from_qind(form)
 force_update_from_form(force, form)
@@ -68,6 +62,30 @@ for u, v in force.edges():
         'style': '--'
     })
 
+# Detect the leaves of form diagram:
+
+form.identify_constraints()
+
+# Next
+# Reflect the leaves cosntraints in the force diagram:
+
+# edge_index = form.edge_index()
+# # index = edge_index[edge_form]
+# edges_force = list(force.ordered_edges(form))
+# vertex_leaves= form.leaves()
+
+# for edge in form.leaf_edges():
+#     index = edge_index[edge]
+#     dual = edges_force[index]
+#     sp, ep = form.edge_coordinates(*edge)
+#     print('INDEX -->', index)
+#     print('original edge -->', edge)
+#     print('dual edge -->', dual)
+
+force_edge_labels1 = {(u, v): index for index, (u, v) in enumerate(force.ordered_edges(form))}
+force_edge_labels2 = {(v, u): index for index, (u, v) in enumerate(force.ordered_edges(form))}
+force_edge_labels = {**force_edge_labels1, **force_edge_labels2}
+
 # --------------------------------------------------------------------------
 #   3. force diagram manipulation and modify the form diagram
 # --------------------------------------------------------------------------
@@ -92,14 +110,14 @@ viewer.draw_form(lines=form_lines,
                  vertexlabel={key: key for key in form.vertices()},
                  external_on=False,
                  vertexsize=0.2,
-                 vertexcolor={key: '#000000' for key in fixed},
+                 vertexcolor={**{key: '#000000' for key in form.fixed()}, **{key: '#FF0000' for key in form.fixed_x()}},
                  edgelabel={uv: index for index, uv in enumerate(form.edges())}
                  )
 
 viewer.draw_force(lines=force_lines,
                   vertexlabel={key: key for key in force.vertices()},
                   vertexsize=0.2,
-                  edgelabel={uv: index for index, uv in enumerate(force.edges())}
+                  edgelabel=force_edge_labels
                   )
 
 viewer.show()

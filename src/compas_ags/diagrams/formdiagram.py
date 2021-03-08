@@ -22,8 +22,8 @@ class FormDiagram(Diagram):
         })
         self.update_default_vertex_attributes({
             'is_fixed': False,
-            'fix_x': False,
-            'fix_y': False,
+            'is_fixed_x': False,
+            'is_fixed_y': False,
             'cx': 0.0,
             'cy': 0.0,
         })
@@ -211,10 +211,10 @@ class FormDiagram(Diagram):
         return list(self.vertices_where({'is_fixed': True}))
 
     def fixed_x(self):
-        return list(self.vertices_where({'fix_x': True, 'is_fixed': False}))
+        return list(self.vertices_where({'is_fixed_x': True, 'is_fixed': False}))
 
     def fixed_y(self):
-        return list(self.vertices_where({'fix_y': True, 'is_fixed': False}))
+        return list(self.vertices_where({'is_fixed_y': True, 'is_fixed': False}))
 
     def constrained(self):
         return [key for key, attr in self.vertices(True) if attr['cx'] or attr['cy']]
@@ -230,6 +230,38 @@ class FormDiagram(Diagram):
     # --------------------------------------------------------------------------
     # Identify features of the formdiagram based on geometrical inputs.
     # --------------------------------------------------------------------------
+
+    def identify_constraints(self, tol=10e-4):
+        """Identify constraints on the Form Diagram based on the geometry.
+        External loads define a line-load which constraint vertices in x, or y.
+
+        Parameters
+        ----------
+        tol : float, optional
+            Tolerance to define if leaves lay in a vertical, or horizontal line.
+            The default value is `10E-4`.
+
+        Returns
+        -------
+        None
+            The FormDiagram is modified in place.
+        """
+        fixed = self.fixed()
+        leaves = self.leaves()
+        for edge in self.leaf_edges():
+            if edge[0] in fixed or edge[1] in fixed:
+                continue
+            sp, ep = self.edge_coordinates(*edge)
+            if abs(sp[0] - ep[0]) < tol:
+                if edge[0] in leaves:
+                    self.vertex_attribute(edge[1], 'is_fixed_x', True)
+                else:
+                    self.vertex_attribute(edge[0], 'is_fixed_x', True)
+            if abs(sp[1] - ep[1]) < tol:
+                if edge[0] in leaves:
+                    self.vertex_attribute(edge[1], 'is_fixed_y', True)
+                else:
+                    self.vertex_attribute(edge[0], 'is_fixed_y', True)
 
     # def identify_fixed(self, points=None, fix_degree=1):
     #     for key, attr in self.vertices(True):

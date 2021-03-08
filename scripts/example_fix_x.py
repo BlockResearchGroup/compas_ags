@@ -41,7 +41,7 @@ for key in fixed:
 internal = [0, 4, 5, 6, 7, 8]
 
 for key in internal:
-    form.vertex_attribute(key, 'fix_x', True)
+    form.vertex_attribute(key, 'is_fixed_x', True)
 
 # update the diagrams
 form_update_q_from_qind(form)
@@ -73,8 +73,8 @@ for u, v in force.edges():
 # --------------------------------------------------------------------------
 
 # modify the geometry of the force diagram moving nodes further at right to the left
-move_vertices = [1, 2, 3, 4, 5, 6, 7]
-translation = -2.0
+move_vertices = [0, 9, 8]
+translation = +1.0
 for key in move_vertices:
     x0 = force.vertex_attribute(key, 'x')
     force.vertex_attribute(key, 'x', x0 + translation)
