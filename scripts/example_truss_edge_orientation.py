@@ -1,4 +1,5 @@
 import compas_ags
+import math
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
@@ -15,6 +16,12 @@ from compas_ags.ags import form_update_from_force
 # ------------------------------------------------------------------------------
 
 graph = FormGraph.from_obj(compas_ags.get('paper/gs_truss.obj'))
+
+# Add horizontal line to graph - Structure isostatic
+lines = graph.to_lines()
+lines.append(([-2.0, 0.0, 0.0], [0.0, 0.0, 0.0]))
+graph = FormGraph.from_lines(lines)
+
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
 
@@ -23,20 +30,30 @@ force = ForceDiagram.from_formdiagram(form)
 # ------------------------------------------------------------------------------
 # prescribe force density to edge
 edges_ind = [
-    (6, 14),
+    (8, 9),
 ]
 for index in edges_ind:
     u, v = index
     form.edge_attribute((u, v), 'is_ind', True)
     form.edge_attribute((u, v), 'q', +1.)
 
+index_edge = form.index_edge()
+
 # set the fixed corners
-left = 5
+left = 6
 right = 1
-fixed = [left, right]
+# fixed = [left, right]
+fixed = [left]
+# fixed = [right]
 
 for key in fixed:
     form.vertex_attribute(key, 'is_fixed', True)
+
+# fix edges orientation
+edges_fix_direct = [12, 13, 15, 18, 4]
+
+for index in edges_fix_direct:
+    form.edge_attribute(index_edge[index], 'has_fixed_direct', True)
 
 # update the diagrams
 form_update_q_from_qind(form)
@@ -79,11 +96,23 @@ force_edge_labels = {**force_edge_labels1, **force_edge_labels2}
 # --------------------------------------------------------------------------
 
 # modify the geometry of the force diagram moving nodes further at right to the left
-move_vertices = [6, 7, 8, 9, 10]
+move_vertices = [7, 8, 9, 10, 11]
 translation = +2.0
+# for key in move_vertices:
+#     x0 = force.vertex_attribute(key, 'x')
+#     force.vertex_attribute(key, 'x', x0 + translation)
+
+L = force.edge_length(*force.ordered_edges(form)[1])
+xc, yc, _ = force.vertex_coordinates(0)
+
 for key in move_vertices:
-    x0 = force.vertex_attribute(key, 'x')
-    force.vertex_attribute(key, 'x', x0 + translation)
+    _, yi, _ = force.vertex_coordinates(key)
+    x = - math.sqrt(L**2 - (yi - yc)**2) + xc
+    force.vertex_attribute(key, 'x', x)
+
+# for key in move_vertices:
+#     y0 = force.vertex_attribute(key, 'y')
+#     force.vertex_attribute(key, 'y', y0 - translation/2)
 
 # set constraints automatically with the form diagram's attributes
 C = ConstraintsCollection(form)

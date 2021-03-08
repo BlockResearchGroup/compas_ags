@@ -37,6 +37,7 @@ class FormDiagram(Diagram):
             'is_external': False,
             'is_reaction': False,
             'is_load': False,
+            'has_fixed_direct': False,
         })
 
     @property
