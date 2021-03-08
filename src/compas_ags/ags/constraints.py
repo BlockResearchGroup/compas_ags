@@ -97,9 +97,9 @@ class ConstraintsCollection(object):
             self.add_constraint(VerticalFix(self.form, key))
 
         # fix x or y coordinates of the non-fixed vertices
-        for key in self.form.vertices_where({'fix_x': True, 'is_fixed': False}):
+        for key in self.form.vertices_where({'is_fixed_x': True, 'is_fixed': False}):
             self.add_constraint(HorizontalFix(self.form, key))
-        for key in self.form.vertices_where({'fix_y': True, 'is_fixed': False}):
+        for key in self.form.vertices_where({'is_fixed_y': True, 'is_fixed': False}):
             self.add_constraint(VerticalFix(self.form, key))
 
         self.constrain_dependent_leaf_edges_lengths()
