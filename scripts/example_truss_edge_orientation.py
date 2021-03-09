@@ -1,23 +1,20 @@
 import compas_ags
-import math
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 from compas_ags.viewers import Viewer
-from compas_ags.ags import form_update_from_force
 from compas_ags.ags import form_update_q_from_qind
 from compas_ags.ags import force_update_from_form
-from compas_ags.ags import ConstraintsCollection
-from compas_ags.ags import form_update_from_force_newton
 from compas_ags.ags import form_update_from_force
+from compas_ags.ags import force_update_from_constraints
 
 # ------------------------------------------------------------------------------
-#   1. create a simple arch from nodes and edges, make form and force diagrams
+#   1. Get OBJ file for the geometry
 # ------------------------------------------------------------------------------
 
 graph = FormGraph.from_obj(compas_ags.get('paper/gs_truss.obj'))
 
-# Add horizontal line to graph - Structure isostatic
+# Add horizontal line to graph to make Structure isostatic.
 lines = graph.to_lines()
 lines.append(([-2.0, 0.0, 0.0], [0.0, 0.0, 0.0]))
 graph = FormGraph.from_lines(lines)
@@ -42,18 +39,10 @@ index_edge = form.index_edge()
 # set the fixed corners
 left = 6
 right = 1
-# fixed = [left, right]
-fixed = [left]
-# fixed = [right]
+fixed = [left, right]
 
 for key in fixed:
     form.vertex_attribute(key, 'is_fixed', True)
-
-# fix edges orientation
-edges_fix_direct = [12, 13, 15, 18, 4]
-
-for index in edges_fix_direct:
-    form.edge_attribute(index_edge[index], 'has_fixed_direct', True)
 
 # update the diagrams
 form_update_q_from_qind(form)
@@ -80,52 +69,65 @@ for u, v in force.edges():
         'style': '--'
     })
 
-# viewer = Viewer(form, force, delay_setup=False)
-# viewer.draw_form(vertexlabel={key: key for key in form.vertices()})
-# viewer.draw_force(vertexlabel={key: key for key in force.vertices()})
-# viewer.show()
+force_edges = force.ordered_edges(form)
 
-form.identify_constraints()
-
-force_edge_labels1 = {(u, v): index for index, (u, v) in enumerate(force.ordered_edges(form))}
-force_edge_labels2 = {(v, u): index for index, (u, v) in enumerate(force.ordered_edges(form))}
+force_edge_labels1 = {(u, v): index for index, (u, v) in enumerate(force_edges)}
+force_edge_labels2 = {(v, u): index for index, (u, v) in enumerate(force_edges)}
 force_edge_labels = {**force_edge_labels1, **force_edge_labels2}
 
-# --------------------------------------------------------------------------
-#   3. force diagram manipulation and modify the form diagram
-# --------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
+#   3. prescribe constraints on the form
+# ------------------------------------------------------------------------------
 
-# modify the geometry of the force diagram moving nodes further at right to the left
-move_vertices = [7, 8, 9, 10, 11]
-translation = +2.0
-# for key in move_vertices:
-#     x0 = force.vertex_attribute(key, 'x')
-#     force.vertex_attribute(key, 'x', x0 + translation)
+# # A. Fix orientation of edges at bottom chord
+edges_fix_orient = [13, 14, 16, 18, 4]
 
+for index in edges_fix_orient:
+    form.edge_attribute(index_edge[index], 'has_fixed_orientation', True)
+
+# B. Assign forces on the top chord to have the same length
+index_edges_constant_force = [0, 1, 5, 7, 9]
 L = force.edge_length(*force.ordered_edges(form)[1])
-xc, yc, _ = force.vertex_coordinates(0)
 
-for key in move_vertices:
-    _, yi, _ = force.vertex_coordinates(key)
-    x = - math.sqrt(L**2 - (yi - yc)**2) + xc
-    force.vertex_attribute(key, 'x', x)
+for index in index_edges_constant_force:
+    form.edge_attribute(index_edge[index], 'target_length', L)
 
-# for key in move_vertices:
-#     y0 = force.vertex_attribute(key, 'y')
-#     force.vertex_attribute(key, 'y', y0 - translation/2)
+# C. Make edge 4 short (less force)  - Try options B and C...
+# edges_change = [4, 13]
+# new_length = 5.5
+# for edge_change in edges_change:
+#     form.edge_attribute(index_edge[edge_change], 'target_length', new_length)
 
-# set constraints automatically with the form diagram's attributes
-C = ConstraintsCollection(form)
-C.constraints_from_form()
+viewer = Viewer(form, force, delay_setup=False)
+viewer.draw_form(edgelabel={uv: index for index, uv in enumerate(form.edges())})
+viewer.draw_force(edgelabel=force_edge_labels)
+viewer.show()
 
-# form_update_from_force_newton(form, force, constraints=C)
+# --------------------------------------------------------------------------
+#   4. find force diagram to respect force/geometry constraints and update equilibtium
+# --------------------------------------------------------------------------
+
+# Identify auto constraints
+form.identify_constraints()
+
+# Reflect all constraints to force diagram
+force.constraints_from_dual()
+
+# Update force diagram given constraints
+force_update_from_constraints(force)
+
+# Update form diagram based on force diagram
 form_update_from_force(form, force)
 
 # ------------------------------------------------------------------------------
-#   4. display the orginal configuration
+#   5. display the orginal configuration
 #      and the configuration after modifying the force diagram
 # ------------------------------------------------------------------------------
 viewer = Viewer(form, force, delay_setup=False)
+
+lengths_uv = {}
+for u, v in force.edges():
+    lengths_uv[(u, v)] = force.edge_length(u, v)
 
 viewer.draw_form(lines=form_lines,
                  forces_on=True,
@@ -133,13 +135,12 @@ viewer.draw_form(lines=form_lines,
                  external_on=False,
                  vertexsize=0.2,
                  vertexcolor={key: '#000000' for key in fixed},
-                 edgelabel={uv: index for index, uv in enumerate(form.edges())}
                  )
 
 viewer.draw_force(lines=force_lines,
                   vertexlabel={key: key for key in force.vertices()},
                   vertexsize=0.2,
-                  edgelabel=force_edge_labels
+                  edgelabel=lengths_uv
                   )
 
 viewer.show()
