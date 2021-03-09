@@ -26,8 +26,6 @@ from compas.numerical import equilibrium_matrix
 from compas.numerical import laplacian_matrix
 from compas.numerical import solve_with_known
 
-from compas.geometry import midpoint_point_point_xy
-
 from compas_ags.exceptions import SolutionError
 
 
@@ -326,7 +324,7 @@ def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, f
                     signe = -1.0
 
                 if target_lengths[e]:               # edges with constraint on length ...
-                    l = target_lengths[e]
+                    lij = target_lengths[e]
                     if target_vectors[e]:           # edges with constraint on length + orientation
                         tx, ty = target_vectors[e]
                     else:                           # edges with constraint on length only
@@ -335,13 +333,13 @@ def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, f
                 else:
                     if target_vectors[e]:           # edges with constraint on orientation only
                         tx, ty = target_vectors[e]
-                        l = lengths[e]
+                        lij = lengths[e]
                     else:
                         continue                    # edges to discard
 
                 ax, ay = xy0[i]
-                x += ax + signe * l * tx
-                y += ay + signe * l * ty
+                x += ax + signe * lij * tx
+                y += ay + signe * lij * ty
                 len_nbrs += 1
 
             if j not in fixed_x:

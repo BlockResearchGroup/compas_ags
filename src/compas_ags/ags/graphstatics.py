@@ -510,7 +510,6 @@ def force_update_from_constraints(force):
     _xy = force.vertices_attributes('xy')
     _edges = list(force.edges())
     _edges = [(_k_i[u], _k_i[v]) for u, v in _edges]
-    _uv = [[_xy[j][0] - _xy[i][0], _xy[j][1] - _xy[i][1]] for i, j in _edges]
     _i_nbrs = {_k_i[key]: [_k_i[nbr] for nbr in force.vertex_neighbors(key)] for key in force.vertices()}
     _uv_i = {uv: index for index, uv in enumerate(_edges)}
     _ij_e = {(u, v): index for (u, v), index in iter(_uv_i.items())}
@@ -536,9 +535,9 @@ def force_update_from_constraints(force):
         sp, ep = force.edge_coordinates(u, v)
         dx = ep[0] - sp[0]
         dy = ep[1] - sp[1]
-        l = (dx**2 + dy**2)**0.5
+        length = (dx**2 + dy**2)**0.5
         index = _uv_i[(_k_i[u], _k_i[v])]
-        target_vectors[index] = [dx/l, dy/l]     # compute target vectors for edges with fix orientation
+        target_vectors[index] = [dx/length, dy/length]  # compute target vectors for edges with fix orientation
 
     # --------------------------------------------------------------------------
     # Paralelise edge given force targets and/or target_lengths
