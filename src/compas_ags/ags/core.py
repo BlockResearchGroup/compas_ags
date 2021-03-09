@@ -244,7 +244,7 @@ def update_form_from_force(xy, _xy, free, fixed_x, fixed_y, leaves, i_nbrs, ij_e
         xy[i] = xy[j] + xy0[i] - xy0[j]
 
 
-def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lmin=None, lmax=None, neighbours_exclude=None, callback=None):
+def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, fixed=None, fixed_x=None, fixed_y=None, kmax=100, callback=None):
     """Parallelise the edges of a mesh to given target vectors.
 
     Parameters
@@ -253,24 +253,26 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
         The XY coordinates of the vertices of the edges.
     edges : list
         The edges as pairs of indices in ``xy``.
-    targets : list
-        A target vector for every edge.
     i_nbrs : dict
         A list of neighbours per vertex.
     ij_e : dict
         An edge index per vertex pair.
+    target_vectors : list
+        A list with an entry for each edge representing the target vector or ``None``.
+    target_lengths : list
+        A list with an entry for each edge representing the target length or ``None``.
     fixed : list, optional
         The fixed nodes of the mesh.
+        Default is ``None``.
+    fixed_x : list, optional
+        The nodes of the mesh fixed in x.
+        Default is ``None``.
+    fixed_y : list, optional
+        The nodes of the mesh fixed in y.
         Default is ``None``.
     kmax : int, optional
         Maximum number of iterations.
         Default is ``100``.
-    lmin : list, optional
-        Minimum length per edge.
-        Default is ``None``.
-    lmax : list, optional
-        Maximum length per edge.
-        Default is ``None``.
     callback : callable, optional
         A user-defined callback function to be executed after every iteration.
         Default is ``None``.
@@ -278,6 +280,10 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
     Returns
     -------
     None
+
+    Notes
+    -----
+    This implementation is based on the function ``compas_tna.equilibrium.parallelisation.parallelise_edges``.
 
     Examples
     --------
@@ -289,94 +295,67 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
 
     fixed = fixed or []
     fixed = set(fixed)
-
-    fixed_y = [2, 0, 4, 5, 6]
-    # fixed_y = []
+    fixed_x = fixed_x or []
+    fixed_x = set(fixed_x)
+    fixed_y = fixed_y or []
+    fixed_y = set(fixed_y)
 
     n = len(xy)
 
     for k in range(kmax):
-        # print('\n-------iteration', k)
         xy0 = [[x, y] for x, y in xy]
         uv = [[xy[j][0] - xy[i][0], xy[j][1] - xy[i][1]] for i, j in edges]
         lengths = [(dx**2 + dy**2)**0.5 for dx, dy in uv]
-        # print('lengths original / imposed / k:', k)
-        # print(lengths)
-
-        if lmin:
-            lengths[:] = [max(a, b) for a, b in zip(lengths, lmin)]
-
-        if lmax:
-            lengths[:] = [min(a, b) for a, b in zip(lengths, lmax)]
-
-        # print(lengths)
 
         for j in range(n):
-            print('----- Vertex: ', j)
             if j in fixed:
-                print('Vertex is fixed')
                 continue
-
-            print('Vertex initial coordinates:', xy[j])
 
             nbrs = i_nbrs[j]
             x, y = 0.0, 0.0
 
             len_nbrs = 0
             for i in nbrs:
+                if (i, j) in ij_e:
+                    e = ij_e[(i, j)]
+                    u, v = i, j
+                    signe = +1.0
+                else:
+                    e = ij_e[(j, i)]
+                    u, v = j, i
+                    signe = -1.0
 
-                print('Vertex neighbour:', i, xy0[i])
-                if (i, j) in neighbours_exclude:
-                    continue
-                elif (j, i) in neighbours_exclude:
-                    continue
-
-                len_nbrs += 1
+                if target_lengths[e]:               # edges with constraint on length ...
+                    l = target_lengths[e]
+                    if target_vectors[e]:           # edges with constraint on length + orientation
+                        tx, ty = target_vectors[e]
+                    else:                           # edges with constraint on length only
+                        tx = (xy0[v][0] - xy0[u][0])/lengths[e]
+                        ty = (xy0[v][1] - xy0[u][1])/lengths[e]
+                else:
+                    if target_vectors[e]:           # edges with constraint on orientation only
+                        tx, ty = target_vectors[e]
+                        l = lengths[e]
+                    else:
+                        continue                    # edges to discard
 
                 ax, ay = xy0[i]
-                if (i, j) in ij_e:
-                    print('i, j direction (+)')
-                    e = ij_e[(i, j)]
-                    l = lengths[e]  # noqa: E741
-                    tx, ty = targets[e]
-                    x += ax + l * tx
-                    y += ay + l * ty
-                    print('l, tx, ty:', l, tx, ty)
-                    print('dx, dy:', ax + l * tx, ay + l * ty)
+                x += ax + signe * l * tx
+                y += ay + signe * l * ty
+                len_nbrs += 1
 
-                else:
-                    print('i, j direction (-)')
-                    e = ij_e[(j, i)]
-                    l = lengths[e]  # noqa: E741
-                    tx, ty = targets[e]
-                    x += ax - l * tx
-                    y += ay - l * ty
-                    print('l, tx, ty:', l, tx, ty)
-                    print('dx, dy:', ax - l * tx, ay - l * ty)
-
-            xy[j][0] = x / len_nbrs
+            if j not in fixed_x:
+                xy[j][0] = x / len_nbrs
             if j not in fixed_y:
                 xy[j][1] = y / len_nbrs
 
-        for (i, j) in ij_e:
-            e = ij_e[(i, j)]
+        # for (i, j) in ij_e:       # TODO: verify if this part is necessary for problems with zero edge
+        #     e = ij_e[(i, j)]
 
-            if lengths[e] == 0.0:
-                c = midpoint_point_point_xy(xy[i], xy[j])
-                xy[i][:] = c[:][:2]
-                xy[j][:] = c[:][:2]
-
-            # if e in target_none:
-            #     print('is target none')
-            #     print(e)
-            #     print(targets[e])
-            #     sp = xy[i]
-            #     ep = xy[j]
-            #     dx = ep[0] - sp[0]
-            #     dy = ep[1] - sp[1]
-            #     l = (dx**2 + dy**2)**0.5
-            #     targets[e] = [dx/l, dy/l]
-            #     print(targets[e])
+        #     if lengths[e] == 0.0:
+        #         c = midpoint_point_point_xy(xy[i], xy[j])
+        #         xy[i][:] = c[:][:2]
+        #         xy[j][:] = c[:][:2]
 
         if callback:
             callback(k, xy, edges)
@@ -506,9 +485,6 @@ def compute_jacobian(form, force):
     Ed = E[:, dependent_edges_idx]
     Eid = E[:, independent_edges_idx]
     qid = q[independent_edges_idx]
-    print(array(Ed).shape)
-    print(E.shape)
-    print('Number of ind / dep:', len(independent_edges), len(dependent_edges_idx))
     EdInv = inv(array(Ed))  # TODO: Explore sparse (spinv)
 
     # --------------------------------------------------------------------------
