@@ -27,7 +27,7 @@ __all__ = ['Viewer']
 class Viewer(object):
     """"""
 
-    def __init__(self, form, force, delay_setup=True, figsize=(16, 9)):
+    def __init__(self, form, force=None, delay_setup=False, figsize=(16, 9)):
         self.form = form
         self.force = force
         self.fig = None
