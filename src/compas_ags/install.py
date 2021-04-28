@@ -25,7 +25,7 @@ if __name__ == '__main__':
     import os
 
     parser = argparse.ArgumentParser(
-        description='COMPAS_AGS Installation command-line utility.')
+        description='compas-ags Installation command-line utility.')
 
     parser.add_argument('--dev', action='store_true', help="install dev version of AGS from current env")
     parser.add_argument('--plugin_path', help="The path to the plugin directory.")

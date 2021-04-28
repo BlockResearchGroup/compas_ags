@@ -10,7 +10,7 @@ import sphinx_compas_theme
 
 # -- General configuration ------------------------------------------------
 
-project = 'COMPAS AGS'
+project = 'compas-ags'
 copyright = '2017, Block Research Group - ETH Zurich'
 author = 'Tom Van Mele'
 release = '1.0.4'
