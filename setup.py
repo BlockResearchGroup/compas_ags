@@ -57,7 +57,7 @@ setup(
         "Issues": "https://github.com/compas-dev/compas_ags/issues",
     },
 
-    packages= find_packages(include=['compas_ags'], exclude=['compas_ags.web']),
+    packages= ["compas_ags"],
     package_dir={'': 'src'},
     package_data={},
     data_files=[],

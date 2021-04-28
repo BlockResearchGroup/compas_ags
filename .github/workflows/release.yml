@@ -52,11 +52,6 @@ jobs:
           repository: BlockResearchGroup/compas_installer
           ref: ags
           path: compas_installer
-
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
       
       - name: wrap installer
         run: |
