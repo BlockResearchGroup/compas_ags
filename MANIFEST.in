@@ -7,6 +7,7 @@ prune examples
 prune temp
 prune tests
 prune ui
+prune src/compas_ags/web
 
 include LICENSE
 include README.md

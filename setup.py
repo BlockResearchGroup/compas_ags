@@ -5,8 +5,7 @@ import io
 from os import path
 
 from setuptools import setup
-from setuptools.command.develop import develop
-from setuptools.command.install import install
+from setuptools import find_packages
 
 
 here = path.abspath(path.dirname(__file__))
@@ -58,7 +57,7 @@ setup(
         "Issues": "https://github.com/compas-dev/compas_ags/issues",
     },
 
-    packages=['compas_ags'],
+    packages= find_packages(include=['compas_ags'], exclude=['compas_ags.web']),
     package_dir={'': 'src'},
     package_data={},
     data_files=[],
