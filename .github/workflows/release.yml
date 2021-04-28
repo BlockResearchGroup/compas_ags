@@ -40,6 +40,7 @@ jobs:
         shell: PowerShell
         run: |
           python ui/Rhino/ags/dev/rui.py
+          Set-Content -Path MANIFEST.in -Value (get-content -Path MANIFEST.in | Select-String -Pattern 'prune src/compas_ags/web' -NotMatch)
           pip install .
 
       - name: ags-pack
