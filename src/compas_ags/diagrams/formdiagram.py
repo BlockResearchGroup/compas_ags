@@ -37,6 +37,8 @@ class FormDiagram(Diagram):
             'is_external': False,
             'is_reaction': False,
             'is_load': False,
+            'has_fixed_orientation': False,
+            'target_length': None,
         })
 
     @property
@@ -249,6 +251,7 @@ class FormDiagram(Diagram):
         fixed = self.fixed()
         leaves = self.leaves()
         for edge in self.leaf_edges():
+            self.edge_attribute(edge, 'has_fixed_orientation', True)
             if edge[0] in fixed or edge[1] in fixed:
                 continue
             sp, ep = self.edge_coordinates(*edge)

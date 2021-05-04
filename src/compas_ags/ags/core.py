@@ -26,8 +26,6 @@ from compas.numerical import equilibrium_matrix
 from compas.numerical import laplacian_matrix
 from compas.numerical import solve_with_known
 
-from compas.geometry import midpoint_point_point_xy
-
 from compas_ags.exceptions import SolutionError
 
 
@@ -36,6 +34,7 @@ __all__ = [
     'update_form_from_force',
     'get_jacobian_and_residual',
     'compute_jacobian',
+    'parallelise_edges',
 ]
 
 
@@ -243,7 +242,7 @@ def update_form_from_force(xy, _xy, free, fixed_x, fixed_y, leaves, i_nbrs, ij_e
         xy[i] = xy[j] + xy0[i] - xy0[j]
 
 
-def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lmin=None, lmax=None, callback=None):
+def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, fixed=None, fixed_x=None, fixed_y=None, kmax=100, callback=None):
     """Parallelise the edges of a mesh to given target vectors.
 
     Parameters
@@ -252,24 +251,26 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
         The XY coordinates of the vertices of the edges.
     edges : list
         The edges as pairs of indices in ``xy``.
-    targets : list
-        A target vector for every edge.
     i_nbrs : dict
         A list of neighbours per vertex.
     ij_e : dict
         An edge index per vertex pair.
+    target_vectors : list
+        A list with an entry for each edge representing the target vector or ``None``.
+    target_lengths : list
+        A list with an entry for each edge representing the target length or ``None``.
     fixed : list, optional
         The fixed nodes of the mesh.
+        Default is ``None``.
+    fixed_x : list, optional
+        The nodes of the mesh fixed in x.
+        Default is ``None``.
+    fixed_y : list, optional
+        The nodes of the mesh fixed in y.
         Default is ``None``.
     kmax : int, optional
         Maximum number of iterations.
         Default is ``100``.
-    lmin : list, optional
-        Minimum length per edge.
-        Default is ``None``.
-    lmax : list, optional
-        Maximum length per edge.
-        Default is ``None``.
     callback : callable, optional
         A user-defined callback function to be executed after every iteration.
         Default is ``None``.
@@ -277,6 +278,10 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
     Returns
     -------
     None
+
+    Notes
+    -----
+    This implementation is based on the function ``compas_tna.equilibrium.parallelisation.parallelise_edges``.
 
     Examples
     --------
@@ -288,6 +293,10 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
 
     fixed = fixed or []
     fixed = set(fixed)
+    fixed_x = fixed_x or []
+    fixed_x = set(fixed_x)
+    fixed_y = fixed_y or []
+    fixed_y = set(fixed_y)
 
     n = len(xy)
 
@@ -296,12 +305,6 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
         uv = [[xy[j][0] - xy[i][0], xy[j][1] - xy[i][1]] for i, j in edges]
         lengths = [(dx**2 + dy**2)**0.5 for dx, dy in uv]
 
-        if lmin:
-            lengths[:] = [max(a, b) for a, b in zip(lengths, lmin)]
-
-        if lmax:
-            lengths[:] = [min(a, b) for a, b in zip(lengths, lmax)]
-
         for j in range(n):
             if j in fixed:
                 continue
@@ -309,33 +312,48 @@ def parallelise_edges(xy, edges, targets, i_nbrs, ij_e, fixed=None, kmax=100, lm
             nbrs = i_nbrs[j]
             x, y = 0.0, 0.0
 
+            len_nbrs = 0
             for i in nbrs:
-                ax, ay = xy0[i]
-
                 if (i, j) in ij_e:
                     e = ij_e[(i, j)]
-                    l = lengths[e]  # noqa: E741
-                    tx, ty = targets[e]
-                    x += ax + l * tx
-                    y += ay + l * ty
-
+                    u, v = i, j
+                    signe = +1.0
                 else:
                     e = ij_e[(j, i)]
-                    l = lengths[e]  # noqa: E741
-                    tx, ty = targets[e]
-                    x += ax - l * tx
-                    y += ay - l * ty
+                    u, v = j, i
+                    signe = -1.0
 
-            xy[j][0] = x / len(nbrs)
-            xy[j][1] = y / len(nbrs)
+                if target_lengths[e]:               # edges with constraint on length ...
+                    lij = target_lengths[e]
+                    if target_vectors[e]:           # edges with constraint on length + orientation
+                        tx, ty = target_vectors[e]
+                    else:                           # edges with constraint on length only
+                        tx = (xy0[v][0] - xy0[u][0])/lengths[e]
+                        ty = (xy0[v][1] - xy0[u][1])/lengths[e]
+                else:
+                    if target_vectors[e]:           # edges with constraint on orientation only
+                        tx, ty = target_vectors[e]
+                        lij = lengths[e]
+                    else:
+                        continue                    # edges to discard
 
-        for (i, j) in ij_e:
-            e = ij_e[(i, j)]
+                ax, ay = xy0[i]
+                x += ax + signe * lij * tx
+                y += ay + signe * lij * ty
+                len_nbrs += 1
 
-            if lengths[e] == 0.0:
-                c = midpoint_point_point_xy(xy[i], xy[j])
-                xy[i][:] = c[:][:2]
-                xy[j][:] = c[:][:2]
+            if j not in fixed_x:
+                xy[j][0] = x / len_nbrs
+            if j not in fixed_y:
+                xy[j][1] = y / len_nbrs
+
+        # for (i, j) in ij_e:       # TODO: verify if this part is necessary for problems with zero edge
+        #     e = ij_e[(i, j)]
+
+        #     if lengths[e] == 0.0:
+        #         c = midpoint_point_point_xy(xy[i], xy[j])
+        #         xy[i][:] = c[:][:2]
+        #         xy[j][:] = c[:][:2]
 
         if callback:
             callback(k, xy, edges)
