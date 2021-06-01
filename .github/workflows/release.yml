@@ -39,8 +39,7 @@ jobs:
       - name: ags-install
         shell: PowerShell
         run: |
-          python ui/Rhino/ags/dev/rui.py
-          Set-Content -Path MANIFEST.in -Value (get-content -Path MANIFEST.in | Select-String -Pattern 'prune src/compas_ags/web' -NotMatch)
+          python src/compas_ags/ui/Rhino/ags/dev/rui.py
           pip install .
 
       - name: ags-pack
@@ -69,7 +68,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          draft: false
+          draft: True
           prerelease: false
 
       - name: Upload Release Asset
