@@ -122,12 +122,18 @@
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
-<span class="sd">    &gt;&gt;&gt; mesh_is_connected(m1)</span>
-<span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; mesh_is_connected(m2)</span>
-<span class="sd">    True</span>
-<span class="sd">    &gt;&gt;&gt; mesh_is_connected(m3)</span>
+<span class="sd">    &gt;&gt;&gt; from compas.datastructures import Mesh</span>
+<span class="sd">    &gt;&gt;&gt; mesh = Mesh()</span>
+<span class="sd">    &gt;&gt;&gt; mesh_is_connected(mesh)</span>
 <span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; a = mesh.add_vertex(x=0, y=0, z=0)</span>
+<span class="sd">    &gt;&gt;&gt; b = mesh.add_vertex(x=1, y=0, z=0)</span>
+<span class="sd">    &gt;&gt;&gt; c = mesh.add_vertex(x=1, y=1, z=0)</span>
+<span class="sd">    &gt;&gt;&gt; mesh_is_connected(mesh)</span>
+<span class="sd">    False</span>
+<span class="sd">    &gt;&gt;&gt; abc = mesh.add_face([a, b, c])</span>
+<span class="sd">    &gt;&gt;&gt; mesh_is_connected(mesh)</span>
+<span class="sd">    True</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertex</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">False</span>
@@ -137,37 +143,6 @@
 
 <span class="k">def</span> <span class="nf">mesh_connected_components</span><span class="p">(</span><span class="n">mesh</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">connected_components</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">adjacency</span><span class="p">)</span>
-
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Main</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-
-    <span class="kn">import</span> <span class="nn">doctest</span>
-
-    <span class="kn">import</span> <span class="nn">compas</span>
-    <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">Mesh</span>
-    <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">meshes_join</span>
-    <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">translate_points_xy</span>
-
-    <span class="n">m1</span> <span class="o">=</span> <span class="n">Mesh</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">compas</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;faces.obj&#39;</span><span class="p">))</span>
-    <span class="n">m2</span> <span class="o">=</span> <span class="n">m1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-    <span class="n">points</span> <span class="o">=</span> <span class="n">m2</span><span class="o">.</span><span class="n">vertices_attributes</span><span class="p">(</span><span class="s1">&#39;xyz&#39;</span><span class="p">)</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="p">)</span>
-    <span class="n">xmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">xmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">points</span> <span class="o">=</span> <span class="n">translate_points_xy</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
-    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">m2</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
-        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;z&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>
-
-    <span class="n">m3</span> <span class="o">=</span> <span class="n">meshes_join</span><span class="p">([</span><span class="n">m1</span><span class="p">,</span> <span class="n">m2</span><span class="p">])</span>
-
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">()</span>
 </code></pre></div>
         
       </main>

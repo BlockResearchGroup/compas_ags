@@ -19,7 +19,7 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="FormDiagram.to_lines" href="compas_ags.diagrams.FormDiagram.to_lines.html" />
+    <link rel="next" title="FormDiagram.to_jsonstring" href="compas_ags.diagrams.FormDiagram.to_jsonstring.html" />
   
 
   
@@ -102,10 +102,14 @@
 <dl class="method">
 <dt id="compas_ags.diagrams.FormDiagram.to_json">
 <code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">to_json</code><span class="sig-paren">(</span><em class="sig-param">filepath</em>, <em class="sig-param">pretty=False</em><span class="sig-paren">)</span></dt>
-<dd><p>Serialise the structured data representing the datastructure to json.</p>
+<dd><p>Serialize the data representation of an object to a JSON file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>filepath</strong> (<em>str</em>) – The path to the json file.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filepath</strong> (<em>path string or file-like object</em>) – The path or file-like object to the file containing the data.</p></li>
+<li><p><strong>pretty</strong> (<em>bool, optional</em>) – If <code class="docutils literal notranslate"><span class="pre">True</span></code> serialize a pretty representation of the data.
+Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -177,10 +181,10 @@
       
 
       
-        <a href="compas_ags.diagrams.FormDiagram.to_lines.html" title="FormDiagram.to_lines" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <a href="compas_ags.diagrams.FormDiagram.to_jsonstring.html" title="FormDiagram.to_jsonstring" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
           <div class="nav-title footer-link flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Next</div>
-            FormDiagram.to_lines
+            FormDiagram.to_jsonstring
           </div>
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
         </a>

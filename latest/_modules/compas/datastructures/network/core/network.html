@@ -144,8 +144,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        filepath : str</span>
-<span class="sd">            Path to the OBJ file.</span>
+<span class="sd">        filepath : path string, file-like object or URL string</span>
+<span class="sd">            A path, a file-like object or a URL pointing to a file.</span>
 <span class="sd">        precision: str, optional</span>
 <span class="sd">            The precision of the geometric map that is used to connect the lines.</span>
 
@@ -257,8 +257,8 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        filepath : str</span>
-<span class="sd">            Full path of the file.</span>
+<span class="sd">        filepath : path string or file-like object</span>
+<span class="sd">            A path or a file-like object pointing to a file.</span>
 
 <span class="sd">        Examples</span>
 <span class="sd">        --------</span>
@@ -347,6 +347,9 @@
         <span class="n">gkey</span> <span class="o">=</span> <span class="n">geometric_key</span>
         <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">node_coordinates</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">gkey</span><span class="p">(</span><span class="n">xyz</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">precision</span><span class="p">):</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">()}</span>
+
+    <span class="n">node_gkey</span> <span class="o">=</span> <span class="n">key_gkey</span>
+    <span class="n">gkey_node</span> <span class="o">=</span> <span class="n">gkey_key</span>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># builders</span>
@@ -590,16 +593,6 @@
 <span class="sd">            The direction vector of the edge.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">normalize_vector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edge_vector</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span>
-
-
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Main</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-
-    <span class="kn">import</span> <span class="nn">doctest</span>
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">globs</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
 </code></pre></div>
         
       </main>

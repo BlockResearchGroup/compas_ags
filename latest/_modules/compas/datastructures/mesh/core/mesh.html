@@ -96,7 +96,7 @@
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span>
 
-<span class="kn">from</span> <span class="nn">.halfedge</span> <span class="kn">import</span> <span class="n">HalfEdge</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures.mesh.core.halfedge</span> <span class="kn">import</span> <span class="n">HalfEdge</span>
 
 <span class="kn">from</span> <span class="nn">compas.files</span> <span class="kn">import</span> <span class="n">OBJ</span>
 <span class="kn">from</span> <span class="nn">compas.files</span> <span class="kn">import</span> <span class="n">OFF</span>
@@ -137,17 +137,10 @@
 <span class="sd">    Attributes</span>
 <span class="sd">    ----------</span>
 <span class="sd">    attributes : dict</span>
-<span class="sd">        A dictionary of general mesh attributes.</span>
-
-<span class="sd">        * ``&#39;name&#39;: &quot;Mesh&quot;``</span>
-
+<span class="sd">        A dictionary of general mesh attributes: ``{&#39;name&#39;: &quot;Mesh&quot;}``.</span>
 <span class="sd">    default_vertex_attributes : dict</span>
-<span class="sd">        The names of pre-assigned vertex attributes and their default values.</span>
-
-<span class="sd">        * ``&#39;x&#39;: 0.0``</span>
-<span class="sd">        * ``&#39;y&#39;: 0.0``</span>
-<span class="sd">        * ``&#39;z&#39;: 0.0``</span>
-
+<span class="sd">        The names of pre-assigned vertex attributes and their default values:</span>
+<span class="sd">        ``{&#39;x&#39;: 0.0, &#39;y&#39;: 0.0, &#39;z&#39;: 0.0}``</span>
 <span class="sd">    default_edge_attributes : dict</span>
 <span class="sd">        The default data attributes assigned to every new edge.</span>
 <span class="sd">    default_face_attributes : dict</span>
@@ -157,20 +150,6 @@
 <span class="sd">        Shorthand for ``mesh.attributes[&#39;name&#39;]``</span>
 <span class="sd">    adjacency : dict, read-only</span>
 <span class="sd">        The vertex adjacency dictionary.</span>
-<span class="sd">    data : dict</span>
-<span class="sd">        The data representing the mesh.</span>
-<span class="sd">        The dict has the following structure:</span>
-
-<span class="sd">        * &#39;attributes&#39;   =&gt; dict</span>
-<span class="sd">        * &#39;dva&#39;          =&gt; dict</span>
-<span class="sd">        * &#39;dea&#39;          =&gt; dict</span>
-<span class="sd">        * &#39;dfa&#39;          =&gt; dict</span>
-<span class="sd">        * &#39;vertex&#39;       =&gt; dict</span>
-<span class="sd">        * &#39;face&#39;         =&gt; dict</span>
-<span class="sd">        * &#39;facedata&#39;     =&gt; dict</span>
-<span class="sd">        * &#39;edgedata&#39;     =&gt; dict</span>
-<span class="sd">        * &#39;max_int_key&#39;  =&gt; int</span>
-<span class="sd">        * &#39;max_int_fkey&#39; =&gt; int</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -691,6 +670,9 @@
         <span class="n">xyz</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_coordinates</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">gkey</span><span class="p">(</span><span class="n">xyz</span><span class="p">(</span><span class="n">key</span><span class="p">),</span> <span class="n">precision</span><span class="p">):</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">()}</span>
 
+    <span class="n">vertex_gkey</span> <span class="o">=</span> <span class="n">key_gkey</span>
+    <span class="n">gkey_vertex</span> <span class="o">=</span> <span class="n">gkey_key</span>
+
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># builders</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
@@ -761,7 +743,7 @@
 <span class="sd">        &gt;&gt;&gt; from compas.datastructures import Mesh</span>
 <span class="sd">        &gt;&gt;&gt; a = Box.from_width_height_depth(1, 1, 1)</span>
 <span class="sd">        &gt;&gt;&gt; b = Box.from_width_height_depth(1, 1, 1)</span>
-<span class="sd">        &gt;&gt;&gt; T = Translation([2, 0, 0])</span>
+<span class="sd">        &gt;&gt;&gt; T = Translation.from_vector([2, 0, 0])</span>
 <span class="sd">        &gt;&gt;&gt; b.transform(T)</span>
 <span class="sd">        &gt;&gt;&gt; a = Mesh.from_shape(a)</span>
 <span class="sd">        &gt;&gt;&gt; b = Mesh.from_shape(b)</span>
@@ -835,10 +817,6 @@
     <span class="c1"># polyedge topology</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-    <span class="c1"># face strips?</span>
-    <span class="c1"># edge chains?</span>
-    <span class="c1"># ...?</span>
-
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># face topology</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
@@ -898,7 +876,7 @@
 <span class="sd">        list</span>
 <span class="sd">            Coordinates of the vertex.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">vertex</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="n">axis</span><span class="p">]</span> <span class="k">for</span> <span class="n">axis</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">]</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_attributes</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">axes</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">vertex_area</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute the tributary area of a vertex.</span>
@@ -1349,91 +1327,39 @@
     <span class="c1"># boundary</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-    <span class="k">def</span> <span class="nf">vertices_on_boundary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Find the vertices on the boundary.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        ordered : bool, optional</span>
-<span class="sd">            If ``True``, Return the vertices in the same order as they are found on the boundary.</span>
-<span class="sd">            Default is ``False``.</span>
+    <span class="k">def</span> <span class="nf">vertices_on_boundary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the vertices on the longest boundary.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list</span>
-<span class="sd">            The vertices of the boundary.</span>
-
-<span class="sd">        Warnings</span>
-<span class="sd">        --------</span>
-<span class="sd">        If the vertices are requested in order, and the mesh has multiple borders,</span>
-<span class="sd">        currently only the vertices of one of the borders will be returned.</span>
-
-<span class="sd">        Examples</span>
-<span class="sd">        --------</span>
-<span class="sd">        &gt;&gt;&gt;</span>
+<span class="sd">            The vertices of the longest boundary.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">vertices_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">nbrs</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-            <span class="k">for</span> <span class="n">nbr</span><span class="p">,</span> <span class="n">face</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">nbrs</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-                <span class="k">if</span> <span class="n">face</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">vertices_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-                    <span class="n">vertices_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>
-        <span class="n">vertices</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vertices_set</span><span class="p">)</span>
+        <span class="n">boundaries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_on_boundaries</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">boundaries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">boundaries</span> <span class="k">else</span> <span class="p">[]</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">vertices</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">vertices</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">ordered</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">vertices</span>
-
-        <span class="n">key</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-
-        <span class="n">vertices</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="n">key</span>
-        <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">nbr</span><span class="p">,</span> <span class="n">fkey</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-                <span class="k">if</span> <span class="n">fkey</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">vertices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>
-                    <span class="n">key</span> <span class="o">=</span> <span class="n">nbr</span>
-                    <span class="k">break</span>
-            <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">start</span><span class="p">:</span>
-                <span class="k">break</span>
-        <span class="k">return</span> <span class="n">vertices</span>
-
-    <span class="k">def</span> <span class="nf">edges_on_boundary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">oriented</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Find the edges on the boundary.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        oriented : bool, optional</span>
-<span class="sd">            If ``False`` (default) the edges are aligned head-to-tail along the boundary.</span>
-<span class="sd">            If ``True`` the edges have the same orientation as in the mesh.</span>
+    <span class="k">def</span> <span class="nf">edges_on_boundary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the edges on the longest boundary.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        edges : list</span>
-<span class="sd">            The boundary edges.</span>
+<span class="sd">            The edges of the longest boundary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">vertices</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_on_boundary</span><span class="p">(</span><span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="n">edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pairwise</span><span class="p">(</span><span class="n">vertices</span> <span class="o">+</span> <span class="n">vertices</span><span class="p">[:</span><span class="mi">1</span><span class="p">]))</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">oriented</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">edges</span>
-        <span class="k">return</span> <span class="p">[(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">has_edge</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">))</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">]</span>
+        <span class="n">boundaries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges_on_boundaries</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">boundaries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">boundaries</span> <span class="k">else</span> <span class="p">[]</span>
 
     <span class="k">def</span> <span class="nf">faces_on_boundary</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Find the faces on the boundary.</span>
+        <span class="sd">&quot;&quot;&quot;Find the faces on the longest boundary.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list</span>
-<span class="sd">            The faces on the boundary.</span>
+<span class="sd">            The faces on the longest boundary.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">faces</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges_on_boundary</span><span class="p">():</span>
-            <span class="n">fkey</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">u</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">fkey</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">faces</span><span class="p">:</span>
-                <span class="n">faces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fkey</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">faces</span>
+        <span class="n">boundaries</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">faces_on_boundaries</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">boundaries</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">boundaries</span> <span class="k">else</span> <span class="p">[]</span>
 
     <span class="k">def</span> <span class="nf">vertices_on_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Find the vertices on all boundaries of the mesh.</span>
@@ -1447,6 +1373,7 @@
 <span class="sd">        --------</span>
 <span class="sd">        &gt;&gt;&gt;</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># all boundary vertices</span>
         <span class="n">vertices_set</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">nbrs</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
             <span class="k">for</span> <span class="n">nbr</span><span class="p">,</span> <span class="n">face</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="n">nbrs</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
@@ -1455,46 +1382,127 @@
                     <span class="n">vertices_set</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>
         <span class="n">vertices_all</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vertices_set</span><span class="p">)</span>
 
+        <span class="c1"># return an empty list if there are no boundary vertices</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">vertices_all</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">vertices_all</span>
+            <span class="k">return</span> <span class="p">[]</span>
 
-        <span class="n">key</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">([(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">key</span><span class="p">))</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vertices_all</span><span class="p">],</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
-
+        <span class="c1"># init container for boundary groups</span>
         <span class="n">boundaries</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">while</span> <span class="n">vertices_all</span><span class="p">:</span>
-            <span class="n">vertices</span> <span class="o">=</span> <span class="p">[]</span>
-            <span class="n">start</span> <span class="o">=</span> <span class="n">key</span>
-            <span class="k">while</span> <span class="mi">1</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">nbr</span><span class="p">,</span> <span class="n">fkey</span> <span class="ow">in</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
-                    <span class="k">if</span> <span class="n">fkey</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">vertices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>
-                        <span class="n">key</span> <span class="o">=</span> <span class="n">nbr</span>
+
+        <span class="c1"># identify *special* vertices</span>
+        <span class="c1"># these vertices are non-manifold</span>
+        <span class="c1"># and should be processed differently</span>
+        <span class="n">special</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">vertices_all</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+                <span class="n">face</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">halfedge_face</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">nbr</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">face</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">count</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">special</span><span class="p">:</span>
+                            <span class="n">special</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="n">superspecial</span> <span class="o">=</span> <span class="n">special</span><span class="p">[:]</span>
+
+        <span class="c1"># process the special vertices first</span>
+        <span class="k">while</span> <span class="n">special</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="n">special</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="c1"># find all neighbors of the current spacial vertex</span>
+            <span class="c1"># that are on the mesh boundary</span>
+            <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">start</span><span class="p">):</span>
+                <span class="n">face</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">halfedge_face</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">nbr</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">face</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">nbrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>
+            <span class="c1"># for normal mesh vertices</span>
+            <span class="c1"># there should be only 1 boundary neighbor</span>
+            <span class="c1"># for special vertices there are more and they all have to be processed</span>
+            <span class="k">while</span> <span class="n">nbrs</span><span class="p">:</span>
+                <span class="n">vertex</span> <span class="o">=</span> <span class="n">nbrs</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+                <span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="n">start</span><span class="p">,</span> <span class="n">vertex</span><span class="p">]</span>
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="c1"># this is a *super* special case</span>
+                    <span class="k">if</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">superspecial</span><span class="p">:</span>
+                        <span class="n">boundaries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
                         <span class="k">break</span>
-                <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">start</span><span class="p">:</span>
-                    <span class="n">boundaries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
-                    <span class="n">vertices_all</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vertices_all</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
-                    <span class="k">break</span>
-            <span class="k">if</span> <span class="n">vertices_all</span><span class="p">:</span>
-                <span class="n">key</span> <span class="o">=</span> <span class="n">vertices_all</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">boundaries</span>
+                    <span class="c1"># find the boundary loop for the current starting halfedge</span>
+                    <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">vertex</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">nbr</span> <span class="o">==</span> <span class="n">vertices</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]:</span>
+                            <span class="k">continue</span>
+                        <span class="n">face</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">halfedge_face</span><span class="p">(</span><span class="n">vertex</span><span class="p">,</span> <span class="n">nbr</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">face</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">vertices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>
+                            <span class="n">vertex</span> <span class="o">=</span> <span class="n">nbr</span>
+                            <span class="k">break</span>
+                    <span class="k">if</span> <span class="n">vertex</span> <span class="o">==</span> <span class="n">start</span><span class="p">:</span>
+                        <span class="n">boundaries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+                        <span class="k">break</span>
+                <span class="c1"># remove any neighbors that might be part of an already identified boundary</span>
+                <span class="n">nbrs</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertex</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">nbrs</span> <span class="k">if</span> <span class="n">vertex</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+
+        <span class="c1"># remove all boundary vertices that were already identified</span>
+        <span class="n">vertices_all</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertex</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">vertices_all</span> <span class="k">if</span> <span class="nb">all</span><span class="p">(</span><span class="n">vertex</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vertices</span> <span class="k">for</span> <span class="n">vertices</span> <span class="ow">in</span> <span class="n">boundaries</span><span class="p">)]</span>
+
+        <span class="c1"># process the remaining boundary vertices if any</span>
+        <span class="k">if</span> <span class="n">vertices_all</span><span class="p">:</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">vertices_all</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="k">while</span> <span class="n">vertices_all</span><span class="p">:</span>
+                <span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">key</span>
+                <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+                        <span class="n">face</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">halfedge_face</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">nbr</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">face</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">vertices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span>
+                            <span class="n">key</span> <span class="o">=</span> <span class="n">nbr</span>
+                            <span class="k">break</span>
+                    <span class="k">if</span> <span class="n">key</span> <span class="o">==</span> <span class="n">start</span><span class="p">:</span>
+                        <span class="n">boundaries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertices</span><span class="p">)</span>
+                        <span class="n">vertices_all</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">vertices_all</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">]</span>
+                        <span class="k">break</span>
+                <span class="k">if</span> <span class="n">vertices_all</span><span class="p">:</span>
+                    <span class="n">key</span> <span class="o">=</span> <span class="n">vertices_all</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># return the boundary groups in order of the length of the group</span>
+        <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">boundaries</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">vertices</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
 
     <span class="k">def</span> <span class="nf">edges_on_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot;Find the edges on all boundaries of the mesh.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of list</span>
+<span class="sd">            A list of edges per boundary.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">vertexgroups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_on_boundaries</span><span class="p">()</span>
         <span class="n">edgegroups</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">vertices</span> <span class="ow">in</span> <span class="n">vertexgroups</span><span class="p">:</span>
-            <span class="n">edgegroups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pairwise</span><span class="p">(</span><span class="n">vertices</span> <span class="o">+</span> <span class="n">vertices</span><span class="p">[:</span><span class="mi">1</span><span class="p">])))</span>
+            <span class="n">edgegroups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">pairwise</span><span class="p">(</span><span class="n">vertices</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">edgegroups</span>
 
+    <span class="k">def</span> <span class="nf">faces_on_boundaries</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Find the faces on all boundaries of the mesh.</span>
 
-<span class="c1"># ==============================================================================</span>
-<span class="c1"># Main</span>
-<span class="c1"># ==============================================================================</span>
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-
-    <span class="kn">import</span> <span class="nn">doctest</span>
-    <span class="n">doctest</span><span class="o">.</span><span class="n">testmod</span><span class="p">(</span><span class="n">globs</span><span class="o">=</span><span class="nb">globals</span><span class="p">())</span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        list of list</span>
+<span class="sd">            Lists of faces, grouped and sorted per boundary.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vertexgroups</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_on_boundaries</span><span class="p">()</span>
+        <span class="n">facegroups</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">vertices</span> <span class="ow">in</span> <span class="n">vertexgroups</span><span class="p">:</span>
+            <span class="n">temp</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">halfedge_face</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">pairwise</span><span class="p">(</span><span class="n">vertices</span><span class="p">)]</span>
+            <span class="n">faces</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">face</span> <span class="ow">in</span> <span class="n">temp</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">face</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">if</span> <span class="n">face</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">faces</span> <span class="ow">and</span> <span class="nb">all</span><span class="p">(</span><span class="n">face</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">group</span> <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">facegroups</span><span class="p">):</span>
+                    <span class="n">faces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">face</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">faces</span><span class="p">:</span>
+                <span class="n">facegroups</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">faces</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">facegroups</span>
 </code></pre></div>
         
       </main>
