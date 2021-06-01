@@ -13,7 +13,7 @@ import compas_rhino
 
 from compas.rpc import Proxy
 from compas_ags.rhino import Scene
-from compas_ags.web import Browser
+from compas_ags.rhino import Browser
 from compas_ags.activate import check
 from compas_ags.activate import activate
 
