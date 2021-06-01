@@ -64,7 +64,7 @@ def RunCommand(is_interactive):
             index = edge_index[edge_form]
 
         f = form.diagram.edge_attribute(edge_form, 'f')
-        l = abs(f * scale)
+        l = abs(f * scale) # noqa E741
 
         tol = form.settings['tol.forces']
         state = ''

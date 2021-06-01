@@ -12,6 +12,7 @@ from compas_ags.rhino import ForceObject
 
 __commandname__ = "AGS_toolbar_display"
 
+
 def RunCommand(is_interactive):
 
     if 'AGS' not in sc.sticky:

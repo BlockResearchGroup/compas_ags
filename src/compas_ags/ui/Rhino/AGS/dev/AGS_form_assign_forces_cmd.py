@@ -27,7 +27,8 @@ def RunCommand(is_interactive):
     edges = list(form.diagram.edges_where({'is_ind': True}))
 
     if not len(edges):
-        compas_rhino.display_message("Warning: None of the edges of the diagram are marked as 'independent'. Forces can only be assigned to independent edges. Please select the independent edges first.")
+        compas_rhino.display_message(
+            "Warning: None of the edges of the diagram are marked as 'independent'. Forces can only be assigned to independent edges. Please select the independent edges first.")
         return
 
     form.settings['show.edgelabels'] = True

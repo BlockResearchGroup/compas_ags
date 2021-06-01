@@ -5,7 +5,7 @@ from __future__ import division
 import scriptcontext as sc
 
 import compas_rhino
-import AGS_form_check_deviation_cmd
+# import AGS_form_check_deviation_cmd
 from compas_ags.utilities.equilibrium import check_deviations
 
 
