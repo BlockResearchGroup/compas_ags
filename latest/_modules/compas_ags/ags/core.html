@@ -116,8 +116,6 @@
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">laplacian_matrix</span>
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">solve_with_known</span>
 
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">midpoint_point_point_xy</span>
-
 <span class="kn">from</span> <span class="nn">compas_ags.exceptions</span> <span class="kn">import</span> <span class="n">SolutionError</span>
 
 
@@ -126,6 +124,7 @@
     <span class="s1">&#39;update_form_from_force&#39;</span><span class="p">,</span>
     <span class="s1">&#39;get_jacobian_and_residual&#39;</span><span class="p">,</span>
     <span class="s1">&#39;compute_jacobian&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;parallelise_edges&#39;</span><span class="p">,</span>
 <span class="p">]</span>
 
 
@@ -333,7 +332,7 @@
         <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">xy0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">xy0</span><span class="p">[</span><span class="n">j</span><span class="p">]</span></div>
 
 
-<span class="k">def</span> <span class="nf">parallelise_edges</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">targets</span><span class="p">,</span> <span class="n">i_nbrs</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">lmin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">lmax</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">parallelise_edges</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">i_nbrs</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">target_vectors</span><span class="p">,</span> <span class="n">target_lengths</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixed_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixed_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parallelise the edges of a mesh to given target vectors.</span>
 
 <span class="sd">    Parameters</span>
@@ -342,24 +341,26 @@
 <span class="sd">        The XY coordinates of the vertices of the edges.</span>
 <span class="sd">    edges : list</span>
 <span class="sd">        The edges as pairs of indices in ``xy``.</span>
-<span class="sd">    targets : list</span>
-<span class="sd">        A target vector for every edge.</span>
 <span class="sd">    i_nbrs : dict</span>
 <span class="sd">        A list of neighbours per vertex.</span>
 <span class="sd">    ij_e : dict</span>
 <span class="sd">        An edge index per vertex pair.</span>
+<span class="sd">    target_vectors : list</span>
+<span class="sd">        A list with an entry for each edge representing the target vector or ``None``.</span>
+<span class="sd">    target_lengths : list</span>
+<span class="sd">        A list with an entry for each edge representing the target length or ``None``.</span>
 <span class="sd">    fixed : list, optional</span>
 <span class="sd">        The fixed nodes of the mesh.</span>
+<span class="sd">        Default is ``None``.</span>
+<span class="sd">    fixed_x : list, optional</span>
+<span class="sd">        The nodes of the mesh fixed in x.</span>
+<span class="sd">        Default is ``None``.</span>
+<span class="sd">    fixed_y : list, optional</span>
+<span class="sd">        The nodes of the mesh fixed in y.</span>
 <span class="sd">        Default is ``None``.</span>
 <span class="sd">    kmax : int, optional</span>
 <span class="sd">        Maximum number of iterations.</span>
 <span class="sd">        Default is ``100``.</span>
-<span class="sd">    lmin : list, optional</span>
-<span class="sd">        Minimum length per edge.</span>
-<span class="sd">        Default is ``None``.</span>
-<span class="sd">    lmax : list, optional</span>
-<span class="sd">        Maximum length per edge.</span>
-<span class="sd">        Default is ``None``.</span>
 <span class="sd">    callback : callable, optional</span>
 <span class="sd">        A user-defined callback function to be executed after every iteration.</span>
 <span class="sd">        Default is ``None``.</span>
@@ -367,6 +368,10 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    This implementation is based on the function ``compas_tna.equilibrium.parallelisation.parallelise_edges``.</span>
 
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
@@ -378,6 +383,10 @@
 
     <span class="n">fixed</span> <span class="o">=</span> <span class="n">fixed</span> <span class="ow">or</span> <span class="p">[]</span>
     <span class="n">fixed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span>
+    <span class="n">fixed_x</span> <span class="o">=</span> <span class="n">fixed_x</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">fixed_x</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed_x</span><span class="p">)</span>
+    <span class="n">fixed_y</span> <span class="o">=</span> <span class="n">fixed_y</span> <span class="ow">or</span> <span class="p">[]</span>
+    <span class="n">fixed_y</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed_y</span><span class="p">)</span>
 
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
 
@@ -386,12 +395,6 @@
         <span class="n">uv</span> <span class="o">=</span> <span class="p">[[</span><span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">]</span>
         <span class="n">lengths</span> <span class="o">=</span> <span class="p">[(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span> <span class="k">for</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dy</span> <span class="ow">in</span> <span class="n">uv</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">lmin</span><span class="p">:</span>
-            <span class="n">lengths</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lengths</span><span class="p">,</span> <span class="n">lmin</span><span class="p">)]</span>
-
-        <span class="k">if</span> <span class="n">lmax</span><span class="p">:</span>
-            <span class="n">lengths</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">lengths</span><span class="p">,</span> <span class="n">lmax</span><span class="p">)]</span>
-
         <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">fixed</span><span class="p">:</span>
                 <span class="k">continue</span>
@@ -399,33 +402,48 @@
             <span class="n">nbrs</span> <span class="o">=</span> <span class="n">i_nbrs</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
             <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span>
 
+            <span class="n">len_nbrs</span> <span class="o">=</span> <span class="mi">0</span>
             <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">nbrs</span><span class="p">:</span>
-                <span class="n">ax</span><span class="p">,</span> <span class="n">ay</span> <span class="o">=</span> <span class="n">xy0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-
                 <span class="k">if</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ij_e</span><span class="p">:</span>
                     <span class="n">e</span> <span class="o">=</span> <span class="n">ij_e</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]</span>
-                    <span class="n">l</span> <span class="o">=</span> <span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>  <span class="c1"># noqa: E741</span>
-                    <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">targets</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
-                    <span class="n">x</span> <span class="o">+=</span> <span class="n">ax</span> <span class="o">+</span> <span class="n">l</span> <span class="o">*</span> <span class="n">tx</span>
-                    <span class="n">y</span> <span class="o">+=</span> <span class="n">ay</span> <span class="o">+</span> <span class="n">l</span> <span class="o">*</span> <span class="n">ty</span>
-
+                    <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span>
+                    <span class="n">signe</span> <span class="o">=</span> <span class="o">+</span><span class="mf">1.0</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">e</span> <span class="o">=</span> <span class="n">ij_e</span><span class="p">[(</span><span class="n">j</span><span class="p">,</span> <span class="n">i</span><span class="p">)]</span>
-                    <span class="n">l</span> <span class="o">=</span> <span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>  <span class="c1"># noqa: E741</span>
-                    <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">targets</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
-                    <span class="n">x</span> <span class="o">+=</span> <span class="n">ax</span> <span class="o">-</span> <span class="n">l</span> <span class="o">*</span> <span class="n">tx</span>
-                    <span class="n">y</span> <span class="o">+=</span> <span class="n">ay</span> <span class="o">-</span> <span class="n">l</span> <span class="o">*</span> <span class="n">ty</span>
+                    <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span>
+                    <span class="n">signe</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
 
-            <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">nbrs</span><span class="p">)</span>
-            <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">nbrs</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">target_lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]:</span>               <span class="c1"># edges with constraint on length ...</span>
+                    <span class="n">lij</span> <span class="o">=</span> <span class="n">target_lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">target_vectors</span><span class="p">[</span><span class="n">e</span><span class="p">]:</span>           <span class="c1"># edges with constraint on length + orientation</span>
+                        <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">target_vectors</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>                           <span class="c1"># edges with constraint on length only</span>
+                        <span class="n">tx</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy0</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">xy0</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+                        <span class="n">ty</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy0</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xy0</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">target_vectors</span><span class="p">[</span><span class="n">e</span><span class="p">]:</span>           <span class="c1"># edges with constraint on orientation only</span>
+                        <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">target_vectors</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+                        <span class="n">lij</span> <span class="o">=</span> <span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">continue</span>                    <span class="c1"># edges to discard</span>
 
-        <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ij_e</span><span class="p">:</span>
-            <span class="n">e</span> <span class="o">=</span> <span class="n">ij_e</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]</span>
+                <span class="n">ax</span><span class="p">,</span> <span class="n">ay</span> <span class="o">=</span> <span class="n">xy0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+                <span class="n">x</span> <span class="o">+=</span> <span class="n">ax</span> <span class="o">+</span> <span class="n">signe</span> <span class="o">*</span> <span class="n">lij</span> <span class="o">*</span> <span class="n">tx</span>
+                <span class="n">y</span> <span class="o">+=</span> <span class="n">ay</span> <span class="o">+</span> <span class="n">signe</span> <span class="o">*</span> <span class="n">lij</span> <span class="o">*</span> <span class="n">ty</span>
+                <span class="n">len_nbrs</span> <span class="o">+=</span> <span class="mi">1</span>
 
-            <span class="k">if</span> <span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
-                <span class="n">c</span> <span class="o">=</span> <span class="n">midpoint_point_point_xy</span><span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
-                <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">c</span><span class="p">[:][:</span><span class="mi">2</span><span class="p">]</span>
-                <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">c</span><span class="p">[:][:</span><span class="mi">2</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fixed_x</span><span class="p">:</span>
+                <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">len_nbrs</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fixed_y</span><span class="p">:</span>
+                <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span> <span class="o">/</span> <span class="n">len_nbrs</span>
+
+        <span class="c1"># for (i, j) in ij_e:       # TODO: verify if this part is necessary for problems with zero edge</span>
+        <span class="c1">#     e = ij_e[(i, j)]</span>
+
+        <span class="c1">#     if lengths[e] == 0.0:</span>
+        <span class="c1">#         c = midpoint_point_point_xy(xy[i], xy[j])</span>
+        <span class="c1">#         xy[i][:] = c[:][:2]</span>
+        <span class="c1">#         xy[j][:] = c[:][:2]</span>
 
         <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
             <span class="n">callback</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>

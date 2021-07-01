@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   
-  <title>compas_ags - ForceDiagram.copy</title>
+  <title>compas_ags - ForceDiagram.constraints_from_dual</title>
   
 
   <meta charset="utf-8" />
@@ -19,11 +19,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="ForceDiagram.cull_vertices" href="compas_ags.diagrams.ForceDiagram.cull_vertices.html" />
+    <link rel="next" title="ForceDiagram.copy" href="compas_ags.diagrams.ForceDiagram.copy.html" />
   
 
   
-    <link rel="prev" title="ForceDiagram.constraints_from_dual" href="compas_ags.diagrams.ForceDiagram.constraints_from_dual.html" />
+    <link rel="prev" title="ForceDiagram.connected_components" href="compas_ags.diagrams.ForceDiagram.connected_components.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -90,26 +90,22 @@
             
               <li class="breadcrumb-item"><a href="compas_ags.diagrams.ForceDiagram.html">ForceDiagram</a></li>
             
-            <li class="breadcrumb-item active" aria-current="page">ForceDiagram.copy</li>
+            <li class="breadcrumb-item active" aria-current="page">ForceDiagram.constraints_from_dual</li>
           </ol>
         </nav>
         
 
         
         
-        <section class="detail" id="forcediagram-copy">
-<h1>ForceDiagram.copy</h1>
+        <section class="detail" id="forcediagram-constraints-from-dual">
+<h1>ForceDiagram.constraints_from_dual</h1>
 <dl class="method">
-<dt id="compas_ags.diagrams.ForceDiagram.copy">
-<code class="sig-prename descclassname">ForceDiagram.</code><code class="sig-name descname">copy</code><span class="sig-paren">(</span><em class="sig-param">cls=None</em><span class="sig-paren">)</span></dt>
-<dd><p>Make an independent copy of the data object.</p>
+<dt id="compas_ags.diagrams.ForceDiagram.constraints_from_dual">
+<code class="sig-prename descclassname">ForceDiagram.</code><code class="sig-name descname">constraints_from_dual</code><span class="sig-paren">(</span><em class="sig-param">tol=0.001</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/diagrams/forcediagram.html#ForceDiagram.constraints_from_dual"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>“Reflect constraints from the form diagram in the force diagram.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>cls</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code>, optional) – The type of data object to return.
-Defaults to the type of the current data object.</p>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">compas.data.Data</span></code> – A separate, but identical data object.</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>ForceDiagram is modified in place.</em></p>
 </dd>
 </dl>
 </dd></dl>
@@ -159,7 +155,7 @@ Defaults to the type of the current data object.</p>
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">ForceDiagram.copy</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">ForceDiagram.constraints_from_dual</a></li>
 </ul>
 
       </div>
@@ -171,20 +167,20 @@ Defaults to the type of the current data object.</p>
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-        <a href="compas_ags.diagrams.ForceDiagram.constraints_from_dual.html" title="ForceDiagram.constraints_from_dual" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+        <a href="compas_ags.diagrams.ForceDiagram.connected_components.html" title="ForceDiagram.connected_components" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
           <div class="nav-title flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Previous</div>
-            ForceDiagram.constraints_from_dual
+            ForceDiagram.connected_components
           </div>
         </a>
       
 
       
-        <a href="compas_ags.diagrams.ForceDiagram.cull_vertices.html" title="ForceDiagram.cull_vertices" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <a href="compas_ags.diagrams.ForceDiagram.copy.html" title="ForceDiagram.copy" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
           <div class="nav-title footer-link flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Next</div>
-            ForceDiagram.cull_vertices
+            ForceDiagram.copy
           </div>
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
         </a>

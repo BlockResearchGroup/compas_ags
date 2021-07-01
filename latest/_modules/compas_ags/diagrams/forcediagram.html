@@ -109,11 +109,13 @@
             <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Force&#39;</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_default_vertex_attributes</span><span class="p">({</span>
             <span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;is_fixed_x&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;is_fixed_y&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
             <span class="s1">&#39;is_param&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_default_edge_attributes</span><span class="p">({</span>
             <span class="s1">&#39;l&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
-            <span class="s1">&#39;lmin&#39;</span><span class="p">:</span> <span class="mf">1e-7</span><span class="p">,</span>
-            <span class="s1">&#39;lmax&#39;</span><span class="p">:</span> <span class="mf">1e+7</span><span class="p">})</span></div>
+            <span class="s1">&#39;has_fixed_orientation&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;target_length&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">})</span></div>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Constructors</span>
@@ -243,7 +245,7 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        tuple(int, int) or None</span>
+<span class="sd">        tuple (int, int) or None</span>
 <span class="sd">            The identifier of the dual edge if it exists.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">face_halfedges</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
@@ -375,7 +377,44 @@
         <span class="n">edge_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_index</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span>
         <span class="n">index_edge</span> <span class="o">=</span> <span class="p">{</span><span class="n">index</span><span class="p">:</span> <span class="n">edge</span> <span class="k">for</span> <span class="n">edge</span><span class="p">,</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">edge_index</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">index_edge</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())]</span>
-        <span class="k">return</span> <span class="n">edges</span></div></div>
+        <span class="k">return</span> <span class="n">edges</span></div>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># Helpers</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+
+<div class="viewcode-block" id="ForceDiagram.constraints_from_dual"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.constraints_from_dual.html#compas_ags.diagrams.ForceDiagram.constraints_from_dual">[docs]</a>    <span class="k">def</span> <span class="nf">constraints_from_dual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">10e-4</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;&quot;Reflect constraints from the form diagram in the force diagram.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        ForceDiagram is modified in place.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">edge_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_index</span><span class="p">()</span>
+        <span class="n">ordered_edges</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges_where_dual</span><span class="p">({</span><span class="s1">&#39;is_ind&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">edge</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;has_fixed_orientation&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges_where_dual</span><span class="p">({</span><span class="s1">&#39;has_fixed_orientation&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;has_fixed_orientation&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_coordinates</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ep</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;is_fixed_x&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">edge</span><span class="p">])</span>
+            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ep</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;is_fixed_y&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">edge</span><span class="p">])</span>
+
+        <span class="k">for</span> <span class="n">form_edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">form_edge</span><span class="p">,</span> <span class="s1">&#39;target_length&#39;</span><span class="p">):</span>
+                <span class="n">length</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">form_edge</span><span class="p">,</span> <span class="s1">&#39;target_length&#39;</span><span class="p">)</span>
+                <span class="n">index</span> <span class="o">=</span> <span class="n">edge_index</span><span class="p">[</span><span class="n">form_edge</span><span class="p">]</span>
+                <span class="n">force_edge</span> <span class="o">=</span> <span class="n">ordered_edges</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">force_edge</span><span class="p">,</span> <span class="s1">&#39;lmin&#39;</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">force_edge</span><span class="p">,</span> <span class="s1">&#39;lmax&#39;</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">force_edge</span><span class="p">,</span> <span class="s1">&#39;target_length&#39;</span><span class="p">,</span> <span class="n">length</span><span class="p">)</span>
+
+        <span class="k">return</span></div></div>
 
     <span class="c1"># def compute_constraints(self, form, M):</span>
     <span class="c1">#     r&quot;&quot;&quot;Computes the form diagram constraints used</span>
