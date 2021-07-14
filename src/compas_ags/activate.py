@@ -71,10 +71,7 @@ def activate():
     register_json = get_register_json()
     plugin_info = register_json["Plugins"][PLUGIN_NAME]
 
-    if plugin_info["dev"]:
-        out, err, code = run("%s -m compas_ags.install --dev" % plugin_info["python"])
-    else:
-        out, err, code = run("%s -m compas_ags.install" % plugin_info["python"])
+    out, err, code = run("%s -m compas_ags.install" % plugin_info["python"])
 
     if code == 0:
         print(out.decode())

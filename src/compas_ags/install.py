@@ -1,53 +1,90 @@
 import compas
-import sys
+import compas_rhino
+from compas_rhino.install import install
+from compas_rhino.uninstall import uninstall
+from compas_rhino.install_plugin import install_plugin
+from compas_rhino.uninstall_plugin import uninstall_plugin
+import argparse
+import os
 import json
+import sys
+import importlib
+
 
 PLUGIN_NAME = "AGS"
+PACKAGES = ['compas', 'compas_rhino', 'compas_ags']
+
+
+def is_editable(project_name):
+    """Is distribution an editable install?"""
+    for path_item in sys.path:
+        egg_link = os.path.join(path_item, "%s.egg-link" % project_name)
+        if os.path.isfile(egg_link):
+            return True
+    return False
+
 
 if __name__ == '__main__':
 
-    packages = ['compas', 'compas_rhino', 'compas_ags']
-
-    import importlib
-
-    print("\n", "-"*10, "Checking packages", "-"*10)
-    for p in packages:
-        try:
-            importlib.import_module(p)
-            print('   {} {}'.format(p.ljust(20), "OK"))
-        except ImportError as e:
-            print(p, "ERROR: cannot be imported, make sure it is installed")
-            raise ImportError(e)
-
-    from compas_rhino.install import install
-    from compas_rhino.install_plugin import install_plugin
-    import argparse
-    import os
-
     parser = argparse.ArgumentParser(
-        description='COMPAS_AGS Installation command-line utility.')
+        description='compas_ags Installation command-line utility.')
 
-    parser.add_argument('--dev', action='store_true', help="install dev version of AGS from current env")
-    parser.add_argument('--plugin_path', help="The path to the plugin directory.")
+    parser.add_argument('--remove_plugins', action='store_true', help="remove all existing plugins")
+    parser.add_argument('--remove_packages', action='store_true', help="remove all existing compas packages")
+    parser.add_argument('--rhino_version', default='6.0', choices=['6.0', '7.0'], help="remove all existing compas packages")
     args = parser.parse_args()
 
-    print("\n", "-"*10, "Installing AGS python plugin", "-"*10)
+    print("\n", "-"*10, "Checking packages", "-"*10)
 
-    if args.dev:
-        rpy_plugin_path = os.path.join(os.path.dirname(__file__), "..", "..", 'ui/Rhino/AGS')
-        rpy_plugin_path = os.path.abspath(rpy_plugin_path)
-    elif args.plugin_path:
-        rpy_plugin_path = os.path.abspath(args.plugin_path)
+    for p in PACKAGES:
+        try:
+            importlib.import_module(p)
+        except ImportError:
+            print(p, "ERROR: cannot be imported, make sure it is installed")
+            raise
+        else:
+            print('   {} {}'.format(p.ljust(20), "OK"))
+
+    is_dev = is_editable("compas-ags")
+    print("compas_ags is editable install: ", is_dev)
+
+    if args.remove_plugins:
+        print("\n", "-"*10, "Removing existing plugins", "-"*10)
+        python_plugins_path = compas_rhino._get_python_plugins_path(args.rhino_version)
+        print("Plugin location: ", python_plugins_path)
+        plugins = os.listdir(python_plugins_path)
+        for p in plugins:
+            uninstall_plugin(p, version=args.rhino_version)
+
+    if args.remove_packages:
+        print("\n", "-"*10, "Removing existing packages", "-"*10)
+        uninstall()
+
+    print("\n", "-"*10, "Installing compas_ags python plugin", "-"*10)
+
+    plugin_path = os.path.dirname(__file__)
+    plugin_path = os.path.join(plugin_path, 'ui/Rhino/AGS')
+    plugin_path = os.path.abspath(plugin_path)
+
+    if os.path.exists(plugin_path):
+        python_plugins_path = compas_rhino._get_python_plugins_path(args.rhino_version)
+        print("Plugin path:", python_plugins_path)
+        install_plugin(plugin_path, version=args.rhino_version)
     else:
-        rpy_plugin_path = os.path.dirname(__file__)
-        rpy_plugin_path = os.path.join(rpy_plugin_path, "..", "..", "..", "..", "..")
-        rpy_plugin_path = os.path.abspath(rpy_plugin_path)
-
-    install_plugin(rpy_plugin_path, version="6.0")
+        raise RuntimeError("%s does not exist" % plugin_path)
 
     print("\n", "-"*10, "Installing COMPAS packages", "-"*10)
 
-    install(packages=packages)
+    if not is_dev:
+        os.environ["CONDA_PREFIX"] = ""
+        os.environ["CONDA_DEFAULT_ENV"] = ""
+        os.environ["CONDA_EXE"] = ""
+
+    print("CONDA_PREFIX", os.environ["CONDA_PREFIX"])
+    print("CONDA_DEFAULT_ENV", os.environ["CONDA_DEFAULT_ENV"])
+    print("CONDA_EXE", os.environ["CONDA_EXE"])
+
+    install(packages=PACKAGES, version=args.rhino_version)
 
     print("\n", "-"*10, "Installation is successful", "-"*10)
 
@@ -55,6 +92,7 @@ if __name__ == '__main__':
 
     os.makedirs(compas.APPDATA, exist_ok=True)
     register_json_path = os.path.join(compas.APPDATA, "compas_plugins.json")
+
     if os.path.exists(register_json_path):
         register_json = json.load(open(register_json_path))
         if not isinstance(register_json["Plugins"], dict):
@@ -62,22 +100,14 @@ if __name__ == '__main__':
     else:
         register_json = {"Plugins": {}, "Current": None}
 
-    if args.dev:
-        plugin_path = os.path.dirname(__file__)
-        plugin_path = os.path.join(plugin_path, "..", "..")
-        plugin_path = os.path.abspath(plugin_path)
-
-    else:
-        plugin_path = rpy_plugin_path
-
     plugin_info = {
-        "dev": args.dev,
+        "dev": is_dev,
         "path": plugin_path,
         "python": sys.executable,
         "packages": {},
     }
 
-    for name in packages:
+    for name in PACKAGES:
         package = importlib.import_module(name)
         plugin_info["packages"][name] = {"version": package.__version__}
 

@@ -1,0 +1,112 @@
+body{
+    font-family:  Helvetica;
+    color: white;
+    margin: 0;
+    padding: 0;
+    font-size: x-small;
+    font-weight: 100;
+    overflow: hidden;
+    background-color: black;
+}
+
+#background{
+    position: absolute;
+    left: 0;
+    width: 100%;
+    top: 0;
+    z-index: -100;
+    -webkit-app-region: drag;
+    opacity: 0.4;
+}
+
+#logo{
+    position: fixed;
+    right: 8%;
+    bottom: 12%;
+    z-index: 100;
+}
+
+#logo img{
+    margin-left: 20px;
+    height: 25px;
+}
+
+#content{
+    /* margin: 3%; */
+    /* line-height: 1.5; */
+    width: 100%;
+    height: 100%;
+}
+
+
+a:link{
+
+    -webkit-app-region: no-drag;
+    color: lightgrey;
+    text-decoration: none;
+}
+
+a:visited{
+    color: lightgrey;
+}
+
+
+#links{
+    position: absolute;
+    top: 60%;
+    left: 8%;
+    line-height: 1.5;
+    /* margin-top: 30%; */
+}
+
+#terms{
+    position: absolute;
+    top: 80%;
+    left: 8%;
+    font-size: xx-small;
+}
+
+#terms a:link{
+    color: lightgrey;
+    text-decoration: underline;
+}
+
+#exit{
+    position: absolute;
+    right: 3%;
+    top: 3%;
+    -webkit-app-region: no-drag;
+    cursor: pointer;
+}
+
+#agree{
+    /* font-family: Arial; */
+    font-size: large;
+    font-weight: bolder;
+}
+
+#agree a:link{
+    text-decoration: none;
+}
+
+
+#version{
+    position: fixed;
+    left: 8%;
+    top: 52%;
+}
+
+#title{
+    position: fixed;
+    left: 8%;
+    bottom: 50%;
+    font-size: 20pt;
+    font-weight: lighter;
+    line-height:10%;
+
+}
+
+#title h1{
+    font-size: 40pt;
+    font-weight: 100;
+}
