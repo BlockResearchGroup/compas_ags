@@ -37,7 +37,7 @@ class FormDiagram(Diagram):
             'is_external': False,
             'is_reaction': False,
             'is_load': False,
-            'has_fixed_orientation': False,
+            'target_vector': None,
             'target_length': None,
         })
 
@@ -251,12 +251,18 @@ class FormDiagram(Diagram):
         fixed = self.fixed()
         leaves = self.leaves()
         for edge in self.leaf_edges():
-            self.edge_attribute(edge, 'has_fixed_orientation', True)
-            if edge[0] in fixed or edge[1] in fixed:
-                continue
             sp, ep = self.edge_coordinates(*edge)
-            if abs(sp[0] - ep[0]) < tol:
-                if edge[0] in leaves:
+            dx = ep[0] - sp[0]
+            dy = ep[1] - sp[1]
+            length = (dx**2 + dy**2)**0.5
+            self.edge_attribute(edge, 'target_vector', [dx/length, dy/length])
+            self.edge_attribute(edge, 'is_load', True)  # by default loads are leaves connected to non fixed vertices
+            if edge[0] in fixed or edge[1] in fixed:
+                self.edge_attribute(edge, 'is_reaction', True)  # by default reactions are leaves connected to fixed vertices
+                self.edge_attribute(edge, 'is_load', False)
+                continue
+            if abs(sp[0] - ep[0]) < tol:  # for now, if loads are vertical, horizontal they will restraint application point in x or y.
+                if edge[0] in leaves:     # TODO: make this work for generic direction
                     self.vertex_attribute(edge[1], 'is_fixed_x', True)
                 else:
                     self.vertex_attribute(edge[0], 'is_fixed_x', True)

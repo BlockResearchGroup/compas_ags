@@ -15,7 +15,7 @@ from compas.numerical import normrow
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
-from compas_ags.ags.core import update_form_from_force
+from compas_ags.ags.core import update_primal_from_dual
 
 
 __all__ = [
@@ -306,7 +306,7 @@ def optimise_loadpath(form, force, algo='COBYLA'):
     def objfunc(_x):
         _xy[_free, 0] = _x
 
-        update_form_from_force(xy, _xy, free, leaves, i_j, ij_e, _C)
+        update_primal_from_dual(xy, _xy, free, leaves, i_j, ij_e, _C)
 
         length = normrow(C.dot(xy))
         force = normrow(_C.dot(_xy))

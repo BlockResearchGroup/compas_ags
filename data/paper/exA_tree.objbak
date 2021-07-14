@@ -1,0 +1,115 @@
+# Rhino
+
+mtllib exA_tree.mtl
+usemtl diffuse_0_0_255_255
+v 1 -1 0
+v 1 -2 0
+cstype bspline
+deg 1
+curv 0 1 1 2
+parm u 0 0 1 1
+end
+usemtl diffuse_0_0_255_255
+v 1 -1 0
+v 3 1 0
+cstype bspline
+deg 1
+curv 0 2.8284271247461903 3 4
+parm u 0 0 2.8284271247461903 2.8284271247461903
+end
+usemtl diffuse_0_0_255_255
+v -1 1 0
+v 1 -1 0
+cstype bspline
+deg 1
+curv 0 2.8284271247461903 5 6
+parm u 0 0 2.8284271247461903 2.8284271247461903
+end
+usemtl diffuse_0_0_255_255
+v 3 1 0
+v 2 2 0
+cstype bspline
+deg 1
+curv 0 1.4142135623730951 7 8
+parm u 0 0 1.4142135623730951 1.4142135623730951
+end
+usemtl diffuse_0_0_255_255
+v 3 1 0
+v 4 2 0
+cstype bspline
+deg 1
+curv 0 1.4142135623730951 9 10
+parm u 0 0 1.4142135623730951 1.4142135623730951
+end
+usemtl diffuse_0_0_255_255
+v 4 2 0
+v 4 3 0
+cstype bspline
+deg 1
+curv 0 1 11 12
+parm u 0 0 1 1
+end
+usemtl diffuse_0_0_255_255
+v 2 2 0
+v 4 2 0
+cstype bspline
+deg 1
+curv 0 2 13 14
+parm u 0 0 2 2
+end
+usemtl diffuse_0_0_255_255
+v 2 2 0
+v 2 3 0
+cstype bspline
+deg 1
+curv 0 1 15 16
+parm u 0 0 1 1
+end
+usemtl diffuse_0_0_255_255
+v 0 2 0
+v 0 3 0
+cstype bspline
+deg 1
+curv 0 1 17 18
+parm u 0 0 1 1
+end
+usemtl diffuse_0_0_255_255
+v -2 2 0
+v -2 3 0
+cstype bspline
+deg 1
+curv 0 1 19 20
+parm u 0 0 1 1
+end
+usemtl diffuse_0_0_255_255
+v 0 2 0
+v 2 2 0
+cstype bspline
+deg 1
+curv 0 2 21 22
+parm u 0 0 2 2
+end
+usemtl diffuse_0_0_255_255
+v -2 2 0
+v 0 2 0
+cstype bspline
+deg 1
+curv 0 2 23 24
+parm u 0 0 2 2
+end
+usemtl diffuse_0_0_255_255
+v -1 1 0
+v -2 2 0
+cstype bspline
+deg 1
+curv 0 1.4142135623730951 25 26
+parm u 0 0 1.4142135623730951 1.4142135623730951
+end
+usemtl diffuse_0_0_255_255
+v -1 1 0
+v 0 2 0
+cstype bspline
+deg 1
+curv 0 1.4142135623730951 27 28
+parm u 0 0 1.4142135623730951 1.4142135623730951
+end

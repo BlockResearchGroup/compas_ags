@@ -8,10 +8,11 @@ from compas.geometry import subtract_vectors
 
 __all__ = [
     'check_deviations',
+    'check_force_length_constraints',
 ]
 
 
-def check_deviations(form, force, tol=10e-3):
+def check_deviations(form, force, tol=10e-3, printout=False):
     """Checks whether the form and force diagrams are indeed reciprocal, i.e. have their corresponding edges parallel.
 
     Parameters
@@ -21,7 +22,7 @@ def check_deviations(form, force, tol=10e-3):
     force: compas_ags.diagrams.ForceDiagram
         The force diagram to check deviations.
     tol: float (10e-3)
-        The tolerance allowd for the deviations.
+        The tolerance allowed for the deviations.
 
     Returns
     -------
@@ -33,6 +34,7 @@ def check_deviations(form, force, tol=10e-3):
     edges_form = list(form.edges())
     edges_force = force.ordered_edges(form)
     checked = True
+    a_max = 0.0
 
     for i in range(len(edges_form)):
         pt0, pt1 = form.edge_coordinates(edges_form[i][0], edges_form[i][1])
@@ -43,6 +45,45 @@ def check_deviations(form, force, tol=10e-3):
         else:
             checked = False
             a = min(a, 180 - a)
+        if a > a_max:
+            a_max = a
         form.edge_attribute(edges_form[i], 'a', a)
+
+    if printout:
+        print('Maximum equilibrium deviation:', a_max)
+
+    return checked
+
+def check_force_length_constraints(force, tol=10e-3, printout=False):
+    """Checks whether target length constraints applied to the force diagrams are respected, i.e. are below the tolerance criteria.
+
+    Parameters
+    ----------
+    force: compas_ags.diagrams.ForceDiagram
+        The force diagram to check deviations.
+    tol: float (10e-3)
+        The tolerance allowed for the deviations.
+
+    Returns
+    -------
+    checked : bool
+        Return whether of not the diagram passes the check with no deviations greater than the tolerance.
+
+    """
+    checked = True
+    max_diff = 0.0
+
+    for u, v in force.edges():
+        target_constraint = force.edge_attribute((u, v), 'target_length')
+        if target_constraint:
+            length = force.edge_length(u, v)
+            diff = abs(length - target_constraint)
+            if diff > tol:
+                checked = False
+            if diff > max_diff:
+                max_diff = diff
+
+    if printout:
+        print('Diff constraints force:', max_diff)
 
     return checked

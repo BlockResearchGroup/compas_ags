@@ -13,7 +13,7 @@ Core
     :toctree: generated/
 
     update_q_from_qind
-    update_form_from_force
+    update_primal_from_dual
 
 
 Graph Statics
