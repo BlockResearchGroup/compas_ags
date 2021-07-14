@@ -5,8 +5,7 @@ import io
 from os import path
 
 from setuptools import setup
-from setuptools.command.develop import develop
-from setuptools.command.install import install
+from setuptools import find_packages
 
 
 here = path.abspath(path.dirname(__file__))
@@ -25,8 +24,8 @@ optional_requirements = {
 }
 
 setup(
-    name='COMPAS AGS',
-    version='1.0.2',
+    name='compas-ags',
+    version='1.1.0rc0',
     description='COMPAS package for Computational Graphic Statics',
     long_description=long_description,
     long_description_content_type='text/markdown',
@@ -58,7 +57,7 @@ setup(
         "Issues": "https://github.com/compas-dev/compas_ags/issues",
     },
 
-    packages=['compas_ags'],
+    packages= ["compas_ags"],
     package_dir={'': 'src'},
     package_data={},
     data_files=[],

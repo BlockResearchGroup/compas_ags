@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 jobs:
-  Installer:
+  Release:
     name: Release-Windows
     runs-on: "windows-latest"
     steps:
@@ -39,7 +39,7 @@ jobs:
       - name: ags-install
         shell: PowerShell
         run: |
-          python ui/Rhino/ags/dev/rui.py
+          python src/compas_ags/ui/Rhino/ags/dev/rui.py
           pip install .
 
       - name: ags-pack
@@ -52,11 +52,6 @@ jobs:
           repository: BlockResearchGroup/compas_installer
           ref: ags
           path: compas_installer
-
-      - name: Use Node.js
-        uses: actions/setup-node@v1
-        with:
-          node-version: '12.x'
       
       - name: wrap installer
         run: |
@@ -73,7 +68,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
-          draft: false
+          draft: True
           prerelease: false
 
       - name: Upload Release Asset
@@ -88,25 +83,13 @@ jobs:
           asset_content_type: application/octet-stream
 
   Publish:
-
-    needs: Installer
-
+    needs: Release
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2
+    - uses: actions/setup-python@v2
       with:
         python-version: '3.x'
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install setuptools wheel twine
-    - name: Build and publish
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: |
-        python setup.py sdist bdist_wheel
-        twine upload --verbose dist/*
+    - uses: compas-dev/compas-actions.publish@v1.0.0
+      with:
+        token: ${{ secrets.PYPI }}
