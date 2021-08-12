@@ -106,7 +106,7 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, t
     _C : sparse matrix in csr format
         The connectivity matrix of the force diagram.
     targ_l : list (optional)
-        Target lengths of the edges.
+        Target lengths / target forces of the edges.
         Default is an empty list, which considers that no target lengths are considered.
     targ_v : list (optional)
         Target vectors of the edges.
@@ -173,7 +173,7 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, t
 
     free_x = []  # list of vertices with free x - to be updated in loop
     free_y = []
-    is_free_x = [True] * len(free)
+    is_free_x = [True] * len(free)  # bool for free vertices - to be updated in loop
     is_free_y = [True] * len(free)
     for i in range(len(free)):
         vertex = free[i]
@@ -441,7 +441,7 @@ def get_jacobian_and_residual(form, force, _X_goal, constraints=None):
     rank_aug = matrix_rank(hstack([jacobian, r]))
 
     if rank_jac < rank_aug:
-        raise SolutionError('ERROR: Solution not possible. Check for overconstrained form diagram, or impossible force diagram movement (Rank Augmented > Rank Jacobian)')
+        raise SolutionError('ERROR: Rank Augmented > Rank Jacobian')
 
     # Remove rows due to anchored vertex in the force diagram
     red_r = delete(r, _bc, axis=0)

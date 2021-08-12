@@ -9,6 +9,7 @@ from compas.geometry import subtract_vectors
 __all__ = [
     'check_deviations',
     'check_force_length_constraints',
+    'check_equilibrium',
 ]
 
 
@@ -21,8 +22,12 @@ def check_deviations(form, force, tol=10e-3, printout=False):
         The form diagram to check deviations.
     force: compas_ags.diagrams.ForceDiagram
         The force diagram to check deviations.
-    tol: float (10e-3)
-        The tolerance allowed for the deviations.
+    tol: float, optional
+        Stopping criteria tolerance for angle deviations.
+        The default value is ``10e-3``.
+    printout: boll, optional
+        Whether or not print intermediate messages.
+        The default value is ``False``.
 
     Returns
     -------
@@ -50,7 +55,8 @@ def check_deviations(form, force, tol=10e-3, printout=False):
         form.edge_attribute(edges_form[i], 'a', a)
 
     if printout:
-        print('Maximum equilibrium deviation:', a_max)
+        if a_max > tol:
+            print('> Equilibrium Check | Max deviation:', a_max)
 
     return checked
 
@@ -61,8 +67,12 @@ def check_force_length_constraints(force, tol=10e-3, printout=False):
     ----------
     force: compas_ags.diagrams.ForceDiagram
         The force diagram to check deviations.
-    tol: float (10e-3)
-        The tolerance allowed for the deviations.
+    tol: float, optional
+        Stopping criteria tolerance for angle deviations.
+        The default value is ``10e-3``.
+    printout: boll, optional
+        Whether or not print intermediate messages.
+        The default value is ``False``.
 
     Returns
     -------
@@ -84,6 +94,35 @@ def check_force_length_constraints(force, tol=10e-3, printout=False):
                 max_diff = diff
 
     if printout:
-        print('Diff constraints force:', max_diff)
+        if max_diff > tol:
+            print('> Equilibrium Check | Constraints violation:', max_diff)
+
+    return checked
+
+
+def check_equilibrium(form, force, tol=10e-3, printout=False):
+    """Checks if maximum deviations and constraints exceed is below the tolerance.
+
+    Parameters
+    ----------
+    form: compas_ags.diagrams.FormDiagram
+        The form diagram to check equilibrium.
+    force: compas_ags.diagrams.ForceDiagram
+        The force diagram to check equilibrium.
+    tol: float, optional
+        Stopping criteria tolerance for angle deviations.
+        The default value is ``10e-3``.
+    printout: boll, optional
+        Whether or not print intermediate messages.
+        The default value is ``False``.
+
+    Returns
+    -------
+    checked : bool
+        Return whether of not the diagram passes the check.
+
+    """
+
+    checked = check_deviations(form, force, tol=tol, printout=printout) and check_force_length_constraints(force, tol=tol, printout=printout)
 
     return checked

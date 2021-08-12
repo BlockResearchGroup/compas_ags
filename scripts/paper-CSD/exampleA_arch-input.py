@@ -131,7 +131,7 @@ for key in release_x:
 
 # view_with_force_lengths(form, force)
 
-update_diagrams_from_constraints(form, force, callback=None, printout=False, max_iter=100)
+update_diagrams_from_constraints(form, force, callback=None, printout=True, max_iter=100)
 # update_diagrams_from_constraints(form, force, callback=view_with_force_lengths, printout=True, max_iter=20)
 
 view_with_initial_stage(form, force, forcescale=2.0, edge_label=False)
