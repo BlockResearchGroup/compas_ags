@@ -10,7 +10,6 @@ from compas_ags.ags import ConstraintsCollection
 from compas_ags.ags import form_update_from_force_newton
 from compas_ags.ags import form_update_from_force
 
-
 # ------------------------------------------------------------------------------
 #   1. create a simple arch from nodes and edges, make form and force diagrams
 # ------------------------------------------------------------------------------
