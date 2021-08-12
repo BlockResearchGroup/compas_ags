@@ -362,6 +362,8 @@ def form_update_from_force(form, force, kmax=100):
     free = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
     fixed_x = [vertex_index[vertex] for vertex in form.fixed_x()]
     fixed_y = [vertex_index[vertex] for vertex in form.fixed_y()]
+    target_lengths = form.edges_attribute('target_length')
+    target_vectors = form.edges_attribute('target_vector')
     # --------------------------------------------------------------------------
     # force diagram
     # --------------------------------------------------------------------------
@@ -378,7 +380,7 @@ def form_update_from_force(form, force, kmax=100):
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # re-add the leaves and leaf-edges
     # --------------------------------------------------------------------------
-    update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_j, ij_e, _C, leaves=leaves, kmax=kmax)
+    update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_j, ij_e, _C, targ_l=target_lengths, targ_v=target_vectors, leaves=leaves, kmax=kmax)
     # --------------------------------------------------------------------------
     # update
     # --------------------------------------------------------------------------
@@ -482,12 +484,6 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
             vertex = index_vertex[i]
             form.vertex_attribute(vertex, 'x', X[i].item())
             form.vertex_attribute(vertex, 'y', X[i + vcount].item())
-
-        from compas_ags.viewers import Viewer  # This is for debug, but could turn into an option
-        viewer = Viewer(form, force, delay_setup=False)
-        viewer.draw_form()
-        viewer.draw_force()
-        viewer.show()
 
         diff = norm(red_r)
         if n_iter > max_iter:
@@ -596,17 +592,19 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     # --------------------------------------------------------------------------
     # constraints
     # --------------------------------------------------------------------------
-    # leaves = [vertex_index[vertex] for vertex in form.leaves()]
     _fixed = [_vertex_index[vertex] for vertex in force.fixed()]
     _free = list(set(range(force.number_of_vertices())) - set(_fixed))
     _fixed_x = [_vertex_index[vertex] for vertex in force.fixed_x()]
     _fixed_y = [_vertex_index[vertex] for vertex in force.fixed_y()]
+    _target_lengths = [force.edge_attribute(edge, 'target_length') for edge in force.ordered_edges(form)]
+    _target_vectors = [force.edge_attribute(edge, 'target_vector') for edge in force.ordered_edges(form)]
 
     # --------------------------------------------------------------------------
     # compute the coordinates of the *free* vertices of the force diagram
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # --------------------------------------------------------------------------
-    update_primal_from_dual(_xy, xy, _free, _fixed_x, _fixed_y, _i_j, _ij_e, C, kmax=kmax)
+    # update_primal_from_dual(_xy, xy, _free, _fixed_x, _fixed_y, _i_j, _ij_e, C, kmax=kmax)
+    update_primal_from_dual(_xy, xy, _free, _fixed_x, _fixed_y, _i_j, _ij_e, C, targ_l=_target_lengths, targ_v=_target_vectors, kmax=kmax)
 
     # --------------------------------------------------------------------------
     # update force diagram
@@ -663,7 +661,7 @@ def force_update_from_constraints(force):
     # --------------------------------------------------------------------------
     # Paralelise edge given force targets and/or target_lengths
     # --------------------------------------------------------------------------
-    parallelise_edges(_xy, _edges, _i_nbrs, _ij_e, target_vectors, target_lengths, fixed=_fixed, fixed_x=_fixed_x, fixed_y=_fixed_y, kmax=20)
+    parallelise_edges(_xy, _edges, _i_nbrs, _ij_e, target_vectors, target_lengths, fixed=_fixed, fixed_x=_fixed_x, fixed_y=_fixed_y, kmax=100)
 
     # --------------------------------------------------------------------------
     # update force diagram geometry
@@ -700,20 +698,20 @@ def update_diagrams_from_constraints(form, force, tol=10e-4, max_iter=20, printo
 
     while not check_force_length_constraints(force, tol=tol, printout=printout) or not check_deviations(form, force, tol=tol, printout=printout) or start is True:
 
-        # Propose a force diagram based on constraints - Using paralellise
+        # Propose a force diagram based on constraints -> Using paralellise
         force_update_from_constraints(force)
 
         if callback:
             callback(form, force)
 
-        # Find geometrical dual form diagram respecting form constraints - Using Least SQRT
-        form_update_from_force(form, force)
+        # Find geometrical dual form diagram respecting form constraints -> Using Least-Squares
+        form_update_from_force(form, force, kmax=20)
 
         if callback:
             callback(form, force)
 
-        # Find geometrical dual force diagram respecting force constraints - Using Least SQRT
-        force_update_from_form_geometrical(force, form)
+        # Find geometrical dual force diagram respecting force constraints -> Using Least-Squares
+        force_update_from_form_geometrical(force, form, kmax=20)
 
         if callback:
             callback(form, force)

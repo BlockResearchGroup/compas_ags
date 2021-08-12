@@ -29,12 +29,12 @@ def show_constraints(form, force):
 
     viewer = Viewer(form, force, delay_setup=False)
     viewer.draw_form(vertexlabel={key: key for key in form.vertices()},
-                    edgelabel={uv: form.edge_attribute(uv, 'target_length') for uv in form.edges()},
+                    edgelabel={uv: str(form.edge_attribute(uv, 'target_length')) for uv in form.edges()},
                     vertexsize=0.2,
-                    forces_on=False,
+                    # forces_on=False,
                     vertexcolor={key: '#000000' for key in form.vertices_where({'is_fixed': True})})
     viewer.draw_force(vertexcolor={key: '#000000' for key in force.vertices_where({'is_fixed': True})},
-                    edgelabel={uv: force.edge_attribute(uv, 'target_length') for uv in force.edges()})
+                    edgelabel={uv: str(force.edge_attribute(uv, 'target_length')) for uv in force.edges()})
     viewer.show()
 
 
@@ -168,31 +168,31 @@ form_lines, force_lines = store_initial_lines(form, force)
 # ---------------------------------------------
 ########## Movement exact to solution:
 
-# 13, 12 move left
-x0 = 5.333333333333331
-y0 = -2.1666666666666674
-force.vertex_attribute(13, 'x', x0)
-force.vertex_attribute(12, 'x', x0)
-# 11, 10, 15, 14 move right and split
-force.vertex_attribute(11, 'x', x0)#5.333333333333331)
-force.vertex_attribute(10, 'x', x0)#5.333333333333331)
-force.vertex_attribute(15, 'x', x0)#5.333333333333331)
-force.vertex_attribute(14, 'x', x0)#5.333333333333331)
-force.vertex_attribute(11, 'y', y0 + 0.5)#5.333333333333331)
-force.vertex_attribute(10, 'y', y0 + 1.5)#5.333333333333331)
-force.vertex_attribute(15, 'y', y0 - 1.5)#5.333333333333331)
-force.vertex_attribute(14, 'y', y0 - 0.5)#5.333333333333331)
+# # 13, 12 move left
+# x0 = 5.333333333333331
+# y0 = -2.1666666666666674
+# force.vertex_attribute(13, 'x', x0)
+# force.vertex_attribute(12, 'x', x0)
+# # 11, 10, 15, 14 move right and split
+# force.vertex_attribute(11, 'x', x0)#5.333333333333331)
+# force.vertex_attribute(10, 'x', x0)#5.333333333333331)
+# force.vertex_attribute(15, 'x', x0)#5.333333333333331)
+# force.vertex_attribute(14, 'x', x0)#5.333333333333331)
+# force.vertex_attribute(11, 'y', y0 + 0.5)#5.333333333333331)
+# force.vertex_attribute(10, 'y', y0 + 1.5)#5.333333333333331)
+# force.vertex_attribute(15, 'y', y0 - 1.5)#5.333333333333331)
+# force.vertex_attribute(14, 'y', y0 - 0.5)#5.333333333333331)
 
-# Identify auto constraints
-form.identify_constraints()
+# # Identify auto constraints
+# form.identify_constraints()
 
-form_update_from_force(form, force)
+# form_update_from_force(form, force)
 
-view_with_initial_stage(form, force, forcescale=2.0)
-view_with_force_lengths(form, force)
+# view_with_initial_stage(form, force, forcescale=2.0)
+# view_with_force_lengths(form, force)
 
 # ---------------------------------------------
-########## Add constraints on force for constant force
+########## Add constraints for constant force on the top
 
 # top_chord = [22, 23, 27, 28, 20, 21]
 # bottom_chord = [18, 13, 10, 5, 2, 1]
@@ -200,23 +200,25 @@ view_with_force_lengths(form, force)
 # diagonals = [16, 14, 8, 6]
 # loads = [17, 12, 9, 4, 0]
 
+# # Constant force on Top Chord
 # L = force.edge_length(*force_edges[21])
+# print(L)
 # # top chord
 # for index in top_chord:
 #     form.edge_attribute(index_edge[index], 'target_length', L)
 
-# # bottom chord
+# # bottom chord remains horizontal
 # for index in bottom_chord:
-#     form.edge_attribute(index_edge[index], 'has_fixed_orientation', True)
-# # bottom chord L = 2.5
-# # for index in bottom_chord:
-# #     form.edge_attribute(index_edge[index], 'target_length', L)
+#     edge = index_edge[index]
+#     sp, ep = form.edge_coordinates(*edge)
+#     dx = ep[0] - sp[0]
+#     dy = ep[1] - sp[1]
+#     length = (dx**2 + dy**2)**0.5
+#     form.edge_attribute(edge, 'target_vector', [dx/length, dy/length])
 
-# # for index in loads:
-# #     form.edge_attribute(index_edge[index], 'target_length', 1.0)
-
-# # for index in struts:
-# #     form.edge_attribute(index_edge[index], 'target_length', 1.0)
+# # keep constant loads
+# for index in loads:
+#     form.edge_attribute(index_edge[index], 'target_length', 1.0)
 
 # # zero on diagonals
 # for index in diagonals:
@@ -234,26 +236,89 @@ view_with_force_lengths(form, force)
 #     force.vertex_attribute(key, 'is_fixed_x', True)
 #     force.vertex_attribute(key, 'is_fixed_y', True)
 
-# vertices_force_fix = [9, 16]
-# for key in vertices_force_fix:
-#     force.vertex_attribute(key, 'is_fixed_x', True)
-#     force.vertex_attribute(key, 'is_fixed_y', True)
+# # vertices_force_fix = [9, 16]
+# # for key in vertices_force_fix:
+# #     force.vertex_attribute(key, 'is_fixed_x', True)
+# #     force.vertex_attribute(key, 'is_fixed_y', True)
 
 # form_vertices_bottom_chord = [14, 9, 7, 5, 3, 1, 12]
 # for key in form_vertices_bottom_chord:
 #     form.vertex_attribute(key, 'is_fixed_y', True)
 
-# form_vertices_top_chord = [11, 19, 17, 18, 10]
-# for key in form_vertices_top_chord:
-#     form.vertex_attribute(key, 'is_fixed_x', True)
+# # form_vertices_top_chord = [11, 19, 17, 18, 10]
+# # for key in form_vertices_top_chord:
+# #     form.vertex_attribute(key, 'is_fixed_x', True)
 
 # show_constraints(form, force)
 
-# update_diagrams_from_constraints(form, force, max_iter=20, callback=view_with_initial_stage, printout=True)
-# # update_diagrams_from_constraints(form, force, max_iter=200, callback=None, printout=True)
+# # update_diagrams_from_constraints(form, force, max_iter=20, callback=view_with_initial_stage, printout=True)
+# update_diagrams_from_constraints(form, force, max_iter=100, callback=None, printout=True)
 
 # view_with_initial_stage(form, force)
 # view_with_force_lengths(form, force)
 
 
+# ---------------------------------------------
+########## Add constraints for constant force on the bottom
 
+top_chord = [22, 23, 27, 28, 20, 21]
+bottom_chord = [18, 13, 10, 5, 2, 1]
+struts = [19, 15, 11, 7, 3]
+diagonals = [16, 14, 8, 6]
+loads = [17, 12, 9, 4, 0]
+
+form.edges_attribute('target_length', None)
+
+# bottom chord
+for index in bottom_chord:
+    edge = index_edge[index]
+    sp, ep = form.edge_coordinates(*edge)
+    dx = ep[0] - sp[0]
+    dy = ep[1] - sp[1]
+    length = (dx**2 + dy**2)**0.5
+    form.edge_attribute(edge, 'target_vector', [dx/length, dy/length])
+
+# bottom chord constant force
+L = 2.5
+for index in bottom_chord:
+    form.edge_attribute(index_edge[index], 'target_length', L)
+
+for index in loads:
+    form.edge_attribute(index_edge[index], 'target_length', 1.0)
+
+# zero on diagonals
+for index in diagonals:
+    form.edge_attribute(index_edge[index], 'target_length', 0.0)
+
+# Identify auto constraints
+form.identify_constraints()
+
+# Reflect all constraints to force diagram
+force.constraints_from_dual()
+
+#vertices force loadline
+vertices_loadline = [2, 3, 4, 5, 6, 7, 0, 1]
+for key in vertices_loadline:
+    force.vertex_attribute(key, 'is_fixed_x', True)
+    force.vertex_attribute(key, 'is_fixed_y', True)
+
+# vertices_force_fix = [9, 16]
+# for key in vertices_force_fix:
+#     force.vertex_attribute(key, 'is_fixed_x', True)
+#     force.vertex_attribute(key, 'is_fixed_y', True)
+
+form_vertices_bottom_chord = [14, 9, 7, 5, 3, 1, 12]
+for key in form_vertices_bottom_chord:
+    form.vertex_attribute(key, 'is_fixed_y', True)
+
+# form_vertices_top_chord = [11, 19, 17, 18, 10]
+# for key in form_vertices_top_chord:
+#     form.vertex_attribute(key, 'is_fixed_x', True)
+
+show_constraints(form, force)
+
+# update_diagrams_from_constraints(form, force, max_iter=20, callback=view_with_initial_stage, printout=True)
+update_diagrams_from_constraints(form, force, max_iter=100, callback=None, printout=True)
+
+view_with_initial_stage(form, force)
+view_with_force_lengths(form, force)

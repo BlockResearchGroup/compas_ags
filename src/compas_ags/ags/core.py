@@ -84,7 +84,7 @@ def update_q_from_qind(E, q, dep, ind):
     q[dep] = qd
 
 
-def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, leaves=[], kmax=100):
+def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, targ_l=[], targ_v=[], leaves=[], kmax=100):
     r"""Update the coordinates of the primal diagram using the coordinates of the corresponding dual diagram.
     This function apply to both sides, i.e. it can be used to update the form diagram from the geometry of the force
     diagram or to update the force diagram from the geometry of the force diagram.
@@ -105,6 +105,12 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, l
         Edge index for every vertex pair.
     _C : sparse matrix in csr format
         The connectivity matrix of the force diagram.
+    targ_l : list (optional)
+        Target lengths of the edges.
+        Default is an empty list, which considers that no target lengths are considered.
+    targ_v : list (optional)
+        Target vectors of the edges.
+        Default is an empty list, which considers that no target vectors are considered.
     leaves : list
         The leaves of the primal diagram.
         Default is an empty list, which considers that no leaves are considered.
@@ -167,7 +173,7 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, l
 
     free_x = []  # list of vertices with free x - to be updated in loop
     free_y = []
-    is_free_x = [True] * len(free)  # bool for free vertices - to be updated in loop
+    is_free_x = [True] * len(free)
     is_free_y = [True] * len(free)
     for i in range(len(free)):
         vertex = free[i]
@@ -206,6 +212,16 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, l
 
                 if normrow(_l)[0, 0] < 0.001:
                     continue
+
+                if targ_l:
+                    if targ_l[ij_e[(i, j)]] == 0.0:
+                        # print('Jumped edge due to 0 force target', ij_e[(i, j)])
+                        continue
+
+                if targ_v:
+                    if targ_v[ij_e[(i, j)]]:
+                        n = array(targ_v[ij_e[(i, j)]]).reshape(1, -1)
+                        # print('changed the N in edge (after / before)', ij_e[(i, j)], n, _t[ij_e[(i, j)], None])
 
                 r = I - n.T.dot(n)          # projection into the orthogonal space of the direction vector
                 a = xy[j, None]             # a point on the line (the neighbour of the vertex)
@@ -334,8 +350,11 @@ def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, f
                     if target_vectors[e]:           # edges with constraint on length + orientation
                         tx, ty = target_vectors[e]
                     else:                           # edges with constraint on length only
-                        tx = (xy0[v][0] - xy0[u][0])/lengths[e]
-                        ty = (xy0[v][1] - xy0[u][1])/lengths[e]
+                        if lengths[e] == 0.0:
+                            tx = ty = 0.0
+                        else:
+                            tx = (xy0[v][0] - xy0[u][0])/lengths[e]
+                            ty = (xy0[v][1] - xy0[u][1])/lengths[e]  # check if xy0 is indeed better than xy
                 else:
                     if target_vectors[e]:           # edges with constraint on orientation only
                         tx, ty = target_vectors[e]
@@ -353,10 +372,10 @@ def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, f
             if j not in fixed_y and len_nbrs > 0:
                 xy[j][1] = y / len_nbrs
 
-        for (i, j) in ij_e:       # TODO: verify if this part is necessary for problems with zero edge
+        for (i, j) in ij_e:
             e = ij_e[(i, j)]
 
-            if lengths[e] == 0.0:
+            if lengths[e] == 0.0 or target_lengths[e] == 0.0:
                 c = midpoint_point_point_xy(xy[i], xy[j])
                 xy[i][:] = c[:][:2]
                 xy[j][:] = c[:][:2]

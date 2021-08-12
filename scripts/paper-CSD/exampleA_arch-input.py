@@ -189,16 +189,8 @@ for key in supports:
 # Identify auto constraints
 form.identify_constraints()
 
-# for uv in form.edges_where({'is_load': True}):
-#     print('is_load ->', edge_index[uv], uv)
-# for uv in form.edges_where({'is_reaction': True}):
-#     print('is_reaction ->', edge_index[uv], uv)
-
 fd_applied = -1.0
-# ind_edge = (0, 12)  # does not work
-# ind_edge = (6, 17)  # does not work
-# ind_edge = (5, 16)  # works 24 iterations
-ind_edge = (4, 15)  # works 19 iterations
+ind_edge = (4, 15)  # works 11 iterations
 form.edge_attribute(ind_edge, 'is_ind', True)
 form.edge_attribute(ind_edge, 'q', fd_applied)
 
@@ -209,9 +201,7 @@ form.edge_attribute(ind_edge, 'q', fd_applied)
 form_update_q_from_qind(form)
 force_update_from_form(force, form)
 
-print('index  reaction  load')
-for index, uv in enumerate(form.edges()):
-    print(index, form.edge_attribute(uv, 'is_reaction'), form.edge_attribute(uv, 'is_load'))
+_k_i = force.index_key()
 
 # visualise initial solution
 view_form_force2(form, force, forcescale=2.0)
@@ -226,7 +216,7 @@ form_lines, force_lines = store_initial_lines(form, force)
 for u, v in form.edges_where({'is_load': True}):
     form.edge_attribute((u, v), 'target_length', abs(fd_applied))
 
-# # set reaction symmetry
+# set reaction symmetry
 # react_y = [4, 15]
 # for index in react_y:
 #     form.edge_attribute(index_edge[index], 'target_length', 3.0)
@@ -240,6 +230,8 @@ for key in release_x:
     force.vertex_attribute(key, 'is_fixed_x', False)
 
 show_constraints(form, force)
+
+# view_with_force_lengths(form, force)
 
 update_diagrams_from_constraints(form, force, callback=None, printout=False, max_iter=100)
 # update_diagrams_from_constraints(form, force, callback=view_with_force_lengths, printout=True, max_iter=20)

@@ -88,15 +88,6 @@ def view_form_force(form, force, forcescale=0.5):
 # ------------------------------------------------------------------------------
 
 
-
-# ------------------------------------------------------------------------------
-#   0. Problem of getting to a funicular shape
-#       - Input a circular arch
-#       - Input "target forces" for the loads applied
-#       - Specify the reaction magnitudes, such that the vertical eq. is fulfilled
-#       - No vertex constraints apply on the force diag. (only to the ind. edge)
-# ------------------------------------------------------------------------------
-
 import compas_ags
 from compas_ags.diagrams import FormGraph
 from compas_ags.diagrams import FormDiagram
@@ -143,7 +134,16 @@ ind_edge = (8, 10)  # works 24 iterations
 form.edge_attribute(ind_edge, 'is_ind', True)
 form.edge_attribute(ind_edge, 'q', fd_applied)
 
-form.vertex_attribute(7, 'is_fixed_y', True)
+edges_top = [5, 7, 12]
+for index, (u, v) in enumerate(form.edges()):
+    if index in edges_top:
+        sp, ep = form.edge_coordinates(u, v)
+        dx = ep[0] - sp[0]
+        dy = ep[1] - sp[1]
+        length = (dx**2 + dy**2)**0.5
+        form.edge_attribute((u, v), 'target_vector', [dx/length, dy/length])
+
+# form.vertex_attribute(7, 'is_fixed_y', True)
 
 # view the centroidal dual
 # view_form_force(form, force)
@@ -196,8 +196,8 @@ force.constraints_from_dual()
 
 show_constraints(form, force)
 
-# update_diagrams_from_constraints(form, force, callback=None, printout=False, max_iter=100)
-update_diagrams_from_constraints(form, force, callback=view_with_force_lengths, printout=True, max_iter=20)
+update_diagrams_from_constraints(form, force, callback=None, printout=False, max_iter=100)
+# update_diagrams_from_constraints(form, force, callback=view_with_force_lengths, printout=True, max_iter=20)
 
 view_form_force(form, force, forcescale=2.0)
 view_with_initial_stage(form, force, forcescale=2.0)

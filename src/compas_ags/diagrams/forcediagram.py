@@ -323,6 +323,7 @@ class ForceDiagram(Diagram):
         ForceDiagram is modified in place.
         """
         edge_index = self.dual.edge_index()
+        _edges = list(self.edges())
         ordered_edges = self.ordered_edges(self.dual)
         edges_orient = []
 
@@ -330,7 +331,7 @@ class ForceDiagram(Diagram):
             self.vertices_attribute('is_fixed', True, keys=[*edge])
             edges_orient.append(edge)
 
-        for edge in self.edges_where_dual({'is_load': True}):
+        for edge in self.edges_where_dual({'is_load': True}):  # If loads are orthogonal the force dual edge gets constrained
             self.edge_attribute(edge, 'is_load', True)
             edges_orient.append(edge)
             sp, ep = self.edge_coordinates(*edge)
@@ -351,6 +352,10 @@ class ForceDiagram(Diagram):
                 edges_orient.append(force_edge)
 
         for edge in edges_orient:
+            if edge in _edges:
+                pass
+            else:
+                edge = (edge[1], edge[0])
             sp, ep = self.edge_coordinates(*edge)
             dx = ep[0] - sp[0]
             dy = ep[1] - sp[1]
@@ -360,7 +365,7 @@ class ForceDiagram(Diagram):
         for form_edge in self.dual.edges():
             if self.dual.edge_attribute(form_edge, 'target_length') is not None:  # rename this to target force
                 length = self.dual.edge_attribute(form_edge, 'target_length')
-                print('constraint to length:', length)
+                # print('constraint to length:', length)
                 index = edge_index[form_edge]
                 force_edge = ordered_edges[index]
                 # self.edge_attribute(force_edge, 'lmin', length)  # Probably useless
