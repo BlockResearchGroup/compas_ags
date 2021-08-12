@@ -533,7 +533,6 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     _xy = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
-    _C = connectivity_matrix(_edges, 'csr')
 
     _i_j = {index: [_vertex_index[nbr] for nbr in force.vertex_neighbors(vertex)] for index, vertex in enumerate(force.vertices())}
     _ij_e = {(_vertex_index[u], _vertex_index[v]): _edge_index[u, v] for u, v in _edge_index}

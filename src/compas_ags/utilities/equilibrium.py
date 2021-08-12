@@ -60,6 +60,7 @@ def check_deviations(form, force, tol=10e-3, printout=False):
 
     return checked
 
+
 def check_force_length_constraints(force, tol=10e-3, printout=False):
     """Checks whether target length constraints applied to the force diagrams are respected, i.e. are below the tolerance criteria.
 

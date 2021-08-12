@@ -71,7 +71,6 @@ class ForceDiagram(Diagram):
         """
         return list(self.vertices_where({'is_fixed': True}))
 
-
     def fixed_x(self):
         """The identifiers of the vertices fixed in ``x`` only.
 
@@ -89,7 +88,6 @@ class ForceDiagram(Diagram):
         list
         """
         return list(self.vertices_where({'is_fixed_y': True, 'is_fixed': False}))
-
 
     def anchor(self):
         """Get an anchor to the force diagram.
