@@ -173,7 +173,7 @@ from compas_ags.ags import update_diagrams_from_constraints
 from compas_ags.ags import form_update_from_force
 from compas_ags.viewers import Viewer
 
-input_file = compas_ags.get('paper/ex0_arch-output.obj')
+input_file = compas_ags.get('paper/exB_arch-output.obj')
 
 form = FormDiagram.from_json(input_file)
 force = ForceDiagram.from_formdiagram(form)
