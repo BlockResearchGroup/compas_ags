@@ -173,7 +173,7 @@ from compas_ags.diagrams import ForceDiagram
 from compas_ags.ags import form_update_q_from_qind
 from compas_ags.ags import force_update_from_form
 
-graph = FormGraph.from_obj(compas_ags.get('paper/ex3_dense_truss.obj'))
+graph = FormGraph.from_obj(compas_ags.get('paper/exE_truss_dense.obj'))
 
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
