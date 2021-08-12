@@ -6,7 +6,6 @@ import sys
 
 from numpy import array
 from numpy import float64
-from numpy import delete
 from numpy import vstack
 from numpy.linalg import lstsq
 from numpy.linalg import norm
@@ -22,7 +21,6 @@ from compas.numerical import normrow
 from compas.numerical import dof
 from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
-from compas.numerical import nullspace
 
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
@@ -31,7 +29,6 @@ from compas_ags.ags.core import update_q_from_qind
 from compas_ags.ags.core import update_primal_from_dual
 from compas_ags.ags.core import get_jacobian_and_residual
 from compas_ags.ags.core import parallelise_edges
-from compas_ags.ags.core import compute_jacobian
 
 from compas_ags.utilities import check_deviations
 from compas_ags.utilities import check_force_length_constraints
@@ -42,7 +39,6 @@ from compas_ags.exceptions import SolutionError
 __all__ = [
     'form_identify_dof',
     'form_count_dof',
-    'form_compute_nullspace',
     'form_update_q_from_qind',
     'form_update_from_force',
     'form_update_from_force_newton',
@@ -203,56 +199,6 @@ def form_count_dof(form):
     k, m = dof(E)
 
     return int(k), int(m)
-
-
-def form_compute_nullspace(form, force, constraints=None):
-    r"""Compute the null space of a form diagram assuming a set of constraints.
-    It returns the new position of the form diagram that represents how the
-    form diagram can be changed without affecting the force diagram.
-    It corresponds to the nullspace of the Jacobian :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`.
-
-    Parameters
-    ----------
-    form : :class:`FormDiagram`
-        The form diagram.
-    force : :class:`ForceDiagram`
-        The force diagram.
-    constraints: :class:`ConstraintsCollection`, optional
-        A collection of form diagram constraints.
-        The default is ``None``, in which case no constraints are considered.
-
-    Returns
-    -------
-    nullspace [list of arrays]
-        The modified diagrams thart require no movement in the force diagram.
-
-    References
-    ----------
-    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
-
-    Examples
-    --------
-    >>>
-    """
-    jacobian = compute_jacobian(form, force)
-    if constraints:
-        (cj, _) = constraints.compute_constraints()
-        jacobian = vstack((jacobian, cj))
-
-    _vcount = force.number_of_vertices()
-    _k_i = force.key_index()
-    _known = _k_i[force.anchor()]
-    _bc = [_known, _vcount + _known]
-
-    red_jacobian = delete(jacobian, _bc, axis=0)
-
-    null_states = nullspace(red_jacobian).T
-
-    null_space = []
-    for null_state in null_states:
-        xy = null_state.reshape((2, -1)).T
-        null_space.append(xy)
-    return null_space
 
 
 # ==============================================================================
@@ -676,6 +622,7 @@ def force_update_from_constraints(force):
 # dual modifications
 # ==============================================================================
 
+
 def update_diagrams_from_constraints(form, force, tol=10e-4, max_iter=20, printout=False, callback=None):
     """Update the force, and form diagram after constraints are imposed in the force diagram.
 
@@ -723,8 +670,6 @@ def update_diagrams_from_constraints(form, force, tol=10e-4, max_iter=20, printo
         start = False
 
     print('Finished with {0} iterations.'.format(niter))
-    print(check_force_length_constraints(force, tol=tol, printout=printout))
-    print(check_deviations(form, force, tol=tol, printout=printout))
 
     return
 
