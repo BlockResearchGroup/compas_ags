@@ -603,7 +603,6 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     # compute the coordinates of the *free* vertices of the force diagram
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # --------------------------------------------------------------------------
-    # update_primal_from_dual(_xy, xy, _free, _fixed_x, _fixed_y, _i_j, _ij_e, C, kmax=kmax)
     update_primal_from_dual(_xy, xy, _free, _fixed_x, _fixed_y, _i_j, _ij_e, C, targ_l=_target_lengths, targ_v=_target_vectors, kmax=kmax)
 
     # --------------------------------------------------------------------------
