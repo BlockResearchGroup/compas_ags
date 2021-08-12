@@ -16,7 +16,7 @@ def view_form_force(form, force, forcescale=0.5, edge_label=True):
     viewer.draw_force(edgelabel=force_edge_label)
     viewer.show()
 
-def view_with_initial_stage(form, force, forcescale=0.5, edge_label=True, qid=True):
+def view_with_initial_stage(form, force, forcescale=0.5, edge_label=True):
     if edge_label:
         form_edge_label = {uv: index for index, uv in enumerate(form.edges())}
         force_edge_label = force_edge_labels
@@ -25,8 +25,6 @@ def view_with_initial_stage(form, force, forcescale=0.5, edge_label=True, qid=Tr
         force_edge_label = None
 
     viewer = Viewer(form, force, delay_setup=False)
-    if not qid:
-        viewer.default_independent_edge_color = '#00ff00'
     viewer.draw_form(lines=form_lines,
                     forces_on=True,
                     external_on=True,
