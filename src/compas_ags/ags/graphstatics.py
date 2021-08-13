@@ -44,6 +44,7 @@ __all__ = [
     'form_update_from_force',
     'form_update_from_force_newton',
     'force_update_from_form',
+    'force_update_from_constraints',
 
     'form_update_q_from_qind_proxy',
     'form_update_from_force_proxy',
@@ -556,10 +557,12 @@ def force_update_from_form(force, form):
 def force_update_from_constraints(force):
     """Update the force diagram from constraints on length and orientation imposed in the form diagram,
     and already carried out as attributes in the force diagram.
+
     Parameters
     ----------
     force : :class:`ForceDiagram`
         The force diagram on which the update is based.
+
     Returns
     -------
     None
