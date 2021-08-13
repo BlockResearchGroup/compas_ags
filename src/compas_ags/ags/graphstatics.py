@@ -30,6 +30,7 @@ from compas_ags.diagrams import ForceDiagram
 from compas_ags.ags.core import update_q_from_qind
 from compas_ags.ags.core import update_form_from_force
 from compas_ags.ags.core import get_jacobian_and_residual
+from compas_ags.ags.core import parallelise_edges
 from compas_ags.ags.core import compute_jacobian
 
 from compas_ags.exceptions import SolutionError
@@ -550,6 +551,70 @@ def force_update_from_form(force, form):
         index = _vertex_index[vertex]
         attr['x'] = _xy[index, 0]
         attr['y'] = _xy[index, 1]
+
+
+def force_update_from_constraints(force):
+    """Update the force diagram from constraints on length and orientation imposed in the form diagram,
+    and already carried out as attributes in the force diagram.
+    Parameters
+    ----------
+    force : :class:`ForceDiagram`
+        The force diagram on which the update is based.
+    Returns
+    -------
+    None
+        The force diagram is updated in-place.
+    """
+
+    # --------------------------------------------------------------------------
+    # parameters from force diagram
+    # --------------------------------------------------------------------------
+    _k_i = force.vertex_index()
+    _xy = force.vertices_attributes('xy')
+    _edges = list(force.edges())
+    _edges = [(_k_i[u], _k_i[v]) for u, v in _edges]
+    _i_nbrs = {_k_i[key]: [_k_i[nbr] for nbr in force.vertex_neighbors(key)] for key in force.vertices()}
+    _uv_i = {uv: index for index, uv in enumerate(_edges)}
+    _ij_e = {(u, v): index for (u, v), index in iter(_uv_i.items())}
+
+    # --------------------------------------------------------------------------
+    # fixity from constraints on force diagram
+    # --------------------------------------------------------------------------
+    fixed_force = [key for key in force.vertices_where({'is_fixed': True})]
+    fixed_force_x = [key for key in force.vertices_where({'is_fixed_x': True})]
+    fixed_force_y = [key for key in force.vertices_where({'is_fixed_y': True})]
+
+    _fixed = [_k_i[key] for key in fixed_force]
+    _fixed_x = [_k_i[key] for key in fixed_force_x]
+    _fixed_y = [_k_i[key] for key in fixed_force_y]
+
+    # --------------------------------------------------------------------------
+    # edge orientations and edge target lengths
+    # --------------------------------------------------------------------------
+    target_lengths = force.edges_attribute('target_length')
+    target_vectors = [None] * len(_edges)
+
+    for u, v in force.edges_where({'has_fixed_orientation': True}):
+        sp, ep = force.edge_coordinates(u, v)
+        dx = ep[0] - sp[0]
+        dy = ep[1] - sp[1]
+        length = (dx**2 + dy**2)**0.5
+        index = _uv_i[(_k_i[u], _k_i[v])]
+        target_vectors[index] = [dx/length, dy/length]  # compute target vectors for edges with fix orientation
+
+    # --------------------------------------------------------------------------
+    # Paralelise edge given force targets and/or target_lengths
+    # --------------------------------------------------------------------------
+    parallelise_edges(_xy, _edges, _i_nbrs, _ij_e, target_vectors, target_lengths, fixed=_fixed, fixed_x=_fixed_x, fixed_y=_fixed_y, kmax=100)
+
+    # --------------------------------------------------------------------------
+    # update force diagram geometry
+    # --------------------------------------------------------------------------
+    for key in force.vertices():
+        i = _k_i[key]
+        x, y = _xy[i]
+        force.vertex_attribute(key, 'x', x)
+        force.vertex_attribute(key, 'y', y)
 
 
 # ==============================================================================
