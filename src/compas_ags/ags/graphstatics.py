@@ -22,7 +22,7 @@ from compas.numerical import normrow
 from compas.numerical import dof
 from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
-from compas.numerical import nullspace
+from compas.numerical import nullspace as matrix_nullspace
 
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
@@ -200,10 +200,12 @@ def form_count_dof(form):
 
 
 def form_compute_nullspace(form, force, constraints=None):
-    r"""Compute the null space of a form diagram assuming a set of constraints.
-    It returns the new position of the form diagram that represents how the
-    form diagram can be changed without affecting the force diagram.
-    It corresponds to the nullspace of the Jacobian :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`.
+    r"""Compute the nullspaces of a form diagram assuming a set of constraints.
+
+    It returns a list with the displacements that apply to the form diagram representing
+    how the latter can be moved in the plan without modifying the force diagram and
+    considering the set of constraints applied. It corresponds to the nullspace of the
+    Jacobian :math:`\partial \mathbf{X}^* / \partial \mathbf{X}` matrix as computed in [1].
 
     Parameters
     ----------
@@ -217,8 +219,15 @@ def form_compute_nullspace(form, force, constraints=None):
 
     Returns
     -------
-    nullspace [list of arrays]
-        The modified diagrams thart require no movement in the force diagram.
+    nullspaces [list of arrays (vcount x 2)]
+        The null displacement fields applied to the form diagram considering applied constraints.
+
+    Notes
+    -----
+    Among the nullspaces, the unrestrained rigid-body displacements available are always
+    included and other unrestrained displacement fields that preserve the orientation
+    of all edges keeping reciprocity between form and force diagram. The displacement fields
+    are unit vectors and can be rescaled to visialisation purposes.
 
     References
     ----------
@@ -228,25 +237,27 @@ def form_compute_nullspace(form, force, constraints=None):
     --------
     >>>
     """
-    jacobian = compute_jacobian(form, force)
+    jacobian = compute_jacobian(form, force)  # Jacobian matrix of size (2 _vcount, 2 vcount)
     if constraints:
         (cj, _) = constraints.compute_constraints()
-        jacobian = vstack((jacobian, cj))
+        jacobian = vstack((jacobian, cj))   # Add rows to the Jacobian matrix representing constraints
 
+    # Remove the rows of the jacobian to account for the anchored vertex in the force diagram (influence x and y directions)
     _vcount = force.number_of_vertices()
     _k_i = force.key_index()
-    _known = _k_i[force.anchor()]
-    _bc = [_known, _vcount + _known]
+    _anchor = _k_i[force.anchor()]
+    _anchor_xy = [_anchor, _vcount + _anchor]
 
-    red_jacobian = delete(jacobian, _bc, axis=0)
+    reduced_jacobian = delete(jacobian, _anchor_xy, axis=0)
 
-    null_states = nullspace(red_jacobian).T
+    nullstates = matrix_nullspace(reduced_jacobian).T  # unit vectors representing the possible nullstates
 
-    null_space = []
-    for null_state in null_states:
-        xy = null_state.reshape((2, -1)).T
-        null_space.append(xy)
-    return null_space
+    nullspaces = []
+    for nullstate in nullstates:  # reshaping the nullstates a list of (vcount x 2) arrays
+        xy = nullstate.reshape((2, -1)).T
+        nullspaces.append(xy)
+
+    return nullspaces
 
 
 # ==============================================================================
