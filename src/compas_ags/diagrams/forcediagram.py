@@ -319,7 +319,7 @@ class ForceDiagram(Diagram):
         ForceDiagram is modified in place.
         """
         edge_index = self.dual.edge_index()
-        _edges = list(self.edges())
+        edges = list(self.edges())
         ordered_edges = self.ordered_edges(self.dual)
         edges_orient = []
 
@@ -348,7 +348,7 @@ class ForceDiagram(Diagram):
                 edges_orient.append(force_edge)
 
         for edge in edges_orient:
-            if edge in _edges:
+            if edge in edges:
                 pass
             else:
                 edge = (edge[1], edge[0])
@@ -364,8 +364,6 @@ class ForceDiagram(Diagram):
                 index = edge_index[form_edge]
                 force_edge = ordered_edges[index]
                 self.edge_attribute(force_edge, 'target_length', length)
-
-        return
 
     # def compute_constraints(self, form, M):
     #     r"""Computes the form diagram constraints used

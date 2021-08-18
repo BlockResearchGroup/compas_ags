@@ -84,7 +84,7 @@ def update_q_from_qind(E, q, dep, ind):
     q[dep] = qd
 
 
-def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, targ_l=[], targ_v=[], leaves=[], kmax=100):
+def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, target_lengths=[], target_vectors=[], leaves=[], kmax=100):
     r"""Update the coordinates of the primal diagram using the coordinates of the corresponding dual diagram.
     This function apply to both sides, i.e. it can be used to update the form diagram from the geometry of the force
     diagram or to update the force diagram from the geometry of the force diagram.
@@ -105,16 +105,16 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, t
         Edge index for every vertex pair.
     _C : sparse matrix in csr format
         The connectivity matrix of the force diagram.
-    targ_l : list (optional)
+    target_lengths : list, optional
         Target lengths / target forces of the edges.
         Default is an empty list, which considers that no target lengths are considered.
-    targ_v : list (optional)
+    target_vectors : list, optional
         Target vectors of the edges.
         Default is an empty list, which considers that no target vectors are considered.
-    leaves : list
+    leaves : list, optional
         The leaves of the primal diagram.
         Default is an empty list, which considers that no leaves are considered.
-    kmax : int, optional
+    kmax : int, optional, optional
         Maximum number of iterations.
         Default is ``100``.
 
@@ -213,13 +213,13 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, t
                 if normrow(_l)[0, 0] < 0.001:
                     continue
 
-                if targ_l:
-                    if targ_l[ij_e[(i, j)]] == 0.0:
+                if target_lengths:
+                    if target_lengths[ij_e[(i, j)]] == 0.0:
                         continue
 
-                if targ_v:
-                    if targ_v[ij_e[(i, j)]]:
-                        n = array(targ_v[ij_e[(i, j)]]).reshape(1, -1)
+                if target_vectors:
+                    if target_vectors[ij_e[(i, j)]]:
+                        n = array(target_vectors[ij_e[(i, j)]]).reshape(1, -1)
 
                 r = I - n.T.dot(n)          # projection into the orthogonal space of the direction vector
                 a = xy[j, None]             # a point on the line (the neighbour of the vertex)
@@ -343,22 +343,22 @@ def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, f
                     u, v = j, i
                     signe = -1.0
 
-                if target_lengths[e] is not None:               # edges with constraint on length ...
+                if target_lengths[e] is not None:  # edges with constraint on length ...
                     lij = target_lengths[e]
-                    if target_vectors[e]:           # edges with constraint on length + orientation
+                    if target_vectors[e]:  # edges with constraint on length + orientation
                         tx, ty = target_vectors[e]
-                    else:                           # edges with constraint on length only
+                    else:  # edges with constraint on length only
                         if lengths[e] == 0.0:
                             tx = ty = 0.0
                         else:
                             tx = (xy0[v][0] - xy0[u][0])/lengths[e]
                             ty = (xy0[v][1] - xy0[u][1])/lengths[e]  # check if xy0 is indeed better than xy
                 else:
-                    if target_vectors[e]:           # edges with constraint on orientation only
+                    if target_vectors[e]:  # edges with constraint on orientation only
                         tx, ty = target_vectors[e]
                         lij = lengths[e]
                     else:
-                        continue                    # edges to discard
+                        continue  # edges to discard
 
                 ax, ay = xy0[i]
                 x += ax + signe * lij * tx

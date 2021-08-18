@@ -1,3 +1,12 @@
+import compas_ags
+from compas_ags.diagrams import FormGraph
+from compas_ags.diagrams import FormDiagram
+from compas_ags.diagrams import ForceDiagram
+from compas_ags.ags import form_update_q_from_qind
+from compas_ags.ags import force_update_from_form
+from compas_ags.ags import update_diagrams_from_constraints
+from compas_ags.viewers import Viewer
+
 
 def view_form_force(form, force, forcescale=0.5, edge_label=True):
     if edge_label:
@@ -7,14 +16,14 @@ def view_form_force(form, force, forcescale=0.5, edge_label=True):
         form_edge_label = None
         force_edge_label = None
 
-
     viewer = Viewer(form, force, delay_setup=False)
-    viewer.draw_form(edgelabel= form_edge_label,
-                    forces_on=True,
-                    forcescale=forcescale,
-                    vertexcolor={key: '#000000' for key in form.vertices_where({'is_fixed': True})})
+    viewer.draw_form(edgelabel=form_edge_label,
+                     forces_on=True,
+                     forcescale=forcescale,
+                     vertexcolor={key: '#000000' for key in form.vertices_where({'is_fixed': True})})
     viewer.draw_force(edgelabel=force_edge_label)
     viewer.show()
+
 
 def view_with_initial_stage(form, force, forcescale=0.5, edge_label=True):
     if edge_label:
@@ -26,15 +35,16 @@ def view_with_initial_stage(form, force, forcescale=0.5, edge_label=True):
 
     viewer = Viewer(form, force, delay_setup=False)
     viewer.draw_form(lines=form_lines,
-                    forces_on=True,
-                    external_on=True,
-                    forcescale=forcescale,
-                    edgelabel= form_edge_label,
-                    vertexcolor={key: '#000000' for key in form.vertices_where({'is_fixed': True})})
+                     forces_on=True,
+                     external_on=True,
+                     forcescale=forcescale,
+                     edgelabel=form_edge_label,
+                     vertexcolor={key: '#000000' for key in form.vertices_where({'is_fixed': True})})
     viewer.draw_force(lines=force_lines,
-                    edgelabel=force_edge_label
-                    )
+                      edgelabel=force_edge_label
+                      )
     viewer.show()
+
 
 def store_initial_lines(form, force):
 
@@ -67,15 +77,6 @@ def store_initial_lines(form, force):
 #       - Specify the reaction magnitudes, such that the vertical eq. is fulfilled
 #       - No vertex constraints apply on the force diag. (only to the ind. edge)
 # ------------------------------------------------------------------------------
-
-import compas_ags
-from compas_ags.diagrams import FormGraph
-from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import ForceDiagram
-from compas_ags.ags import form_update_q_from_qind
-from compas_ags.ags import force_update_from_form
-from compas_ags.ags import update_diagrams_from_constraints
-from compas_ags.viewers import Viewer
 
 
 graph = FormGraph.from_obj(compas_ags.get('paper/exA_arch-circular.obj'))
