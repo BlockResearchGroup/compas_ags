@@ -319,7 +319,6 @@ class ForceDiagram(Diagram):
         ForceDiagram is modified in place.
         """
         edge_index = self.dual.edge_index()
-        edges = list(self.edges())
         ordered_edges = self.ordered_edges(self.dual)
         edges_orient = []
 
@@ -348,10 +347,7 @@ class ForceDiagram(Diagram):
                 edges_orient.append(force_edge)
 
         for edge in edges_orient:
-            if edge in edges:
-                pass
-            else:
-                edge = (edge[1], edge[0])
+            edge = edge if edge in list(self.edges()) else (edge[1], edge[0])
             sp, ep = self.edge_coordinates(*edge)
             dx = ep[0] - sp[0]
             dy = ep[1] - sp[1]

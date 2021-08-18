@@ -114,7 +114,7 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, t
     leaves : list, optional
         The leaves of the primal diagram.
         Default is an empty list, which considers that no leaves are considered.
-    kmax : int, optional, optional
+    kmax : int, optional
         Maximum number of iterations.
         Default is ``100``.
 

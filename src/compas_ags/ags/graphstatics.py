@@ -392,7 +392,7 @@ def form_update_from_force(form, force, kmax=100):
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # re-add the leaves and leaf-edges
     # --------------------------------------------------------------------------
-    update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_j, ij_e, _C, targ_l=target_lengths, targ_v=target_vectors, leaves=leaves, kmax=kmax)
+    update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_j, ij_e, _C, target_lengths=target_lengths, target_vectors=target_vectors, leaves=leaves, kmax=kmax)
     # --------------------------------------------------------------------------
     # update
     # --------------------------------------------------------------------------
@@ -617,7 +617,7 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     # compute the coordinates of the *free* vertices of the force diagram
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # --------------------------------------------------------------------------
-    update_primal_from_dual(_xy, xy, _free, _fixed_x, _fixed_y, _i_j, _ij_e, C, targ_l=_target_lengths, targ_v=_target_vectors, kmax=kmax)
+    update_primal_from_dual(_xy, xy, _free, _fixed_x, _fixed_y, _i_j, _ij_e, C, target_lengths=_target_lengths, target_vectors=_target_vectors, kmax=kmax)
 
     # --------------------------------------------------------------------------
     # update force diagram
