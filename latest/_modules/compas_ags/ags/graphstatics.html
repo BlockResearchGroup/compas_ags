@@ -96,6 +96,8 @@
 
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
 <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">float64</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">delete</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">vstack</span>
 <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">lstsq</span>
 <span class="kn">from</span> <span class="nn">numpy.linalg</span> <span class="kn">import</span> <span class="n">norm</span>
 
@@ -110,6 +112,7 @@
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">dof</span>
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">rref_sympy</span> <span class="k">as</span> <span class="n">rref</span>
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">nonpivots</span>
+<span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">nullspace</span> <span class="k">as</span> <span class="n">matrix_nullspace</span>
 
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">FormDiagram</span>
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">ForceDiagram</span>
@@ -118,6 +121,7 @@
 <span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">update_form_from_force</span>
 <span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">get_jacobian_and_residual</span>
 <span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">parallelise_edges</span>
+<span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">compute_jacobian</span>
 
 <span class="kn">from</span> <span class="nn">compas_ags.exceptions</span> <span class="kn">import</span> <span class="n">SolutionError</span>
 
@@ -125,6 +129,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;form_identify_dof&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_count_dof&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;form_compute_nullspace&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_update_q_from_qind&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_update_from_force&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_update_from_force_newton&#39;</span><span class="p">,</span>
@@ -284,6 +289,67 @@
     <span class="n">k</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">dof</span><span class="p">(</span><span class="n">E</span><span class="p">)</span>
 
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">k</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">m</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">form_compute_nullspace</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the nullspaces of a form diagram assuming a set of constraints.</span>
+
+<span class="sd">    It returns a list with the displacements that apply to the form diagram representing</span>
+<span class="sd">    how the latter can be moved in the plan without modifying the force diagram and</span>
+<span class="sd">    considering the set of constraints applied. It corresponds to the nullspace of the</span>
+<span class="sd">    Jacobian :math:`\partial \mathbf{X}^* / \partial \mathbf{X}` matrix as computed in [1].</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form : :class:`FormDiagram`</span>
+<span class="sd">        The form diagram.</span>
+<span class="sd">    force : :class:`ForceDiagram`</span>
+<span class="sd">        The force diagram.</span>
+<span class="sd">    constraints: :class:`ConstraintsCollection`, optional</span>
+<span class="sd">        A collection of form diagram constraints.</span>
+<span class="sd">        The default is ``None``, in which case no constraints are considered.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    nullspaces [list of arrays (vcount x 2)]</span>
+<span class="sd">        The null displacement fields applied to the form diagram considering applied constraints.</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Among the nullspaces, the unrestrained rigid-body displacements available are always</span>
+<span class="sd">    included and other unrestrained displacement fields that preserve the orientation</span>
+<span class="sd">    of all edges keeping reciprocity between form and force diagram. The displacement fields</span>
+<span class="sd">    are unit vectors and can be rescaled to visialisation purposes.</span>
+
+<span class="sd">    References</span>
+<span class="sd">    ----------</span>
+<span class="sd">    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">jacobian</span> <span class="o">=</span> <span class="n">compute_jacobian</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">)</span>  <span class="c1"># Jacobian matrix of size (2 _vcount, 2 vcount)</span>
+    <span class="k">if</span> <span class="n">constraints</span><span class="p">:</span>
+        <span class="p">(</span><span class="n">cj</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="o">=</span> <span class="n">constraints</span><span class="o">.</span><span class="n">compute_constraints</span><span class="p">()</span>
+        <span class="n">jacobian</span> <span class="o">=</span> <span class="n">vstack</span><span class="p">((</span><span class="n">jacobian</span><span class="p">,</span> <span class="n">cj</span><span class="p">))</span>   <span class="c1"># Add rows to the Jacobian matrix representing constraints</span>
+
+    <span class="c1"># Remove the rows of the jacobian to account for the anchored vertex in the force diagram (influence x and y directions)</span>
+    <span class="n">_vcount</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()</span>
+    <span class="n">_k_i</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">key_index</span><span class="p">()</span>
+    <span class="n">_anchor</span> <span class="o">=</span> <span class="n">_k_i</span><span class="p">[</span><span class="n">force</span><span class="o">.</span><span class="n">anchor</span><span class="p">()]</span>
+    <span class="n">_anchor_xy</span> <span class="o">=</span> <span class="p">[</span><span class="n">_anchor</span><span class="p">,</span> <span class="n">_vcount</span> <span class="o">+</span> <span class="n">_anchor</span><span class="p">]</span>
+
+    <span class="n">reduced_jacobian</span> <span class="o">=</span> <span class="n">delete</span><span class="p">(</span><span class="n">jacobian</span><span class="p">,</span> <span class="n">_anchor_xy</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">nullstates</span> <span class="o">=</span> <span class="n">matrix_nullspace</span><span class="p">(</span><span class="n">reduced_jacobian</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>  <span class="c1"># unit vectors representing the possible nullstates</span>
+
+    <span class="n">nullspaces</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">nullstate</span> <span class="ow">in</span> <span class="n">nullstates</span><span class="p">:</span>  <span class="c1"># reshaping the nullstates a list of (vcount x 2) arrays</span>
+        <span class="n">xy</span> <span class="o">=</span> <span class="n">nullstate</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+        <span class="n">nullspaces</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">nullspaces</span>
 
 
 <span class="c1"># ==============================================================================</span>
