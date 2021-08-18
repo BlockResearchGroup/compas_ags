@@ -6,6 +6,8 @@ import sys
 
 from numpy import array
 from numpy import float64
+from numpy import delete
+from numpy import vstack
 from numpy.linalg import lstsq
 from numpy.linalg import norm
 
@@ -30,8 +32,6 @@ from compas_ags.ags.core import update_primal_from_dual
 from compas_ags.ags.core import get_jacobian_and_residual
 from compas_ags.ags.core import compute_jacobian
 from compas_ags.ags.core import parallelise_edges
-from compas_ags.ags.core import parallelise_edges
-from compas_ags.ags.core import compute_jacobian
 
 from compas_ags.utilities import check_equilibrium
 
