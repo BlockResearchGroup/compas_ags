@@ -20,6 +20,7 @@ from compas.numerical import normrow
 from compas.numerical import dof
 from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
+from compas.numerical import nullspace as matrix_nullspace
 
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
@@ -27,7 +28,10 @@ from compas_ags.diagrams import ForceDiagram
 from compas_ags.ags.core import update_q_from_qind
 from compas_ags.ags.core import update_primal_from_dual
 from compas_ags.ags.core import get_jacobian_and_residual
+from compas_ags.ags.core import compute_jacobian
 from compas_ags.ags.core import parallelise_edges
+from compas_ags.ags.core import parallelise_edges
+from compas_ags.ags.core import compute_jacobian
 
 from compas_ags.utilities import check_equilibrium
 
@@ -197,6 +201,67 @@ def form_count_dof(form):
     k, m = dof(E)
 
     return int(k), int(m)
+
+
+def form_compute_nullspace(form, force, constraints=None):
+    r"""Compute the nullspaces of a form diagram assuming a set of constraints.
+
+    It returns a list with the displacements that apply to the form diagram representing
+    how the latter can be moved in the plan without modifying the force diagram and
+    considering the set of constraints applied. It corresponds to the nullspace of the
+    Jacobian :math:`\partial \mathbf{X}^* / \partial \mathbf{X}` matrix as computed in [1].
+
+    Parameters
+    ----------
+    form : :class:`FormDiagram`
+        The form diagram.
+    force : :class:`ForceDiagram`
+        The force diagram.
+    constraints: :class:`ConstraintsCollection`, optional
+        A collection of form diagram constraints.
+        The default is ``None``, in which case no constraints are considered.
+
+    Returns
+    -------
+    nullspaces [list of arrays (vcount x 2)]
+        The null displacement fields applied to the form diagram considering applied constraints.
+
+    Notes
+    -----
+    Among the nullspaces, the unrestrained rigid-body displacements available are always
+    included and other unrestrained displacement fields that preserve the orientation
+    of all edges keeping reciprocity between form and force diagram. The displacement fields
+    are unit vectors and can be rescaled to visialisation purposes.
+
+    References
+    ----------
+    .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
+
+    Examples
+    --------
+    >>>
+    """
+    jacobian = compute_jacobian(form, force)  # Jacobian matrix of size (2 _vcount, 2 vcount)
+    if constraints:
+        (cj, _) = constraints.compute_constraints()
+        jacobian = vstack((jacobian, cj))   # Add rows to the Jacobian matrix representing constraints
+
+    # Remove the rows of the jacobian to account for the anchored vertex in the force diagram (influence x and y directions)
+    _vcount = force.number_of_vertices()
+    _k_i = force.key_index()
+    _anchor = _k_i[force.anchor()]
+    _anchor_xy = [_anchor, _vcount + _anchor]
+
+    reduced_jacobian = delete(jacobian, _anchor_xy, axis=0)
+
+    nullstates = matrix_nullspace(reduced_jacobian).T  # unit vectors representing the possible nullstates
+
+    nullspaces = []
+    for nullstate in nullstates:  # reshaping the nullstates a list of (vcount x 2) arrays
+        xy = nullstate.reshape((2, -1)).T
+        nullspaces.append(xy)
+
+    return nullspaces
 
 
 # ==============================================================================
