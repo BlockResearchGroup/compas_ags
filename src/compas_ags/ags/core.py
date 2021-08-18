@@ -215,13 +215,11 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, t
 
                 if targ_l:
                     if targ_l[ij_e[(i, j)]] == 0.0:
-                        # print('Jumped edge due to 0 force target', ij_e[(i, j)])
                         continue
 
                 if targ_v:
                     if targ_v[ij_e[(i, j)]]:
                         n = array(targ_v[ij_e[(i, j)]]).reshape(1, -1)
-                        # print('changed the N in edge (after / before)', ij_e[(i, j)], n, _t[ij_e[(i, j)], None])
 
                 r = I - n.T.dot(n)          # projection into the orthogonal space of the direction vector
                 a = xy[j, None]             # a point on the line (the neighbour of the vertex)
