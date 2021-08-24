@@ -71,7 +71,6 @@ class ForceDiagram(Diagram):
         """
         return list(self.vertices_where({'is_fixed': True}))
 
-
     def fixed_x(self):
         """The identifiers of the vertices fixed in ``x`` only.
 
@@ -89,7 +88,6 @@ class ForceDiagram(Diagram):
         list
         """
         return list(self.vertices_where({'is_fixed_y': True, 'is_fixed': False}))
-
 
     def anchor(self):
         """Get an anchor to the force diagram.
@@ -285,10 +283,8 @@ class ForceDiagram(Diagram):
         """
         if not form:
             return {edge: index for index, edge in enumerate(self.edges())}
-            # return {edge: index for index, edge in enumerate(form.edges_where({'_is_edge': True}))}
         edge_index = dict()
         for index, (u, v) in enumerate(form.edges()):
-        # for index, (u, v) in enumerate(form.edges_where({'_is_edge': True})):
             f1 = form.halfedge[u][v]
             f2 = form.halfedge[v][u]
             edge_index[f1, f2] = index
@@ -323,7 +319,6 @@ class ForceDiagram(Diagram):
         ForceDiagram is modified in place.
         """
         edge_index = self.dual.edge_index()
-        _edges = list(self.edges())
         ordered_edges = self.ordered_edges(self.dual)
         edges_orient = []
 
@@ -352,10 +347,7 @@ class ForceDiagram(Diagram):
                 edges_orient.append(force_edge)
 
         for edge in edges_orient:
-            if edge in _edges:
-                pass
-            else:
-                edge = (edge[1], edge[0])
+            edge = edge if edge in list(self.edges()) else (edge[1], edge[0])
             sp, ep = self.edge_coordinates(*edge)
             dx = ep[0] - sp[0]
             dy = ep[1] - sp[1]
@@ -363,16 +355,11 @@ class ForceDiagram(Diagram):
             self.edge_attribute(edge, 'target_vector', [dx/length, dy/length])
 
         for form_edge in self.dual.edges():
-            if self.dual.edge_attribute(form_edge, 'target_length') is not None:  # rename this to target force
+            if self.dual.edge_attribute(form_edge, 'target_length') is not None:
                 length = self.dual.edge_attribute(form_edge, 'target_length')
-                # print('constraint to length:', length)
                 index = edge_index[form_edge]
                 force_edge = ordered_edges[index]
-                # self.edge_attribute(force_edge, 'lmin', length)  # Probably useless
-                # self.edge_attribute(force_edge, 'lmax', length)  # Probably useless
                 self.edge_attribute(force_edge, 'target_length', length)
-
-        return
 
     # def compute_constraints(self, form, M):
     #     r"""Computes the form diagram constraints used

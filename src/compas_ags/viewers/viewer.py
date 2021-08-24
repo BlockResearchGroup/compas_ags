@@ -27,7 +27,7 @@ __all__ = ['Viewer']
 class Viewer(object):
     """"""
 
-    def __init__(self, form, force=None, delay_setup=False, figsize=(16, 9)):
+    def __init__(self, form, force, delay_setup=True, figsize=(16, 9)):
         self.form = form
         self.force = force
         self.fig = None
@@ -44,10 +44,6 @@ class Viewer(object):
         self.default_tensioncolor = '#ff0000'
         self.default_externalforcecolor = '#00ff00'
         self.default_externalforcewidth = 2.0
-        self.default_independent_width = 2.0
-
-        self.default_independent_edge_color = '#000000'
-        self.default_reaction_color = '#00ffff'
 
         self.default_textcolor = '#000000'
         self.default_fontsize = 8
@@ -163,14 +159,11 @@ class Viewer(object):
                 if external_on:
                     if u in leaves or v in leaves:
                         text = None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
-                        color = self.default_externalforcecolor if not attr['is_ind'] else self.default_independent_edge_color
-                        if attr['is_reaction']:
-                            color = self.default_reaction_color
                         _arrows.append({
                             'start': sp,
                             'end': ep,
-                            'width': self.default_externalforcewidth if not attr['is_ind'] else self.default_independent_width,
-                            'color': color,
+                            'width': self.default_externalforcewidth if not attr['is_ind'] else self.default_edgewidth * 3,
+                            'color': self.default_externalforcecolor if not attr['is_ind'] else '#000000',
                             'text': text,
                             'fontsize': self.default_fontsize
                         })
@@ -348,14 +341,11 @@ class Viewer(object):
                 form_u, form_v = self.force.dual_edge((u, v))
                 text = None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
                 if form_u in leaves or form_v in leaves:
-                    color = self.default_externalforcecolor if not self.form.edge_attribute((form_u, form_v), 'is_ind') else self.default_independent_edge_color
-                    if self.form.edge_attribute((form_u, form_v), 'is_reaction'):
-                        color = self.default_reaction_color
                     _arrows.append({
                         'start': sp,
                         'end': ep,
-                        'color': color,
-                        'width': self.default_externalforcewidth if not self.form.edge_attribute((form_u, form_v), 'is_ind') else self.default_independent_width,
+                        'color': self.default_externalforcecolor if not self.form.edge_attribute((form_u, form_v), 'is_ind') else '#000000',
+                        'width': self.default_externalforcewidth if not self.form.edge_attribute((form_u, form_v), 'is_ind') else self.default_edgewidth * 3,
                         'text': text,
                         'fontsize': self.default_fontsize,
                     })

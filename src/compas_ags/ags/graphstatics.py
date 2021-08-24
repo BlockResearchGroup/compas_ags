@@ -22,7 +22,7 @@ from compas.numerical import normrow
 from compas.numerical import dof
 from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
-from compas.numerical import nullspace
+from compas.numerical import nullspace as matrix_nullspace
 
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
@@ -30,11 +30,10 @@ from compas_ags.diagrams import ForceDiagram
 from compas_ags.ags.core import update_q_from_qind
 from compas_ags.ags.core import update_primal_from_dual
 from compas_ags.ags.core import get_jacobian_and_residual
-from compas_ags.ags.core import parallelise_edges
 from compas_ags.ags.core import compute_jacobian
+from compas_ags.ags.core import parallelise_edges
 
-from compas_ags.utilities import check_deviations
-from compas_ags.utilities import check_force_length_constraints
+from compas_ags.utilities import check_equilibrium
 
 from compas_ags.exceptions import SolutionError
 
@@ -42,7 +41,6 @@ from compas_ags.exceptions import SolutionError
 __all__ = [
     'form_identify_dof',
     'form_count_dof',
-    'form_compute_nullspace',
     'form_update_q_from_qind',
     'form_update_from_force',
     'form_update_from_force_newton',
@@ -206,10 +204,12 @@ def form_count_dof(form):
 
 
 def form_compute_nullspace(form, force, constraints=None):
-    r"""Compute the null space of a form diagram assuming a set of constraints.
-    It returns the new position of the form diagram that represents how the
-    form diagram can be changed without affecting the force diagram.
-    It corresponds to the nullspace of the Jacobian :math:`\partial \mathbf{X}^* / \partial \mathbf{X}`.
+    r"""Compute the nullspaces of a form diagram assuming a set of constraints.
+
+    It returns a list with the displacements that apply to the form diagram representing
+    how the latter can be moved in the plan without modifying the force diagram and
+    considering the set of constraints applied. It corresponds to the nullspace of the
+    Jacobian :math:`\partial \mathbf{X}^* / \partial \mathbf{X}` matrix as computed in [1].
 
     Parameters
     ----------
@@ -223,8 +223,15 @@ def form_compute_nullspace(form, force, constraints=None):
 
     Returns
     -------
-    nullspace [list of arrays]
-        The modified diagrams thart require no movement in the force diagram.
+    nullspaces [list of arrays (vcount x 2)]
+        The null displacement fields applied to the form diagram considering applied constraints.
+
+    Notes
+    -----
+    Among the nullspaces, the unrestrained rigid-body displacements available are always
+    included and other unrestrained displacement fields that preserve the orientation
+    of all edges keeping reciprocity between form and force diagram. The displacement fields
+    are unit vectors and can be rescaled to visialisation purposes.
 
     References
     ----------
@@ -234,25 +241,27 @@ def form_compute_nullspace(form, force, constraints=None):
     --------
     >>>
     """
-    jacobian = compute_jacobian(form, force)
+    jacobian = compute_jacobian(form, force)  # Jacobian matrix of size (2 _vcount, 2 vcount)
     if constraints:
         (cj, _) = constraints.compute_constraints()
-        jacobian = vstack((jacobian, cj))
+        jacobian = vstack((jacobian, cj))   # Add rows to the Jacobian matrix representing constraints
 
+    # Remove the rows of the jacobian to account for the anchored vertex in the force diagram (influence x and y directions)
     _vcount = force.number_of_vertices()
     _k_i = force.key_index()
-    _known = _k_i[force.anchor()]
-    _bc = [_known, _vcount + _known]
+    _anchor = _k_i[force.anchor()]
+    _anchor_xy = [_anchor, _vcount + _anchor]
 
-    red_jacobian = delete(jacobian, _bc, axis=0)
+    reduced_jacobian = delete(jacobian, _anchor_xy, axis=0)
 
-    null_states = nullspace(red_jacobian).T
+    nullstates = matrix_nullspace(reduced_jacobian).T  # unit vectors representing the possible nullstates
 
-    null_space = []
-    for null_state in null_states:
-        xy = null_state.reshape((2, -1)).T
-        null_space.append(xy)
-    return null_space
+    nullspaces = []
+    for nullstate in nullstates:  # reshaping the nullstates a list of (vcount x 2) arrays
+        xy = nullstate.reshape((2, -1)).T
+        nullspaces.append(xy)
+
+    return nullspaces
 
 
 # ==============================================================================
@@ -314,6 +323,9 @@ def form_update_from_force(form, force, kmax=100):
         The form diagram to update.
     force : :class:`ForceDiagram`
         The force diagram on which the update is based.
+    kmax: int, optional
+        Maximum number of least-square iterations for solving the duality form-force.
+        The default value is ``20``.
 
     Returns
     -------
@@ -380,7 +392,7 @@ def form_update_from_force(form, force, kmax=100):
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # re-add the leaves and leaf-edges
     # --------------------------------------------------------------------------
-    update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_j, ij_e, _C, targ_l=target_lengths, targ_v=target_vectors, leaves=leaves, kmax=kmax)
+    update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_j, ij_e, _C, target_lengths=target_lengths, target_vectors=target_vectors, leaves=leaves, kmax=kmax)
     # --------------------------------------------------------------------------
     # update
     # --------------------------------------------------------------------------
@@ -558,6 +570,9 @@ def force_update_from_form_geometrical(force, form, kmax=100):
         The force diagram on which the update is based.
     form : :class:`FormDiagram`
         The form diagram to update.
+    kmax: int, optional
+        Maximum number of least-square iterations for solving the duality form-force.
+        The default value is ``20``.
 
     Returns
     -------
@@ -583,7 +598,6 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     _xy = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
-    _C = connectivity_matrix(_edges, 'csr')
 
     _i_j = {index: [_vertex_index[nbr] for nbr in force.vertex_neighbors(vertex)] for index, vertex in enumerate(force.vertices())}
     _ij_e = {(_vertex_index[u], _vertex_index[v]): _edge_index[u, v] for u, v in _edge_index}
@@ -603,7 +617,7 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     # compute the coordinates of the *free* vertices of the force diagram
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # --------------------------------------------------------------------------
-    update_primal_from_dual(_xy, xy, _free, _fixed_x, _fixed_y, _i_j, _ij_e, C, targ_l=_target_lengths, targ_v=_target_vectors, kmax=kmax)
+    update_primal_from_dual(_xy, xy, _free, _fixed_x, _fixed_y, _i_j, _ij_e, C, target_lengths=_target_lengths, target_vectors=_target_vectors, kmax=kmax)
 
     # --------------------------------------------------------------------------
     # update force diagram
@@ -614,7 +628,7 @@ def force_update_from_form_geometrical(force, form, kmax=100):
         attr['y'] = _xy[index, 1]
 
 
-def force_update_from_constraints(force):
+def force_update_from_constraints(force, kmax=100):
     """Update the force diagram from constraints on length and orientation imposed in the form diagram,
     and already carried out as attributes in the force diagram.
 
@@ -622,6 +636,9 @@ def force_update_from_constraints(force):
     ----------
     force : :class:`ForceDiagram`
         The force diagram on which the update is based.
+    kmax: int, optional
+        Maximum number of parallelisation iterations for updating the force diagram.
+        The default value is ``100``.
 
     Returns
     -------
@@ -660,7 +677,7 @@ def force_update_from_constraints(force):
     # --------------------------------------------------------------------------
     # Paralelise edge given force targets and/or target_lengths
     # --------------------------------------------------------------------------
-    parallelise_edges(_xy, _edges, _i_nbrs, _ij_e, target_vectors, target_lengths, fixed=_fixed, fixed_x=_fixed_x, fixed_y=_fixed_y, kmax=100)
+    parallelise_edges(_xy, _edges, _i_nbrs, _ij_e, target_vectors, target_lengths, fixed=_fixed, fixed_x=_fixed_x, fixed_y=_fixed_y, kmax=kmax)
 
     # --------------------------------------------------------------------------
     # update force diagram geometry
@@ -676,15 +693,31 @@ def force_update_from_constraints(force):
 # dual modifications
 # ==============================================================================
 
-def update_diagrams_from_constraints(form, force, tol=10e-4, max_iter=20, printout=False, callback=None):
-    """Update the force, and form diagram after constraints are imposed in the force diagram.
+
+def update_diagrams_from_constraints(form, force, max_iter=20, tol=10e-3, kmax=20, printout=False, callback=None):
+    """Update the form and force diagram after constraints / or movements are imposed to the diagrams.
 
     Parameters
     ----------
-    force : :class:`ForceDiagram`
-        The force diagram on which the update is based.
     form : :class:`FormDiagram`
-        The form diagram to update.
+        The form diagram.
+    force : :class:`ForceDiagram`
+        The force diagram.
+    max_iter: int, optional
+        Maximum number of iterations to update the diagrams.
+        The default value is ``20``.
+    tol: float, optional
+        Stopping criteria tolerance for equilibrium and constraint violation.
+        The default value is ``10e-3``.
+    kmax: int, optional
+        Maximum number of least-square iterations for solving the duality form-force.
+        The default value is ``20``.
+    printout: boll, optional
+        Whether or not print intermediate messages.
+        The default value is ``False``.
+    callback: callable, optional
+        Callable function at the end of each iteration.
+        The default value is ``None``.
 
     Returns
     -------
@@ -695,36 +728,30 @@ def update_diagrams_from_constraints(form, force, tol=10e-4, max_iter=20, printo
     niter = 1
     start = True
 
-    while not check_force_length_constraints(force, tol=tol, printout=printout) or not check_deviations(form, force, tol=tol, printout=printout) or start is True:
+    while not check_equilibrium(form, force, tol=tol, printout=printout) or start:
 
         # Propose a force diagram based on constraints -> Using paralellise
         force_update_from_constraints(force)
 
-        if callback:
-            callback(form, force)
-
         # Find geometrical dual form diagram respecting form constraints -> Using Least-Squares
-        form_update_from_force(form, force, kmax=20)
-
-        if callback:
-            callback(form, force)
+        form_update_from_force(form, force, kmax=kmax)
 
         # Find geometrical dual force diagram respecting force constraints -> Using Least-Squares
-        force_update_from_form_geometrical(force, form, kmax=20)
+        force_update_from_form_geometrical(force, form, kmax=kmax)
 
         if callback:
             callback(form, force)
 
         if niter > max_iter:
             print('Warning: Did not converge.')
+            check_equilibrium(form, force, tol=tol, printout=printout)
             break
 
         niter += 1
         start = False
 
-    print('Finished with {0} iterations.'.format(niter))
-    print(check_force_length_constraints(force, tol=tol, printout=printout))
-    print(check_deviations(form, force, tol=tol, printout=printout))
+    if printout:
+        print('Finished with {0} iterations.'.format(niter))
 
     return
 

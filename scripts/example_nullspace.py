@@ -79,7 +79,6 @@ print("Dimension of nullspace: " + str(len(ns)))
 def show(i):
     # i is the index of nullspace mode
     c = 10
-    c += 1
     nsi = ns[i] * c
     # store lines representing the current null space mode
     form_lines = []
