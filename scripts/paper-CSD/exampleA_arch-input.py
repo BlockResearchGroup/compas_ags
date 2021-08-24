@@ -70,14 +70,13 @@ def store_initial_lines(form, force):
 
     return form_lines, force_lines
 
+
 # ------------------------------------------------------------------------------
-#   0. Problem of getting to a funicular shape
+#   1. Problem of getting to a funicular shape
 #       - Input a circular arch
 #       - Input "target forces" for the loads applied
-#       - Specify the reaction magnitudes, such that the vertical eq. is fulfilled
-#       - No vertex constraints apply on the force diag. (only to the ind. edge)
+#       - Update form and force diagram
 # ------------------------------------------------------------------------------
-
 
 graph = FormGraph.from_obj(compas_ags.get('paper/exA_arch-circular.obj'))
 form = FormDiagram.from_graph(graph)
