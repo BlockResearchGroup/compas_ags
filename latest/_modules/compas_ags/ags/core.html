@@ -115,13 +115,14 @@
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">equilibrium_matrix</span>
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">laplacian_matrix</span>
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">solve_with_known</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">midpoint_point_point_xy</span>
 
 <span class="kn">from</span> <span class="nn">compas_ags.exceptions</span> <span class="kn">import</span> <span class="n">SolutionError</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;update_q_from_qind&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;update_form_from_force&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;update_primal_from_dual&#39;</span><span class="p">,</span>
     <span class="s1">&#39;get_jacobian_and_residual&#39;</span><span class="p">,</span>
     <span class="s1">&#39;compute_jacobian&#39;</span><span class="p">,</span>
     <span class="s1">&#39;parallelise_edges&#39;</span><span class="p">,</span>
@@ -173,27 +174,36 @@
     <span class="n">q</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span> <span class="o">=</span> <span class="n">qd</span></div>
 
 
-<div class="viewcode-block" id="update_form_from_force"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.update_form_from_force.html#compas_ags.ags.update_form_from_force">[docs]</a><span class="k">def</span> <span class="nf">update_form_from_force</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">_xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">fixed_x</span><span class="p">,</span> <span class="n">fixed_y</span><span class="p">,</span> <span class="n">leaves</span><span class="p">,</span> <span class="n">i_nbrs</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">_C</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the coordinates of a form diagram using the coordinates of the corresponding force diagram.</span>
+<div class="viewcode-block" id="update_primal_from_dual"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.update_primal_from_dual.html#compas_ags.ags.update_primal_from_dual">[docs]</a><span class="k">def</span> <span class="nf">update_primal_from_dual</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">_xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">fixed_x</span><span class="p">,</span> <span class="n">fixed_y</span><span class="p">,</span> <span class="n">i_nbrs</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">_C</span><span class="p">,</span> <span class="n">target_lengths</span><span class="o">=</span><span class="p">[],</span> <span class="n">target_vectors</span><span class="o">=</span><span class="p">[],</span> <span class="n">leaves</span><span class="o">=</span><span class="p">[],</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the coordinates of the primal diagram using the coordinates of the corresponding dual diagram.</span>
+<span class="sd">    This function apply to both sides, i.e. it can be used to update the form diagram from the geometry of the force</span>
+<span class="sd">    diagram or to update the force diagram from the geometry of the force diagram.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
 <span class="sd">    xy : array-like</span>
-<span class="sd">        XY coordinates of the vertices of the form diagram.</span>
+<span class="sd">        XY coordinates of the vertices of the primal diagram.</span>
 <span class="sd">    _xy : array-like</span>
-<span class="sd">        XY coordinates of the vertices of the force diagram.</span>
+<span class="sd">        XY coordinates of the vertices of the dual diagram.</span>
 <span class="sd">    fixed_x : list</span>
-<span class="sd">        Vertices of the form diagram fixed to move in ``x``.</span>
+<span class="sd">        Vertices of the primal diagram fixed to move in ``x``.</span>
 <span class="sd">    fixed_y : list</span>
-<span class="sd">        Vertices of the form diagram fixed to move in ``y``.</span>
-<span class="sd">    leaves : list</span>
-<span class="sd">        The leaves of the form diagram.</span>
+<span class="sd">        Vertices of the primal diagram fixed to move in ``y``.</span>
 <span class="sd">    i_nbrs : list of list of int</span>
 <span class="sd">        Vertex neighbours per vertex.</span>
 <span class="sd">    ij_e : dict</span>
 <span class="sd">        Edge index for every vertex pair.</span>
 <span class="sd">    _C : sparse matrix in csr format</span>
 <span class="sd">        The connectivity matrix of the force diagram.</span>
+<span class="sd">    target_lengths : list, optional</span>
+<span class="sd">        Target lengths / target forces of the edges.</span>
+<span class="sd">        Default is an empty list, which considers that no target lengths are considered.</span>
+<span class="sd">    target_vectors : list, optional</span>
+<span class="sd">        Target vectors of the edges.</span>
+<span class="sd">        Default is an empty list, which considers that no target vectors are considered.</span>
+<span class="sd">    leaves : list, optional</span>
+<span class="sd">        The leaves of the primal diagram.</span>
+<span class="sd">        Default is an empty list, which considers that no leaves are considered.</span>
 <span class="sd">    kmax : int, optional</span>
 <span class="sd">        Maximum number of iterations.</span>
 <span class="sd">        Default is ``100``.</span>
@@ -206,14 +216,16 @@
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
 <span class="sd">    This function should be used to update the form diagram after modifying the</span>
-<span class="sd">    geometry of the force diagram. The objective is to compute new locations</span>
-<span class="sd">    for the vertices of the form diagram such that the corrsponding lines of the</span>
-<span class="sd">    form and force diagram are parallel while any geometric constraints imposed on</span>
-<span class="sd">    the form diagram are satisfied.</span>
+<span class="sd">    geometry of the force diagram. Or to update the force diagram geometrically to</span>
+<span class="sd">    become reciprocal to the form diagram. The objective is to compute new locations</span>
+<span class="sd">    for the vertices of the primal diagram such that the corrsponding lines of the</span>
+<span class="sd">    primal and dual diagram are parallel while any geometric constraints imposed on</span>
+<span class="sd">    the primal diagram are satisfied. Note that form, and force can assume position</span>
+<span class="sd">    of primal and dual interchagable.</span>
 
-<span class="sd">    The location of each vertex of the form diagram is computed as the intersection</span>
+<span class="sd">    The location of each vertex of the primal diagram is computed as the intersection</span>
 <span class="sd">    of the lines connected to it. Each of the connected lines is based at the connected</span>
-<span class="sd">    neighbouring vertex and taken parallel to the corresponding line in the force</span>
+<span class="sd">    neighbouring vertex and taken parallel to the corresponding line in the dual</span>
 <span class="sd">    diagram.</span>
 
 <span class="sd">    For a point :math:`\mathbf{p}`, which is the least-squares intersection of *K*</span>
@@ -269,10 +281,10 @@
         <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span>
 
         <span class="c1"># in order for the two diagrams to have parallel corresponding edges,</span>
-        <span class="c1"># each free vertex location of the form diagram is computed as the intersection</span>
+        <span class="c1"># each free vertex location of the primal diagram is computed as the intersection</span>
         <span class="c1"># of the connected lines. each of these lines is based at the corresponding</span>
         <span class="c1"># connected neighbouring vertex and taken parallel to the corresponding</span>
-        <span class="c1"># edge in the force diagram.</span>
+        <span class="c1"># edge in the dual diagram.</span>
         <span class="c1"># the intersection is the point that minimises the distance to all connected</span>
         <span class="c1"># lines.</span>
         <span class="k">for</span> <span class="n">count</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">)):</span>
@@ -290,6 +302,14 @@
 
                 <span class="k">if</span> <span class="n">normrow</span><span class="p">(</span><span class="n">_l</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="p">:</span>
                     <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">target_lengths</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">target_lengths</span><span class="p">[</span><span class="n">ij_e</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                        <span class="k">continue</span>
+
+                <span class="k">if</span> <span class="n">target_vectors</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">target_vectors</span><span class="p">[</span><span class="n">ij_e</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]]:</span>
+                        <span class="n">n</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">target_vectors</span><span class="p">[</span><span class="n">ij_e</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 
                 <span class="n">r</span> <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="n">n</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>          <span class="c1"># projection into the orthogonal space of the direction vector</span>
                 <span class="n">a</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>             <span class="c1"># a point on the line (the neighbour of the vertex)</span>
@@ -413,37 +433,40 @@
                     <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">j</span><span class="p">,</span> <span class="n">i</span>
                     <span class="n">signe</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
 
-                <span class="k">if</span> <span class="n">target_lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]:</span>               <span class="c1"># edges with constraint on length ...</span>
+                <span class="k">if</span> <span class="n">target_lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># edges with constraint on length ...</span>
                     <span class="n">lij</span> <span class="o">=</span> <span class="n">target_lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
-                    <span class="k">if</span> <span class="n">target_vectors</span><span class="p">[</span><span class="n">e</span><span class="p">]:</span>           <span class="c1"># edges with constraint on length + orientation</span>
+                    <span class="k">if</span> <span class="n">target_vectors</span><span class="p">[</span><span class="n">e</span><span class="p">]:</span>  <span class="c1"># edges with constraint on length + orientation</span>
                         <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">target_vectors</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
-                    <span class="k">else</span><span class="p">:</span>                           <span class="c1"># edges with constraint on length only</span>
-                        <span class="n">tx</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy0</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">xy0</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
-                        <span class="n">ty</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy0</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xy0</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+                    <span class="k">else</span><span class="p">:</span>  <span class="c1"># edges with constraint on length only</span>
+                        <span class="k">if</span> <span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                            <span class="n">tx</span> <span class="o">=</span> <span class="n">ty</span> <span class="o">=</span> <span class="mf">0.0</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">tx</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy0</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">xy0</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
+                            <span class="n">ty</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy0</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">xy0</span><span class="p">[</span><span class="n">u</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>  <span class="c1"># check if xy0 is indeed better than xy</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">target_vectors</span><span class="p">[</span><span class="n">e</span><span class="p">]:</span>           <span class="c1"># edges with constraint on orientation only</span>
+                    <span class="k">if</span> <span class="n">target_vectors</span><span class="p">[</span><span class="n">e</span><span class="p">]:</span>  <span class="c1"># edges with constraint on orientation only</span>
                         <span class="n">tx</span><span class="p">,</span> <span class="n">ty</span> <span class="o">=</span> <span class="n">target_vectors</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
                         <span class="n">lij</span> <span class="o">=</span> <span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span>
                     <span class="k">else</span><span class="p">:</span>
-                        <span class="k">continue</span>                    <span class="c1"># edges to discard</span>
+                        <span class="k">continue</span>  <span class="c1"># edges to discard</span>
 
                 <span class="n">ax</span><span class="p">,</span> <span class="n">ay</span> <span class="o">=</span> <span class="n">xy0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">x</span> <span class="o">+=</span> <span class="n">ax</span> <span class="o">+</span> <span class="n">signe</span> <span class="o">*</span> <span class="n">lij</span> <span class="o">*</span> <span class="n">tx</span>
                 <span class="n">y</span> <span class="o">+=</span> <span class="n">ay</span> <span class="o">+</span> <span class="n">signe</span> <span class="o">*</span> <span class="n">lij</span> <span class="o">*</span> <span class="n">ty</span>
                 <span class="n">len_nbrs</span> <span class="o">+=</span> <span class="mi">1</span>
 
-            <span class="k">if</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fixed_x</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fixed_x</span> <span class="ow">and</span> <span class="n">len_nbrs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">len_nbrs</span>
-            <span class="k">if</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fixed_y</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fixed_y</span> <span class="ow">and</span> <span class="n">len_nbrs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span> <span class="o">/</span> <span class="n">len_nbrs</span>
 
-        <span class="c1"># for (i, j) in ij_e:       # TODO: verify if this part is necessary for problems with zero edge</span>
-        <span class="c1">#     e = ij_e[(i, j)]</span>
+        <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ij_e</span><span class="p">:</span>
+            <span class="n">e</span> <span class="o">=</span> <span class="n">ij_e</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]</span>
 
-        <span class="c1">#     if lengths[e] == 0.0:</span>
-        <span class="c1">#         c = midpoint_point_point_xy(xy[i], xy[j])</span>
-        <span class="c1">#         xy[i][:] = c[:][:2]</span>
-        <span class="c1">#         xy[j][:] = c[:][:2]</span>
+            <span class="k">if</span> <span class="n">lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">target_lengths</span><span class="p">[</span><span class="n">e</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="n">c</span> <span class="o">=</span> <span class="n">midpoint_point_point_xy</span><span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+                <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">c</span><span class="p">[:][:</span><span class="mi">2</span><span class="p">]</span>
+                <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][:]</span> <span class="o">=</span> <span class="n">c</span><span class="p">[:][:</span><span class="mi">2</span><span class="p">]</span>
 
         <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
             <span class="n">callback</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">edges</span><span class="p">)</span>

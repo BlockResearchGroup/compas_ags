@@ -118,10 +118,12 @@
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">ForceDiagram</span>
 
 <span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">update_q_from_qind</span>
-<span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">update_form_from_force</span>
+<span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">update_primal_from_dual</span>
 <span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">get_jacobian_and_residual</span>
-<span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">parallelise_edges</span>
 <span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">compute_jacobian</span>
+<span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">parallelise_edges</span>
+
+<span class="kn">from</span> <span class="nn">compas_ags.utilities</span> <span class="kn">import</span> <span class="n">check_equilibrium</span>
 
 <span class="kn">from</span> <span class="nn">compas_ags.exceptions</span> <span class="kn">import</span> <span class="n">SolutionError</span>
 
@@ -129,12 +131,12 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s1">&#39;form_identify_dof&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_count_dof&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;form_compute_nullspace&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_update_q_from_qind&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_update_from_force&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_update_from_force_newton&#39;</span><span class="p">,</span>
     <span class="s1">&#39;force_update_from_form&#39;</span><span class="p">,</span>
     <span class="s1">&#39;force_update_from_constraints&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;update_diagrams_from_constraints&#39;</span><span class="p">,</span>
 
     <span class="s1">&#39;form_update_q_from_qind_proxy&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_update_from_force_proxy&#39;</span><span class="p">,</span>
@@ -411,11 +413,14 @@
 <span class="sd">        The form diagram to update.</span>
 <span class="sd">    force : :class:`ForceDiagram`</span>
 <span class="sd">        The force diagram on which the update is based.</span>
+<span class="sd">    kmax: int, optional</span>
+<span class="sd">        Maximum number of least-square iterations for solving the duality form-force.</span>
+<span class="sd">        The default value is ``20``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
-<span class="sd">        The form and force diagram are updated in-place.</span>
+<span class="sd">        The form diagram is updated in-place.</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -459,6 +464,8 @@
     <span class="n">free</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">leaves</span><span class="p">))</span>
     <span class="n">fixed_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertex_index</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">fixed_x</span><span class="p">()]</span>
     <span class="n">fixed_y</span> <span class="o">=</span> <span class="p">[</span><span class="n">vertex_index</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">fixed_y</span><span class="p">()]</span>
+    <span class="n">target_lengths</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;target_length&#39;</span><span class="p">)</span>
+    <span class="n">target_vectors</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;target_vector&#39;</span><span class="p">)</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># force diagram</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
@@ -475,7 +482,7 @@
     <span class="c1"># as a function of the fixed vertices and the previous coordinates of the *free* vertices</span>
     <span class="c1"># re-add the leaves and leaf-edges</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="n">update_form_from_force</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">_xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">fixed_x</span><span class="p">,</span> <span class="n">fixed_y</span><span class="p">,</span> <span class="n">leaves</span><span class="p">,</span> <span class="n">i_j</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">_C</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="n">kmax</span><span class="p">)</span>
+    <span class="n">update_primal_from_dual</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">_xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">fixed_x</span><span class="p">,</span> <span class="n">fixed_y</span><span class="p">,</span> <span class="n">i_j</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">_C</span><span class="p">,</span> <span class="n">target_lengths</span><span class="o">=</span><span class="n">target_lengths</span><span class="p">,</span> <span class="n">target_vectors</span><span class="o">=</span><span class="n">target_vectors</span><span class="p">,</span> <span class="n">leaves</span><span class="o">=</span><span class="n">leaves</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="n">kmax</span><span class="p">)</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># update</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
@@ -541,7 +548,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 <span class="sd">    None</span>
-<span class="sd">        The form and force diagram are updated in-place.</span>
+<span class="sd">        The form diagram is updated in-place.</span>
 
 <span class="sd">    References</span>
 <span class="sd">    ----------</span>
@@ -616,7 +623,7 @@
     <span class="n">vertex_index</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">vertex_index</span><span class="p">()</span>
 
     <span class="n">xy</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">edges</span> <span class="o">=</span> <span class="p">[[</span><span class="n">vertex_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">vertex_index</span><span class="p">[</span><span class="n">v</span><span class="p">]]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[[</span><span class="n">vertex_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">vertex_index</span><span class="p">[</span><span class="n">v</span><span class="p">]]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;_is_edge&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">})]</span>
     <span class="n">C</span> <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
     <span class="n">Q</span> <span class="o">=</span> <span class="n">diags</span><span class="p">([</span><span class="n">form</span><span class="o">.</span><span class="n">q</span><span class="p">()],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">uv</span> <span class="o">=</span> <span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
@@ -644,7 +651,74 @@
         <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_xy</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span></div>
 
 
-<span class="k">def</span> <span class="nf">force_update_from_constraints</span><span class="p">(</span><span class="n">force</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">force_update_from_form_geometrical</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Update the force diagram after modifying the (geometry of) the form diagram.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    force : :class:`ForceDiagram`</span>
+<span class="sd">        The force diagram on which the update is based.</span>
+<span class="sd">    form : :class:`FormDiagram`</span>
+<span class="sd">        The form diagram to update.</span>
+<span class="sd">    kmax: int, optional</span>
+<span class="sd">        Maximum number of least-square iterations for solving the duality form-force.</span>
+<span class="sd">        The default value is ``20``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        The form and force diagram are updated in-place.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># form diagram</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">vertex_index</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">vertex_index</span><span class="p">()</span>
+
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">vertex_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">vertex_index</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">()]</span>
+    <span class="n">C</span> <span class="o">=</span> <span class="n">connectivity_matrix</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="s1">&#39;csr&#39;</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># force diagram</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">_vertex_index</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">vertex_index</span><span class="p">()</span>
+    <span class="n">_edge_index</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">edge_index</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+    <span class="n">_edge_index</span><span class="o">.</span><span class="n">update</span><span class="p">({(</span><span class="n">v</span><span class="p">,</span> <span class="n">u</span><span class="p">):</span> <span class="n">_edge_index</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_edge_index</span><span class="p">})</span>
+
+    <span class="n">_xy</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">xy</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
+    <span class="n">_edges</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
+    <span class="n">_edges</span><span class="p">[:]</span> <span class="o">=</span> <span class="p">[(</span><span class="n">_vertex_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">_vertex_index</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_edges</span><span class="p">]</span>
+
+    <span class="n">_i_j</span> <span class="o">=</span> <span class="p">{</span><span class="n">index</span><span class="p">:</span> <span class="p">[</span><span class="n">_vertex_index</span><span class="p">[</span><span class="n">nbr</span><span class="p">]</span> <span class="k">for</span> <span class="n">nbr</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">vertex_neighbors</span><span class="p">(</span><span class="n">vertex</span><span class="p">)]</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">())}</span>
+    <span class="n">_ij_e</span> <span class="o">=</span> <span class="p">{(</span><span class="n">_vertex_index</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">_vertex_index</span><span class="p">[</span><span class="n">v</span><span class="p">]):</span> <span class="n">_edge_index</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_edge_index</span><span class="p">}</span>
+    <span class="n">_ij_e</span><span class="o">.</span><span class="n">update</span><span class="p">({(</span><span class="n">_vertex_index</span><span class="p">[</span><span class="n">v</span><span class="p">],</span> <span class="n">_vertex_index</span><span class="p">[</span><span class="n">u</span><span class="p">]):</span> <span class="n">_edge_index</span><span class="p">[</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">]</span> <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">_edge_index</span><span class="p">})</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># constraints</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">_fixed</span> <span class="o">=</span> <span class="p">[</span><span class="n">_vertex_index</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">fixed</span><span class="p">()]</span>
+    <span class="n">_free</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">number_of_vertices</span><span class="p">()))</span> <span class="o">-</span> <span class="nb">set</span><span class="p">(</span><span class="n">_fixed</span><span class="p">))</span>
+    <span class="n">_fixed_x</span> <span class="o">=</span> <span class="p">[</span><span class="n">_vertex_index</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">fixed_x</span><span class="p">()]</span>
+    <span class="n">_fixed_y</span> <span class="o">=</span> <span class="p">[</span><span class="n">_vertex_index</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">fixed_y</span><span class="p">()]</span>
+    <span class="n">_target_lengths</span> <span class="o">=</span> <span class="p">[</span><span class="n">force</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;target_length&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)]</span>
+    <span class="n">_target_vectors</span> <span class="o">=</span> <span class="p">[</span><span class="n">force</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;target_vector&#39;</span><span class="p">)</span> <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">ordered_edges</span><span class="p">(</span><span class="n">form</span><span class="p">)]</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># compute the coordinates of the *free* vertices of the force diagram</span>
+    <span class="c1"># as a function of the fixed vertices and the previous coordinates of the *free* vertices</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="n">update_primal_from_dual</span><span class="p">(</span><span class="n">_xy</span><span class="p">,</span> <span class="n">xy</span><span class="p">,</span> <span class="n">_free</span><span class="p">,</span> <span class="n">_fixed_x</span><span class="p">,</span> <span class="n">_fixed_y</span><span class="p">,</span> <span class="n">_i_j</span><span class="p">,</span> <span class="n">_ij_e</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="n">target_lengths</span><span class="o">=</span><span class="n">_target_lengths</span><span class="p">,</span> <span class="n">target_vectors</span><span class="o">=</span><span class="n">_target_vectors</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="n">kmax</span><span class="p">)</span>
+
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="c1"># update force diagram</span>
+    <span class="c1"># --------------------------------------------------------------------------</span>
+    <span class="k">for</span> <span class="n">vertex</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="n">_vertex_index</span><span class="p">[</span><span class="n">vertex</span><span class="p">]</span>
+        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_xy</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+        <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">_xy</span><span class="p">[</span><span class="n">index</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">force_update_from_constraints</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Update the force diagram from constraints on length and orientation imposed in the form diagram,</span>
 <span class="sd">    and already carried out as attributes in the force diagram.</span>
 
@@ -652,6 +726,9 @@
 <span class="sd">    ----------</span>
 <span class="sd">    force : :class:`ForceDiagram`</span>
 <span class="sd">        The force diagram on which the update is based.</span>
+<span class="sd">    kmax: int, optional</span>
+<span class="sd">        Maximum number of parallelisation iterations for updating the force diagram.</span>
+<span class="sd">        The default value is ``100``.</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -685,20 +762,12 @@
     <span class="c1"># edge orientations and edge target lengths</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="n">target_lengths</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;target_length&#39;</span><span class="p">)</span>
-    <span class="n">target_vectors</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">_edges</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">edges_where</span><span class="p">({</span><span class="s1">&#39;has_fixed_orientation&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}):</span>
-        <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">edge_coordinates</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
-        <span class="n">dx</span> <span class="o">=</span> <span class="n">ep</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">dy</span> <span class="o">=</span> <span class="n">ep</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-        <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">_uv_i</span><span class="p">[(</span><span class="n">_k_i</span><span class="p">[</span><span class="n">u</span><span class="p">],</span> <span class="n">_k_i</span><span class="p">[</span><span class="n">v</span><span class="p">])]</span>
-        <span class="n">target_vectors</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">dx</span><span class="o">/</span><span class="n">length</span><span class="p">,</span> <span class="n">dy</span><span class="o">/</span><span class="n">length</span><span class="p">]</span>  <span class="c1"># compute target vectors for edges with fix orientation</span>
+    <span class="n">target_vectors</span> <span class="o">=</span> <span class="n">force</span><span class="o">.</span><span class="n">edges_attribute</span><span class="p">(</span><span class="s1">&#39;target_vector&#39;</span><span class="p">)</span>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Paralelise edge given force targets and/or target_lengths</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
-    <span class="n">parallelise_edges</span><span class="p">(</span><span class="n">_xy</span><span class="p">,</span> <span class="n">_edges</span><span class="p">,</span> <span class="n">_i_nbrs</span><span class="p">,</span> <span class="n">_ij_e</span><span class="p">,</span> <span class="n">target_vectors</span><span class="p">,</span> <span class="n">target_lengths</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="n">_fixed</span><span class="p">,</span> <span class="n">fixed_x</span><span class="o">=</span><span class="n">_fixed_x</span><span class="p">,</span> <span class="n">fixed_y</span><span class="o">=</span><span class="n">_fixed_y</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">parallelise_edges</span><span class="p">(</span><span class="n">_xy</span><span class="p">,</span> <span class="n">_edges</span><span class="p">,</span> <span class="n">_i_nbrs</span><span class="p">,</span> <span class="n">_ij_e</span><span class="p">,</span> <span class="n">target_vectors</span><span class="p">,</span> <span class="n">target_lengths</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="n">_fixed</span><span class="p">,</span> <span class="n">fixed_x</span><span class="o">=</span><span class="n">_fixed_x</span><span class="p">,</span> <span class="n">fixed_y</span><span class="o">=</span><span class="n">_fixed_y</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="n">kmax</span><span class="p">)</span>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># update force diagram geometry</span>
@@ -708,6 +777,73 @@
         <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">_xy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">force</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
         <span class="n">force</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># dual modifications</span>
+<span class="c1"># ==============================================================================</span>
+
+
+<span class="k">def</span> <span class="nf">update_diagrams_from_constraints</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">10e-3</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">printout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Update the form and force diagram after constraints / or movements are imposed to the diagrams.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    form : :class:`FormDiagram`</span>
+<span class="sd">        The form diagram.</span>
+<span class="sd">    force : :class:`ForceDiagram`</span>
+<span class="sd">        The force diagram.</span>
+<span class="sd">    max_iter: int, optional</span>
+<span class="sd">        Maximum number of iterations to update the diagrams.</span>
+<span class="sd">        The default value is ``20``.</span>
+<span class="sd">    tol: float, optional</span>
+<span class="sd">        Stopping criteria tolerance for equilibrium and constraint violation.</span>
+<span class="sd">        The default value is ``10e-3``.</span>
+<span class="sd">    kmax: int, optional</span>
+<span class="sd">        Maximum number of least-square iterations for solving the duality form-force.</span>
+<span class="sd">        The default value is ``20``.</span>
+<span class="sd">    printout: boll, optional</span>
+<span class="sd">        Whether or not print intermediate messages.</span>
+<span class="sd">        The default value is ``False``.</span>
+<span class="sd">    callback: callable, optional</span>
+<span class="sd">        Callable function at the end of each iteration.</span>
+<span class="sd">        The default value is ``None``.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None</span>
+<span class="sd">        The form and force diagram are updated in-place.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">niter</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">check_equilibrium</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">printout</span><span class="o">=</span><span class="n">printout</span><span class="p">)</span> <span class="ow">or</span> <span class="n">start</span><span class="p">:</span>
+
+        <span class="c1"># Propose a force diagram based on constraints -&gt; Using paralellise</span>
+        <span class="n">force_update_from_constraints</span><span class="p">(</span><span class="n">force</span><span class="p">)</span>
+
+        <span class="c1"># Find geometrical dual form diagram respecting form constraints -&gt; Using Least-Squares</span>
+        <span class="n">form_update_from_force</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="n">kmax</span><span class="p">)</span>
+
+        <span class="c1"># Find geometrical dual force diagram respecting force constraints -&gt; Using Least-Squares</span>
+        <span class="n">force_update_from_form_geometrical</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="n">kmax</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
+            <span class="n">callback</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">niter</span> <span class="o">&gt;</span> <span class="n">max_iter</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Did not converge.&#39;</span><span class="p">)</span>
+            <span class="n">check_equilibrium</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">printout</span><span class="o">=</span><span class="n">printout</span><span class="p">)</span>
+            <span class="k">break</span>
+
+        <span class="n">niter</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">if</span> <span class="n">printout</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Finished with </span><span class="si">{0}</span><span class="s1"> iterations.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">niter</span><span class="p">))</span>
+
+    <span class="k">return</span>
 
 
 <span class="c1"># ==============================================================================</span>

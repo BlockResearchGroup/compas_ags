@@ -105,7 +105,7 @@
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">FormDiagram</span>
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">ForceDiagram</span>
 
-<span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">update_form_from_force</span>
+<span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">update_primal_from_dual</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
@@ -396,7 +396,7 @@
     <span class="k">def</span> <span class="nf">objfunc</span><span class="p">(</span><span class="n">_x</span><span class="p">):</span>
         <span class="n">_xy</span><span class="p">[</span><span class="n">_free</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">_x</span>
 
-        <span class="n">update_form_from_force</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">_xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">leaves</span><span class="p">,</span> <span class="n">i_j</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">_C</span><span class="p">)</span>
+        <span class="n">update_primal_from_dual</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">_xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">leaves</span><span class="p">,</span> <span class="n">i_j</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">_C</span><span class="p">)</span>
 
         <span class="n">length</span> <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">xy</span><span class="p">))</span>
         <span class="n">force</span> <span class="o">=</span> <span class="n">normrow</span><span class="p">(</span><span class="n">_C</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">_xy</span><span class="p">))</span>

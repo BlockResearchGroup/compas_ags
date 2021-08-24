@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   
-  <title>compas_ags - form_update_from_force</title>
+  <title>compas_ags - ForceDiagram.fixed_x</title>
   
 
   <meta charset="utf-8" />
@@ -19,11 +19,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="force_update_from_form" href="compas_ags.ags.force_update_from_form.html" />
+    <link rel="next" title="ForceDiagram.fixed_y" href="compas_ags.diagrams.ForceDiagram.fixed_y.html" />
   
 
   
-    <link rel="prev" title="form_update_q_from_qind" href="compas_ags.ags.form_update_q_from_qind.html" />
+    <link rel="prev" title="ForceDiagram.fixed" href="compas_ags.diagrams.ForceDiagram.fixed.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -86,51 +86,28 @@
             
               <li class="breadcrumb-item"><a href="../compas_ags.html">compas_ags</a></li>
             
-              <li class="breadcrumb-item"><a href="../compas_ags.ags.html">compas_ags.ags</a></li>
+              <li class="breadcrumb-item"><a href="../compas_ags.diagrams.html">compas_ags.diagrams</a></li>
             
-            <li class="breadcrumb-item active" aria-current="page">form_update_from_force</li>
+              <li class="breadcrumb-item"><a href="compas_ags.diagrams.ForceDiagram.html">ForceDiagram</a></li>
+            
+            <li class="breadcrumb-item active" aria-current="page">ForceDiagram.fixed_x</li>
           </ol>
         </nav>
         
 
         
         
-        <section class="detail" id="form-update-from-force">
-<h1>form_update_from_force</h1>
-<dl class="function">
-<dt id="compas_ags.ags.form_update_from_force">
-<code class="sig-prename descclassname">compas_ags.ags.</code><code class="sig-name descname">form_update_from_force</code><span class="sig-paren">(</span><em class="sig-param">form</em>, <em class="sig-param">force</em>, <em class="sig-param">kmax=100</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/ags/graphstatics.html#form_update_from_force"><span class="viewcode-link">[source]</span></a></dt>
-<dd><p>Update the form diagram after a modification of the force diagram.</p>
+        <section class="detail" id="forcediagram-fixed-x">
+<h1>ForceDiagram.fixed_x</h1>
+<dl class="method">
+<dt id="compas_ags.diagrams.ForceDiagram.fixed_x">
+<code class="sig-prename descclassname">ForceDiagram.</code><code class="sig-name descname">fixed_x</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/diagrams/forcediagram.html#ForceDiagram.fixed_x"><span class="viewcode-link">[source]</span></a></dt>
+<dd><p>The identifiers of the vertices fixed in <code class="docutils literal notranslate"><span class="pre">x</span></code> only.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>form</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">FormDiagram</span></code>) – The form diagram to update.</p></li>
-<li><p><strong>force</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ForceDiagram</span></code>) – The force diagram on which the update is based.</p></li>
-<li><p><strong>kmax</strong> (<em>int, optional</em>) – Maximum number of least-square iterations for solving the duality form-force.
-The default value is <code class="docutils literal notranslate"><span class="pre">20</span></code>.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p><em>None</em> – The form diagram is updated in-place.</p>
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p><em>list</em></p>
 </dd>
 </dl>
-<p class="rubric">Notes</p>
-<p>Compute the geometry of the form diagram from the geometry of the form diagram
-and some constraints (location of fixed points).
-Since both diagrams are reciprocal, the coordinates of each vertex of the form
-diagram can be expressed as the intersection of three or more lines parallel
-to the corresponding edges of the force diagram.
-Essentially, this boils down to solving the following problem:</p>
-<div class="math notranslate nohighlight">
-\[\mathbf{A}\mathbf{x} = \mathbf{b}\]</div>
-<p>with <span class="math notranslate nohighlight">\(\mathbf{A}\)</span> the coefficients of the x and y-coordinate of the  ,
-<span class="math notranslate nohighlight">\(\mathbf{x}\)</span> the coordinates of the vertices of the form diagram,
-in <em>Fortran</em> order (first all x-coordinates, then all y-coordinates),
-and  <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> ….</p>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><code><span></span><span class="go">&gt;&gt;&gt;</span>
-</code></pre></div>
-</div>
 </dd></dl>
 
 </section>
@@ -157,8 +134,8 @@ and  <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> ….</p>
 <li class="nav-item"><a class="nav-link reference internal" href="../../examples.html">Examples</a></li>
 <li class="nav-item active"><a class="nav-link reference internal" href="../../api.html">API Reference</a><ul class="nav flex-column active">
 <li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.html">compas_ags</a><ul class="nav flex-column active">
-<li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
-<li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.diagrams.html">compas_ags.diagrams</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
+<li class="nav-item active"><a class="nav-link reference internal" href="../compas_ags.diagrams.html">compas_ags.diagrams</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.viewers.html">compas_ags.viewers</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="../compas_ags.utilities.html">compas_ags.utilities</a></li>
 </ul>
@@ -178,7 +155,7 @@ and  <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> ….</p>
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">form_update_from_force</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">ForceDiagram.fixed_x</a></li>
 </ul>
 
       </div>
@@ -190,20 +167,20 @@ and  <span class="math notranslate nohighlight">\(\mathbf{b}\)</span> ….</p>
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-        <a href="compas_ags.ags.form_update_q_from_qind.html" title="form_update_q_from_qind" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+        <a href="compas_ags.diagrams.ForceDiagram.fixed.html" title="ForceDiagram.fixed" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
           <div class="nav-title flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Previous</div>
-            form_update_q_from_qind
+            ForceDiagram.fixed
           </div>
         </a>
       
 
       
-        <a href="compas_ags.ags.force_update_from_form.html" title="force_update_from_form" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <a href="compas_ags.diagrams.ForceDiagram.fixed_y.html" title="ForceDiagram.fixed_y" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
           <div class="nav-title footer-link flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Next</div>
-            force_update_from_form
+            ForceDiagram.fixed_y
           </div>
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
         </a>
