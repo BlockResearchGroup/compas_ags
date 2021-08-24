@@ -28,10 +28,12 @@ from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import ForceDiagram
 
 from compas_ags.ags.core import update_q_from_qind
-from compas_ags.ags.core import update_form_from_force
+from compas_ags.ags.core import update_primal_from_dual
 from compas_ags.ags.core import get_jacobian_and_residual
-from compas_ags.ags.core import parallelise_edges
 from compas_ags.ags.core import compute_jacobian
+from compas_ags.ags.core import parallelise_edges
+
+from compas_ags.utilities import check_equilibrium
 
 from compas_ags.exceptions import SolutionError
 
@@ -39,12 +41,12 @@ from compas_ags.exceptions import SolutionError
 __all__ = [
     'form_identify_dof',
     'form_count_dof',
-    'form_compute_nullspace',
     'form_update_q_from_qind',
     'form_update_from_force',
     'form_update_from_force_newton',
     'force_update_from_form',
     'force_update_from_constraints',
+    'update_diagrams_from_constraints',
 
     'form_update_q_from_qind_proxy',
     'form_update_from_force_proxy',
@@ -321,11 +323,14 @@ def form_update_from_force(form, force, kmax=100):
         The form diagram to update.
     force : :class:`ForceDiagram`
         The force diagram on which the update is based.
+    kmax: int, optional
+        Maximum number of least-square iterations for solving the duality form-force.
+        The default value is ``20``.
 
     Returns
     -------
     None
-        The form and force diagram are updated in-place.
+        The form diagram is updated in-place.
 
     Notes
     -----
@@ -369,6 +374,8 @@ def form_update_from_force(form, force, kmax=100):
     free = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
     fixed_x = [vertex_index[vertex] for vertex in form.fixed_x()]
     fixed_y = [vertex_index[vertex] for vertex in form.fixed_y()]
+    target_lengths = form.edges_attribute('target_length')
+    target_vectors = form.edges_attribute('target_vector')
     # --------------------------------------------------------------------------
     # force diagram
     # --------------------------------------------------------------------------
@@ -385,7 +392,7 @@ def form_update_from_force(form, force, kmax=100):
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # re-add the leaves and leaf-edges
     # --------------------------------------------------------------------------
-    update_form_from_force(xy, _xy, free, fixed_x, fixed_y, leaves, i_j, ij_e, _C, kmax=kmax)
+    update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_j, ij_e, _C, target_lengths=target_lengths, target_vectors=target_vectors, leaves=leaves, kmax=kmax)
     # --------------------------------------------------------------------------
     # update
     # --------------------------------------------------------------------------
@@ -451,7 +458,7 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
     Returns
     -------
     None
-        The form and force diagram are updated in-place.
+        The form diagram is updated in-place.
 
     References
     ----------
@@ -526,7 +533,7 @@ def force_update_from_form(force, form):
     vertex_index = form.vertex_index()
 
     xy = array(form.xy(), dtype=float64)
-    edges = [[vertex_index[u], vertex_index[v]] for u, v in form.edges()]
+    edges = [[vertex_index[u], vertex_index[v]] for u, v in form.edges_where({'_is_edge': True})]
     C = connectivity_matrix(edges, 'csr')
     Q = diags([form.q()], [0])
     uv = C.dot(xy)
@@ -554,7 +561,74 @@ def force_update_from_form(force, form):
         attr['y'] = _xy[index, 1]
 
 
-def force_update_from_constraints(force):
+def force_update_from_form_geometrical(force, form, kmax=100):
+    """Update the force diagram after modifying the (geometry of) the form diagram.
+
+    Parameters
+    ----------
+    force : :class:`ForceDiagram`
+        The force diagram on which the update is based.
+    form : :class:`FormDiagram`
+        The form diagram to update.
+    kmax: int, optional
+        Maximum number of least-square iterations for solving the duality form-force.
+        The default value is ``20``.
+
+    Returns
+    -------
+    None
+        The form and force diagram are updated in-place.
+    """
+    # --------------------------------------------------------------------------
+    # form diagram
+    # --------------------------------------------------------------------------
+    vertex_index = form.vertex_index()
+
+    xy = array(form.xy(), dtype=float64)
+    edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
+    C = connectivity_matrix(edges, 'csr')
+
+    # --------------------------------------------------------------------------
+    # force diagram
+    # --------------------------------------------------------------------------
+    _vertex_index = force.vertex_index()
+    _edge_index = force.edge_index(form)
+    _edge_index.update({(v, u): _edge_index[u, v] for u, v in _edge_index})
+
+    _xy = array(force.xy(), dtype=float64)
+    _edges = force.ordered_edges(form)
+    _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
+
+    _i_j = {index: [_vertex_index[nbr] for nbr in force.vertex_neighbors(vertex)] for index, vertex in enumerate(force.vertices())}
+    _ij_e = {(_vertex_index[u], _vertex_index[v]): _edge_index[u, v] for u, v in _edge_index}
+    _ij_e.update({(_vertex_index[v], _vertex_index[u]): _edge_index[u, v] for u, v in _edge_index})
+
+    # --------------------------------------------------------------------------
+    # constraints
+    # --------------------------------------------------------------------------
+    _fixed = [_vertex_index[vertex] for vertex in force.fixed()]
+    _free = list(set(range(force.number_of_vertices())) - set(_fixed))
+    _fixed_x = [_vertex_index[vertex] for vertex in force.fixed_x()]
+    _fixed_y = [_vertex_index[vertex] for vertex in force.fixed_y()]
+    _target_lengths = [force.edge_attribute(edge, 'target_length') for edge in force.ordered_edges(form)]
+    _target_vectors = [force.edge_attribute(edge, 'target_vector') for edge in force.ordered_edges(form)]
+
+    # --------------------------------------------------------------------------
+    # compute the coordinates of the *free* vertices of the force diagram
+    # as a function of the fixed vertices and the previous coordinates of the *free* vertices
+    # --------------------------------------------------------------------------
+    update_primal_from_dual(_xy, xy, _free, _fixed_x, _fixed_y, _i_j, _ij_e, C, target_lengths=_target_lengths, target_vectors=_target_vectors, kmax=kmax)
+
+    # --------------------------------------------------------------------------
+    # update force diagram
+    # --------------------------------------------------------------------------
+    for vertex, attr in force.vertices(True):
+        index = _vertex_index[vertex]
+        attr['x'] = _xy[index, 0]
+        attr['y'] = _xy[index, 1]
+
+
+def force_update_from_constraints(force, kmax=100):
     """Update the force diagram from constraints on length and orientation imposed in the form diagram,
     and already carried out as attributes in the force diagram.
 
@@ -562,6 +636,9 @@ def force_update_from_constraints(force):
     ----------
     force : :class:`ForceDiagram`
         The force diagram on which the update is based.
+    kmax: int, optional
+        Maximum number of parallelisation iterations for updating the force diagram.
+        The default value is ``100``.
 
     Returns
     -------
@@ -595,20 +672,12 @@ def force_update_from_constraints(force):
     # edge orientations and edge target lengths
     # --------------------------------------------------------------------------
     target_lengths = force.edges_attribute('target_length')
-    target_vectors = [None] * len(_edges)
-
-    for u, v in force.edges_where({'has_fixed_orientation': True}):
-        sp, ep = force.edge_coordinates(u, v)
-        dx = ep[0] - sp[0]
-        dy = ep[1] - sp[1]
-        length = (dx**2 + dy**2)**0.5
-        index = _uv_i[(_k_i[u], _k_i[v])]
-        target_vectors[index] = [dx/length, dy/length]  # compute target vectors for edges with fix orientation
+    target_vectors = force.edges_attribute('target_vector')
 
     # --------------------------------------------------------------------------
     # Paralelise edge given force targets and/or target_lengths
     # --------------------------------------------------------------------------
-    parallelise_edges(_xy, _edges, _i_nbrs, _ij_e, target_vectors, target_lengths, fixed=_fixed, fixed_x=_fixed_x, fixed_y=_fixed_y, kmax=100)
+    parallelise_edges(_xy, _edges, _i_nbrs, _ij_e, target_vectors, target_lengths, fixed=_fixed, fixed_x=_fixed_x, fixed_y=_fixed_y, kmax=kmax)
 
     # --------------------------------------------------------------------------
     # update force diagram geometry
@@ -618,6 +687,73 @@ def force_update_from_constraints(force):
         x, y = _xy[i]
         force.vertex_attribute(key, 'x', x)
         force.vertex_attribute(key, 'y', y)
+
+
+# ==============================================================================
+# dual modifications
+# ==============================================================================
+
+
+def update_diagrams_from_constraints(form, force, max_iter=20, tol=10e-3, kmax=20, printout=False, callback=None):
+    """Update the form and force diagram after constraints / or movements are imposed to the diagrams.
+
+    Parameters
+    ----------
+    form : :class:`FormDiagram`
+        The form diagram.
+    force : :class:`ForceDiagram`
+        The force diagram.
+    max_iter: int, optional
+        Maximum number of iterations to update the diagrams.
+        The default value is ``20``.
+    tol: float, optional
+        Stopping criteria tolerance for equilibrium and constraint violation.
+        The default value is ``10e-3``.
+    kmax: int, optional
+        Maximum number of least-square iterations for solving the duality form-force.
+        The default value is ``20``.
+    printout: boll, optional
+        Whether or not print intermediate messages.
+        The default value is ``False``.
+    callback: callable, optional
+        Callable function at the end of each iteration.
+        The default value is ``None``.
+
+    Returns
+    -------
+    None
+        The form and force diagram are updated in-place.
+    """
+
+    niter = 1
+    start = True
+
+    while not check_equilibrium(form, force, tol=tol, printout=printout) or start:
+
+        # Propose a force diagram based on constraints -> Using paralellise
+        force_update_from_constraints(force)
+
+        # Find geometrical dual form diagram respecting form constraints -> Using Least-Squares
+        form_update_from_force(form, force, kmax=kmax)
+
+        # Find geometrical dual force diagram respecting force constraints -> Using Least-Squares
+        force_update_from_form_geometrical(force, form, kmax=kmax)
+
+        if callback:
+            callback(form, force)
+
+        if niter > max_iter:
+            print('Warning: Did not converge.')
+            check_equilibrium(form, force, tol=tol, printout=printout)
+            break
+
+        niter += 1
+        start = False
+
+    if printout:
+        print('Finished with {0} iterations.'.format(niter))
+
+    return
 
 
 # ==============================================================================

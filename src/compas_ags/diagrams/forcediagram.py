@@ -24,7 +24,7 @@ class ForceDiagram(Diagram):
             'is_param': False})
         self.update_default_edge_attributes({
             'l': 0.0,
-            'has_fixed_orientation': False,
+            'target_vector': None,
             'target_length': None})
 
     # --------------------------------------------------------------------------
@@ -70,6 +70,24 @@ class ForceDiagram(Diagram):
         list
         """
         return list(self.vertices_where({'is_fixed': True}))
+
+    def fixed_x(self):
+        """The identifiers of the vertices fixed in ``x`` only.
+
+        Returns
+        -------
+        list
+        """
+        return list(self.vertices_where({'is_fixed_x': True, 'is_fixed': False}))
+
+    def fixed_y(self):
+        """The identifiers of the vertices fixed in ``y`` only.
+
+        Returns
+        -------
+        list
+        """
+        return list(self.vertices_where({'is_fixed_y': True, 'is_fixed': False}))
 
     def anchor(self):
         """Get an anchor to the force diagram.
@@ -302,29 +320,46 @@ class ForceDiagram(Diagram):
         """
         edge_index = self.dual.edge_index()
         ordered_edges = self.ordered_edges(self.dual)
+        edges_orient = []
 
-        for edge in self.edges_where_dual({'is_ind': True}):
+        for edge in self.edges_where_dual({'is_ind': True}):  # Fix vertices of dual independent edge
             self.vertices_attribute('is_fixed', True, keys=[*edge])
-            self.edge_attribute(edge, 'has_fixed_orientation', True)
+            edges_orient.append(edge)
 
-        for edge in self.edges_where_dual({'has_fixed_orientation': True}):
-            self.edge_attribute(edge, 'has_fixed_orientation', True)
+        for edge in self.edges_where_dual({'is_load': True}):  # If loads are orthogonal the force dual edge gets constrained
+            self.edge_attribute(edge, 'is_load', True)
+            edges_orient.append(edge)
             sp, ep = self.edge_coordinates(*edge)
             if abs(sp[0] - ep[0]) < tol:
                 self.vertices_attribute('is_fixed_x', value=True, keys=[*edge])
             if abs(sp[1] - ep[1]) < tol:
                 self.vertices_attribute('is_fixed_y', value=True, keys=[*edge])
 
+        for edge in self.edges_where_dual({'is_reaction': True}):
+            self.edge_attribute(edge, 'is_reaction', True)
+            edges_orient.append(edge)
+
         for form_edge in self.dual.edges():
-            if self.dual.edge_attribute(form_edge, 'target_length'):
+            target_vector = self.dual.edge_attribute(form_edge, 'target_vector')
+            index = edge_index[form_edge]
+            force_edge = ordered_edges[index]
+            if target_vector is not None:
+                edges_orient.append(force_edge)
+
+        for edge in edges_orient:
+            edge = edge if edge in list(self.edges()) else (edge[1], edge[0])
+            sp, ep = self.edge_coordinates(*edge)
+            dx = ep[0] - sp[0]
+            dy = ep[1] - sp[1]
+            length = (dx**2 + dy**2)**0.5
+            self.edge_attribute(edge, 'target_vector', [dx/length, dy/length])
+
+        for form_edge in self.dual.edges():
+            if self.dual.edge_attribute(form_edge, 'target_length') is not None:
                 length = self.dual.edge_attribute(form_edge, 'target_length')
                 index = edge_index[form_edge]
                 force_edge = ordered_edges[index]
-                self.edge_attribute(force_edge, 'lmin', length)
-                self.edge_attribute(force_edge, 'lmax', length)
                 self.edge_attribute(force_edge, 'target_length', length)
-
-        return
 
     # def compute_constraints(self, form, M):
     #     r"""Computes the form diagram constraints used

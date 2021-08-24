@@ -25,13 +25,14 @@ from compas.numerical import connectivity_matrix
 from compas.numerical import equilibrium_matrix
 from compas.numerical import laplacian_matrix
 from compas.numerical import solve_with_known
+from compas.geometry import midpoint_point_point_xy
 
 from compas_ags.exceptions import SolutionError
 
 
 __all__ = [
     'update_q_from_qind',
-    'update_form_from_force',
+    'update_primal_from_dual',
     'get_jacobian_and_residual',
     'compute_jacobian',
     'parallelise_edges',
@@ -83,27 +84,36 @@ def update_q_from_qind(E, q, dep, ind):
     q[dep] = qd
 
 
-def update_form_from_force(xy, _xy, free, fixed_x, fixed_y, leaves, i_nbrs, ij_e, _C, kmax=100):
-    r"""Update the coordinates of a form diagram using the coordinates of the corresponding force diagram.
+def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, target_lengths=[], target_vectors=[], leaves=[], kmax=100):
+    r"""Update the coordinates of the primal diagram using the coordinates of the corresponding dual diagram.
+    This function apply to both sides, i.e. it can be used to update the form diagram from the geometry of the force
+    diagram or to update the force diagram from the geometry of the force diagram.
 
     Parameters
     ----------
     xy : array-like
-        XY coordinates of the vertices of the form diagram.
+        XY coordinates of the vertices of the primal diagram.
     _xy : array-like
-        XY coordinates of the vertices of the force diagram.
+        XY coordinates of the vertices of the dual diagram.
     fixed_x : list
-        Vertices of the form diagram fixed to move in ``x``.
+        Vertices of the primal diagram fixed to move in ``x``.
     fixed_y : list
-        Vertices of the form diagram fixed to move in ``y``.
-    leaves : list
-        The leaves of the form diagram.
+        Vertices of the primal diagram fixed to move in ``y``.
     i_nbrs : list of list of int
         Vertex neighbours per vertex.
     ij_e : dict
         Edge index for every vertex pair.
     _C : sparse matrix in csr format
         The connectivity matrix of the force diagram.
+    target_lengths : list, optional
+        Target lengths / target forces of the edges.
+        Default is an empty list, which considers that no target lengths are considered.
+    target_vectors : list, optional
+        Target vectors of the edges.
+        Default is an empty list, which considers that no target vectors are considered.
+    leaves : list, optional
+        The leaves of the primal diagram.
+        Default is an empty list, which considers that no leaves are considered.
     kmax : int, optional
         Maximum number of iterations.
         Default is ``100``.
@@ -116,14 +126,16 @@ def update_form_from_force(xy, _xy, free, fixed_x, fixed_y, leaves, i_nbrs, ij_e
     Notes
     -----
     This function should be used to update the form diagram after modifying the
-    geometry of the force diagram. The objective is to compute new locations
-    for the vertices of the form diagram such that the corrsponding lines of the
-    form and force diagram are parallel while any geometric constraints imposed on
-    the form diagram are satisfied.
+    geometry of the force diagram. Or to update the force diagram geometrically to
+    become reciprocal to the form diagram. The objective is to compute new locations
+    for the vertices of the primal diagram such that the corrsponding lines of the
+    primal and dual diagram are parallel while any geometric constraints imposed on
+    the primal diagram are satisfied. Note that form, and force can assume position
+    of primal and dual interchagable.
 
-    The location of each vertex of the form diagram is computed as the intersection
+    The location of each vertex of the primal diagram is computed as the intersection
     of the lines connected to it. Each of the connected lines is based at the connected
-    neighbouring vertex and taken parallel to the corresponding line in the force
+    neighbouring vertex and taken parallel to the corresponding line in the dual
     diagram.
 
     For a point :math:`\mathbf{p}`, which is the least-squares intersection of *K*
@@ -179,10 +191,10 @@ def update_form_from_force(xy, _xy, free, fixed_x, fixed_y, leaves, i_nbrs, ij_e
         row = 0
 
         # in order for the two diagrams to have parallel corresponding edges,
-        # each free vertex location of the form diagram is computed as the intersection
+        # each free vertex location of the primal diagram is computed as the intersection
         # of the connected lines. each of these lines is based at the corresponding
         # connected neighbouring vertex and taken parallel to the corresponding
-        # edge in the force diagram.
+        # edge in the dual diagram.
         # the intersection is the point that minimises the distance to all connected
         # lines.
         for count in range(len(free)):
@@ -200,6 +212,14 @@ def update_form_from_force(xy, _xy, free, fixed_x, fixed_y, leaves, i_nbrs, ij_e
 
                 if normrow(_l)[0, 0] < 0.001:
                     continue
+
+                if target_lengths:
+                    if target_lengths[ij_e[(i, j)]] == 0.0:
+                        continue
+
+                if target_vectors:
+                    if target_vectors[ij_e[(i, j)]]:
+                        n = array(target_vectors[ij_e[(i, j)]]).reshape(1, -1)
 
                 r = I - n.T.dot(n)          # projection into the orthogonal space of the direction vector
                 a = xy[j, None]             # a point on the line (the neighbour of the vertex)
@@ -323,37 +343,40 @@ def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, f
                     u, v = j, i
                     signe = -1.0
 
-                if target_lengths[e]:               # edges with constraint on length ...
+                if target_lengths[e] is not None:  # edges with constraint on length ...
                     lij = target_lengths[e]
-                    if target_vectors[e]:           # edges with constraint on length + orientation
+                    if target_vectors[e]:  # edges with constraint on length + orientation
                         tx, ty = target_vectors[e]
-                    else:                           # edges with constraint on length only
-                        tx = (xy0[v][0] - xy0[u][0])/lengths[e]
-                        ty = (xy0[v][1] - xy0[u][1])/lengths[e]
+                    else:  # edges with constraint on length only
+                        if lengths[e] == 0.0:
+                            tx = ty = 0.0
+                        else:
+                            tx = (xy0[v][0] - xy0[u][0])/lengths[e]
+                            ty = (xy0[v][1] - xy0[u][1])/lengths[e]  # check if xy0 is indeed better than xy
                 else:
-                    if target_vectors[e]:           # edges with constraint on orientation only
+                    if target_vectors[e]:  # edges with constraint on orientation only
                         tx, ty = target_vectors[e]
                         lij = lengths[e]
                     else:
-                        continue                    # edges to discard
+                        continue  # edges to discard
 
                 ax, ay = xy0[i]
                 x += ax + signe * lij * tx
                 y += ay + signe * lij * ty
                 len_nbrs += 1
 
-            if j not in fixed_x:
+            if j not in fixed_x and len_nbrs > 0:
                 xy[j][0] = x / len_nbrs
-            if j not in fixed_y:
+            if j not in fixed_y and len_nbrs > 0:
                 xy[j][1] = y / len_nbrs
 
-        # for (i, j) in ij_e:       # TODO: verify if this part is necessary for problems with zero edge
-        #     e = ij_e[(i, j)]
+        for (i, j) in ij_e:
+            e = ij_e[(i, j)]
 
-        #     if lengths[e] == 0.0:
-        #         c = midpoint_point_point_xy(xy[i], xy[j])
-        #         xy[i][:] = c[:][:2]
-        #         xy[j][:] = c[:][:2]
+            if lengths[e] == 0.0 or target_lengths[e] == 0.0:
+                c = midpoint_point_point_xy(xy[i], xy[j])
+                xy[i][:] = c[:][:2]
+                xy[j][:] = c[:][:2]
 
         if callback:
             callback(k, xy, edges)
