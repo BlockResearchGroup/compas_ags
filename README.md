@@ -1,6 +1,7 @@
 # compas_ags
 
 ![build](https://github.com/blockresearchgroup/compas_ags/workflows/build/badge.svg)
+
 [![GitHub - License](https://img.shields.io/github/license/blockresearchgroup/compas_ags.svg)](https://github.com/blockresearchgroup/compas_ags)
 
 **compas_ags** is a COMPAS package for Computational Graphic Statics.
@@ -10,15 +11,15 @@ It combines implementations of the following papers:
 * Bi-directional Algebraic Graph Statics
 * Load-path optimisation of funcicular networks
 
-See "[Publications](https://blockresearchgroup.github.io/compas_ags/publications.html)" for more info.
+See "[Publications](https://blockresearchgroup.github.io/compas_ags/latest/publications.html)" for more info.
 
 ## Getting Started
 
-Have a look at the "Getting Started" instructions in the docs: <https://blockresearchgroup.github.io/compas_ags/gettingstarted.html>.
+Have a look at the "Getting Started" instructions in the docs: <https://blockresearchgroup.github.io/compas_ags/latest/gettingstarted.html>.
 
 ## First Steps
 
-A good place to start exploring AGS through `compas_ags` are the [tutorial](https://blockresearchgroup.github.io/compas_ags/tutorial.html), and the [examples](https://blockresearchgroup.github.io/compas_ags/examples.html).
+A good place to start exploring AGS through `compas_ags` are the [examples](https://blockresearchgroup.github.io/compas_ags/latest/examples.html).
 
 ## Questions and feedback
 
@@ -30,7 +31,7 @@ If you find a bug, please help us solve it by [filing a report](https://github.c
 
 ## Contributing
 
-If you want to contribute, check out our [developer guidelines](https://blockresearchgroup.github.io/compas_ags/devguide.html).
+If you want to contribute, check out our [developer guidelines](https://blockresearchgroup.github.io/compas_ags/latest/devguide.html).
 
 ## License
 
