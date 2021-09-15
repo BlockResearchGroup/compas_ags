@@ -126,7 +126,6 @@ move_support_dist = +1.5
 for key in form_nodes_move:
     _, y, _ = form.vertex_coordinates(key)
     form.vertex_attribute(key, 'y', y + move_support_dist)
-    form.vertex_attribute(key, 'is_fixed_y', True)
 
 update_diagrams_from_constraints(form, force)
 

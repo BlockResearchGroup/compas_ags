@@ -122,11 +122,6 @@ for u, v in form.edges_where({'is_load': True}):
 # Reflect all constraints to force diagram
 force.constraints_from_dual()
 
-# release x:
-release_x = [1, 2, 3, 4, 5, 6, 7]
-for key in release_x:
-    force.vertex_attribute(key, 'is_fixed_x', False)
-
 # view_with_force_lengths(form, force)
 
 update_diagrams_from_constraints(form, force, callback=None, printout=True, max_iter=100)

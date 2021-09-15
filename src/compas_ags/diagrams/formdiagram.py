@@ -212,12 +212,6 @@ class FormDiagram(Diagram):
     def fixed(self):
         return list(self.vertices_where({'is_fixed': True}))
 
-    def fixed_x(self):
-        return list(self.vertices_where({'is_fixed_x': True, 'is_fixed': False}))
-
-    def fixed_y(self):
-        return list(self.vertices_where({'is_fixed_y': True, 'is_fixed': False}))
-
     def constrained(self):
         return [key for key, attr in self.vertices(True) if attr['cx'] or attr['cy']]
 
@@ -266,16 +260,6 @@ class FormDiagram(Diagram):
                 self.vertex_attribute(edge[1], 'line_constraint', line)
             else:
                 self.vertex_attribute(edge[0], 'line_constraint', line)
-            # if abs(sp[0] - ep[0]) < tol:  # for now, if loads are vertical, horizontal they will restraint application point in x or y.
-            #     if edge[0] in leaves:     # TODO: make this work for generic direction
-            #         self.vertex_attribute(edge[1], 'is_fixed_x', True)
-            #     else:
-            #         self.vertex_attribute(edge[0], 'is_fixed_x', True)
-            # if abs(sp[1] - ep[1]) < tol:
-            #     if edge[0] in leaves:
-            #         self.vertex_attribute(edge[1], 'is_fixed_y', True)
-            #     else:
-            #         self.vertex_attribute(edge[0], 'is_fixed_y', True)
 
     # def identify_fixed(self, points=None, fix_degree=1):
     #     for key, attr in self.vertices(True):
