@@ -93,6 +93,9 @@ force_update_from_form(force, form)
 # visualise initial solution
 view_form_force(form, force, forcescale=2.0)
 
+# Identify auto constraints
+form.identify_constraints()
+
 form_lines, force_lines = store_initial_lines(form, force)
 
 # ---------------------------------------------
