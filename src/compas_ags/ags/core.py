@@ -26,6 +26,7 @@ from compas.numerical import equilibrium_matrix
 from compas.numerical import laplacian_matrix
 from compas.numerical import solve_with_known
 from compas.geometry import midpoint_point_point_xy
+from compas.geometry import project_point_line_xy
 
 from compas_ags.exceptions import SolutionError
 
@@ -84,7 +85,7 @@ def update_q_from_qind(E, q, dep, ind):
     q[dep] = qd
 
 
-def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, target_lengths=[], target_vectors=[], leaves=[], kmax=100):
+def update_primal_from_dual(xy, _xy, free, i_nbrs, ij_e, _C, line_constraints=None, target_lengths=[], target_vectors=[], leaves=[], kmax=100):
     r"""Update the coordinates of the primal diagram using the coordinates of the corresponding dual diagram.
     This function apply to both sides, i.e. it can be used to update the form diagram from the geometry of the force
     diagram or to update the force diagram from the geometry of the force diagram.
@@ -95,16 +96,15 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, t
         XY coordinates of the vertices of the primal diagram.
     _xy : array-like
         XY coordinates of the vertices of the dual diagram.
-    fixed_x : list
-        Vertices of the primal diagram fixed to move in ``x``.
-    fixed_y : list
-        Vertices of the primal diagram fixed to move in ``y``.
     i_nbrs : list of list of int
         Vertex neighbours per vertex.
     ij_e : dict
         Edge index for every vertex pair.
     _C : sparse matrix in csr format
         The connectivity matrix of the force diagram.
+    line_constraints : list, optional
+        Line constraints applied to the free nodes.
+        Default is an ``None`` in which case no line constraints are considered.
     target_lengths : list, optional
         Target lengths / target forces of the edges.
         Default is an empty list, which considers that no target lengths are considered.
@@ -171,21 +171,6 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, t
     A = zeros((2 * len(free), 2 * len(free)), dtype=float64)
     b = zeros((2 * len(free), 1), dtype=float64)
 
-    free_x = []  # list of vertices with free x - to be updated in loop
-    free_y = []
-    is_free_x = [True] * len(free)  # bool for free vertices - to be updated in loop
-    is_free_y = [True] * len(free)
-    for i in range(len(free)):
-        vertex = free[i]
-        if vertex in fixed_x:
-            is_free_x[i] = False
-        else:
-            free_x.append(vertex)
-        if vertex in fixed_y:
-            is_free_y[i] = False
-        else:
-            free_y.append(vertex)
-
     # update the free vertices
     for k in range(kmax):
         row = 0
@@ -226,21 +211,14 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, t
                 R += r
                 q += r.dot(a.T)
 
-            if not is_free_x[count]:
-                n_ = zeros((1, 2))
-                n_[0, 1] = 1.0
-                r = I - n_.T.dot(n_)
-                pt = xy[i].reshape(1, 2) - n_
-                R += r
-                q += r.dot(pt.T)
-
-            if not is_free_y[count]:
-                n_ = zeros((1, 2))
-                n_[0, 0] = 1.0
-                r = I - n_.T.dot(n_)
-                pt = xy[i].reshape(1, 2) - n_
-                R += r
-                q += r.dot(pt.T)
+            if line_constraints:
+                line = line_constraints[count]
+                if line:
+                    n_ = array(line.direction[:2]).reshape(1, 2)
+                    r = I - n_.T.dot(n_)
+                    pt = array(line.start[:2]).reshape(1, 2)
+                    R += r
+                    q += r.dot(pt.T)
 
             A[row: row + 2, row: row + 2] = R
             b[row: row + 2] = q
@@ -249,12 +227,9 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, t
             # p = solve(R.T.dot(R), R.T.dot(q))
             # xy[i] = p.reshape((-1, 2), order='C')
 
-        # res = solve(A.T.dot(A), A.T.dot(b))
-        # xy[free] = res.reshape((-1, 2), order='C')
         res = lstsq(A, b)
         xy_lstsq = res[0].reshape((-1, 2), order='C')
-        xy[free_x, 0] = xy_lstsq[is_free_x, 0]
-        xy[free_y, 1] = xy_lstsq[is_free_y, 1]
+        xy[free] = xy_lstsq
 
     # reconnect leaves
     for i in leaves:
@@ -262,7 +237,7 @@ def update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_nbrs, ij_e, _C, t
         xy[i] = xy[j] + xy0[i] - xy0[j]
 
 
-def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, fixed=None, fixed_x=None, fixed_y=None, kmax=100, callback=None):
+def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, fixed=None, line_constraints=None, kmax=100, callback=None):
     """Parallelise the edges of a mesh to given target vectors.
 
     Parameters
@@ -282,12 +257,9 @@ def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, f
     fixed : list, optional
         The fixed nodes of the mesh.
         Default is ``None``.
-    fixed_x : list, optional
-        The nodes of the mesh fixed in x.
-        Default is ``None``.
-    fixed_y : list, optional
-        The nodes of the mesh fixed in y.
-        Default is ``None``.
+    line_constraints : list, optional
+        Line constraints applied to the free nodes.
+        Default is an ``None`` in which case no line constraints are considered.
     kmax : int, optional
         Maximum number of iterations.
         Default is ``100``.
@@ -310,13 +282,6 @@ def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, f
     if callback:
         if not callable(callback):
             raise Exception('The provided callback is not callable.')
-
-    fixed = fixed or []
-    fixed = set(fixed)
-    fixed_x = fixed_x or []
-    fixed_x = set(fixed_x)
-    fixed_y = fixed_y or []
-    fixed_y = set(fixed_y)
 
     n = len(xy)
 
@@ -365,10 +330,17 @@ def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, f
                 y += ay + signe * lij * ty
                 len_nbrs += 1
 
-            if j not in fixed_x and len_nbrs > 0:
+            if len_nbrs > 0:
                 xy[j][0] = x / len_nbrs
-            if j not in fixed_y and len_nbrs > 0:
                 xy[j][1] = y / len_nbrs
+
+                # check if line constraints are applied and project result
+                if line_constraints:
+                    line = line_constraints[j]
+                    if line:
+                        pt_proj = project_point_line_xy(xy[j], line)
+                        xy[j][0] = pt_proj[0]
+                        xy[j][1] = pt_proj[1]
 
         for (i, j) in ij_e:
             e = ij_e[(i, j)]

@@ -372,8 +372,8 @@ def form_update_from_force(form, force, kmax=100):
     leaves = [vertex_index[vertex] for vertex in form.leaves()]
     fixed = [vertex_index[vertex] for vertex in form.fixed()]
     free = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
-    fixed_x = [vertex_index[vertex] for vertex in form.fixed_x()]
-    fixed_y = [vertex_index[vertex] for vertex in form.fixed_y()]
+    line_constraints_all = form.vertices_attribute('line_constraint')
+    line_constraints = [line_constraints_all[i] for i in free]
     target_lengths = form.edges_attribute('target_length')
     target_vectors = form.edges_attribute('target_vector')
     # --------------------------------------------------------------------------
@@ -392,7 +392,8 @@ def form_update_from_force(form, force, kmax=100):
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # re-add the leaves and leaf-edges
     # --------------------------------------------------------------------------
-    update_primal_from_dual(xy, _xy, free, fixed_x, fixed_y, i_j, ij_e, _C, target_lengths=target_lengths, target_vectors=target_vectors, leaves=leaves, kmax=kmax)
+    update_primal_from_dual(xy, _xy, free, i_j, ij_e, _C, line_constraints=line_constraints, target_lengths=target_lengths,
+                            target_vectors=target_vectors, leaves=leaves, kmax=kmax)
     # --------------------------------------------------------------------------
     # update
     # --------------------------------------------------------------------------
@@ -608,8 +609,10 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     # --------------------------------------------------------------------------
     _fixed = [_vertex_index[vertex] for vertex in force.fixed()]
     _free = list(set(range(force.number_of_vertices())) - set(_fixed))
-    _fixed_x = [_vertex_index[vertex] for vertex in force.fixed_x()]
-    _fixed_y = [_vertex_index[vertex] for vertex in force.fixed_y()]
+    # _fixed_x = [_vertex_index[vertex] for vertex in force.fixed_x()]
+    # _fixed_y = [_vertex_index[vertex] for vertex in force.fixed_y()]
+    _line_constraints_all = force.vertices_attribute('line_constraint')
+    _line_constraints = [_line_constraints_all[i] for i in _free]
     _target_lengths = [force.edge_attribute(edge, 'target_length') for edge in force.ordered_edges(form)]
     _target_vectors = [force.edge_attribute(edge, 'target_vector') for edge in force.ordered_edges(form)]
 
@@ -617,7 +620,7 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     # compute the coordinates of the *free* vertices of the force diagram
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # --------------------------------------------------------------------------
-    update_primal_from_dual(_xy, xy, _free, _fixed_x, _fixed_y, _i_j, _ij_e, C, target_lengths=_target_lengths, target_vectors=_target_vectors, kmax=kmax)
+    update_primal_from_dual(_xy, xy, _free, _i_j, _ij_e, C, line_constraints=_line_constraints, target_lengths=_target_lengths, target_vectors=_target_vectors, kmax=kmax)
 
     # --------------------------------------------------------------------------
     # update force diagram
@@ -661,12 +664,8 @@ def force_update_from_constraints(force, kmax=100):
     # fixity from constraints on force diagram
     # --------------------------------------------------------------------------
     fixed_force = [key for key in force.vertices_where({'is_fixed': True})]
-    fixed_force_x = [key for key in force.vertices_where({'is_fixed_x': True})]
-    fixed_force_y = [key for key in force.vertices_where({'is_fixed_y': True})]
-
     _fixed = [_k_i[key] for key in fixed_force]
-    _fixed_x = [_k_i[key] for key in fixed_force_x]
-    _fixed_y = [_k_i[key] for key in fixed_force_y]
+    line_constraints = force.vertices_attribute('line_constraint')
 
     # --------------------------------------------------------------------------
     # edge orientations and edge target lengths
@@ -677,7 +676,7 @@ def force_update_from_constraints(force, kmax=100):
     # --------------------------------------------------------------------------
     # Paralelise edge given force targets and/or target_lengths
     # --------------------------------------------------------------------------
-    parallelise_edges(_xy, _edges, _i_nbrs, _ij_e, target_vectors, target_lengths, fixed=_fixed, fixed_x=_fixed_x, fixed_y=_fixed_y, kmax=kmax)
+    parallelise_edges(_xy, _edges, _i_nbrs, _ij_e, target_vectors, target_lengths, fixed=_fixed, line_constraints=line_constraints, kmax=kmax)
 
     # --------------------------------------------------------------------------
     # update force diagram geometry
@@ -733,8 +732,14 @@ def update_diagrams_from_constraints(form, force, max_iter=20, tol=10e-3, kmax=2
         # Propose a force diagram based on constraints -> Using paralellise
         force_update_from_constraints(force)
 
+        if callback:
+            callback(form, force)
+
         # Find geometrical dual form diagram respecting form constraints -> Using Least-Squares
         form_update_from_force(form, force, kmax=kmax)
+
+        if callback:
+            callback(form, force)
 
         # Find geometrical dual force diagram respecting force constraints -> Using Least-Squares
         force_update_from_form_geometrical(force, form, kmax=kmax)
