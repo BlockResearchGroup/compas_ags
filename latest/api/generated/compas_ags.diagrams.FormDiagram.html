@@ -502,6 +502,12 @@
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormDiagram.merge_faces.html#compas_ags.diagrams.FormDiagram.merge_faces" title="compas_ags.diagrams.FormDiagram.merge_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_faces</span></code></a>(faces)</p></td>
 <td><p>Merge two faces of a mesh over their shared edge.</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormDiagram.mesh_oriented_bounding_box_numpy.html#compas_ags.diagrams.FormDiagram.mesh_oriented_bounding_box_numpy" title="compas_ags.diagrams.FormDiagram.mesh_oriented_bounding_box_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_oriented_bounding_box_numpy</span></code></a>()</p></td>
+<td><p>Compute the (axis aligned) bounding box of a mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormDiagram.mesh_oriented_bounding_box_xy_numpy.html#compas_ags.diagrams.FormDiagram.mesh_oriented_bounding_box_xy_numpy" title="compas_ags.diagrams.FormDiagram.mesh_oriented_bounding_box_xy_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mesh_oriented_bounding_box_xy_numpy</span></code></a>()</p></td>
+<td><p>Compute the (axis aligned) bounding box of a projection of the mesh in the XY plane.</p></td>
+</tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormDiagram.normal.html#compas_ags.diagrams.FormDiagram.normal" title="compas_ags.diagrams.FormDiagram.normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normal</span></code></a>()</p></td>
 <td><p>Calculate the average mesh normal.</p></td>
 </tr>
@@ -513,6 +519,12 @@
 </tr>
 <tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormDiagram.number_of_vertices.html#compas_ags.diagrams.FormDiagram.number_of_vertices" title="compas_ags.diagrams.FormDiagram.number_of_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_vertices</span></code></a>()</p></td>
 <td><p>Count the number of vertices in the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormDiagram.obb_numpy.html#compas_ags.diagrams.FormDiagram.obb_numpy" title="compas_ags.diagrams.FormDiagram.obb_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">obb_numpy</span></code></a>()</p></td>
+<td><p>Compute the (axis aligned) bounding box of a mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.FormDiagram.obb_xy_numpy.html#compas_ags.diagrams.FormDiagram.obb_xy_numpy" title="compas_ags.diagrams.FormDiagram.obb_xy_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">obb_xy_numpy</span></code></a>()</p></td>
+<td><p>Compute the (axis aligned) bounding box of a projection of the mesh in the XY plane.</p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.FormDiagram.q.html#compas_ags.diagrams.FormDiagram.q" title="compas_ags.diagrams.FormDiagram.q"><code class="xref py py-obj docutils literal notranslate"><span class="pre">q</span></code></a>()</p></td>
 <td><p></p></td>
@@ -700,23 +712,35 @@
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">JSONSCHEMA</span></code></p></td>
 <td><p>The schema of the JSON representation of the data of this object.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adjacency</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">JSONSCHEMANAME</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">adjacency</span></code></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">data</span></code></p></td>
 <td><p>A data dict representing the mesh data structure for serialization.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype</span></code></p></td>
-<td><p>The type of the object in the form of a “2-level” import and a class name.</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtype</span></code></p></td>
+<td><p>The type of the object in the form of a ‘2-level’ import and a class name.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dual</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dual</span></code></p></td>
 <td><p>The dual of this diagram.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">graph</span></code></p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">graph</span></code></p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid</span></code></p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">guid</span></code></p></td>
 <td><p>The globally unique identifier of the object.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">jsondefinitions</span></code></p></td>
+<td><p>Reusable schema definitions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">jsonstring</span></code></p></td>
+<td><p>The representation of the object data in JSON format.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">jsonvalidator</span></code></p></td>
+<td><p>JSON schema validator for draft 7.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span></code></p></td>
 <td><p>The name of the data structure.</p></td>
@@ -869,10 +893,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -885,6 +905,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

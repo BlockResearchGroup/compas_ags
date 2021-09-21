@@ -19,11 +19,11 @@
   <link rel="stylesheet" type="text/css" href="../../_static/css/compas-reference.css" />
 
   
-    <link rel="next" title="FormGraph.degree" href="compas_ags.diagrams.FormGraph.degree.html" />
+    <link rel="next" title="FormGraph.count_crossings" href="compas_ags.diagrams.FormGraph.count_crossings.html" />
   
 
   
-    <link rel="prev" title="FormGraph.connected_edges" href="compas_ags.diagrams.FormGraph.connected_edges.html" />
+    <link rel="prev" title="FormGraph.connectivity_matrix" href="compas_ags.diagrams.FormGraph.connectivity_matrix.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -171,20 +171,20 @@ Defaults to the type of the current data object.</p>
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-        <a href="compas_ags.diagrams.FormGraph.connected_edges.html" title="FormGraph.connected_edges" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+        <a href="compas_ags.diagrams.FormGraph.connectivity_matrix.html" title="FormGraph.connectivity_matrix" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
           <div class="nav-title flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Previous</div>
-            FormGraph.connected_edges
+            FormGraph.connectivity_matrix
           </div>
         </a>
       
 
       
-        <a href="compas_ags.diagrams.FormGraph.degree.html" title="FormGraph.degree" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
+        <a href="compas_ags.diagrams.FormGraph.count_crossings.html" title="FormGraph.count_crossings" class="nav-link footer-link float-end text-right d-flex w-50" rel="next">
           <div class="nav-title footer-link flex-grow-1 align-self-center">
             <div class="nav-direction small font-weight-light">Next</div>
-            FormGraph.degree
+            FormGraph.count_crossings
           </div>
           <div class="nav-button p-2 m-2"><i class="fas fa-arrow-right"></i></div>
         </a>
@@ -258,10 +258,6 @@ Defaults to the type of the current data object.</p>
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -274,6 +270,13 @@ Defaults to the type of the current data object.</p>
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

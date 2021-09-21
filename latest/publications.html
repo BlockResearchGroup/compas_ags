@@ -95,6 +95,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="publications/ags.html">Algebraic Graph Statics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications/bi-ags.html">Bi-directional Algebraic Graph Statics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="publications/interactive-ags.html">Interactive Graphic Statics</a></li>
 <li class="toctree-l1"><a class="reference internal" href="publications/loadpath.html">Load-path optimisation of funicular networks</a></li>
 </ul>
 </div>
@@ -125,6 +126,7 @@
 <li class="nav-item active"><a class="nav-link active current reference internal" href="#">Publications</a><ul class="nav flex-column">
 <li class="nav-item"><a class="nav-link reference internal" href="publications/ags.html">Algebraic Graph Statics</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="publications/bi-ags.html">Bi-directional Algebraic Graph Statics</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="publications/interactive-ags.html">Interactive Graphic Statics</a></li>
 <li class="nav-item"><a class="nav-link reference internal" href="publications/loadpath.html">Load-path optimisation of funicular networks</a></li>
 </ul>
 </li>
@@ -238,10 +240,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -254,6 +252,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

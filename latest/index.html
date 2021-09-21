@@ -137,6 +137,7 @@ more transparent than arithmetic or numerical methods.</p>
 <li class="toctree-l1"><a class="reference internal" href="publications.html">Publications</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="publications/ags.html">Algebraic Graph Statics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="publications/bi-ags.html">Bi-directional Algebraic Graph Statics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="publications/interactive-ags.html">Interactive Graphic Statics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="publications/loadpath.html">Load-path optimisation of funicular networks</a></li>
 </ul>
 </li>
@@ -276,10 +277,6 @@ more transparent than arithmetic or numerical methods.</p>
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -292,6 +289,13 @@ more transparent than arithmetic or numerical methods.</p>
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>

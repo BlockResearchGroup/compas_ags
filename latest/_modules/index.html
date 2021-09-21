@@ -87,13 +87,15 @@
         
         <h1>All modules for which code is available</h1>
 <ul><li><a href="compas/data/data.html">compas.data.data</a></li>
+<li><a href="compas/datastructures/graph/graph.html">compas.datastructures.graph.graph</a></li>
+<li><a href="compas/datastructures/halfedge/halfedge.html">compas.datastructures.halfedge.halfedge</a></li>
 <li><a href="compas/datastructures/mesh/bbox.html">compas.datastructures.mesh.bbox</a></li>
+<li><a href="compas/datastructures/mesh/bbox_numpy.html">compas.datastructures.mesh.bbox_numpy</a></li>
 <li><a href="compas/datastructures/mesh/combinatorics.html">compas.datastructures.mesh.combinatorics</a></li>
-<li><a href="compas/datastructures/mesh/core/halfedge.html">compas.datastructures.mesh.core.halfedge</a></li>
-<li><a href="compas/datastructures/mesh/core/mesh.html">compas.datastructures.mesh.core.mesh</a></li>
-<li><a href="compas/datastructures/mesh/core/operations/collapse.html">compas.datastructures.mesh.core.operations.collapse</a></li>
-<li><a href="compas/datastructures/mesh/core/operations/merge.html">compas.datastructures.mesh.core.operations.merge</a></li>
-<li><a href="compas/datastructures/mesh/core/operations/split.html">compas.datastructures.mesh.core.operations.split</a></li>
+<li><a href="compas/datastructures/mesh/mesh.html">compas.datastructures.mesh.mesh</a></li>
+<li><a href="compas/datastructures/mesh/operations/collapse.html">compas.datastructures.mesh.operations.collapse</a></li>
+<li><a href="compas/datastructures/mesh/operations/merge.html">compas.datastructures.mesh.operations.merge</a></li>
+<li><a href="compas/datastructures/mesh/operations/split.html">compas.datastructures.mesh.operations.split</a></li>
 <li><a href="compas/datastructures/mesh/orientation.html">compas.datastructures.mesh.orientation</a></li>
 <li><a href="compas/datastructures/mesh/slice.html">compas.datastructures.mesh.slice</a></li>
 <li><a href="compas/datastructures/mesh/smoothing.html">compas.datastructures.mesh.smoothing</a></li>
@@ -102,9 +104,11 @@
 <li><a href="compas/datastructures/mesh/triangulation.html">compas.datastructures.mesh.triangulation</a></li>
 <li><a href="compas/datastructures/network/combinatorics.html">compas.datastructures.network.combinatorics</a></li>
 <li><a href="compas/datastructures/network/complementarity.html">compas.datastructures.network.complementarity</a></li>
-<li><a href="compas/datastructures/network/core/graph.html">compas.datastructures.network.core.graph</a></li>
-<li><a href="compas/datastructures/network/core/network.html">compas.datastructures.network.core.network</a></li>
-<li><a href="compas/datastructures/network/core/operations/split.html">compas.datastructures.network.core.operations.split</a></li>
+<li><a href="compas/datastructures/network/duality.html">compas.datastructures.network.duality</a></li>
+<li><a href="compas/datastructures/network/matrices.html">compas.datastructures.network.matrices</a></li>
+<li><a href="compas/datastructures/network/network.html">compas.datastructures.network.network</a></li>
+<li><a href="compas/datastructures/network/operations/split.html">compas.datastructures.network.operations.split</a></li>
+<li><a href="compas/datastructures/network/planarity.html">compas.datastructures.network.planarity</a></li>
 <li><a href="compas/datastructures/network/smoothing.html">compas.datastructures.network.smoothing</a></li>
 <li><a href="compas/datastructures/network/transformations.html">compas.datastructures.network.transformations</a></li>
 <li><a href="compas/datastructures/network/traversal.html">compas.datastructures.network.traversal</a></li>
@@ -232,10 +236,6 @@
     hljs.initHighlighting();
     anchors.add();
 
-    $('.nav-versions .dropdown-item').filter(function(i, ver) {
-      return window.location.href.startsWith(ver.href);
-    }).addClass("active");
-
   });
 
 
@@ -248,6 +248,13 @@
       lines.forEach(version => {
         $("#doc_version_list").append("<a class=\"dropdown-item\" href=\""+ docs_site + version + "\">" + version + "</a>");
       });
+
+      var selected_version = $('.nav-versions .dropdown-item').filter(function(i, ver) {
+        return window.location.href.startsWith(ver.href);
+      });
+      selected_version.addClass('active');
+      $("#bd-versions").text(selected_version.text());
+
     })
   }
   </script>
