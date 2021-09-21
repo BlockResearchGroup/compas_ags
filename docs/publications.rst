@@ -9,4 +9,5 @@ Publications
 
    publications/ags
    publications/bi-ags
+   publications/interactive-ags
    publications/loadpath
