@@ -5,18 +5,16 @@ Bi-directional Algebraic Graph Statics
 .. code-block:: latex
 
     @article{ALIC201726,
-    title = {Bi-directional algebraic graphic statics},
-    journal = {Computer-Aided Design},
-    volume = {93},
-    pages = {26-37},
-    year = {2017},
-    issn = {0010-4485},
-    doi = {https://doi.org/10.1016/j.cad.2017.08.003},
-    url = {https://www.sciencedirect.com/science/article/pii/S0010448517301446},
-    author = {Vedad Alic and Daniel Åkesson},
-    keywords = {Interactive graphic statics, Matrix analysis of structures, Graph theory, Reciprocal figures, Force diagram manipulations, Conceptual design},
+        author  = "Vedad Alic and Daniel Åkesson",
+        title   = "Bi-directional algebraic graphic statics",
+        journal = "Computer-Aided Design",
+        year    = "2017",
+        volume  = "93",
+        pages   = "26-37",
+        issn    = "0010-4485",
+        doi     = "10.1016/j.cad.2017.08.003",
+        note    = "",
     }
-
 
 **Abstract**
 
