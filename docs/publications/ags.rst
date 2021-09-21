@@ -38,7 +38,7 @@ and flexible computational implementation of traditional graphic statics.
 
 **Contributions**
 
-The paper brings together concepts and techniques from graph theory and matrix 
+The paper brings together concepts and techniques from graph theory and matrix
 analysis of structures and present them in a unified framework for algebraic graphical
 analysis built around the reciprocal relation between the form and force diagrams
 of graphic statics.
@@ -47,7 +47,7 @@ A general scheme is discussed for a computational implementation of the presente
 approach that can be used as back-end of a real-time, interactive graphic statics
 application.
 Different steps of the implementation are illustrated using a Fink truss, which
-is a statically determinate structure that cannot be calculated directly with 
+is a statically determinate structure that cannot be calculated directly with
 traditional graphic statics, because it contains crossing edges.
 Relevant algorithms are provided as code snippets.
 
