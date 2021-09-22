@@ -93,8 +93,9 @@
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">division</span>
 
 <span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">islice</span>
-<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">network_find_cycles</span>
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">Diagram</span>
+<span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">network_find_cycles</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Line</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;FormDiagram&#39;</span><span class="p">]</span>
@@ -112,8 +113,7 @@
         <span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_default_vertex_attributes</span><span class="p">({</span>
             <span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;is_fixed_x&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;is_fixed_y&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;line_constraint&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="s1">&#39;cx&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
             <span class="s1">&#39;cy&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
         <span class="p">})</span>
@@ -302,12 +302,6 @@
 <div class="viewcode-block" id="FormDiagram.fixed"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.fixed.html#compas_ags.diagrams.FormDiagram.fixed">[docs]</a>    <span class="k">def</span> <span class="nf">fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span></div>
 
-<div class="viewcode-block" id="FormDiagram.fixed_x"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.fixed_x.html#compas_ags.diagrams.FormDiagram.fixed_x">[docs]</a>    <span class="k">def</span> <span class="nf">fixed_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;is_fixed_x&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}))</span></div>
-
-<div class="viewcode-block" id="FormDiagram.fixed_y"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.fixed_y.html#compas_ags.diagrams.FormDiagram.fixed_y">[docs]</a>    <span class="k">def</span> <span class="nf">fixed_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;is_fixed_y&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}))</span></div>
-
 <div class="viewcode-block" id="FormDiagram.constrained"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormDiagram.constrained.html#compas_ags.diagrams.FormDiagram.constrained">[docs]</a>    <span class="k">def</span> <span class="nf">constrained</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;cx&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">attr</span><span class="p">[</span><span class="s1">&#39;cy&#39;</span><span class="p">]]</span></div>
 
@@ -342,6 +336,7 @@
         <span class="n">leaves</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leaves</span><span class="p">()</span>
         <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">leaf_edges</span><span class="p">():</span>
             <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_coordinates</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">Line</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">ep</span><span class="p">)</span>
             <span class="n">dx</span> <span class="o">=</span> <span class="n">ep</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">dy</span> <span class="o">=</span> <span class="n">ep</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
@@ -351,16 +346,10 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;is_reaction&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>  <span class="c1"># by default reactions are leaves connected to fixed vertices</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;is_load&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
                 <span class="k">continue</span>
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ep</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>  <span class="c1"># for now, if loads are vertical, horizontal they will restraint application point in x or y.</span>
-                <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>     <span class="c1"># TODO: make this work for generic direction</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;is_fixed_x&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;is_fixed_x&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ep</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;is_fixed_y&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;is_fixed_y&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span></div></div>
+            <span class="k">if</span> <span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;line_constraint&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vertex_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s1">&#39;line_constraint&#39;</span><span class="p">,</span> <span class="n">line</span><span class="p">)</span></div></div>
 
     <span class="c1"># def identify_fixed(self, points=None, fix_degree=1):</span>
     <span class="c1">#     for key, attr in self.vertices(True):</span>

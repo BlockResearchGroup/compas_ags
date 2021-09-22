@@ -94,6 +94,7 @@
 
 <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">mesh_dual</span>
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">Diagram</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Line</span>
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ForceDiagram&#39;</span><span class="p">]</span>
@@ -109,8 +110,7 @@
             <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;Force&#39;</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_default_vertex_attributes</span><span class="p">({</span>
             <span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;is_fixed_x&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
-            <span class="s1">&#39;is_fixed_y&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span>
+            <span class="s1">&#39;line_constraint&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
             <span class="s1">&#39;is_param&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_default_edge_attributes</span><span class="p">({</span>
             <span class="s1">&#39;l&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span>
@@ -160,24 +160,6 @@
 <span class="sd">        list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span></div>
-
-<div class="viewcode-block" id="ForceDiagram.fixed_x"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.fixed_x.html#compas_ags.diagrams.ForceDiagram.fixed_x">[docs]</a>    <span class="k">def</span> <span class="nf">fixed_x</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The identifiers of the vertices fixed in ``x`` only.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;is_fixed_x&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}))</span></div>
-
-<div class="viewcode-block" id="ForceDiagram.fixed_y"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.fixed_y.html#compas_ags.diagrams.ForceDiagram.fixed_y">[docs]</a>    <span class="k">def</span> <span class="nf">fixed_y</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The identifiers of the vertices fixed in ``y`` only.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        list</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;is_fixed_y&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;is_fixed&#39;</span><span class="p">:</span> <span class="kc">False</span><span class="p">}))</span></div>
 
 <div class="viewcode-block" id="ForceDiagram.anchor"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.anchor.html#compas_ags.diagrams.ForceDiagram.anchor">[docs]</a>    <span class="k">def</span> <span class="nf">anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get an anchor to the force diagram.</span>
@@ -420,10 +402,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;is_load&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
             <span class="n">edges_orient</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
             <span class="n">sp</span><span class="p">,</span> <span class="n">ep</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_coordinates</span><span class="p">(</span><span class="o">*</span><span class="n">edge</span><span class="p">)</span>
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ep</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;is_fixed_x&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">edge</span><span class="p">])</span>
-            <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ep</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">tol</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;is_fixed_y&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">edge</span><span class="p">])</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">Line</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span> <span class="n">ep</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;line_constraint&#39;</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">line</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="p">[</span><span class="o">*</span><span class="n">edge</span><span class="p">])</span>
 
         <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">edges_where_dual</span><span class="p">({</span><span class="s1">&#39;is_reaction&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s1">&#39;is_reaction&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>

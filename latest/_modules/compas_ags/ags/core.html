@@ -116,6 +116,7 @@
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">laplacian_matrix</span>
 <span class="kn">from</span> <span class="nn">compas.numerical</span> <span class="kn">import</span> <span class="n">solve_with_known</span>
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">midpoint_point_point_xy</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">project_point_line_xy</span>
 
 <span class="kn">from</span> <span class="nn">compas_ags.exceptions</span> <span class="kn">import</span> <span class="n">SolutionError</span>
 
@@ -174,7 +175,7 @@
     <span class="n">q</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span> <span class="o">=</span> <span class="n">qd</span></div>
 
 
-<div class="viewcode-block" id="update_primal_from_dual"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.update_primal_from_dual.html#compas_ags.ags.update_primal_from_dual">[docs]</a><span class="k">def</span> <span class="nf">update_primal_from_dual</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">_xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">fixed_x</span><span class="p">,</span> <span class="n">fixed_y</span><span class="p">,</span> <span class="n">i_nbrs</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">_C</span><span class="p">,</span> <span class="n">target_lengths</span><span class="o">=</span><span class="p">[],</span> <span class="n">target_vectors</span><span class="o">=</span><span class="p">[],</span> <span class="n">leaves</span><span class="o">=</span><span class="p">[],</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="viewcode-block" id="update_primal_from_dual"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.update_primal_from_dual.html#compas_ags.ags.update_primal_from_dual">[docs]</a><span class="k">def</span> <span class="nf">update_primal_from_dual</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">_xy</span><span class="p">,</span> <span class="n">free</span><span class="p">,</span> <span class="n">i_nbrs</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">_C</span><span class="p">,</span> <span class="n">line_constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">target_lengths</span><span class="o">=</span><span class="p">[],</span> <span class="n">target_vectors</span><span class="o">=</span><span class="p">[],</span> <span class="n">leaves</span><span class="o">=</span><span class="p">[],</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the coordinates of the primal diagram using the coordinates of the corresponding dual diagram.</span>
 <span class="sd">    This function apply to both sides, i.e. it can be used to update the form diagram from the geometry of the force</span>
 <span class="sd">    diagram or to update the force diagram from the geometry of the force diagram.</span>
@@ -185,16 +186,15 @@
 <span class="sd">        XY coordinates of the vertices of the primal diagram.</span>
 <span class="sd">    _xy : array-like</span>
 <span class="sd">        XY coordinates of the vertices of the dual diagram.</span>
-<span class="sd">    fixed_x : list</span>
-<span class="sd">        Vertices of the primal diagram fixed to move in ``x``.</span>
-<span class="sd">    fixed_y : list</span>
-<span class="sd">        Vertices of the primal diagram fixed to move in ``y``.</span>
 <span class="sd">    i_nbrs : list of list of int</span>
 <span class="sd">        Vertex neighbours per vertex.</span>
 <span class="sd">    ij_e : dict</span>
 <span class="sd">        Edge index for every vertex pair.</span>
 <span class="sd">    _C : sparse matrix in csr format</span>
 <span class="sd">        The connectivity matrix of the force diagram.</span>
+<span class="sd">    line_constraints : list, optional</span>
+<span class="sd">        Line constraints applied to the free nodes.</span>
+<span class="sd">        Default is an ``None`` in which case no line constraints are considered.</span>
 <span class="sd">    target_lengths : list, optional</span>
 <span class="sd">        Target lengths / target forces of the edges.</span>
 <span class="sd">        Default is an empty list, which considers that no target lengths are considered.</span>
@@ -261,21 +261,6 @@
     <span class="n">A</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">),</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">)),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
     <span class="n">b</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">float64</span><span class="p">)</span>
 
-    <span class="n">free_x</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># list of vertices with free x - to be updated in loop</span>
-    <span class="n">free_y</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">is_free_x</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">)</span>  <span class="c1"># bool for free vertices - to be updated in loop</span>
-    <span class="n">is_free_y</span> <span class="o">=</span> <span class="p">[</span><span class="kc">True</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">free</span><span class="p">)):</span>
-        <span class="n">vertex</span> <span class="o">=</span> <span class="n">free</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">fixed_x</span><span class="p">:</span>
-            <span class="n">is_free_x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">free_x</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">fixed_y</span><span class="p">:</span>
-            <span class="n">is_free_y</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="kc">False</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">free_y</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span>
-
     <span class="c1"># update the free vertices</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">kmax</span><span class="p">):</span>
         <span class="n">row</span> <span class="o">=</span> <span class="mi">0</span>
@@ -316,21 +301,14 @@
                 <span class="n">R</span> <span class="o">+=</span> <span class="n">r</span>
                 <span class="n">q</span> <span class="o">+=</span> <span class="n">r</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_free_x</span><span class="p">[</span><span class="n">count</span><span class="p">]:</span>
-                <span class="n">n_</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-                <span class="n">n_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-                <span class="n">r</span> <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="n">n_</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">n_</span><span class="p">)</span>
-                <span class="n">pt</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_</span>
-                <span class="n">R</span> <span class="o">+=</span> <span class="n">r</span>
-                <span class="n">q</span> <span class="o">+=</span> <span class="n">r</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
-
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">is_free_y</span><span class="p">[</span><span class="n">count</span><span class="p">]:</span>
-                <span class="n">n_</span> <span class="o">=</span> <span class="n">zeros</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
-                <span class="n">n_</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
-                <span class="n">r</span> <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="n">n_</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">n_</span><span class="p">)</span>
-                <span class="n">pt</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_</span>
-                <span class="n">R</span> <span class="o">+=</span> <span class="n">r</span>
-                <span class="n">q</span> <span class="o">+=</span> <span class="n">r</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">line_constraints</span><span class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line_constraints</span><span class="p">[</span><span class="n">count</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">n_</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">direction</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">r</span> <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="n">n_</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">n_</span><span class="p">)</span>
+                    <span class="n">pt</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">start</span><span class="p">[:</span><span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+                    <span class="n">R</span> <span class="o">+=</span> <span class="n">r</span>
+                    <span class="n">q</span> <span class="o">+=</span> <span class="n">r</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">pt</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
 
             <span class="n">A</span><span class="p">[</span><span class="n">row</span><span class="p">:</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="n">row</span><span class="p">:</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">R</span>
             <span class="n">b</span><span class="p">[</span><span class="n">row</span><span class="p">:</span> <span class="n">row</span> <span class="o">+</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span>
@@ -339,12 +317,9 @@
             <span class="c1"># p = solve(R.T.dot(R), R.T.dot(q))</span>
             <span class="c1"># xy[i] = p.reshape((-1, 2), order=&#39;C&#39;)</span>
 
-        <span class="c1"># res = solve(A.T.dot(A), A.T.dot(b))</span>
-        <span class="c1"># xy[free] = res.reshape((-1, 2), order=&#39;C&#39;)</span>
         <span class="n">res</span> <span class="o">=</span> <span class="n">lstsq</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
         <span class="n">xy_lstsq</span> <span class="o">=</span> <span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">order</span><span class="o">=</span><span class="s1">&#39;C&#39;</span><span class="p">)</span>
-        <span class="n">xy</span><span class="p">[</span><span class="n">free_x</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">xy_lstsq</span><span class="p">[</span><span class="n">is_free_x</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-        <span class="n">xy</span><span class="p">[</span><span class="n">free_y</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">xy_lstsq</span><span class="p">[</span><span class="n">is_free_y</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">xy</span><span class="p">[</span><span class="n">free</span><span class="p">]</span> <span class="o">=</span> <span class="n">xy_lstsq</span>
 
     <span class="c1"># reconnect leaves</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">leaves</span><span class="p">:</span>
@@ -352,7 +327,7 @@
         <span class="n">xy</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">xy0</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">xy0</span><span class="p">[</span><span class="n">j</span><span class="p">]</span></div>
 
 
-<span class="k">def</span> <span class="nf">parallelise_edges</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">i_nbrs</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">target_vectors</span><span class="p">,</span> <span class="n">target_lengths</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixed_x</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fixed_y</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">parallelise_edges</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">edges</span><span class="p">,</span> <span class="n">i_nbrs</span><span class="p">,</span> <span class="n">ij_e</span><span class="p">,</span> <span class="n">target_vectors</span><span class="p">,</span> <span class="n">target_lengths</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">line_constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Parallelise the edges of a mesh to given target vectors.</span>
 
 <span class="sd">    Parameters</span>
@@ -372,12 +347,9 @@
 <span class="sd">    fixed : list, optional</span>
 <span class="sd">        The fixed nodes of the mesh.</span>
 <span class="sd">        Default is ``None``.</span>
-<span class="sd">    fixed_x : list, optional</span>
-<span class="sd">        The nodes of the mesh fixed in x.</span>
-<span class="sd">        Default is ``None``.</span>
-<span class="sd">    fixed_y : list, optional</span>
-<span class="sd">        The nodes of the mesh fixed in y.</span>
-<span class="sd">        Default is ``None``.</span>
+<span class="sd">    line_constraints : list, optional</span>
+<span class="sd">        Line constraints applied to the free nodes.</span>
+<span class="sd">        Default is an ``None`` in which case no line constraints are considered.</span>
 <span class="sd">    kmax : int, optional</span>
 <span class="sd">        Maximum number of iterations.</span>
 <span class="sd">        Default is ``100``.</span>
@@ -400,13 +372,6 @@
     <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">callable</span><span class="p">(</span><span class="n">callback</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;The provided callback is not callable.&#39;</span><span class="p">)</span>
-
-    <span class="n">fixed</span> <span class="o">=</span> <span class="n">fixed</span> <span class="ow">or</span> <span class="p">[]</span>
-    <span class="n">fixed</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span>
-    <span class="n">fixed_x</span> <span class="o">=</span> <span class="n">fixed_x</span> <span class="ow">or</span> <span class="p">[]</span>
-    <span class="n">fixed_x</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed_x</span><span class="p">)</span>
-    <span class="n">fixed_y</span> <span class="o">=</span> <span class="n">fixed_y</span> <span class="ow">or</span> <span class="p">[]</span>
-    <span class="n">fixed_y</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">fixed_y</span><span class="p">)</span>
 
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
 
@@ -455,10 +420,17 @@
                 <span class="n">y</span> <span class="o">+=</span> <span class="n">ay</span> <span class="o">+</span> <span class="n">signe</span> <span class="o">*</span> <span class="n">lij</span> <span class="o">*</span> <span class="n">ty</span>
                 <span class="n">len_nbrs</span> <span class="o">+=</span> <span class="mi">1</span>
 
-            <span class="k">if</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fixed_x</span> <span class="ow">and</span> <span class="n">len_nbrs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">len_nbrs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">len_nbrs</span>
-            <span class="k">if</span> <span class="n">j</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">fixed_y</span> <span class="ow">and</span> <span class="n">len_nbrs</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span> <span class="o">/</span> <span class="n">len_nbrs</span>
+
+                <span class="c1"># check if line constraints are applied and project result</span>
+                <span class="k">if</span> <span class="n">line_constraints</span><span class="p">:</span>
+                    <span class="n">line</span> <span class="o">=</span> <span class="n">line_constraints</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">pt_proj</span> <span class="o">=</span> <span class="n">project_point_line_xy</span><span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">line</span><span class="p">)</span>
+                        <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">pt_proj</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="n">xy</span><span class="p">[</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">pt_proj</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
 
         <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="n">ij_e</span><span class="p">:</span>
             <span class="n">e</span> <span class="o">=</span> <span class="n">ij_e</span><span class="p">[(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">)]</span>

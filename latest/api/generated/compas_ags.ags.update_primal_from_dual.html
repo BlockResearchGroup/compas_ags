@@ -99,7 +99,7 @@
 <h1>update_primal_from_dual</h1>
 <dl class="function">
 <dt id="compas_ags.ags.update_primal_from_dual">
-<code class="sig-prename descclassname">compas_ags.ags.</code><code class="sig-name descname">update_primal_from_dual</code><span class="sig-paren">(</span><em class="sig-param">xy</em>, <em class="sig-param">_xy</em>, <em class="sig-param">free</em>, <em class="sig-param">fixed_x</em>, <em class="sig-param">fixed_y</em>, <em class="sig-param">i_nbrs</em>, <em class="sig-param">ij_e</em>, <em class="sig-param">_C</em>, <em class="sig-param">target_lengths=[]</em>, <em class="sig-param">target_vectors=[]</em>, <em class="sig-param">leaves=[]</em>, <em class="sig-param">kmax=100</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/ags/core.html#update_primal_from_dual"><span class="viewcode-link">[source]</span></a></dt>
+<code class="sig-prename descclassname">compas_ags.ags.</code><code class="sig-name descname">update_primal_from_dual</code><span class="sig-paren">(</span><em class="sig-param">xy</em>, <em class="sig-param">_xy</em>, <em class="sig-param">free</em>, <em class="sig-param">i_nbrs</em>, <em class="sig-param">ij_e</em>, <em class="sig-param">_C</em>, <em class="sig-param">line_constraints=None</em>, <em class="sig-param">target_lengths=[]</em>, <em class="sig-param">target_vectors=[]</em>, <em class="sig-param">leaves=[]</em>, <em class="sig-param">kmax=100</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/compas_ags/ags/core.html#update_primal_from_dual"><span class="viewcode-link">[source]</span></a></dt>
 <dd><p>Update the coordinates of the primal diagram using the coordinates of the corresponding dual diagram.
 This function apply to both sides, i.e. it can be used to update the form diagram from the geometry of the force
 diagram or to update the force diagram from the geometry of the force diagram.</p>
@@ -108,11 +108,11 @@ diagram or to update the force diagram from the geometry of the force diagram.</
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>xy</strong> (<em>array-like</em>) – XY coordinates of the vertices of the primal diagram.</p></li>
 <li><p><strong>_xy</strong> (<em>array-like</em>) – XY coordinates of the vertices of the dual diagram.</p></li>
-<li><p><strong>fixed_x</strong> (<em>list</em>) – Vertices of the primal diagram fixed to move in <code class="docutils literal notranslate"><span class="pre">x</span></code>.</p></li>
-<li><p><strong>fixed_y</strong> (<em>list</em>) – Vertices of the primal diagram fixed to move in <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p></li>
 <li><p><strong>i_nbrs</strong> (<em>list of list of int</em>) – Vertex neighbours per vertex.</p></li>
 <li><p><strong>ij_e</strong> (<em>dict</em>) – Edge index for every vertex pair.</p></li>
 <li><p><strong>_C</strong> (<em>sparse matrix in csr format</em>) – The connectivity matrix of the force diagram.</p></li>
+<li><p><strong>line_constraints</strong> (<em>list, optional</em>) – Line constraints applied to the free nodes.
+Default is an <code class="docutils literal notranslate"><span class="pre">None</span></code> in which case no line constraints are considered.</p></li>
 <li><p><strong>target_lengths</strong> (<em>list, optional</em>) – Target lengths / target forces of the edges.
 Default is an empty list, which considers that no target lengths are considered.</p></li>
 <li><p><strong>target_vectors</strong> (<em>list, optional</em>) – Target vectors of the edges.
