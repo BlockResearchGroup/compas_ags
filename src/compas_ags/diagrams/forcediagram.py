@@ -305,7 +305,7 @@ class ForceDiagram(Diagram):
         edges_orient = []
 
         for edge in self.edges_where_dual({'is_ind': True}):  # Fix vertices of dual independent edge
-            self.vertices_attribute('is_fixed', True, keys=[*edge])
+            self.vertices_attribute('is_fixed', True, keys=edge)
             edges_orient.append(edge)
 
         for edge in self.edges_where_dual({'is_load': True}):  # If loads are orthogonal the force dual edge gets constrained
@@ -313,7 +313,7 @@ class ForceDiagram(Diagram):
             edges_orient.append(edge)
             sp, ep = self.edge_coordinates(*edge)
             line = Line(sp, ep)
-            self.vertices_attribute('line_constraint', value=line, keys=[*edge])
+            self.vertices_attribute('line_constraint', value=line, keys=edge)
 
         for edge in self.edges_where_dual({'is_reaction': True}):
             self.edge_attribute(edge, 'is_reaction', True)
