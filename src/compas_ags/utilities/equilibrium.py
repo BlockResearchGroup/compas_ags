@@ -4,6 +4,7 @@ from __future__ import division
 
 from compas.geometry import angle_vectors_xy
 from compas.geometry import subtract_vectors
+from compas.geometry import distance_point_point_xy
 
 
 __all__ = [
@@ -13,7 +14,7 @@ __all__ = [
 ]
 
 
-def check_deviations(form, force, tol=0.01, printout=False):
+def check_deviations(form, force, tol=0.1, printout=False):
     """Checks whether the form and force diagrams are indeed reciprocal, i.e. have their corresponding edges parallel.
 
     Parameters
@@ -47,8 +48,9 @@ def check_deviations(form, force, tol=0.01, printout=False):
         if a < tol or a > 180 - tol:
             pass
         else:
-            checked = False
-            break
+            if distance_point_point_xy(_pt0, _pt1) > tol:
+                checked = False
+                break
 
     if printout:
         if not checked:
