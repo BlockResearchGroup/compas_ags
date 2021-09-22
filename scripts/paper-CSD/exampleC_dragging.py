@@ -77,7 +77,7 @@ def store_initial_lines(form, force):
 #       - Move one of the internal nodes to a specific position
 # ---------------------------------------------------------------------------------------
 
-input_file = compas_ags.get('paper/exB_arch-output.obj')
+input_file = compas_ags.get('paper/exB_arch-output.json')
 
 form = FormDiagram.from_json(input_file)
 force = ForceDiagram.from_formdiagram(form)
