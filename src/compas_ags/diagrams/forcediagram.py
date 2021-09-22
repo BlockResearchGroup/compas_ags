@@ -4,6 +4,7 @@ from __future__ import division
 
 from compas.datastructures import mesh_dual
 from compas_ags.diagrams import Diagram
+from compas.geometry import Line
 
 
 __all__ = ['ForceDiagram']
@@ -19,8 +20,7 @@ class ForceDiagram(Diagram):
             'name': 'Force'})
         self.update_default_vertex_attributes({
             'is_fixed': False,
-            'is_fixed_x': False,
-            'is_fixed_y': False,
+            'line_constraint': None,
             'is_param': False})
         self.update_default_edge_attributes({
             'l': 0.0,
@@ -70,24 +70,6 @@ class ForceDiagram(Diagram):
         list
         """
         return list(self.vertices_where({'is_fixed': True}))
-
-    def fixed_x(self):
-        """The identifiers of the vertices fixed in ``x`` only.
-
-        Returns
-        -------
-        list
-        """
-        return list(self.vertices_where({'is_fixed_x': True, 'is_fixed': False}))
-
-    def fixed_y(self):
-        """The identifiers of the vertices fixed in ``y`` only.
-
-        Returns
-        -------
-        list
-        """
-        return list(self.vertices_where({'is_fixed_y': True, 'is_fixed': False}))
 
     def anchor(self):
         """Get an anchor to the force diagram.
@@ -330,10 +312,8 @@ class ForceDiagram(Diagram):
             self.edge_attribute(edge, 'is_load', True)
             edges_orient.append(edge)
             sp, ep = self.edge_coordinates(*edge)
-            if abs(sp[0] - ep[0]) < tol:
-                self.vertices_attribute('is_fixed_x', value=True, keys=[*edge])
-            if abs(sp[1] - ep[1]) < tol:
-                self.vertices_attribute('is_fixed_y', value=True, keys=[*edge])
+            line = Line(sp, ep)
+            self.vertices_attribute('line_constraint', value=line, keys=[*edge])
 
         for edge in self.edges_where_dual({'is_reaction': True}):
             self.edge_attribute(edge, 'is_reaction', True)

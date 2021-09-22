@@ -3,8 +3,9 @@ from __future__ import absolute_import
 from __future__ import division
 
 from itertools import islice
-from compas.datastructures import network_find_cycles
 from compas_ags.diagrams import Diagram
+from compas.datastructures import network_find_cycles
+from compas.geometry import Line
 
 
 __all__ = ['FormDiagram']
@@ -22,8 +23,7 @@ class FormDiagram(Diagram):
         })
         self.update_default_vertex_attributes({
             'is_fixed': False,
-            'is_fixed_x': False,
-            'is_fixed_y': False,
+            'line_constraint': None,
             'cx': 0.0,
             'cy': 0.0,
         })
@@ -212,12 +212,6 @@ class FormDiagram(Diagram):
     def fixed(self):
         return list(self.vertices_where({'is_fixed': True}))
 
-    def fixed_x(self):
-        return list(self.vertices_where({'is_fixed_x': True, 'is_fixed': False}))
-
-    def fixed_y(self):
-        return list(self.vertices_where({'is_fixed_y': True, 'is_fixed': False}))
-
     def constrained(self):
         return [key for key, attr in self.vertices(True) if attr['cx'] or attr['cy']]
 
@@ -252,6 +246,7 @@ class FormDiagram(Diagram):
         leaves = self.leaves()
         for edge in self.leaf_edges():
             sp, ep = self.edge_coordinates(*edge)
+            line = Line(sp, ep)
             dx = ep[0] - sp[0]
             dy = ep[1] - sp[1]
             length = (dx**2 + dy**2)**0.5
@@ -261,16 +256,10 @@ class FormDiagram(Diagram):
                 self.edge_attribute(edge, 'is_reaction', True)  # by default reactions are leaves connected to fixed vertices
                 self.edge_attribute(edge, 'is_load', False)
                 continue
-            if abs(sp[0] - ep[0]) < tol:  # for now, if loads are vertical, horizontal they will restraint application point in x or y.
-                if edge[0] in leaves:     # TODO: make this work for generic direction
-                    self.vertex_attribute(edge[1], 'is_fixed_x', True)
-                else:
-                    self.vertex_attribute(edge[0], 'is_fixed_x', True)
-            if abs(sp[1] - ep[1]) < tol:
-                if edge[0] in leaves:
-                    self.vertex_attribute(edge[1], 'is_fixed_y', True)
-                else:
-                    self.vertex_attribute(edge[0], 'is_fixed_y', True)
+            if edge[0] in leaves:
+                self.vertex_attribute(edge[1], 'line_constraint', line)
+            else:
+                self.vertex_attribute(edge[0], 'line_constraint', line)
 
     # def identify_fixed(self, points=None, fix_degree=1):
     #     for key, attr in self.vertices(True):
