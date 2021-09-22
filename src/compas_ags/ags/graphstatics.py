@@ -693,7 +693,7 @@ def force_update_from_constraints(force, kmax=100):
 # ==============================================================================
 
 
-def update_diagrams_from_constraints(form, force, max_iter=20, tol=0.1, kmax=20, printout=False, callback=None):
+def update_diagrams_from_constraints(form, force, max_iter=20, tol_angle=0.1, tol_force=0.01, kmax=20, printout=False, callback=None):
     """Update the form and force diagram after constraints / or movements are imposed to the diagrams.
 
     Parameters
@@ -705,9 +705,12 @@ def update_diagrams_from_constraints(form, force, max_iter=20, tol=0.1, kmax=20,
     max_iter: int, optional
         Maximum number of iterations to update the diagrams.
         The default value is ``20``.
-    tol: float, optional
-        Stopping criteria tolerance for equilibrium and constraint violation.
-        The default value is ``10e-3``.
+    tol_angle: float, optional
+        Stopping criteria tolerance for angle deviations.
+        The default value is ``0.1``.
+    tol_force: float, optional
+        Stopping criteria tolerance for the constraints on the length.
+        The default value is ``0.01``.
     kmax: int, optional
         Maximum number of least-square iterations for solving the duality form-force.
         The default value is ``20``.
@@ -727,7 +730,7 @@ def update_diagrams_from_constraints(form, force, max_iter=20, tol=0.1, kmax=20,
     niter = 1
     start = True
 
-    while not check_equilibrium(form, force, tol=tol, printout=printout) or start:
+    while not check_equilibrium(form, force, tol_angle=tol_angle, tol_force=tol_force, printout=printout) or start:
 
         # Propose a force diagram based on constraints -> Using paralellise
         force_update_from_constraints(force)
