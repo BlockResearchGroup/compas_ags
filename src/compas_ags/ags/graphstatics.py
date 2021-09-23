@@ -752,7 +752,7 @@ def update_diagrams_from_constraints(form, force, max_iter=20, tol_angle=0.1, to
 
         if niter > max_iter:
             print('Warning: Did not converge.')
-            check_equilibrium(form, force, tol=tol, printout=printout)
+            check_equilibrium(form, force, tol_angle=tol_angle, tol_force=tol_force, printout=printout)
             break
 
         niter += 1
