@@ -693,7 +693,7 @@ def force_update_from_constraints(force, kmax=100):
 # ==============================================================================
 
 
-def update_diagrams_from_constraints(form, force, max_iter=20, tol_angle=0.1, tol_force=0.01, kmax=20, printout=False, callback=None):
+def update_diagrams_from_constraints(form, force, max_iter=20, tol_angle=0.5, tol_force=0.05, kmax=20, printout=False, callback=None):
     """Update the form and force diagram after constraints / or movements are imposed to the diagrams.
 
     Parameters

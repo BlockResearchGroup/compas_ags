@@ -14,7 +14,7 @@ __all__ = [
 ]
 
 
-def check_deviations(form, force, tol_angle=0.1, tol_force=0.01, printout=False):
+def check_deviations(form, force, tol_angle=0.5, tol_force=0.05, printout=False):
     """Checks whether the form and force diagrams are indeed reciprocal, i.e. have their corresponding edges parallel.
 
     Parameters
@@ -25,10 +25,10 @@ def check_deviations(form, force, tol_angle=0.1, tol_force=0.01, printout=False)
         The force diagram to check deviations.
     tol_angle: float, optional
         Stopping criteria tolerance for angle deviations.
-        The default value is ``0.1``.
+        The default value is ``0.5``.
     tol_force: float, optional
         Stopping criteria tolerance for the constraints on the length.
-        The default value is ``0.01``.
+        The default value is ``0.05``.
     printout: boll, optional
         Whether or not print intermediate messages.
         The default value is ``False``.
@@ -62,7 +62,7 @@ def check_deviations(form, force, tol_angle=0.1, tol_force=0.01, printout=False)
     return checked
 
 
-def check_force_length_constraints(force, tol_force=0.01, printout=False):
+def check_force_length_constraints(force, tol_force=0.05, printout=False):
     """Checks whether target length constraints applied to the force diagrams are respected, i.e. are below the tolerance criteria.
 
     Parameters
@@ -71,7 +71,7 @@ def check_force_length_constraints(force, tol_force=0.01, printout=False):
         The force diagram to check deviations.
     tol_forces: float, optional
         Stopping criteria tolerance for the edge lengths (i.e. force magnitude) in the force diagram.
-        The default value is ``0.01``.
+        The default value is ``0.05``.
     printout: boll, optional
         Whether or not print intermediate messages.
         The default value is ``False``.
@@ -100,7 +100,7 @@ def check_force_length_constraints(force, tol_force=0.01, printout=False):
     return checked
 
 
-def check_equilibrium(form, force, tol_angle=0.1, tol_force=0.01, printout=False):
+def check_equilibrium(form, force, tol_angle=0.5, tol_force=0.05, printout=False):
     """Checks if maximum deviations and constraints exceed is below the tolerance.
 
     Parameters
@@ -111,10 +111,10 @@ def check_equilibrium(form, force, tol_angle=0.1, tol_force=0.01, printout=False
         The force diagram to check equilibrium.
     tol_angle: float, optional
         Stopping criteria tolerance for angle deviations.
-        The default value is ``0.1``.
+        The default value is ``0.5``.
     tol_force: float, optional
         Stopping criteria tolerance for the constraints on the length.
-        The default value is ``0.01``.
+        The default value is ``0.05``.
     printout: boll, optional
         Whether or not print intermediate messages.
         The default value is ``False``.
@@ -126,8 +126,8 @@ def check_equilibrium(form, force, tol_angle=0.1, tol_force=0.01, printout=False
 
     """
 
-    checked_deviations = check_deviations(form, force, tol_angle=tol_angle, tol_force=tol_angle, printout=printout)
-    checked_forces = check_force_length_constraints(force, tol_force=tol_angle, printout=printout)
+    checked_deviations = check_deviations(form, force, tol_angle=tol_angle, tol_force=tol_force, printout=printout)
+    checked_forces = check_force_length_constraints(force, tol_force=tol_force, printout=printout)
     checked = checked_deviations and checked_forces
 
     return checked
