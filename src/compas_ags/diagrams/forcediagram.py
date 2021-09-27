@@ -24,8 +24,7 @@ class ForceDiagram(Diagram):
             'is_param': False})
         self.update_default_edge_attributes({
             'l': 0.0,
-            'target_vector': None,
-            'target_length': None})
+            'target_vector': None})
 
     # --------------------------------------------------------------------------
     # Constructors
@@ -248,6 +247,21 @@ class ForceDiagram(Diagram):
         """
         return self.dual.edge_attribute(self.dual_edge(edge), 'a')
 
+
+    def dual_edge_targetlength(self, edge):
+        """Retrieve the target length/force in the corresponding edge of the diagram's dual.
+
+        Parameters
+        ----------
+        edge : tuple(int, int)
+            The edge identifier.
+
+        Returns
+        -------
+        float
+        """
+        return self.dual.edge_attribute(self.dual_edge(edge), 'target_length')
+
     def edge_index(self, form=None):
         """Construct a mapping between the identifiers of edges and the corresponding indices in a list of edges.
 
@@ -333,13 +347,6 @@ class ForceDiagram(Diagram):
             dy = ep[1] - sp[1]
             length = (dx**2 + dy**2)**0.5
             self.edge_attribute(edge, 'target_vector', [dx/length, dy/length])
-
-        for form_edge in self.dual.edges():
-            if self.dual.edge_attribute(form_edge, 'target_length') is not None:
-                length = self.dual.edge_attribute(form_edge, 'target_length')
-                index = edge_index[form_edge]
-                force_edge = ordered_edges[index]
-                self.edge_attribute(force_edge, 'target_length', length)
 
     # def compute_constraints(self, form, M):
     #     r"""Computes the form diagram constraints used

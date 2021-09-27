@@ -613,7 +613,7 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     # _fixed_y = [_vertex_index[vertex] for vertex in force.fixed_y()]
     _line_constraints_all = force.vertices_attribute('line_constraint')
     _line_constraints = [_line_constraints_all[i] for i in _free]
-    _target_lengths = [force.edge_attribute(edge, 'target_length') for edge in force.ordered_edges(form)]
+    _target_lengths = form.edges_attribute('target_length')
     _target_vectors = [force.edge_attribute(edge, 'target_vector') for edge in force.ordered_edges(form)]
 
     # --------------------------------------------------------------------------
@@ -670,7 +670,7 @@ def force_update_from_constraints(force, kmax=100):
     # --------------------------------------------------------------------------
     # edge orientations and edge target lengths
     # --------------------------------------------------------------------------
-    target_lengths = force.edges_attribute('target_length')
+    target_lengths = [force.dual_edge_targetlength(edge) for edge in force.edges()]
     target_vectors = force.edges_attribute('target_vector')
 
     # --------------------------------------------------------------------------
