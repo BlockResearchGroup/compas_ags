@@ -199,6 +199,6 @@ force.constraints_from_dual()
 
 view_form_force(form, force, edge_label=True)
 
-update_diagrams_from_constraints(form, force, printout=True)
+update_diagrams_from_constraints(form, force)
 
 view_form_force(form, force, edge_label=True)
