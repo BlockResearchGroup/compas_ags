@@ -52,6 +52,7 @@ __all__ = [
     'form_update_from_force_proxy',
     'form_update_from_force_newton_proxy',
     'force_update_from_form_proxy',
+    'update_diagrams_from_constraints_proxy'
 ]
 
 
@@ -88,6 +89,13 @@ def form_update_from_force_newton_proxy(forcedata, formdata, *args, **kwargs):
     force = ForceDiagram.from_data(forcedata)
     form_update_from_force_newton(force, form, *args, **kwargs)  # Still need dealing with constraints
     return force.to_data()
+
+
+def update_diagrams_from_constraints_proxy(formdata, forcedata, *args, **kwargs):
+    form = FormDiagram.from_data(formdata)
+    force = ForceDiagram.from_data(forcedata)
+    update_diagrams_from_constraints(form, force, *args, **kwargs)
+    return form.to_data(), force.to_data()
 
 
 # ==============================================================================
