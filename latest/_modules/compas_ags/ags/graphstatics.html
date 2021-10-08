@@ -123,8 +123,6 @@
 <span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">compute_jacobian</span>
 <span class="kn">from</span> <span class="nn">compas_ags.ags.core</span> <span class="kn">import</span> <span class="n">parallelise_edges</span>
 
-<span class="kn">from</span> <span class="nn">compas_ags.utilities</span> <span class="kn">import</span> <span class="n">check_equilibrium</span>
-
 <span class="kn">from</span> <span class="nn">compas_ags.exceptions</span> <span class="kn">import</span> <span class="n">SolutionError</span>
 
 
@@ -791,7 +789,7 @@
 <span class="c1"># ==============================================================================</span>
 
 
-<span class="k">def</span> <span class="nf">update_diagrams_from_constraints</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">10e-3</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">printout</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">update_diagrams_from_constraints</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Update the form and force diagram after constraints / or movements are imposed to the diagrams.</span>
 
 <span class="sd">    Parameters</span>
@@ -803,15 +801,9 @@
 <span class="sd">    max_iter: int, optional</span>
 <span class="sd">        Maximum number of iterations to update the diagrams.</span>
 <span class="sd">        The default value is ``20``.</span>
-<span class="sd">    tol: float, optional</span>
-<span class="sd">        Stopping criteria tolerance for equilibrium and constraint violation.</span>
-<span class="sd">        The default value is ``10e-3``.</span>
 <span class="sd">    kmax: int, optional</span>
 <span class="sd">        Maximum number of least-square iterations for solving the duality form-force.</span>
 <span class="sd">        The default value is ``20``.</span>
-<span class="sd">    printout: boll, optional</span>
-<span class="sd">        Whether or not print intermediate messages.</span>
-<span class="sd">        The default value is ``False``.</span>
 <span class="sd">    callback: callable, optional</span>
 <span class="sd">        Callable function at the end of each iteration.</span>
 <span class="sd">        The default value is ``None``.</span>
@@ -822,10 +814,9 @@
 <span class="sd">        The form and force diagram are updated in-place.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">niter</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">start</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="n">niter</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">while</span> <span class="ow">not</span> <span class="n">check_equilibrium</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">printout</span><span class="o">=</span><span class="n">printout</span><span class="p">)</span> <span class="ow">or</span> <span class="n">start</span><span class="p">:</span>
+    <span class="k">while</span> <span class="n">niter</span> <span class="o">&lt;</span> <span class="n">max_iter</span><span class="p">:</span>
 
         <span class="c1"># Propose a force diagram based on constraints -&gt; Using paralellise</span>
         <span class="n">force_update_from_constraints</span><span class="p">(</span><span class="n">force</span><span class="p">)</span>
@@ -845,16 +836,7 @@
         <span class="k">if</span> <span class="n">callback</span><span class="p">:</span>
             <span class="n">callback</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="n">niter</span> <span class="o">&gt;</span> <span class="n">max_iter</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: Did not converge.&#39;</span><span class="p">)</span>
-            <span class="n">check_equilibrium</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="n">tol</span><span class="p">,</span> <span class="n">printout</span><span class="o">=</span><span class="n">printout</span><span class="p">)</span>
-            <span class="k">break</span>
-
         <span class="n">niter</span> <span class="o">+=</span> <span class="mi">1</span>
-        <span class="n">start</span> <span class="o">=</span> <span class="kc">False</span>
-
-    <span class="k">if</span> <span class="n">printout</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Finished with </span><span class="si">{0}</span><span class="s1"> iterations.&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">niter</span><span class="p">))</span>
 
     <span class="k">return</span>
 
