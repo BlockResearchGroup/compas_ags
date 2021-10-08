@@ -142,6 +142,7 @@
     <span class="s1">&#39;form_update_from_force_proxy&#39;</span><span class="p">,</span>
     <span class="s1">&#39;form_update_from_force_newton_proxy&#39;</span><span class="p">,</span>
     <span class="s1">&#39;force_update_from_form_proxy&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;update_diagrams_from_constraints_proxy&#39;</span>
 <span class="p">]</span>
 
 
@@ -178,6 +179,13 @@
     <span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">forcedata</span><span class="p">)</span>
     <span class="n">form_update_from_force_newton</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>  <span class="c1"># Still need dealing with constraints</span>
     <span class="k">return</span> <span class="n">force</span><span class="o">.</span><span class="n">to_data</span><span class="p">()</span>
+
+
+<span class="k">def</span> <span class="nf">update_diagrams_from_constraints_proxy</span><span class="p">(</span><span class="n">formdata</span><span class="p">,</span> <span class="n">forcedata</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">formdata</span><span class="p">)</span>
+    <span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_data</span><span class="p">(</span><span class="n">forcedata</span><span class="p">)</span>
+    <span class="n">update_diagrams_from_constraints</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">form</span><span class="o">.</span><span class="n">to_data</span><span class="p">(),</span> <span class="n">force</span><span class="o">.</span><span class="n">to_data</span><span class="p">()</span>
 
 
 <span class="c1"># ==============================================================================</span>
