@@ -178,9 +178,6 @@ for index in edges_fix_orient:
 
 vertices_bottom_chord = [14, 19, 15, 18, 16, 17, 7, 8, 6, 9, 5]
 
-for key in vertices_bottom_chord:
-    form.vertex_attribute(key, 'is_fixed_y', True)
-
 # B. Assign forces on the top chord to have the same length
 index_edges_constant_force = [27, 25, 23, 21, 3, 0, 1, 5, 7, 9]
 L = 7.0
@@ -200,76 +197,8 @@ form.identify_constraints()
 # Reflect all constraints to force diagram
 force.constraints_from_dual()
 
-update_diagrams_from_constraints(form, force, max_iter=500, printout=True)
-
 view_form_force(form, force, edge_label=True)
 
-# --------------------------------------------------------------------------
-#   3. find a different equilibrium configuration with sinus
-# --------------------------------------------------------------------------
-
-span = 5.0
-x0 = 0.0
-vertices_bottom_leaves = [26, 24, 27, 23, 28, 22, 29, 21, 30, 20, 31]
-amplitude = 0.10
-
-for index, key in enumerate(vertices_bottom_chord):
-    x, y, _ = form.vertex_coordinates(key)
-    key_leaf = vertices_bottom_leaves[index]
-    _, y_leaf, _ = form.vertex_coordinates(key_leaf)
-    h = amplitude*math.sin(2*math.pi*(x - x0)/span)
-    form.vertex_attribute(key, 'y', y + h)
-    form.vertex_attribute(key, 'is_fixed_y', True)
-    form.vertex_attribute(key_leaf, 'y', y_leaf + h)
-
-for index in edges_fix_orient:
-    edge = index_edge[index]
-    form.edge_attribute(edge, 'target_vector', None)
-
-show_constraints(form, force)
-
-# Identify auto constraints
-form.identify_constraints()
-
-# # Reflect all constraints to force diagram
-force.constraints_from_dual()
-
-show_constraints(form, force)
-
-# fix_y_force = [8, 7, 9, 10, 11]
-# for key in fix_y_force:
-#     force.vertex_attribute(key, 'is_fixed_y', False)
-
-update_diagrams_from_constraints(form, force, max_iter=100, printout=True)
+update_diagrams_from_constraints(form, force)
 
 view_form_force(form, force, edge_label=True)
-
-# # more movement
-
-for index, key in enumerate(vertices_bottom_chord):
-    x, y, _ = form.vertex_coordinates(key)
-    key_leaf = vertices_bottom_leaves[index]
-    _, y_leaf, _ = form.vertex_coordinates(key_leaf)
-    h = amplitude*math.sin(2*math.pi*(x - x0)/span)
-    form.vertex_attribute(key, 'y', y + h)
-    form.vertex_attribute(key, 'is_fixed_y', True)
-    form.vertex_attribute(key_leaf, 'y', y_leaf + h)
-
-update_diagrams_from_constraints(form, force, max_iter=100, printout=True)
-
-view_form_force(form, force)
-
-# # more movement
-
-for index, key in enumerate(vertices_bottom_chord):
-    x, y, _ = form.vertex_coordinates(key)
-    key_leaf = vertices_bottom_leaves[index]
-    _, y_leaf, _ = form.vertex_coordinates(key_leaf)
-    h = amplitude*math.sin(2*math.pi*(x - x0)/span)
-    form.vertex_attribute(key, 'y', y + h)
-    form.vertex_attribute(key, 'is_fixed_y', True)
-    form.vertex_attribute(key_leaf, 'y', y_leaf + h)
-
-update_diagrams_from_constraints(form, force, max_iter=100, printout=True)
-
-view_form_force(form, force)

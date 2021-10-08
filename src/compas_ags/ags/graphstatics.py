@@ -33,8 +33,6 @@ from compas_ags.ags.core import get_jacobian_and_residual
 from compas_ags.ags.core import compute_jacobian
 from compas_ags.ags.core import parallelise_edges
 
-from compas_ags.utilities import check_equilibrium
-
 from compas_ags.exceptions import SolutionError
 
 
@@ -701,7 +699,7 @@ def force_update_from_constraints(force, kmax=100):
 # ==============================================================================
 
 
-def update_diagrams_from_constraints(form, force, max_iter=20, tol=10e-3, kmax=20, printout=False, callback=None):
+def update_diagrams_from_constraints(form, force, max_iter=20, kmax=20, callback=None):
     """Update the form and force diagram after constraints / or movements are imposed to the diagrams.
 
     Parameters
@@ -713,15 +711,9 @@ def update_diagrams_from_constraints(form, force, max_iter=20, tol=10e-3, kmax=2
     max_iter: int, optional
         Maximum number of iterations to update the diagrams.
         The default value is ``20``.
-    tol: float, optional
-        Stopping criteria tolerance for equilibrium and constraint violation.
-        The default value is ``10e-3``.
     kmax: int, optional
         Maximum number of least-square iterations for solving the duality form-force.
         The default value is ``20``.
-    printout: boll, optional
-        Whether or not print intermediate messages.
-        The default value is ``False``.
     callback: callable, optional
         Callable function at the end of each iteration.
         The default value is ``None``.
@@ -732,10 +724,9 @@ def update_diagrams_from_constraints(form, force, max_iter=20, tol=10e-3, kmax=2
         The form and force diagram are updated in-place.
     """
 
-    niter = 1
-    start = True
+    niter = 0
 
-    while not check_equilibrium(form, force, tol=tol, printout=printout) or start:
+    while niter < max_iter:
 
         # Propose a force diagram based on constraints -> Using paralellise
         force_update_from_constraints(force)
@@ -755,16 +746,7 @@ def update_diagrams_from_constraints(form, force, max_iter=20, tol=10e-3, kmax=2
         if callback:
             callback(form, force)
 
-        if niter > max_iter:
-            print('Warning: Did not converge.')
-            check_equilibrium(form, force, tol=tol, printout=printout)
-            break
-
         niter += 1
-        start = False
-
-    if printout:
-        print('Finished with {0} iterations.'.format(niter))
 
     return
 
