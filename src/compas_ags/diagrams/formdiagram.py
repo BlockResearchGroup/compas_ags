@@ -38,7 +38,7 @@ class FormDiagram(Diagram):
             'is_reaction': False,
             'is_load': False,
             'target_vector': None,
-            'target_length': None,
+            'target_force': None,
         })
 
     @property

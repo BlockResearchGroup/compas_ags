@@ -139,14 +139,14 @@ index_edges_constant_force = [9, 7, 5, 0, 1]
 L = 5.0
 
 for index in index_edges_constant_force:
-    form.edge_attribute(index_edge[index], 'target_length', L)
+    form.edge_attribute(index_edge[index], 'target_force', L)
 
 # C. Guarantee constant force application
 index_edges_constant_load = [20, 18, 16, 14]
 load = 2.0
 
 for index in index_edges_constant_load:
-    form.edge_attribute(index_edge[index], 'target_length', load)
+    form.edge_attribute(index_edge[index], 'target_force', load)
 
 # Identify auto constraints
 form.identify_constraints()

@@ -102,12 +102,12 @@ def show_constraints(form, force):
 
     viewer = Viewer(form, force, delay_setup=False)
     viewer.draw_form(vertexlabel={key: key for key in form.vertices()},
-                    edgelabel={uv: str(form.edge_attribute(uv, 'target_length')) for uv in form.edges()},
+                    edgelabel={uv: str(form.edge_attribute(uv, 'target_force')) for uv in form.edges()},
                     vertexsize=0.2,
                     # forces_on=False,
                     vertexcolor={key: '#000000' for key in form.vertices_where({'is_fixed': True})})
     viewer.draw_force(vertexcolor={key: '#000000' for key in force.vertices_where({'is_fixed': True})},
-                    edgelabel={uv: str(force.edge_attribute(uv, 'target_length')) for uv in force.edges()})
+                    edgelabel={uv: str(force.dual_edgelength(uv)) for uv in force.edges()})
     viewer.show()
 
 
@@ -183,13 +183,13 @@ index_edges_constant_force = [27, 25, 23, 21, 3, 0, 1, 5, 7, 9]
 L = 7.0
 
 for index in index_edges_constant_force:
-    form.edge_attribute(index_edge[index], 'target_length', L)
+    form.edge_attribute(index_edge[index], 'target_force', L)
 
 # C. Guarantee constant force application
 index_edges_constant_load = [40, 33, 39, 36, 38, 17, 19, 14, 20]
 
 for index in index_edges_constant_load:
-    form.edge_attribute(index_edge[index], 'target_length', load)
+    form.edge_attribute(index_edge[index], 'target_force', load)
 
 # Identify auto constraints
 form.identify_constraints()

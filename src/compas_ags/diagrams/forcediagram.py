@@ -247,8 +247,8 @@ class ForceDiagram(Diagram):
         """
         return self.dual.edge_attribute(self.dual_edge(edge), 'a')
 
-    def dual_edge_targetlength(self, edge):
-        """Retrieve the target length/force in the corresponding edge of the diagram's dual.
+    def dual_edge_targetforce(self, edge):
+        """Retrieve the target force in the corresponding edge of the diagram's dual.
 
         Parameters
         ----------
@@ -259,7 +259,7 @@ class ForceDiagram(Diagram):
         -------
         float
         """
-        return self.dual.edge_attribute(self.dual_edge(edge), 'target_length')
+        return self.dual.edge_attribute(self.dual_edge(edge), 'target_force')
 
     def edge_index(self, form=None):
         """Construct a mapping between the identifiers of edges and the corresponding indices in a list of edges.

@@ -85,7 +85,7 @@ def check_force_length_constraints(force, tol_force=0.05, printout=False):
     checked = True
 
     for u, v in force.edges():
-        target_constraint = force.edge_attribute((u, v), 'target_length')
+        target_constraint = force.dual_edge_targetforce((u, v))
         if target_constraint:
             length = force.edge_length(u, v)
             diff = abs(length - target_constraint)

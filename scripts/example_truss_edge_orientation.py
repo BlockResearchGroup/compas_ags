@@ -90,13 +90,13 @@ index_edges_constant_force = [0, 1, 5, 7, 9]
 L = force.edge_length(*force.ordered_edges(form)[1])
 
 for index in index_edges_constant_force:
-    form.edge_attribute(index_edge[index], 'target_length', L)
+    form.edge_attribute(index_edge[index], 'target_force', L)
 
 # C. Make edge 4 short (less force)  - Try options B and C...
 # edges_change = [4, 13]
 # new_length = 5.5
 # for edge_change in edges_change:
-#     form.edge_attribute(index_edge[edge_change], 'target_length', new_length)
+#     form.edge_attribute(index_edge[edge_change], 'target_force', new_length)
 
 viewer = Viewer(form, force, delay_setup=False)
 viewer.draw_form(edgelabel={uv: index for index, uv in enumerate(form.edges())})
