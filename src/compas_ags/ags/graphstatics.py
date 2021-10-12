@@ -687,6 +687,9 @@ def update_diagrams_from_constraints(form, force, max_iter=20, kmax=20, callback
         The updated force diagram.
     """
 
+    form.dual = force
+    force.dual = form
+
     niter = 0
 
     while niter < max_iter:
