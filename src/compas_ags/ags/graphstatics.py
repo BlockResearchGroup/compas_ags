@@ -2,8 +2,6 @@ from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
 
-import sys
-
 from numpy import array
 from numpy import float64
 from numpy import delete
@@ -24,9 +22,6 @@ from compas.numerical import rref_sympy as rref
 from compas.numerical import nonpivots
 from compas.numerical import nullspace as matrix_nullspace
 
-from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import ForceDiagram
-
 from compas_ags.ags.core import update_q_from_qind
 from compas_ags.ags.core import update_primal_from_dual
 from compas_ags.ags.core import get_jacobian_and_residual
@@ -44,56 +39,8 @@ __all__ = [
     'form_update_from_force_newton',
     'force_update_from_form',
     'force_update_from_constraints',
-    'update_diagrams_from_constraints',
-
-    'form_update_q_from_qind_proxy',
-    'form_update_from_force_proxy',
-    'form_update_from_force_newton_proxy',
-    'force_update_from_form_proxy',
-    'update_diagrams_from_constraints_proxy'
+    'update_diagrams_from_constraints'
 ]
-
-
-EPS = 1 / sys.float_info.epsilon
-
-
-# ==============================================================================
-# proxy
-# ==============================================================================
-
-
-def form_update_q_from_qind_proxy(formdata, *args, **kwargs):
-    form = FormDiagram.from_data(formdata)
-    form_update_q_from_qind(form, *args, **kwargs)
-    return form.to_data()
-
-
-def form_update_from_force_proxy(formdata, forcedata, *args, **kwargs):
-    form = FormDiagram.from_data(formdata)
-    force = ForceDiagram.from_data(forcedata)
-    form_update_from_force(form, force, *args, **kwargs)
-    return form.to_data()
-
-
-def force_update_from_form_proxy(forcedata, formdata, *args, **kwargs):
-    form = FormDiagram.from_data(formdata)
-    force = ForceDiagram.from_data(forcedata)
-    force_update_from_form(force, form, *args, **kwargs)
-    return force.to_data()
-
-
-def form_update_from_force_newton_proxy(forcedata, formdata, *args, **kwargs):
-    form = FormDiagram.from_data(formdata)
-    force = ForceDiagram.from_data(forcedata)
-    form_update_from_force_newton(force, form, *args, **kwargs)  # Still need dealing with constraints
-    return force.to_data()
-
-
-def update_diagrams_from_constraints_proxy(formdata, forcedata, *args, **kwargs):
-    form = FormDiagram.from_data(formdata)
-    force = ForceDiagram.from_data(forcedata)
-    update_diagrams_from_constraints(form, force, *args, **kwargs)
-    return form.to_data(), force.to_data()
 
 
 # ==============================================================================
@@ -286,8 +233,8 @@ def form_update_q_from_qind(form):
 
     Returns
     -------
-    None
-        The updated force densities are stored as attributes of the edges of the form diagram.
+    form: :class:`FormDiagram`
+        The updated form diagram with force densities stored as attributes of the edges.
 
     Examples
     --------
@@ -319,6 +266,8 @@ def form_update_q_from_qind(form):
         index = edge_index[edge]
         form.edge_attributes(edge, ['q', 'f', 'l'], [q[index, 0], forces[index, 0], lengths[index, 0]])
 
+    return form
+
 
 def form_update_from_force(form, force, kmax=100):
     r"""Update the form diagram after a modification of the force diagram.
@@ -335,8 +284,10 @@ def form_update_from_force(form, force, kmax=100):
 
     Returns
     -------
-    None
-        The form diagram is updated in-place.
+    form: :class:`FormDiagram`
+        The form diagram with updated force densities.
+    force: :class:`ForceDiagram`
+        The updated force diagram.
 
     Notes
     -----
@@ -434,6 +385,8 @@ def form_update_from_force(form, force, kmax=100):
         attr['a'] = angles[index]
         attr['l'] = forces[index, 0]
 
+    return form, force
+
 
 def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_iter=20):
     r"""Update the form diagram after a modification of the force diagram.
@@ -464,8 +417,8 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
 
     Returns
     -------
-    None
-        The form diagram is updated in-place.
+    form: :class:`FormDiagram`
+        The updated form diagram.
 
     References
     ----------
@@ -513,6 +466,8 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
 
     print('Converged in {0} iterations'.format(n_iter))
 
+    return form
+
 
 # ==============================================================================
 # update force diagram
@@ -531,8 +486,8 @@ def force_update_from_form(force, form):
 
     Returns
     -------
-    None
-        The form and force diagram are updated in-place.
+    force: :class:`ForceDiagram`
+        The updated force diagram.
     """
     # --------------------------------------------------------------------------
     # form diagram
@@ -567,6 +522,8 @@ def force_update_from_form(force, form):
         attr['x'] = _xy[index, 0]
         attr['y'] = _xy[index, 1]
 
+    return force
+
 
 def force_update_from_form_geometrical(force, form, kmax=100):
     """Update the force diagram after modifying the (geometry of) the form diagram.
@@ -583,8 +540,8 @@ def force_update_from_form_geometrical(force, form, kmax=100):
 
     Returns
     -------
-    None
-        The form and force diagram are updated in-place.
+    force :class:`ForceDiagram`
+        The updated force diagram.
     """
     # --------------------------------------------------------------------------
     # form diagram
@@ -636,6 +593,8 @@ def force_update_from_form_geometrical(force, form, kmax=100):
         attr['x'] = _xy[index, 0]
         attr['y'] = _xy[index, 1]
 
+    return force
+
 
 def force_update_from_constraints(force, kmax=100):
     """Update the force diagram from constraints on length and orientation imposed in the form diagram,
@@ -651,8 +610,8 @@ def force_update_from_constraints(force, kmax=100):
 
     Returns
     -------
-    None
-        The force diagram is updated in-place.
+    force :class:`ForceDiagram`
+        The updated force diagram.
     """
 
     # --------------------------------------------------------------------------
@@ -693,6 +652,8 @@ def force_update_from_constraints(force, kmax=100):
         force.vertex_attribute(key, 'x', x)
         force.vertex_attribute(key, 'y', y)
 
+    return force
+
 
 # ==============================================================================
 # dual modifications
@@ -720,9 +681,14 @@ def update_diagrams_from_constraints(form, force, max_iter=20, kmax=20, callback
 
     Returns
     -------
-    None
-        The form and force diagram are updated in-place.
+    form: :class:`FormDiagram`
+        The updated form diagram.
+    force: :class:`ForceDiagram`
+        The updated force diagram.
     """
+
+    form.dual = force
+    force.dual = form
 
     niter = 0
 
@@ -748,7 +714,7 @@ def update_diagrams_from_constraints(form, force, max_iter=20, kmax=20, callback
 
         niter += 1
 
-    return
+    return form, force
 
 
 # ==============================================================================
