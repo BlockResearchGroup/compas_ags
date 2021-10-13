@@ -12,9 +12,6 @@ from compas.geometry import angle_vectors_xy
 from compas.numerical import connectivity_matrix
 from compas.numerical import normrow
 
-from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import ForceDiagram
-
 from compas_ags.ags.core import update_primal_from_dual
 
 
@@ -24,33 +21,8 @@ __all__ = [
     'compute_internal_work',
     'compute_internal_work_tension',
     'compute_internal_work_compression',
-    'optimise_loadpath',
-
-    'compute_loadpath_proxy',
-    'compute_loadpath_tension_proxy',
-    'compute_loadpath_compression_proxy',
+    'optimise_loadpath'
 ]
-
-
-def compute_loadpath_proxy(formdata, forcedata, *args, **kwargs):
-    form = FormDiagram.from_data(formdata)
-    force = ForceDiagram.from_data(forcedata)
-    lp = compute_loadpath(form, force, *args, **kwargs)
-    return lp
-
-
-def compute_loadpath_tension_proxy(formdata, forcedata, *args, **kwargs):
-    form = FormDiagram.from_data(formdata)
-    force = ForceDiagram.from_data(forcedata)
-    lp = compute_internal_work_tension(form, force, *args, **kwargs)
-    return lp
-
-
-def compute_loadpath_compression_proxy(formdata, forcedata, *args, **kwargs):
-    form = FormDiagram.from_data(formdata)
-    force = ForceDiagram.from_data(forcedata)
-    lp = compute_internal_work_compression(form, force, *args, **kwargs)
-    return lp
 
 
 def compute_loadpath(form, force):
@@ -254,7 +226,10 @@ def optimise_loadpath(form, force, algo='COBYLA'):
 
     Returns
     -------
-    None
+    form: :class:`FormDiagram`
+        The optimised form diagram.
+    force: :class:`ForceDiagram`
+        The optimised force diagram.
 
     Notes
     -----
@@ -351,6 +326,8 @@ def optimise_loadpath(form, force, algo='COBYLA'):
         index = _edge_index[edge]
         attr['a'] = angles[index]
         attr['l'] = forces[index, 0]
+
+    return form, force
 
 
 # ==============================================================================
