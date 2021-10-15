@@ -337,8 +337,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ForceDiagram.dual_edge_targetlength"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.dual_edge_targetlength.html#compas_ags.diagrams.ForceDiagram.dual_edge_targetlength">[docs]</a>    <span class="k">def</span> <span class="nf">dual_edge_targetlength</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve the target length/force in the corresponding edge of the diagram&#39;s dual.</span>
+<div class="viewcode-block" id="ForceDiagram.dual_edge_targetforce"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.dual_edge_targetforce.html#compas_ags.diagrams.ForceDiagram.dual_edge_targetforce">[docs]</a>    <span class="k">def</span> <span class="nf">dual_edge_targetforce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the target force in the corresponding edge of the diagram&#39;s dual.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -349,7 +349,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s1">&#39;target_length&#39;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s1">&#39;target_force&#39;</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="ForceDiagram.edge_index"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.edge_index.html#compas_ags.diagrams.ForceDiagram.edge_index">[docs]</a>    <span class="k">def</span> <span class="nf">edge_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Construct a mapping between the identifiers of edges and the corresponding indices in a list of edges.</span>
