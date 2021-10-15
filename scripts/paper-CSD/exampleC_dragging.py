@@ -97,6 +97,11 @@ view_form_force(form, force, forcescale=2.0)
 # Identify auto constraints
 form.identify_constraints()
 
+# set target lengths
+force_constraint = 1.0
+for u, v in form.edges_where({'is_load': True}):
+    form.edge_attribute((u, v), 'target_force', abs(force_constraint))
+
 form_lines, force_lines = store_initial_lines(form, force)
 
 # ---------------------------------------------

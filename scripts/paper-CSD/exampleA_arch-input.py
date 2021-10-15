@@ -117,7 +117,7 @@ form_lines, force_lines = store_initial_lines(form, force)
 
 # set target lengths
 for u, v in form.edges_where({'is_load': True}):
-    form.edge_attribute((u, v), 'target_length', abs(fd_applied))
+    form.edge_attribute((u, v), 'target_force', abs(fd_applied))
 
 # Reflect all constraints to force diagram
 force.constraints_from_dual()
