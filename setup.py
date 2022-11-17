@@ -21,7 +21,7 @@ optional_requirements = {}
 
 setup(
     name="compas-ags",
-    version="1.1.1",
+    version="1.2.0",
     description="COMPAS package for Computational Graphic Statics",
     long_description=long_description,
     long_description_content_type="text/markdown",
