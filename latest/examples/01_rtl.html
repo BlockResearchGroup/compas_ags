@@ -110,7 +110,7 @@
 <span class="c1"># including loads and reaction forces.</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">graph</span> <span class="o">=</span> <span class="n">FormGraph</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">compas_ags</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;paper/gs_form_force.obj&#39;</span><span class="p">))</span>
+<span class="n">graph</span> <span class="o">=</span> <span class="n">FormGraph</span><span class="o">.</span><span class="n">from_obj</span><span class="p">(</span><span class="n">compas_ags</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;paper/gs_form_force.obj&quot;</span><span class="p">))</span>
 
 <span class="n">form</span> <span class="o">=</span> <span class="n">FormDiagram</span><span class="o">.</span><span class="n">from_graph</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
 <span class="n">force</span> <span class="o">=</span> <span class="n">ForceDiagram</span><span class="o">.</span><span class="n">from_formdiagram</span><span class="p">(</span><span class="n">form</span><span class="p">)</span>
@@ -119,11 +119,11 @@
 <span class="c1"># Fix the left and right supports.</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">left</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}))</span>
-<span class="n">right</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s1">&#39;x&#39;</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}))</span>
+<span class="n">left</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}))</span>
+<span class="n">right</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="mf">6.0</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="mf">0.0</span><span class="p">}))</span>
 <span class="n">fixed</span> <span class="o">=</span> <span class="p">[</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">]</span>
 
-<span class="n">form</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s1">&#39;is_fixed&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">fixed</span><span class="p">)</span>
+<span class="n">form</span><span class="o">.</span><span class="n">vertices_attribute</span><span class="p">(</span><span class="s2">&quot;is_fixed&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">keys</span><span class="o">=</span><span class="n">fixed</span><span class="p">)</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Set the magnitude of the load.</span>
@@ -151,29 +151,33 @@
 
 <span class="n">form_lines</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
-    <span class="n">form_lines</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-        <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">form</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="n">form</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;#cccccc&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="s1">&#39;--&#39;</span>
-    <span class="p">})</span>
+    <span class="n">form_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">form</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="s2">&quot;xy&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">form</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;xy&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#cccccc&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
 
 <span class="n">force_lines</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
-    <span class="n">force_lines</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-        <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">force</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="n">force</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s1">&#39;xy&#39;</span><span class="p">),</span>
-        <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;#cccccc&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="s1">&#39;--&#39;</span>
-    <span class="p">})</span>
+    <span class="n">force_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">force</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="s2">&quot;xy&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">force</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="s2">&quot;xy&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+            <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#cccccc&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Change the position of the &quot;free&quot; node of the force diagram</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">force</span><span class="o">.</span><span class="n">vertex</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="o">-=</span> <span class="mf">8.0</span>
+<span class="n">force</span><span class="o">.</span><span class="n">vertex</span><span class="p">[</span><span class="mi">4</span><span class="p">][</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="o">-=</span> <span class="mf">8.0</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Update the form diagram accordingly.</span>
@@ -185,13 +189,15 @@
 <span class="c1"># Indicate the movement of the free node in the force diagram with an arrow.</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">force_lines</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-    <span class="s1">&#39;start&#39;</span><span class="p">:</span> <span class="n">force_key_xyz</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
-    <span class="s1">&#39;end&#39;</span><span class="p">:</span> <span class="n">force</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
-    <span class="s1">&#39;color&#39;</span><span class="p">:</span> <span class="s1">&#39;#ff0000&#39;</span><span class="p">,</span>
-    <span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
-    <span class="s1">&#39;style&#39;</span><span class="p">:</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span>
-<span class="p">})</span>
+<span class="n">force_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;start&quot;</span><span class="p">:</span> <span class="n">force_key_xyz</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span>
+        <span class="s2">&quot;end&quot;</span><span class="p">:</span> <span class="n">force</span><span class="o">.</span><span class="n">vertex_coordinates</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span>
+        <span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;#ff0000&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="mf">10.0</span><span class="p">,</span>
+        <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;-&quot;</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">)</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Visualize the result.</span>
@@ -199,16 +205,16 @@
 
 <span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">delay_setup</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">))</span>
 
-<span class="n">viewer</span><span class="o">.</span><span class="n">draw_form</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="n">form_lines</span><span class="p">,</span>
-                 <span class="n">forces_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-                 <span class="n">vertexlabel</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">()},</span>
-                 <span class="n">vertexsize</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
-                 <span class="n">vertexcolor</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="s1">&#39;#000000&#39;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fixed</span><span class="p">},</span>
-                 <span class="n">edgelabel</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">())})</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">draw_form</span><span class="p">(</span>
+    <span class="n">lines</span><span class="o">=</span><span class="n">form_lines</span><span class="p">,</span>
+    <span class="n">forces_on</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">vertexlabel</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">()},</span>
+    <span class="n">vertexsize</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">vertexcolor</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="s2">&quot;#000000&quot;</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">fixed</span><span class="p">},</span>
+    <span class="n">edgelabel</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">())},</span>
+<span class="p">)</span>
 
-<span class="n">viewer</span><span class="o">.</span><span class="n">draw_force</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="n">force_lines</span><span class="p">,</span>
-                  <span class="n">vertexlabel</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">()},</span>
-                  <span class="n">vertexsize</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">draw_force</span><span class="p">(</span><span class="n">lines</span><span class="o">=</span><span class="n">force_lines</span><span class="p">,</span> <span class="n">vertexlabel</span><span class="o">=</span><span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">force</span><span class="o">.</span><span class="n">vertices</span><span class="p">()},</span> <span class="n">vertexsize</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
 
 <span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </code></pre></div>
