@@ -5,7 +5,7 @@ from __future__ import division
 from compas.datastructures import Mesh
 
 
-__all__ = ['Diagram']
+__all__ = ["Diagram"]
 
 
 class Diagram(Mesh):
@@ -48,5 +48,5 @@ class Diagram(Mesh):
 # Main
 # ==============================================================================
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

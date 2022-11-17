@@ -7,12 +7,11 @@ from compas.datastructures import Network
 from compas.datastructures import network_is_crossed
 
 
-__all__ = ['FormGraph']
+__all__ = ["FormGraph"]
 
 
 class FormGraph(Network):
-    """A graph representing the geometry and connectivity of the lines of a form diagram.
-    """
+    """A graph representing the geometry and connectivity of the lines of a form diagram."""
 
     def __init__(self):
         super(FormGraph, self).__init__()
@@ -27,7 +26,7 @@ class FormGraph(Network):
         -------
         bool
         """
-        z = self.nodes_attribute('z')
+        z = self.nodes_attribute("z")
         zmin = min(z)
         zmax = max(z)
         if (zmax - zmin) ** 2 > 0.001:
@@ -46,7 +45,8 @@ class FormGraph(Network):
         """
         if compas.IPY:
             from compas.rpc import Proxy
-            planarity = Proxy('planarity')
+
+            planarity = Proxy("planarity")
         else:
             import planarity
         return planarity.is_planar(list(self.edges()))
@@ -73,10 +73,13 @@ class FormGraph(Network):
         """
         if compas.IPY:
             from compas.rpc import Proxy
-            proxy = Proxy('compas.datastructures')
+
+            proxy = Proxy("compas.datastructures")
 
             def network_embed_in_plane(network, fixed, straightline):
-                network.data = proxy.network_embed_in_plane_proxy(network.data, fixed, straightline)
+                network.data = proxy.network_embed_in_plane_proxy(
+                    network.data, fixed, straightline
+                )
 
         else:
             from compas.datastructures import network_embed_in_plane
@@ -87,5 +90,5 @@ class FormGraph(Network):
 # Main
 # ==============================================================================
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

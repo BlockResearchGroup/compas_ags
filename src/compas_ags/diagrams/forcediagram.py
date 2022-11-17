@@ -7,24 +7,19 @@ from compas_ags.diagrams import Diagram
 from compas.geometry import Line
 
 
-__all__ = ['ForceDiagram']
+__all__ = ["ForceDiagram"]
 
 
 class ForceDiagram(Diagram):
-    """Mesh-based data structure for force diagrams in AGS.
-    """
+    """Mesh-based data structure for force diagrams in AGS."""
 
     def __init__(self):
         super(ForceDiagram, self).__init__()
-        self.attributes.update({
-            'name': 'Force'})
-        self.update_default_vertex_attributes({
-            'is_fixed': False,
-            'line_constraint': None,
-            'is_param': False})
-        self.update_default_edge_attributes({
-            'l': 0.0,
-            'target_vector': None})
+        self.attributes.update({"name": "Force"})
+        self.update_default_vertex_attributes(
+            {"is_fixed": False, "line_constraint": None, "is_param": False}
+        )
+        self.update_default_edge_attributes({"l": 0.0, "target_vector": None})
 
     # --------------------------------------------------------------------------
     # Constructors
@@ -59,7 +54,7 @@ class ForceDiagram(Diagram):
         -------
         list
         """
-        return self.vertices_attributes('xy')
+        return self.vertices_attributes("xy")
 
     def fixed(self):
         """The identifiers of the fixed vertices.
@@ -68,7 +63,7 @@ class ForceDiagram(Diagram):
         -------
         list
         """
-        return list(self.vertices_where({'is_fixed': True}))
+        return list(self.vertices_where({"is_fixed": True}))
 
     def anchor(self):
         """Get an anchor to the force diagram.
@@ -175,7 +170,7 @@ class ForceDiagram(Diagram):
         -------
         bool
         """
-        return self.dual.edge_attribute(self.dual_edge(edge), 'is_external')
+        return self.dual.edge_attribute(self.dual_edge(edge), "is_external")
 
     def is_dual_edge_reaction(self, edge):
         """Verify if the corresponding edge in the diagram's dual is marked as "reaction".
@@ -189,7 +184,7 @@ class ForceDiagram(Diagram):
         -------
         bool
         """
-        return self.dual.edge_attribute(self.dual_edge(edge), 'is_reaction')
+        return self.dual.edge_attribute(self.dual_edge(edge), "is_reaction")
 
     def is_dual_edge_load(self, edge):
         """Verify if the corresponding edge in the diagram's dual is marked as "load".
@@ -203,7 +198,7 @@ class ForceDiagram(Diagram):
         -------
         bool
         """
-        return self.dual.edge_attribute(self.dual_edge(edge), 'is_load')
+        return self.dual.edge_attribute(self.dual_edge(edge), "is_load")
 
     def is_dual_edge_ind(self, edge):
         """Verify if the corresponding edge in the diagram's dual is marked as "independent".
@@ -217,7 +212,7 @@ class ForceDiagram(Diagram):
         -------
         bool
         """
-        return self.dual.edge_attribute(self.dual_edge(edge), 'is_ind')
+        return self.dual.edge_attribute(self.dual_edge(edge), "is_ind")
 
     def dual_edge_force(self, edge):
         """Retrieve the force in the corresponding edge of the diagram's dual.
@@ -231,7 +226,7 @@ class ForceDiagram(Diagram):
         -------
         float
         """
-        return self.dual.edge_attribute(self.dual_edge(edge), 'f')
+        return self.dual.edge_attribute(self.dual_edge(edge), "f")
 
     def dual_edge_angledeviation(self, edge):
         """Retrieve the angle deviation in the corresponding edge of the diagram's dual.
@@ -245,7 +240,7 @@ class ForceDiagram(Diagram):
         -------
         float
         """
-        return self.dual.edge_attribute(self.dual_edge(edge), 'a')
+        return self.dual.edge_attribute(self.dual_edge(edge), "a")
 
     def dual_edge_targetforce(self, edge):
         """Retrieve the target force in the corresponding edge of the diagram's dual.
@@ -259,7 +254,7 @@ class ForceDiagram(Diagram):
         -------
         float
         """
-        return self.dual.edge_attribute(self.dual_edge(edge), 'target_force')
+        return self.dual.edge_attribute(self.dual_edge(edge), "target_force")
 
     def edge_index(self, form=None):
         """Construct a mapping between the identifiers of edges and the corresponding indices in a list of edges.
@@ -287,7 +282,7 @@ class ForceDiagram(Diagram):
         return edge_index
 
     def ordered_edges(self, form):
-        """"Construct a list of edges with the same order as the corresponding edges of the form diagram.
+        """ "Construct a list of edges with the same order as the corresponding edges of the form diagram.
 
         Parameters
         ----------
@@ -307,7 +302,7 @@ class ForceDiagram(Diagram):
     # --------------------------------------------------------------------------
 
     def constraints_from_dual(self, tol=10e-4):
-        """"Reflect constraints from the form diagram in the force diagram.
+        """ "Reflect constraints from the form diagram in the force diagram.
 
         Returns
         -------
@@ -317,23 +312,27 @@ class ForceDiagram(Diagram):
         ordered_edges = self.ordered_edges(self.dual)
         edges_orient = []
 
-        for edge in self.edges_where_dual({'is_ind': True}):  # Fix vertices of dual independent edge
-            self.vertices_attribute('is_fixed', True, keys=edge)
+        for edge in self.edges_where_dual(
+            {"is_ind": True}
+        ):  # Fix vertices of dual independent edge
+            self.vertices_attribute("is_fixed", True, keys=edge)
             edges_orient.append(edge)
 
-        for edge in self.edges_where_dual({'is_load': True}):  # If loads are orthogonal the force dual edge gets constrained
-            self.edge_attribute(edge, 'is_load', True)
+        for edge in self.edges_where_dual(
+            {"is_load": True}
+        ):  # If loads are orthogonal the force dual edge gets constrained
+            self.edge_attribute(edge, "is_load", True)
             edges_orient.append(edge)
             sp, ep = self.edge_coordinates(*edge)
             line = Line(sp, ep)
-            self.vertices_attribute('line_constraint', value=line, keys=edge)
+            self.vertices_attribute("line_constraint", value=line, keys=edge)
 
-        for edge in self.edges_where_dual({'is_reaction': True}):
-            self.edge_attribute(edge, 'is_reaction', True)
+        for edge in self.edges_where_dual({"is_reaction": True}):
+            self.edge_attribute(edge, "is_reaction", True)
             edges_orient.append(edge)
 
         for form_edge in self.dual.edges():
-            target_vector = self.dual.edge_attribute(form_edge, 'target_vector')
+            target_vector = self.dual.edge_attribute(form_edge, "target_vector")
             index = edge_index[form_edge]
             force_edge = ordered_edges[index]
             if target_vector is not None:
@@ -344,8 +343,8 @@ class ForceDiagram(Diagram):
             sp, ep = self.edge_coordinates(*edge)
             dx = ep[0] - sp[0]
             dy = ep[1] - sp[1]
-            length = (dx**2 + dy**2)**0.5
-            self.edge_attribute(edge, 'target_vector', [dx/length, dy/length])
+            length = (dx**2 + dy**2) ** 0.5
+            self.edge_attribute(edge, "target_vector", [dx / length, dy / length])
 
     # def compute_constraints(self, form, M):
     #     r"""Computes the form diagram constraints used
@@ -391,5 +390,5 @@ class ForceDiagram(Diagram):
 # Main
 # ==============================================================================
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass
