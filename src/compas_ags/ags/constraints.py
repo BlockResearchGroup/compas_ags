@@ -4,12 +4,12 @@ import math
 
 
 __all__ = [
-    'ConstraintsCollection',
-    'HorizontalFix',
-    'VerticalFix',
-    'AngleFix',
-    'LengthFix',
-    'SetLength'
+    "ConstraintsCollection",
+    "HorizontalFix",
+    "VerticalFix",
+    "AngleFix",
+    "LengthFix",
+    "SetLength",
 ]
 
 
@@ -29,7 +29,7 @@ class AbstractConstraint(ABC):
         self.vertex_index = form.vertex_index()
         self._color = (21, 36, 198)
         self._width = 1.0
-        self._style = '--'
+        self._style = "--"
 
     @abstractmethod
     def compute_constraint(self):
@@ -92,14 +92,14 @@ class ConstraintsCollection(object):
         """Automate set up of constraint collection based on diagram's attributes"""
 
         # fix x and y coordinates of the fixed vertices
-        for key in self.form.vertices_where({'is_fixed': True}):
+        for key in self.form.vertices_where({"is_fixed": True}):
             self.add_constraint(HorizontalFix(self.form, key))
             self.add_constraint(VerticalFix(self.form, key))
 
         # fix x or y coordinates of the non-fixed vertices
-        for key in self.form.vertices_where({'is_fixed_x': True, 'is_fixed': False}):
+        for key in self.form.vertices_where({"is_fixed_x": True, "is_fixed": False}):
             self.add_constraint(HorizontalFix(self.form, key))
-        for key in self.form.vertices_where({'is_fixed_y': True, 'is_fixed': False}):
+        for key in self.form.vertices_where({"is_fixed_y": True, "is_fixed": False}):
             self.add_constraint(VerticalFix(self.form, key))
 
         self.constrain_dependent_leaf_edges_lengths()
@@ -118,7 +118,7 @@ class ConstraintsCollection(object):
         dependent_leaf_edges = []
         for i, (u, v) in enumerate(self.form.edges()):
             if u in leaves or v in leaves:
-                if not self.form.edge_attribute((u, v), 'is_ind'):
+                if not self.form.edge_attribute((u, v), "is_ind"):
                     dependent_leaf_edges.append((u, v))
         for edge in dependent_leaf_edges:
             self.add_constraint(LengthFix(self.form, edge))
@@ -143,13 +143,13 @@ class HorizontalFix(AbstractConstraint):
         self.set_initial_position()
 
     def set_initial_position(self):
-        self.x = self.form.vertex_attribute(self.vertex, 'x')
+        self.x = self.form.vertex_attribute(self.vertex, "x")
 
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
         idx = self.vertex_index[self.vertex]
         constraint_jac_row[0, idx] = 1
-        r = self.form.vertex_attribute(self.vertex, 'x') - self.x
+        r = self.form.vertex_attribute(self.vertex, "x") - self.x
         return constraint_jac_row, r
 
     def update_constraint_goal(self):
@@ -157,17 +157,19 @@ class HorizontalFix(AbstractConstraint):
 
     def get_lines(self):
         constraint_lines = []
-        s = self.form.vertex_coordinates(self.vertex, 'xy')
-        e = self.form.vertex_coordinates(self.vertex, 'xy')
+        s = self.form.vertex_coordinates(self.vertex, "xy")
+        e = self.form.vertex_coordinates(self.vertex, "xy")
         s[1] += 1
         e[1] -= 1
-        constraint_lines.append({
-            'start': s,
-            'end': e,
-            'width': self._width,
-            'color': self._color,
-            'style': self._style,
-        })
+        constraint_lines.append(
+            {
+                "start": s,
+                "end": e,
+                "width": self._width,
+                "color": self._color,
+                "style": self._style,
+            }
+        )
         return constraint_lines
 
 
@@ -190,13 +192,13 @@ class VerticalFix(AbstractConstraint):
         self.set_initial_position()
 
     def set_initial_position(self):
-        self.y = self.form.vertex_attribute(self.vertex, 'y')
+        self.y = self.form.vertex_attribute(self.vertex, "y")
 
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
         idx = self.vertex_index[self.vertex] + self.vcount
         constraint_jac_row[0, idx] = 1
-        r = self.form.vertex_attribute(self.vertex, 'y') - self.y
+        r = self.form.vertex_attribute(self.vertex, "y") - self.y
         return constraint_jac_row, r
 
     def update_constraint_goal(self):
@@ -204,17 +206,19 @@ class VerticalFix(AbstractConstraint):
 
     def get_lines(self):
         constraint_lines = []
-        s = self.form.vertex_coordinates(self.vertex, 'xy')
-        e = self.form.vertex_coordinates(self.vertex, 'xy')
+        s = self.form.vertex_coordinates(self.vertex, "xy")
+        e = self.form.vertex_coordinates(self.vertex, "xy")
         s[0] += 1
         e[0] -= 1
-        constraint_lines.append({
-            'start': s,
-            'end': e,
-            'width': self._width,
-            'color': self._color,
-            'style': self._style,
-        })
+        constraint_lines.append(
+            {
+                "start": s,
+                "end": e,
+                "width": self._width,
+                "color": self._color,
+                "style": self._style,
+            }
+        )
         return constraint_lines
 
 
@@ -241,8 +245,8 @@ class AngleFix(AbstractConstraint):
         self.set_initial_position()
 
     def set_initial_position(self):
-        self.x = self.form.vertex_attribute(self.vertex, 'x')
-        self.y = self.form.vertex_attribute(self.vertex, 'y')
+        self.x = self.form.vertex_attribute(self.vertex, "x")
+        self.y = self.form.vertex_attribute(self.vertex, "y")
 
     def compute_constraint(self):
         constraint_jac_row = np.zeros((1, self.number_of_cols))
@@ -251,11 +255,11 @@ class AngleFix(AbstractConstraint):
 
         idx = self.vertex_index[self.vertex]
         constraint_jac_row[0, idx] = 1 * math.sin(theta)
-        r = (self.form.vertex_attribute(self.vertex, 'x') - self.x) * math.sin(theta)
+        r = (self.form.vertex_attribute(self.vertex, "x") - self.x) * math.sin(theta)
 
         idx = self.vertex_index[self.vertex] + self.vcount
         constraint_jac_row[0, idx] = 1 * math.cos(theta)
-        r = (self.form.vertex_attribute(self.vertex, 'y') - self.y) * math.cos(theta)
+        r = (self.form.vertex_attribute(self.vertex, "y") - self.y) * math.cos(theta)
         return constraint_jac_row, r
 
     def update_constraint_goal(self):
@@ -263,20 +267,22 @@ class AngleFix(AbstractConstraint):
 
     def get_lines(self):
         constraint_lines = []
-        s = self.form.vertex_coordinates(self.vertex, 'xy')
-        e = self.form.vertex_coordinates(self.vertex, 'xy')
+        s = self.form.vertex_coordinates(self.vertex, "xy")
+        e = self.form.vertex_coordinates(self.vertex, "xy")
         theta = math.radians(90 - self.angle)
         s[0] += 1 * math.sin(theta)
         s[1] -= 1 * math.cos(theta)
         e[0] -= 1 * math.sin(theta)
         e[1] += 1 * math.cos(theta)
-        constraint_lines.append({
-            'start': s,
-            'end': e,
-            'width': self._width,
-            'color': self._color,
-            'style': self._style,
-        })
+        constraint_lines.append(
+            {
+                "start": s,
+                "end": e,
+                "width": self._width,
+                "color": self._color,
+                "style": self._style,
+            }
+        )
         return constraint_lines
 
 
@@ -310,7 +316,7 @@ class LengthFix(AbstractConstraint):
         s, e = self.form.edge_coordinates(*self.edge)
         dx = s[0] - e[0]
         dy = s[1] - e[1]
-        length = math.sqrt(dx ** 2 + dy ** 2)  # Current length
+        length = math.sqrt(dx**2 + dy**2)  # Current length
 
         id_u = self.vertex_index[self.edge[0]]
         id_v = self.vertex_index[self.edge[1]]
@@ -325,7 +331,7 @@ class LengthFix(AbstractConstraint):
 
 
 class SetLength(LengthFix):
-    """ WIP - Constraint that sets the edge length to L.
+    """WIP - Constraint that sets the edge length to L.
 
     Parameters
     -----------
@@ -347,7 +353,7 @@ class SetLength(LengthFix):
 
 
 class SetOrientation(AbstractConstraint):
-    """ WIP - Constraint that sets the edge orientation.
+    """WIP - Constraint that sets the edge orientation.
 
     Parameters
     -----------
@@ -370,5 +376,5 @@ class SetOrientation(AbstractConstraint):
 # Main
 # ==============================================================================
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

@@ -3,14 +3,11 @@ from __future__ import absolute_import
 from __future__ import division
 
 
-__all__ = [
-    'SolutionError'
-]
+__all__ = ["SolutionError"]
 
 
 class SolutionError(Exception):
-    """Used to throw solution errors during form or force computations.
-    """
+    """Used to throw solution errors during form or force computations."""
 
     def __init__(self, value):
         self.value = value

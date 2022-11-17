@@ -32,14 +32,14 @@ from compas_ags.exceptions import SolutionError
 
 
 __all__ = [
-    'form_identify_dof',
-    'form_count_dof',
-    'form_update_q_from_qind',
-    'form_update_from_force',
-    'form_update_from_force_newton',
-    'force_update_from_form',
-    'force_update_from_constraints',
-    'update_diagrams_from_constraints'
+    "form_identify_dof",
+    "form_count_dof",
+    "form_update_q_from_qind",
+    "form_update_from_force",
+    "form_update_from_force_newton",
+    "force_update_from_form",
+    "force_update_from_constraints",
+    "update_diagrams_from_constraints",
 ]
 
 
@@ -95,7 +95,7 @@ def form_identify_dof(form):
     """
     vertex_index = form.vertex_index()
 
-    xy = form.vertices_attributes('xy')
+    xy = form.vertices_attributes("xy")
     fixed = [vertex_index[vertex] for vertex in form.fixed()]
     free = list(set(range(form.number_of_vertices())) - set(fixed))
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
@@ -144,7 +144,7 @@ def form_count_dof(form):
     """
     vertex_index = form.vertex_index()
 
-    xy = form.vertices_attributes('xy')
+    xy = form.vertices_attributes("xy")
     fixed = [vertex_index[vertex] for vertex in form.leaves()]
     free = list(set(range(form.number_of_vertices())) - set(fixed))
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
@@ -194,10 +194,14 @@ def form_compute_nullspace(form, force, constraints=None):
     --------
     >>>
     """
-    jacobian = compute_jacobian(form, force)  # Jacobian matrix of size (2 _vcount, 2 vcount)
+    jacobian = compute_jacobian(
+        form, force
+    )  # Jacobian matrix of size (2 _vcount, 2 vcount)
     if constraints:
         (cj, _) = constraints.compute_constraints()
-        jacobian = vstack((jacobian, cj))   # Add rows to the Jacobian matrix representing constraints
+        jacobian = vstack(
+            (jacobian, cj)
+        )  # Add rows to the Jacobian matrix representing constraints
 
     # Remove the rows of the jacobian to account for the anchored vertex in the force diagram (influence x and y directions)
     _vcount = force.number_of_vertices()
@@ -207,10 +211,14 @@ def form_compute_nullspace(form, force, constraints=None):
 
     reduced_jacobian = delete(jacobian, _anchor_xy, axis=0)
 
-    nullstates = matrix_nullspace(reduced_jacobian).T  # unit vectors representing the possible nullstates
+    nullstates = matrix_nullspace(
+        reduced_jacobian
+    ).T  # unit vectors representing the possible nullstates
 
     nullspaces = []
-    for nullstate in nullstates:  # reshaping the nullstates a list of (vcount x 2) arrays
+    for (
+        nullstate
+    ) in nullstates:  # reshaping the nullstates a list of (vcount x 2) arrays
         xy = nullstate.reshape((2, -1)).T
         nullspaces.append(xy)
 
@@ -253,8 +261,8 @@ def form_update_q_from_qind(form):
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
     xy = array(form.xy(), dtype=float64).reshape((-1, 2))
     q = array(form.q(), dtype=float64).reshape((-1, 1))
-    C = connectivity_matrix(edges, 'csr')
-    E = equilibrium_matrix(C, xy, free, 'csr')
+    C = connectivity_matrix(edges, "csr")
+    E = equilibrium_matrix(C, xy, free, "csr")
 
     update_q_from_qind(E, q, dep, ind)
 
@@ -264,7 +272,9 @@ def form_update_q_from_qind(form):
 
     for edge in form.edges():
         index = edge_index[edge]
-        form.edge_attributes(edge, ['q', 'f', 'l'], [q[index, 0], forces[index, 0], lengths[index, 0]])
+        form.edge_attributes(
+            edge, ["q", "f", "l"], [q[index, 0], forces[index, 0], lengths[index, 0]]
+        )
 
     return form
 
@@ -316,22 +326,27 @@ def form_update_from_force(form, force, kmax=100):
     # --------------------------------------------------------------------------
     vertex_index = form.vertex_index()
     edge_index = form.edge_index()
-    i_j = {index: [vertex_index[nbr] for nbr in form.vertex_neighbors(vertex)] for index, vertex in enumerate(form.vertices())}
+    i_j = {
+        index: [vertex_index[nbr] for nbr in form.vertex_neighbors(vertex)]
+        for index, vertex in enumerate(form.vertices())
+    }
     ij_e = {(vertex_index[u], vertex_index[v]): edge_index[u, v] for u, v in edge_index}
-    ij_e.update({(vertex_index[v], vertex_index[u]): edge_index[u, v] for u, v in edge_index})
+    ij_e.update(
+        {(vertex_index[v], vertex_index[u]): edge_index[u, v] for u, v in edge_index}
+    )
 
     xy = array(form.xy(), dtype=float64)
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
-    C = connectivity_matrix(edges, 'csr')
+    C = connectivity_matrix(edges, "csr")
     # --------------------------------------------------------------------------
     # constraints
     # --------------------------------------------------------------------------
     leaves = [vertex_index[vertex] for vertex in form.leaves()]
     fixed = [vertex_index[vertex] for vertex in form.fixed()]
     free = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
-    line_constraints_all = form.vertices_attribute('line_constraint')
+    line_constraints_all = form.vertices_attribute("line_constraint")
     line_constraints = [line_constraints_all[i] for i in free]
-    target_vectors = form.edges_attribute('target_vector')
+    target_vectors = form.edges_attribute("target_vector")
     # --------------------------------------------------------------------------
     # force diagram
     # --------------------------------------------------------------------------
@@ -342,14 +357,24 @@ def form_update_from_force(form, force, kmax=100):
     _xy = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
-    _C = connectivity_matrix(_edges, 'csr')
+    _C = connectivity_matrix(_edges, "csr")
     # --------------------------------------------------------------------------
     # compute the coordinates of thet *free* vertices
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # re-add the leaves and leaf-edges
     # --------------------------------------------------------------------------
-    update_primal_from_dual(xy, _xy, free, i_j, ij_e, _C, line_constraints=line_constraints,
-                            target_vectors=target_vectors, leaves=leaves, kmax=kmax)
+    update_primal_from_dual(
+        xy,
+        _xy,
+        free,
+        i_j,
+        ij_e,
+        _C,
+        line_constraints=line_constraints,
+        target_vectors=target_vectors,
+        leaves=leaves,
+        kmax=kmax,
+    )
     # --------------------------------------------------------------------------
     # update
     # --------------------------------------------------------------------------
@@ -364,30 +389,32 @@ def form_update_from_force(form, force, kmax=100):
     # --------------------------------------------------------------------------
     for vertex, attr in form.vertices(True):
         index = vertex_index[vertex]
-        attr['x'] = xy[index, 0]
-        attr['y'] = xy[index, 1]
+        attr["x"] = xy[index, 0]
+        attr["y"] = xy[index, 1]
     for edge, attr in form.edges(True):
         index = edge_index[edge]
-        attr['l'] = lengths[index, 0]
-        attr['a'] = angles[index]
+        attr["l"] = lengths[index, 0]
+        attr["a"] = angles[index]
         if angles[index] < 90:
-            attr['f'] = forces[index, 0]
-            attr['q'] = q[index, 0]
+            attr["f"] = forces[index, 0]
+            attr["q"] = q[index, 0]
         else:
-            attr['f'] = - forces[index, 0]
-            attr['q'] = - q[index, 0]
+            attr["f"] = -forces[index, 0]
+            attr["q"] = -q[index, 0]
     # --------------------------------------------------------------------------
     # update force diagram
     # --------------------------------------------------------------------------
     for edge, attr in force.edges(True):
         index = _edge_index[edge]
-        attr['a'] = angles[index]
-        attr['l'] = forces[index, 0]
+        attr["a"] = angles[index]
+        attr["l"] = forces[index, 0]
 
     return form, force
 
 
-def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_iter=20):
+def form_update_from_force_newton(
+    form, force, constraints=None, tol=1e-10, max_iter=20
+):
     r"""Update the form diagram after a modification of the force diagram.
 
     Compute the geometry of the form diagram from the geometry of the force diagram
@@ -428,8 +455,12 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
     >>>
 
     """
-    X = array(form.vertices_attribute('x') + form.vertices_attribute('y')).reshape(-1, 1)
-    _X_goal = array(force.vertices_attribute('x') + force.vertices_attribute('y')).reshape(-1, 1)
+    X = array(form.vertices_attribute("x") + form.vertices_attribute("y")).reshape(
+        -1, 1
+    )
+    _X_goal = array(
+        force.vertices_attribute("x") + force.vertices_attribute("y")
+    ).reshape(-1, 1)
 
     vcount = form.number_of_vertices()
     index_vertex = form.index_vertex()
@@ -443,7 +474,9 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
         force_update_from_form(force, form)
 
         # Get jacobian maxtrix and residual vector considering constraints
-        red_jacobian, red_r = get_jacobian_and_residual(form, force, _X_goal, constraints)
+        red_jacobian, red_r = get_jacobian_and_residual(
+            form, force, _X_goal, constraints
+        )
 
         # Do the least squares solution
         dx = lstsq(red_jacobian, -red_r)[0]
@@ -453,17 +486,17 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
         # Update form diagram at end of iteration
         for i in range(vcount):
             vertex = index_vertex[i]
-            form.vertex_attribute(vertex, 'x', X[i].item())
-            form.vertex_attribute(vertex, 'y', X[i + vcount].item())
+            form.vertex_attribute(vertex, "x", X[i].item())
+            form.vertex_attribute(vertex, "y", X[i + vcount].item())
 
         diff = norm(red_r)
         if n_iter > max_iter:
-            raise SolutionError('Did not converge')
+            raise SolutionError("Did not converge")
 
-        print('i: {0:0} diff: {1:.2e}'.format(n_iter, float(diff)))
+        print("i: {0:0} diff: {1:.2e}".format(n_iter, float(diff)))
         n_iter += 1
 
-    print('Converged in {0} iterations'.format(n_iter))
+    print("Converged in {0} iterations".format(n_iter))
 
     return form
 
@@ -494,8 +527,11 @@ def force_update_from_form(force, form):
     vertex_index = form.vertex_index()
 
     xy = array(form.xy(), dtype=float64)
-    edges = [[vertex_index[u], vertex_index[v]] for u, v in form.edges_where({'_is_edge': True})]
-    C = connectivity_matrix(edges, 'csr')
+    edges = [
+        [vertex_index[u], vertex_index[v]]
+        for u, v in form.edges_where({"_is_edge": True})
+    ]
+    C = connectivity_matrix(edges, "csr")
     Q = diags([form.q()], [0])
     uv = C.dot(xy)
     # --------------------------------------------------------------------------
@@ -507,7 +543,7 @@ def force_update_from_form(force, form):
     _xy = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
-    _C = connectivity_matrix(_edges, 'csr')
+    _C = connectivity_matrix(_edges, "csr")
     _Ct = _C.transpose()
     # --------------------------------------------------------------------------
     # compute reciprocal for given q
@@ -518,8 +554,8 @@ def force_update_from_form(force, form):
     # --------------------------------------------------------------------------
     for vertex, attr in force.vertices(True):
         index = _vertex_index[vertex]
-        attr['x'] = _xy[index, 0]
-        attr['y'] = _xy[index, 1]
+        attr["x"] = _xy[index, 0]
+        attr["y"] = _xy[index, 1]
 
     return force
 
@@ -549,7 +585,7 @@ def force_update_from_form_geometrical(force, form, kmax=100):
 
     xy = array(form.xy(), dtype=float64)
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
-    C = connectivity_matrix(edges, 'csr')
+    C = connectivity_matrix(edges, "csr")
 
     # --------------------------------------------------------------------------
     # force diagram
@@ -562,9 +598,19 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
 
-    _i_j = {index: [_vertex_index[nbr] for nbr in force.vertex_neighbors(vertex)] for index, vertex in enumerate(force.vertices())}
-    _ij_e = {(_vertex_index[u], _vertex_index[v]): _edge_index[u, v] for u, v in _edge_index}
-    _ij_e.update({(_vertex_index[v], _vertex_index[u]): _edge_index[u, v] for u, v in _edge_index})
+    _i_j = {
+        index: [_vertex_index[nbr] for nbr in force.vertex_neighbors(vertex)]
+        for index, vertex in enumerate(force.vertices())
+    }
+    _ij_e = {
+        (_vertex_index[u], _vertex_index[v]): _edge_index[u, v] for u, v in _edge_index
+    }
+    _ij_e.update(
+        {
+            (_vertex_index[v], _vertex_index[u]): _edge_index[u, v]
+            for u, v in _edge_index
+        }
+    )
 
     # --------------------------------------------------------------------------
     # constraints
@@ -573,25 +619,38 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     _free = list(set(range(force.number_of_vertices())) - set(_fixed))
     # _fixed_x = [_vertex_index[vertex] for vertex in force.fixed_x()]
     # _fixed_y = [_vertex_index[vertex] for vertex in force.fixed_y()]
-    _line_constraints_all = force.vertices_attribute('line_constraint')
+    _line_constraints_all = force.vertices_attribute("line_constraint")
     _line_constraints = [_line_constraints_all[i] for i in _free]
-    _target_lengths = form.edges_attribute('target_force')
-    _target_vectors = [force.edge_attribute(edge, 'target_vector') for edge in force.ordered_edges(form)]
+    _target_lengths = form.edges_attribute("target_force")
+    _target_vectors = [
+        force.edge_attribute(edge, "target_vector")
+        for edge in force.ordered_edges(form)
+    ]
 
     # --------------------------------------------------------------------------
     # compute the coordinates of the *free* vertices of the force diagram
     # as a function of the fixed vertices and the previous coordinates of the *free* vertices
     # --------------------------------------------------------------------------
-    update_primal_from_dual(_xy, xy, _free, _i_j, _ij_e, C, line_constraints=_line_constraints, target_lengths=_target_lengths,
-                            target_vectors=_target_vectors, kmax=kmax)
+    update_primal_from_dual(
+        _xy,
+        xy,
+        _free,
+        _i_j,
+        _ij_e,
+        C,
+        line_constraints=_line_constraints,
+        target_lengths=_target_lengths,
+        target_vectors=_target_vectors,
+        kmax=kmax,
+    )
 
     # --------------------------------------------------------------------------
     # update force diagram
     # --------------------------------------------------------------------------
     for vertex, attr in force.vertices(True):
         index = _vertex_index[vertex]
-        attr['x'] = _xy[index, 0]
-        attr['y'] = _xy[index, 1]
+        attr["x"] = _xy[index, 0]
+        attr["y"] = _xy[index, 1]
 
     return force
 
@@ -618,30 +677,43 @@ def force_update_from_constraints(force, kmax=100):
     # parameters from force diagram
     # --------------------------------------------------------------------------
     _k_i = force.vertex_index()
-    _xy = force.vertices_attributes('xy')
+    _xy = force.vertices_attributes("xy")
     _edges = list(force.edges())
     _edges = [(_k_i[u], _k_i[v]) for u, v in _edges]
-    _i_nbrs = {_k_i[key]: [_k_i[nbr] for nbr in force.vertex_neighbors(key)] for key in force.vertices()}
+    _i_nbrs = {
+        _k_i[key]: [_k_i[nbr] for nbr in force.vertex_neighbors(key)]
+        for key in force.vertices()
+    }
     _uv_i = {uv: index for index, uv in enumerate(_edges)}
     _ij_e = {(u, v): index for (u, v), index in iter(_uv_i.items())}
 
     # --------------------------------------------------------------------------
     # fixity from constraints on force diagram
     # --------------------------------------------------------------------------
-    fixed_force = [key for key in force.vertices_where({'is_fixed': True})]
+    fixed_force = [key for key in force.vertices_where({"is_fixed": True})]
     _fixed = [_k_i[key] for key in fixed_force]
-    line_constraints = force.vertices_attribute('line_constraint')
+    line_constraints = force.vertices_attribute("line_constraint")
 
     # --------------------------------------------------------------------------
     # edge orientations and edge target lengths
     # --------------------------------------------------------------------------
     target_lengths = [force.dual_edge_targetforce(edge) for edge in force.edges()]
-    target_vectors = force.edges_attribute('target_vector')
+    target_vectors = force.edges_attribute("target_vector")
 
     # --------------------------------------------------------------------------
     # Paralelise edge given force targets and/or target_lengths
     # --------------------------------------------------------------------------
-    parallelise_edges(_xy, _edges, _i_nbrs, _ij_e, target_vectors, target_lengths, fixed=_fixed, line_constraints=line_constraints, kmax=kmax)
+    parallelise_edges(
+        _xy,
+        _edges,
+        _i_nbrs,
+        _ij_e,
+        target_vectors,
+        target_lengths,
+        fixed=_fixed,
+        line_constraints=line_constraints,
+        kmax=kmax,
+    )
 
     # --------------------------------------------------------------------------
     # update force diagram geometry
@@ -649,8 +721,8 @@ def force_update_from_constraints(force, kmax=100):
     for key in force.vertices():
         i = _k_i[key]
         x, y = _xy[i]
-        force.vertex_attribute(key, 'x', x)
-        force.vertex_attribute(key, 'y', y)
+        force.vertex_attribute(key, "x", x)
+        force.vertex_attribute(key, "y", y)
 
     return force
 
@@ -721,5 +793,5 @@ def update_diagrams_from_constraints(form, force, max_iter=20, kmax=20, callback
 # Main
 # ==============================================================================
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     pass

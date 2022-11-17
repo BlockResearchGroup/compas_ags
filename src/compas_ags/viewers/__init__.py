@@ -15,4 +15,4 @@ compas_ags.viewers
 
 from .viewer import Viewer  # noqa: F401
 
-__all__ = [name for name in dir() if not name.startswith('_')]
+__all__ = [name for name in dir() if not name.startswith("_")]

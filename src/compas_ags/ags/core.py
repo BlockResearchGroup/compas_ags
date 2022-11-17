@@ -32,11 +32,11 @@ from compas_ags.exceptions import SolutionError
 
 
 __all__ = [
-    'update_q_from_qind',
-    'update_primal_from_dual',
-    'get_jacobian_and_residual',
-    'compute_jacobian',
-    'parallelise_edges',
+    "update_q_from_qind",
+    "update_primal_from_dual",
+    "get_jacobian_and_residual",
+    "compute_jacobian",
+    "parallelise_edges",
 ]
 
 
@@ -85,7 +85,19 @@ def update_q_from_qind(E, q, dep, ind):
     q[dep] = qd
 
 
-def update_primal_from_dual(xy, _xy, free, i_nbrs, ij_e, _C, line_constraints=None, target_lengths=[], target_vectors=[], leaves=[], kmax=100):
+def update_primal_from_dual(
+    xy,
+    _xy,
+    free,
+    i_nbrs,
+    ij_e,
+    _C,
+    line_constraints=None,
+    target_lengths=[],
+    target_vectors=[],
+    leaves=[],
+    kmax=100,
+):
     r"""Update the coordinates of the primal diagram using the coordinates of the corresponding dual diagram.
     This function apply to both sides, i.e. it can be used to update the form diagram from the geometry of the force
     diagram or to update the force diagram from the geometry of the force diagram.
@@ -192,7 +204,9 @@ def update_primal_from_dual(xy, _xy, free, i_nbrs, ij_e, _C, line_constraints=No
                 if j in leaves:
                     continue
 
-                n = _t[ij_e[(i, j)], None]  # the direction of the line (the line parallel to the corresponding line in the force diagram)
+                n = _t[
+                    ij_e[(i, j)], None
+                ]  # the direction of the line (the line parallel to the corresponding line in the force diagram)
                 _l = _uv[ij_e[(i, j)], None]
 
                 if normrow(_l)[0, 0] < 0.001:
@@ -206,8 +220,10 @@ def update_primal_from_dual(xy, _xy, free, i_nbrs, ij_e, _C, line_constraints=No
                     if target_vectors[ij_e[(i, j)]]:
                         n = array(target_vectors[ij_e[(i, j)]]).reshape(1, -1)
 
-                r = I - n.T.dot(n)          # projection into the orthogonal space of the direction vector
-                a = xy[j, None]             # a point on the line (the neighbour of the vertex)
+                r = I - n.T.dot(
+                    n
+                )  # projection into the orthogonal space of the direction vector
+                a = xy[j, None]  # a point on the line (the neighbour of the vertex)
                 R += r
                 q += r.dot(a.T)
 
@@ -220,15 +236,15 @@ def update_primal_from_dual(xy, _xy, free, i_nbrs, ij_e, _C, line_constraints=No
                     R += r
                     q += r.dot(pt.T)
 
-            A[row: row + 2, row: row + 2] = R
-            b[row: row + 2] = q
+            A[row : row + 2, row : row + 2] = R
+            b[row : row + 2] = q
             row += 2
 
             # p = solve(R.T.dot(R), R.T.dot(q))
             # xy[i] = p.reshape((-1, 2), order='C')
 
         res = lstsq(A, b)
-        xy_lstsq = res[0].reshape((-1, 2), order='C')
+        xy_lstsq = res[0].reshape((-1, 2), order="C")
         xy[free] = xy_lstsq
 
     # reconnect leaves
@@ -237,7 +253,18 @@ def update_primal_from_dual(xy, _xy, free, i_nbrs, ij_e, _C, line_constraints=No
         xy[i] = xy[j] + xy0[i] - xy0[j]
 
 
-def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, fixed=None, line_constraints=None, kmax=100, callback=None):
+def parallelise_edges(
+    xy,
+    edges,
+    i_nbrs,
+    ij_e,
+    target_vectors,
+    target_lengths,
+    fixed=None,
+    line_constraints=None,
+    kmax=100,
+    callback=None,
+):
     """Parallelise the edges of a mesh to given target vectors.
 
     Parameters
@@ -281,14 +308,14 @@ def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, f
     """
     if callback:
         if not callable(callback):
-            raise Exception('The provided callback is not callable.')
+            raise Exception("The provided callback is not callable.")
 
     n = len(xy)
 
     for k in range(kmax):
         xy0 = [[x, y] for x, y in xy]
         uv = [[xy[j][0] - xy[i][0], xy[j][1] - xy[i][1]] for i, j in edges]
-        lengths = [(dx**2 + dy**2)**0.5 for dx, dy in uv]
+        lengths = [(dx**2 + dy**2) ** 0.5 for dx, dy in uv]
 
         for j in range(n):
             if j in fixed:
@@ -310,14 +337,18 @@ def parallelise_edges(xy, edges, i_nbrs, ij_e, target_vectors, target_lengths, f
 
                 if target_lengths[e] is not None:  # edges with constraint on length ...
                     lij = target_lengths[e]
-                    if target_vectors[e]:  # edges with constraint on length + orientation
+                    if target_vectors[
+                        e
+                    ]:  # edges with constraint on length + orientation
                         tx, ty = target_vectors[e]
                     else:  # edges with constraint on length only
                         if lengths[e] == 0.0:
                             tx = ty = 0.0
                         else:
-                            tx = (xy0[v][0] - xy0[u][0])/lengths[e]
-                            ty = (xy0[v][1] - xy0[u][1])/lengths[e]  # check if xy0 is indeed better than xy
+                            tx = (xy0[v][0] - xy0[u][0]) / lengths[e]
+                            ty = (xy0[v][1] - xy0[u][1]) / lengths[
+                                e
+                            ]  # check if xy0 is indeed better than xy
                 else:
                     if target_vectors[e]:  # edges with constraint on orientation only
                         tx, ty = target_vectors[e]
@@ -398,7 +429,9 @@ def get_jacobian_and_residual(form, force, _X_goal, constraints=None):
     _k_i = force.key_index()
     _known = _k_i[force.anchor()]
     _bc = [_known, _vcount + _known]
-    _X_iteration = array(force.vertices_attribute('x') + force.vertices_attribute('y')).reshape(-1, 1)
+    _X_iteration = array(
+        force.vertices_attribute("x") + force.vertices_attribute("y")
+    ).reshape(-1, 1)
     r = _X_iteration - _X_goal
 
     if constraints:
@@ -411,7 +444,7 @@ def get_jacobian_and_residual(form, force, _X_goal, constraints=None):
     rank_aug = matrix_rank(hstack([jacobian, r]))
 
     if rank_jac < rank_aug:
-        raise SolutionError('ERROR: Rank Augmented > Rank Jacobian')
+        raise SolutionError("ERROR: Rank Augmented > Rank Jacobian")
 
     # Remove rows due to anchored vertex in the force diagram
     red_r = delete(r, _bc, axis=0)
@@ -460,8 +493,8 @@ def compute_jacobian(form, force):
     edges = [(k_i[u], k_i[v]) for u, v in form.edges()]
     xy = array(form.xy(), dtype=float64).reshape((-1, 2))
     ecount = len(edges)
-    C = connectivity_matrix(edges, 'array')
-    E = equilibrium_matrix(C, xy, free, 'array')
+    C = connectivity_matrix(edges, "array")
+    E = equilibrium_matrix(C, xy, free, "array")
     uv = C.dot(xy)
     u = uv[:, 0].reshape(-1, 1)
     v = uv[:, 1].reshape(-1, 1)
@@ -471,7 +504,9 @@ def compute_jacobian(form, force):
     q = array(form.q(), dtype=float64).reshape((-1, 1))
     Q = diag(q.flatten())  # TODO: Explore sparse (diags)
 
-    independent_edges = [(k_i[u], k_i[v]) for (u, v) in list(form.edges_where({'is_ind': True}))]
+    independent_edges = [
+        (k_i[u], k_i[v]) for (u, v) in list(form.edges_where({"is_ind": True}))
+    ]
     independent_edges_idx = [edges.index(i) for i in independent_edges]
     dependent_edges_idx = list(set(range(ecount)) - set(independent_edges_idx))
 
@@ -487,8 +522,8 @@ def compute_jacobian(form, force):
     _vcount = force.number_of_vertices()
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
-    _L = laplacian_matrix(_edges, normalize=False, rtype='array')
-    _C = connectivity_matrix(_edges, 'array')
+    _L = laplacian_matrix(_edges, normalize=False, rtype="array")
+    _C = connectivity_matrix(_edges, "array")
     _Ct = _C.transpose()
     _Ct = array(_Ct)
     _known = [_vertex_index[force.anchor()]]
@@ -509,9 +544,9 @@ def compute_jacobian(form, force):
             dEdXi_d = dEdXi[:, dependent_edges_idx]
             dEdXi_id = dEdXi[:, independent_edges_idx]
 
-            dEdXiInv = - EdInv.dot(dEdXi_d.dot(EdInv))
+            dEdXiInv = -EdInv.dot(dEdXi_d.dot(EdInv))
 
-            dqdXi_d = - dEdXiInv.dot(Eid.dot(qid)) - EdInv.dot(dEdXi_id.dot(qid))
+            dqdXi_d = -dEdXiInv.dot(Eid.dot(qid)) - EdInv.dot(dEdXi_id.dot(qid))
             dqdXi = zeros((ecount, 1))
             dqdXi[dependent_edges_idx] = dqdXi_d
             dqdXi[independent_edges_idx] = 0
@@ -521,11 +556,25 @@ def compute_jacobian(form, force):
             d_XdXiBot = zeros((_L.shape[0]))
 
             if j == 0:
-                d_XdXiTop = solve_with_known(_L, (_Ct.dot(dQdXi.dot(u) + Q.dot(dxdxi))).flatten(), d_XdXiTop, _known)
-                d_XdXiBot = solve_with_known(_L, (_Ct.dot(dQdXi.dot(v))).flatten(), d_XdXiBot, _known)
+                d_XdXiTop = solve_with_known(
+                    _L,
+                    (_Ct.dot(dQdXi.dot(u) + Q.dot(dxdxi))).flatten(),
+                    d_XdXiTop,
+                    _known,
+                )
+                d_XdXiBot = solve_with_known(
+                    _L, (_Ct.dot(dQdXi.dot(v))).flatten(), d_XdXiBot, _known
+                )
             elif j == 1:
-                d_XdXiTop = solve_with_known(_L, (_Ct.dot(dQdXi.dot(u))).flatten(), d_XdXiTop, _known)
-                d_XdXiBot = solve_with_known(_L, (_Ct.dot(dQdXi.dot(v) + Q.dot(dxdxi))).flatten(), d_XdXiBot, _known)
+                d_XdXiTop = solve_with_known(
+                    _L, (_Ct.dot(dQdXi.dot(u))).flatten(), d_XdXiTop, _known
+                )
+                d_XdXiBot = solve_with_known(
+                    _L,
+                    (_Ct.dot(dQdXi.dot(v) + Q.dot(dxdxi))).flatten(),
+                    d_XdXiBot,
+                    _known,
+                )
 
             d_XdXi = hstack((d_XdXiTop, d_XdXiBot))
             jacobian[:, i + j * vcount] = d_XdXi
