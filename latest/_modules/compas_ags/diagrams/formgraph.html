@@ -97,12 +97,11 @@
 <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">network_is_crossed</span>
 
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;FormGraph&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;FormGraph&quot;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="FormGraph"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.html#compas_ags.diagrams.FormGraph">[docs]</a><span class="k">class</span> <span class="nc">FormGraph</span><span class="p">(</span><span class="n">Network</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A graph representing the geometry and connectivity of the lines of a form diagram.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;A graph representing the geometry and connectivity of the lines of a form diagram.&quot;&quot;&quot;</span>
 
 <div class="viewcode-block" id="FormGraph.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.__init__.html#compas_ags.diagrams.FormGraph.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FormGraph</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
@@ -117,7 +116,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_attribute</span><span class="p">(</span><span class="s1">&#39;z&#39;</span><span class="p">)</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nodes_attribute</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
         <span class="n">zmin</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="n">zmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">zmax</span> <span class="o">-</span> <span class="n">zmin</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">&gt;</span> <span class="mf">0.001</span><span class="p">:</span>
@@ -136,7 +135,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">compas</span><span class="o">.</span><span class="n">IPY</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">compas.rpc</span> <span class="kn">import</span> <span class="n">Proxy</span>
-            <span class="n">planarity</span> <span class="o">=</span> <span class="n">Proxy</span><span class="p">(</span><span class="s1">&#39;planarity&#39;</span><span class="p">)</span>
+
+            <span class="n">planarity</span> <span class="o">=</span> <span class="n">Proxy</span><span class="p">(</span><span class="s2">&quot;planarity&quot;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="kn">import</span> <span class="nn">planarity</span>
         <span class="k">return</span> <span class="n">planarity</span><span class="o">.</span><span class="n">is_planar</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">()))</span></div>
@@ -163,7 +163,8 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">compas</span><span class="o">.</span><span class="n">IPY</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">compas.rpc</span> <span class="kn">import</span> <span class="n">Proxy</span>
-            <span class="n">proxy</span> <span class="o">=</span> <span class="n">Proxy</span><span class="p">(</span><span class="s1">&#39;compas.datastructures&#39;</span><span class="p">)</span>
+
+            <span class="n">proxy</span> <span class="o">=</span> <span class="n">Proxy</span><span class="p">(</span><span class="s2">&quot;compas.datastructures&quot;</span><span class="p">)</span>
 
             <span class="k">def</span> <span class="nf">network_embed_in_plane</span><span class="p">(</span><span class="n">network</span><span class="p">,</span> <span class="n">fixed</span><span class="p">,</span> <span class="n">straightline</span><span class="p">):</span>
                 <span class="n">network</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="n">proxy</span><span class="o">.</span><span class="n">network_embed_in_plane_proxy</span><span class="p">(</span><span class="n">network</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">fixed</span><span class="p">,</span> <span class="n">straightline</span><span class="p">)</span>
@@ -177,7 +178,7 @@
 <span class="c1"># Main</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="k">pass</span>
 </code></pre></div>
         

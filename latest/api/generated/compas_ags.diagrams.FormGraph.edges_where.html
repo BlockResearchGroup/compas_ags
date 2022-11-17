@@ -99,23 +99,23 @@
         
         <section class="detail" id="formgraph-edges-where">
 <h1>FormGraph.edges_where</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.FormGraph.edges_where">
-<code class="sig-prename descclassname">FormGraph.</code><code class="sig-name descname">edges_where</code><span class="sig-paren">(</span><em class="sig-param">conditions</em>, <em class="sig-param">data=False</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.FormGraph.edges_where">
+<span class="sig-prename descclassname"><span class="pre">FormGraph.</span></span><span class="sig-name descname"><span class="pre">edges_where</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conditions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Get edges for which a certain condition or set of conditions is true.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>conditions</strong> (<em>dict</em>) – A set of conditions in the form of key-value pairs.
+<li><p><strong>conditions</strong> (<em>dict, optional</em>) – A set of conditions in the form of key-value pairs.
 The keys should be attribute names. The values can be attribute
 values or ranges of attribute values in the form of min/max pairs.</p></li>
-<li><p><strong>data</strong> (<em>bool, optional</em>) – Yield the edges and their data attributes.
-Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>data</strong> (<em>bool, optional</em>) – If True, yield the edge attributes in addition to the edge identifiers.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict[str, Any], optional</em>) – Additional conditions provided as named function arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>tuple</em> – The next edge identifier (u, v), if <code class="docutils literal notranslate"><span class="pre">data</span></code> is <code class="docutils literal notranslate"><span class="pre">False</span></code>.
-Otherwise, the next edge identifier and its attributes as a ((u, v), attr) tuple.</p>
+<dd class="field-even"><p><em>tuple[hashable, hashable] | tuple[tuple[hashable, hashable], dict[str, Any]]</em> – If <cite>data</cite> is False, the next edge identifier (u, v).
+If <cite>data</cite> is True, the next edge identifier and its attributes as a ((u, v), attr) tuple.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -176,7 +176,10 @@ Otherwise, the next edge identifier and its attributes as a ((u, v), attr) tuple
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">FormGraph.edges_where</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">FormGraph.edges_where</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.FormGraph.edges_where"><code class="docutils literal notranslate"><span class="pre">FormGraph.edges_where()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

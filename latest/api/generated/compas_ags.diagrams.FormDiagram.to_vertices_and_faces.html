@@ -99,25 +99,22 @@
         
         <section class="detail" id="formdiagram-to-vertices-and-faces">
 <h1>FormDiagram.to_vertices_and_faces</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.FormDiagram.to_vertices_and_faces">
-<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">to_vertices_and_faces</code><span class="sig-paren">(</span><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.FormDiagram.to_vertices_and_faces">
+<span class="sig-prename descclassname"><span class="pre">FormDiagram.</span></span><span class="sig-name descname"><span class="pre">to_vertices_and_faces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">triangulated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Return the vertices and faces of a mesh.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><p><em>tuple</em> – A 2-tuple containing</p>
-<ul class="simple">
-<li><p>a list of vertices, represented by their XYZ coordinates, and</p></li>
-<li><p>a list of faces.</p></li>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>triangulated</strong> (<em>bool, optional</em>) – If True, triangulate the faces.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p><em>list[list[float]]</em> – The vertices as a list of XYZ coordinates.</p></li>
+<li><p><em>list[list[int]]</em> – The faces as a list of lists of vertex indices.</p></li>
 </ul>
-<p>Each face is a list of indices referencing the list of vertex coordinates.</p>
 </p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="go">&gt;&gt;&gt;</span>
-</code></pre></div>
-</div>
 </dd></dl>
 
 </section>
@@ -176,7 +173,10 @@
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">FormDiagram.to_vertices_and_faces</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">FormDiagram.to_vertices_and_faces</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.FormDiagram.to_vertices_and_faces"><code class="docutils literal notranslate"><span class="pre">FormDiagram.to_vertices_and_faces()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

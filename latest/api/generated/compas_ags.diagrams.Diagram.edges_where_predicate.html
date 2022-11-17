@@ -99,29 +99,25 @@
         
         <section class="detail" id="diagram-edges-where-predicate">
 <h1>Diagram.edges_where_predicate</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.Diagram.edges_where_predicate">
-<code class="sig-prename descclassname">Diagram.</code><code class="sig-name descname">edges_where_predicate</code><span class="sig-paren">(</span><em class="sig-param">predicate</em>, <em class="sig-param">data=False</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.Diagram.edges_where_predicate">
+<span class="sig-prename descclassname"><span class="pre">Diagram.</span></span><span class="sig-name descname"><span class="pre">edges_where_predicate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predicate</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Get edges for which a certain condition or set of conditions is true using a lambda function.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>predicate</strong> (<em>callable</em>) – The condition you want to evaluate. The callable takes 3 parameters: <code class="docutils literal notranslate"><span class="pre">u</span></code>, <code class="docutils literal notranslate"><span class="pre">v</span></code>, <code class="docutils literal notranslate"><span class="pre">attr</span></code> and should return <code class="docutils literal notranslate"><span class="pre">True</span></code> or <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
-<li><p><strong>data</strong> (<em>bool, optional</em>) – Yield the vertices and their data attributes.
-Default is <code class="docutils literal notranslate"><span class="pre">False</span></code>.</p></li>
+<li><p><strong>predicate</strong> (<em>callable</em>) – The condition you want to evaluate.
+The callable takes 3 parameters:
+the identifier of the first vertex, the identifier of the second vertex, and the edge attributes,
+and should return True or False.</p></li>
+<li><p><strong>data</strong> (<em>bool, optional</em>) – If True, yield the vertex attributes in addition ot the vertex identifiers.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yields<span class="colon">:</span></dt>
-<dd class="field-even"><ul class="simple">
-<li><p><em>2-tuple</em> – The next edge as a (u, v) tuple, if <code class="docutils literal notranslate"><span class="pre">data=False</span></code>.</p></li>
-<li><p><em>3-tuple</em> – The next edge as a (u, v, data) tuple, if <code class="docutils literal notranslate"><span class="pre">data=True</span></code>.</p></li>
-</ul>
+<dd class="field-even"><p><em>tuple[int, int] | tuple[tuple[int, int], dict[str, Any]]</em> – If <cite>data</cite> is False, the next edge as a (u, v) tuple.
+If <cite>data</cite> is True, the next edge as a (u, v, data) tuple.</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="go">&gt;&gt;&gt;</span>
-</code></pre></div>
-</div>
 </dd></dl>
 
 </section>
@@ -180,7 +176,10 @@ Default is <code class="docutils literal notranslate"><span class="pre">False</s
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.edges_where_predicate</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.edges_where_predicate</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.Diagram.edges_where_predicate"><code class="docutils literal notranslate"><span class="pre">Diagram.edges_where_predicate()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

@@ -99,30 +99,26 @@
         
         <section class="detail" id="formgraph-network-laplacian-matrix">
 <h1>FormGraph.network_laplacian_matrix</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.FormGraph.network_laplacian_matrix">
-<code class="sig-prename descclassname">FormGraph.</code><code class="sig-name descname">network_laplacian_matrix</code><span class="sig-paren">(</span><em class="sig-param">normalize=False</em>, <em class="sig-param">rtype='array'</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.FormGraph.network_laplacian_matrix">
+<span class="sig-prename descclassname"><span class="pre">FormGraph.</span></span><span class="sig-name descname"><span class="pre">network_laplacian_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">normalize</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtype</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'array'</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Construct a Laplacian matrix from a Network datastructure.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>network</strong> (<em>obj</em>) – Network datastructure object to get data from.</p></li>
-<li><p><strong>normalize</strong> (<em>bool</em>) – Normalize the entries such that the value on the diagonal is <code class="docutils literal notranslate"><span class="pre">1</span></code>.</p></li>
-<li><p><strong>rtype</strong> (<em>{‘array’, ‘csc’, ‘csr’, ‘coo’, ‘list’}</em>) – Format of the result.</p></li>
+<li><p><strong>network</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Network</span></code>) – Network data structure.</p></li>
+<li><p><strong>normalize</strong> (<em>bool, optional</em>) – If True, normalize the entries such that the value on the diagonal is 1.</p></li>
+<li><p><strong>rtype</strong> (<em>Literal[‘array’, ‘csc’, ‘csr’, ‘coo’, ‘list’], optional</em>) – Format of the result.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>array-like</em> – Constructed Laplacian matrix.</p>
+<dd class="field-even"><p><em>array_like</em> – Constructed Laplacian matrix.</p>
 </dd>
 </dl>
 <p class="rubric">Notes</p>
 <p><code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">L.dot(xyz)</span></code> is currently a vector that points from the centroid to the node.
 Therefore <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">=</span> <span class="pre">xyz</span> <span class="pre">-</span> <span class="pre">d</span></code>. By changing the signs in the laplacian, the dsiplacement
 vectors could be used in a more natural way <code class="docutils literal notranslate"><span class="pre">c</span> <span class="pre">=</span> <span class="pre">xyz</span> <span class="pre">+</span> <span class="pre">d</span></code>.</p>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="go">&gt;&gt;&gt;</span>
-</code></pre></div>
-</div>
 </dd></dl>
 
 </section>
@@ -181,7 +177,10 @@ vectors could be used in a more natural way <code class="docutils literal notran
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">FormGraph.network_laplacian_matrix</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">FormGraph.network_laplacian_matrix</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.FormGraph.network_laplacian_matrix"><code class="docutils literal notranslate"><span class="pre">FormGraph.network_laplacian_matrix()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

@@ -99,24 +99,23 @@
         
         <section class="detail" id="diagram-subdivide">
 <h1>Diagram.subdivide</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.Diagram.subdivide">
-<code class="sig-prename descclassname">Diagram.</code><code class="sig-name descname">subdivide</code><span class="sig-paren">(</span><em class="sig-param">scheme='catmullclark'</em>, <em class="sig-param">**options</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.Diagram.subdivide">
+<span class="sig-prename descclassname"><span class="pre">Diagram.</span></span><span class="sig-name descname"><span class="pre">subdivide</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scheme</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'catmullclark'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Subdivide the input mesh.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mesh</strong> (<em>Mesh</em>) – A mesh object.</p></li>
-<li><p><strong>scheme</strong> (<em>{‘tri’, ‘quad’, ‘corner’, ‘catmullclark’, ‘doosabin’, ‘frames’, ‘loop’}, optional</em>) – The scheme according to which the mesh should be subdivided.
-Default is <code class="docutils literal notranslate"><span class="pre">'catmullclark'</span></code>.</p></li>
-<li><p><strong>options</strong> (<em>dict</em>) – Optional additional keyword arguments.</p></li>
+<li><p><strong>mesh</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh</span></code>) – A mesh object.</p></li>
+<li><p><strong>scheme</strong> (<em>Literal[‘tri’, ‘quad’, ‘corner’, ‘catmullclark’, ‘doosabin’, ‘frames’, ‘loop’], optional</em>) – The scheme according to which the mesh should be subdivided.</p></li>
+<li><p><strong>**options</strong> (<em>dict[str, Any], optional</em>) – Optional additional keyword arguments.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Mesh</em> – The subdivided mesh.</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh</span></code> – The subdivided mesh.</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If the scheme is not supported.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If the scheme is not supported.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -177,7 +176,10 @@ Default is <code class="docutils literal notranslate"><span class="pre">'catmull
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.subdivide</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.subdivide</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.Diagram.subdivide"><code class="docutils literal notranslate"><span class="pre">Diagram.subdivide()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

@@ -99,27 +99,27 @@
         
         <section class="detail" id="formgraph-node-attributes">
 <h1>FormGraph.node_attributes</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.FormGraph.node_attributes">
-<code class="sig-prename descclassname">FormGraph.</code><code class="sig-name descname">node_attributes</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">names=None</em>, <em class="sig-param">values=None</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.FormGraph.node_attributes">
+<span class="sig-prename descclassname"><span class="pre">FormGraph.</span></span><span class="sig-name descname"><span class="pre">node_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Get or set multiple attributes of a node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>key</strong> (<em>hashable</em>) – The identifier of the node.</p></li>
-<li><p><strong>names</strong> (<em>list, optional</em>) – A list of attribute names.</p></li>
-<li><p><strong>values</strong> (<em>list, optional</em>) – A list of attribute values.</p></li>
+<li><p><strong>names</strong> (<em>list[str], optional</em>) – A list of attribute names.</p></li>
+<li><p><strong>values</strong> (<em>list[Any], optional</em>) – A list of attribute values.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>dict, list or None</em> – If the parameter <code class="docutils literal notranslate"><span class="pre">names</span></code> is empty,
+<dd class="field-even"><p><em>dict[str, Any] | list[Any] | None</em> – If the parameter <cite>names</cite> is empty,
 the function returns a dictionary of all attribute name-value pairs of the node.
-If the parameter <code class="docutils literal notranslate"><span class="pre">names</span></code> is not empty,
+If the parameter <cite>names</cite> is not empty,
 the function returns a list of the values corresponding to the requested attribute names.
-The function returns <code class="docutils literal notranslate"><span class="pre">None</span></code> if it is used as a “setter”.</p>
+The function returns None if it is used as a “setter”.</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.10)"><strong>KeyError</strong></a> – If the node does not exist.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.11)"><strong>KeyError</strong></a> – If the node does not exist.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -180,7 +180,10 @@ The function returns <code class="docutils literal notranslate"><span class="pre
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">FormGraph.node_attributes</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">FormGraph.node_attributes</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.FormGraph.node_attributes"><code class="docutils literal notranslate"><span class="pre">FormGraph.node_attributes()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

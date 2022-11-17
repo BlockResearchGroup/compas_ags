@@ -99,17 +99,17 @@
         
         <section class="detail" id="formdiagram-vertices">
 <h1>FormDiagram.vertices</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.FormDiagram.vertices">
-<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">vertices</code><span class="sig-paren">(</span><em class="sig-param">data=False</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.FormDiagram.vertices">
+<span class="sig-prename descclassname"><span class="pre">FormDiagram.</span></span><span class="sig-name descname"><span class="pre">vertices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Iterate over the vertices of the mesh.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<em>bool, optional</em>) – Return the vertex data as well as the vertex keys.</p>
+<dd class="field-odd"><p><strong>data</strong> (<em>bool, optional</em>) – If True, yield the vertex attributes in addition to the vertex identifiers.</p>
 </dd>
 <dt class="field-even">Yields<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>int or tuple</em> – The next vertex identifier, if <code class="docutils literal notranslate"><span class="pre">data</span></code> is false.
-The next vertex as a (key, attr) tuple, if <code class="docutils literal notranslate"><span class="pre">data</span></code> is true.</p>
+<dd class="field-even"><p><em>int | tuple[int, dict[str, Any]]</em> – If <cite>data</cite> is False, the next vertex identifier.
+If <cite>data</cite> is True, the next vertex as a (key, attr) tuple.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -170,7 +170,10 @@ The next vertex as a (key, attr) tuple, if <code class="docutils literal notrans
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">FormDiagram.vertices</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">FormDiagram.vertices</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.FormDiagram.vertices"><code class="docutils literal notranslate"><span class="pre">FormDiagram.vertices()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

@@ -24,7 +24,7 @@
   
 
   
-  <link rel="prev" title="ForceDiagram.remove_unused_vertices" href="compas_ags.diagrams.ForceDiagram.remove_unused_vertices.html" />
+  <link rel="prev" title="ForceDiagram.sha256" href="compas_ags.diagrams.ForceDiagram.sha256.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -99,22 +99,22 @@
         
         <section class="detail" id="forcediagram-slice-plane">
 <h1>ForceDiagram.slice_plane</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.ForceDiagram.slice_plane">
-<code class="sig-prename descclassname">ForceDiagram.</code><code class="sig-name descname">slice_plane</code><span class="sig-paren">(</span><em class="sig-param">plane</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.ForceDiagram.slice_plane">
+<span class="sig-prename descclassname"><span class="pre">ForceDiagram.</span></span><span class="sig-name descname"><span class="pre">slice_plane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">plane</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Slice a mesh with a plane and construct the resulting submeshes.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mesh</strong> (<em>compas.datastructures.Mesh</em>) – The original mesh.</p></li>
-<li><p><strong>plane</strong> (<em>compas.geometry.Plane</em>) – The cutting plane.</p></li>
+<li><p><strong>mesh</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh</span></code>) – The original mesh.</p></li>
+<li><p><strong>plane</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Plane</span></code>) – The cutting plane.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None or tuple of <code class="xref py py-class docutils literal notranslate"><span class="pre">compas.datastructures.Mesh</span></code> – If the mesh and plane do not intersect,
+<dd class="field-even"><p>tuple[<code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh</span></code>] | None – The “positive” and “negative” submeshes.
+If the mesh and plane do not intersect,
 or if the intersection is degenerate (point or line),
-the function returns <code class="docutils literal notranslate"><span class="pre">None</span></code>.
-Otherwise, the “positive” and “negative” submeshes are returned.</p>
+the function returns None.</p>
 </dd>
 </dl>
 <p class="rubric">Examples</p>
@@ -187,7 +187,10 @@ Otherwise, the “positive” and “negative” submeshes are returned.</p>
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">ForceDiagram.slice_plane</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">ForceDiagram.slice_plane</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.ForceDiagram.slice_plane"><code class="docutils literal notranslate"><span class="pre">ForceDiagram.slice_plane()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>
@@ -199,11 +202,11 @@ Otherwise, the “positive” and “negative” submeshes are returned.</p>
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-      <a href="compas_ags.diagrams.ForceDiagram.remove_unused_vertices.html" title="ForceDiagram.remove_unused_vertices" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+      <a href="compas_ags.diagrams.ForceDiagram.sha256.html" title="ForceDiagram.sha256" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
         <div class="nav-title flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Previous</div>
-          ForceDiagram.remove_unused_vertices
+          ForceDiagram.sha256
         </div>
       </a>
       

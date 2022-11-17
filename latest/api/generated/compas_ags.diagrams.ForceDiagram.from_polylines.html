@@ -99,9 +99,9 @@
         
         <section class="detail" id="forcediagram-from-polylines">
 <h1>ForceDiagram.from_polylines</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.ForceDiagram.from_polylines">
-<em class="property">classmethod </em><code class="sig-prename descclassname">ForceDiagram.</code><code class="sig-name descname">from_polylines</code><span class="sig-paren">(</span><em class="sig-param">boundary_polylines</em>, <em class="sig-param">other_polylines</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.ForceDiagram.from_polylines">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">ForceDiagram.</span></span><span class="sig-name descname"><span class="pre">from_polylines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">boundary_polylines</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">other_polylines</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Construct mesh from polylines.</p>
 <p>Based on construction from_lines,
 with removal of vertices that are not polyline extremities
@@ -111,12 +111,12 @@ that could overlap and yield a wrong connectivity if using from_lines based on t
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>boundary_polylines</strong> (<em>list</em>) – List of polylines representing boundaries as lists of vertex coordinates.</p></li>
-<li><p><strong>other_polylines</strong> (<em>list</em>) – List of the other polylines as lists of vertex coordinates.</p></li>
+<li><p><strong>boundary_polylines</strong> (<em>list[list[float]]</em>) – List of polylines representing boundaries as lists of vertex coordinates.</p></li>
+<li><p><strong>other_polylines</strong> (<em>list[list[float]]</em>) – List of the other polylines as lists of vertex coordinates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Mesh</em> – A mesh object.</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh</span></code> – A mesh object.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -177,7 +177,10 @@ that could overlap and yield a wrong connectivity if using from_lines based on t
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">ForceDiagram.from_polylines</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">ForceDiagram.from_polylines</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.ForceDiagram.from_polylines"><code class="docutils literal notranslate"><span class="pre">ForceDiagram.from_polylines()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

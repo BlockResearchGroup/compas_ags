@@ -99,32 +99,28 @@
         
         <section class="detail" id="formgraph-split-edge">
 <h1>FormGraph.split_edge</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.FormGraph.split_edge">
-<code class="sig-prename descclassname">FormGraph.</code><code class="sig-name descname">split_edge</code><span class="sig-paren">(</span><em class="sig-param">u</em>, <em class="sig-param">v</em>, <em class="sig-param">t=0.5</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.FormGraph.split_edge">
+<span class="sig-prename descclassname"><span class="pre">FormGraph.</span></span><span class="sig-name descname"><span class="pre">split_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Split and edge by inserting a node along its length.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>u</strong> (<em>str</em>) – The key of the first node of the edge.</p></li>
 <li><p><strong>v</strong> (<em>str</em>) – The key of the second node of the edge.</p></li>
-<li><p><strong>t</strong> (<em>float</em>) – The position of the inserted node.</p></li>
+<li><p><strong>t</strong> (<em>float, optional</em>) – The position of the inserted node on the edge.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>str</em> – The key of the inserted node.</p>
+<dd class="field-even"><p><em>hashable</em> – The key of the inserted node.</p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If <cite>t</cite> is not <cite>0 &lt;= t &lt;= 1</cite>.</p></li>
-<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.10)"><strong>Exception</strong></a> – If <cite>u</cite> and <cite>v</cite> are not neighbors.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If <cite>t</cite> is not in the range 0-1.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><strong>Exception</strong></a> – If <cite>u</cite> and <cite>v</cite> are not neighbors.</p></li>
 </ul>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="go">&gt;&gt;&gt;</span>
-</code></pre></div>
-</div>
 </dd></dl>
 
 </section>
@@ -183,7 +179,10 @@
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">FormGraph.split_edge</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">FormGraph.split_edge</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.FormGraph.split_edge"><code class="docutils literal notranslate"><span class="pre">FormGraph.split_edge()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

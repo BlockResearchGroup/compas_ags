@@ -99,25 +99,21 @@
         
         <section class="detail" id="diagram-from-shape">
 <h1>Diagram.from_shape</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.Diagram.from_shape">
-<em class="property">classmethod </em><code class="sig-prename descclassname">Diagram.</code><code class="sig-name descname">from_shape</code><span class="sig-paren">(</span><em class="sig-param">shape</em>, <em class="sig-param">**kwargs</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.Diagram.from_shape">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Diagram.</span></span><span class="sig-name descname"><span class="pre">from_shape</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shape</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Construct a mesh from a primitive shape.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>shape</strong> (:class: <cite>compas.geometry.shape</cite>) – The input shape to generate a mesh from.</p></li>
-<li><p><strong>kwargs</strong> – Optional keyword arguments <code class="docutils literal notranslate"><span class="pre">u</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code> for the resolution in u (Torus, Sphere, Cylinder, Cone) and v direction (Torus and Sphere).</p></li>
+<li><p><strong>shape</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Shape</span></code>) – The input shape to generate a mesh from.</p></li>
+<li><p><strong>**kwargs</strong> (<em>dict[str, Any], optional</em>) – Optional keyword arguments to be passed on to <code class="xref py py-meth docutils literal notranslate"><span class="pre">compas.geometry.Shape.to_vertices_and_faces()</span></code>.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Mesh</em> – A mesh object.</p>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh</span></code> – A mesh object.</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="go">&gt;&gt;&gt;</span>
-</code></pre></div>
-</div>
 </dd></dl>
 
 </section>
@@ -176,7 +172,10 @@
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.from_shape</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.from_shape</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.Diagram.from_shape"><code class="docutils literal notranslate"><span class="pre">Diagram.from_shape()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

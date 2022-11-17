@@ -99,29 +99,29 @@
         
         <section class="detail" id="formdiagram-collapse-edge">
 <h1>FormDiagram.collapse_edge</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.FormDiagram.collapse_edge">
-<code class="sig-prename descclassname">FormDiagram.</code><code class="sig-name descname">collapse_edge</code><span class="sig-paren">(</span><em class="sig-param">u</em>, <em class="sig-param">v</em>, <em class="sig-param">t=0.5</em>, <em class="sig-param">allow_boundary=False</em>, <em class="sig-param">fixed=None</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.FormDiagram.collapse_edge">
+<span class="sig-prename descclassname"><span class="pre">FormDiagram.</span></span><span class="sig-name descname"><span class="pre">collapse_edge</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">u</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">t</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fixed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Collapse an edge to its first or second vertex, or to an intermediate point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mesh</strong> (<em>compas.datastructures.Mesh</em>) – Instance of a mesh.</p></li>
+<li><p><strong>mesh</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh</span></code>) – Instance of a mesh.</p></li>
 <li><p><strong>u</strong> (<em>str</em>) – The first vertex of the (half-) edge.</p></li>
 <li><p><strong>v</strong> (<em>str</em>) – The second vertex of the (half-) edge.</p></li>
-<li><p><strong>t</strong> (<em>float (0.5)</em>) – Determines where to collapse to.
-If <cite>t == 0.0</cite> collapse to <cite>u</cite>.
-If <cite>t == 1.0</cite> collapse to <cite>v</cite>.
-If <cite>0.0 &lt; t &lt; 1.0</cite>, collapse to a point between <cite>u</cite> and <cite>v</cite>.</p></li>
-<li><p><strong>allow_boundary</strong> (<em>bool (False)</em>) – Allow collapses involving boundary vertices.</p></li>
-<li><p><strong>fixed</strong> (<em>list (None)</em>) – A list of identifiers of vertices that should stay fixed.</p></li>
+<li><p><strong>t</strong> (<em>float, optional</em>) – Determines where to collapse to.
+If <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">==</span> <span class="pre">0.0</span></code> collapse to <cite>u</cite>.
+If <code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">==</span> <span class="pre">1.0</span></code> collapse to <cite>v</cite>.
+If <code class="docutils literal notranslate"><span class="pre">0.0</span> <span class="pre">&lt;</span> <span class="pre">t</span> <span class="pre">&lt;</span> <span class="pre">1.0</span></code>, collapse to a point between <cite>u</cite> and <cite>v</cite>.</p></li>
+<li><p><strong>allow_boundary</strong> (<em>bool, optional</em>) – If True, allow collapses involving boundary vertices.</p></li>
+<li><p><strong>fixed</strong> (<em>list[int], optional</em>) – A list of identifiers of vertices that should stay fixed.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p><em>None</em></p>
 </dd>
 <dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.10)"><strong>ValueError</strong></a> – If <cite>u</cite> and <cite>v</cite> are not neighbors.</p>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – If <cite>u</cite> and <cite>v</cite> are not neighbors.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -182,7 +182,10 @@ If <cite>0.0 &lt; t &lt; 1.0</cite>, collapse to a point between <cite>u</cite> 
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">FormDiagram.collapse_edge</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">FormDiagram.collapse_edge</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.FormDiagram.collapse_edge"><code class="docutils literal notranslate"><span class="pre">FormDiagram.collapse_edge()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

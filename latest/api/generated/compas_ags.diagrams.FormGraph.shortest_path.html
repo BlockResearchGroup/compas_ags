@@ -24,7 +24,7 @@
   
 
   
-  <link rel="prev" title="FormGraph.number_of_nodes" href="compas_ags.diagrams.FormGraph.number_of_nodes.html" />
+  <link rel="prev" title="FormGraph.sha256" href="compas_ags.diagrams.FormGraph.sha256.html" />
   
 
   <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
@@ -99,26 +99,22 @@
         
         <section class="detail" id="formgraph-shortest-path">
 <h1>FormGraph.shortest_path</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.FormGraph.shortest_path">
-<code class="sig-prename descclassname">FormGraph.</code><code class="sig-name descname">shortest_path</code><span class="sig-paren">(</span><em class="sig-param">start</em>, <em class="sig-param">end</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.FormGraph.shortest_path">
+<span class="sig-prename descclassname"><span class="pre">FormGraph.</span></span><span class="sig-name descname"><span class="pre">shortest_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Find the shortest path between two nodes of the network.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>network</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">compas.datastructures.Network</span></code>)</p></li>
-<li><p><strong>start</strong> (<em>int</em>)</p></li>
-<li><p><strong>end</strong> (<em>int</em>)</p></li>
+<li><p><strong>network</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Network</span></code>) – A network data structure.</p></li>
+<li><p><strong>start</strong> (<em>hashable</em>) – The identifier of the start node.</p></li>
+<li><p><strong>end</strong> (<em>hashable</em>) – The identifier of the end node.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>list of int</em> – The nodes of the network leading from start to end.</p>
+<dd class="field-even"><p><em>list[hashable]</em> – The nodes of the network leading from start to end.</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="go">&gt;&gt;&gt;</span>
-</code></pre></div>
-</div>
 </dd></dl>
 
 </section>
@@ -177,7 +173,10 @@
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">FormGraph.shortest_path</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">FormGraph.shortest_path</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.FormGraph.shortest_path"><code class="docutils literal notranslate"><span class="pre">FormGraph.shortest_path()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>
@@ -189,11 +188,11 @@
   <footer class="compas-footer">
     <nav class="nav p-2">
       
-      <a href="compas_ags.diagrams.FormGraph.number_of_nodes.html" title="FormGraph.number_of_nodes" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
+      <a href="compas_ags.diagrams.FormGraph.sha256.html" title="FormGraph.sha256" class="nav-link footer-link float-start text-left d-flex w-50" rel="prev">
         <div class="nav-button p-2 m-2"><i class="fas fa-arrow-left"></i></div>
         <div class="nav-title flex-grow-1 align-self-center">
           <div class="nav-direction small font-weight-light">Previous</div>
-          FormGraph.number_of_nodes
+          FormGraph.sha256
         </div>
       </a>
       

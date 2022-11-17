@@ -99,29 +99,28 @@
         
         <section class="detail" id="diagram-smooth-area">
 <h1>Diagram.smooth_area</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.Diagram.smooth_area">
-<code class="sig-prename descclassname">Diagram.</code><code class="sig-name descname">smooth_area</code><span class="sig-paren">(</span><em class="sig-param">fixed=None</em>, <em class="sig-param">kmax=100</em>, <em class="sig-param">damping=0.5</em>, <em class="sig-param">callback=None</em>, <em class="sig-param">callback_args=None</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.Diagram.smooth_area">
+<span class="sig-prename descclassname"><span class="pre">Diagram.</span></span><span class="sig-name descname"><span class="pre">smooth_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fixed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kmax</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">damping</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback_args</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Smooth a mesh by moving each vertex to the barycenter of the centroids of the surrounding faces, weighted by area.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>mesh</strong> (<em>Mesh</em>) – A mesh object.</p></li>
-<li><p><strong>fixed</strong> (<em>list, optional</em>) – The fixed vertices of the mesh.</p></li>
+<li><p><strong>mesh</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">Mesh</span></code>) – A mesh object.</p></li>
+<li><p><strong>fixed</strong> (<em>list[int], optional</em>) – The fixed vertices of the mesh.</p></li>
 <li><p><strong>kmax</strong> (<em>int, optional</em>) – The maximum number of iterations.</p></li>
 <li><p><strong>damping</strong> (<em>float, optional</em>) – The damping factor.</p></li>
 <li><p><strong>callback</strong> (<em>callable, optional</em>) – A user-defined callback function to be executed after every iteration.</p></li>
-<li><p><strong>callback_args</strong> (<em>list, optional</em>) – A list of arguments to be passed to the callback.</p></li>
+<li><p><strong>callback_args</strong> (<em>list[Any], optional</em>) – A list of arguments to be passed to the callback.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.10)"><strong>Exception</strong></a> – If a callback is provided, but it is not callable.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><strong>Exception</strong></a> – If a callback is provided, but it is not callable.</p>
 </dd>
 </dl>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="go">&gt;&gt;&gt;</span>
-</code></pre></div>
-</div>
 </dd></dl>
 
 </section>
@@ -180,7 +179,10 @@
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.smooth_area</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.smooth_area</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.Diagram.smooth_area"><code class="docutils literal notranslate"><span class="pre">Diagram.smooth_area()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>

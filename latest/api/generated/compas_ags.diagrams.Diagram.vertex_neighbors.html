@@ -99,20 +99,19 @@
         
         <section class="detail" id="diagram-vertex-neighbors">
 <h1>Diagram.vertex_neighbors</h1>
-<dl class="method">
-<dt id="compas_ags.diagrams.Diagram.vertex_neighbors">
-<code class="sig-prename descclassname">Diagram.</code><code class="sig-name descname">vertex_neighbors</code><span class="sig-paren">(</span><em class="sig-param">key</em>, <em class="sig-param">ordered=False</em><span class="sig-paren">)</span></dt>
+<dl class="py method">
+<dt class="sig sig-object py" id="compas_ags.diagrams.Diagram.vertex_neighbors">
+<span class="sig-prename descclassname"><span class="pre">Diagram.</span></span><span class="sig-name descname"><span class="pre">vertex_neighbors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ordered</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span></dt>
 <dd><p>Return the neighbors of a vertex.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>key</strong> (<em>int</em>) – The identifier of the vertex.</p></li>
-<li><p><strong>ordered</strong> (<em>bool, optional</em>) – Return the neighbors in the cycling order of the faces.
-Default is false.</p></li>
+<li><p><strong>ordered</strong> (<em>bool, optional</em>) – If True, return the neighbors in the cycling order of the faces.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>list</em> – The list of neighboring vertices.
+<dd class="field-even"><p><em>list[int]</em> – The list of neighboring vertices.
 If the vertex lies on the boundary of the mesh,
 an ordered list always starts and ends with with boundary vertices.</p>
 </dd>
@@ -123,10 +122,6 @@ the node in the opposite direction as the cycling direction of the faces.
 For some algorithms this produces the expected results. For others it doesn’t.
 For example, a dual mesh constructed relying on these conventions will have
 oposite face cycle directions compared to the original.</p>
-<p class="rubric">Examples</p>
-<div class="doctest language-python notranslate"><div class="highlight"><pre><button class="btn copy"><i class="far fa-copy"></i></button><code><span></span><span class="go">&gt;&gt;&gt;</span>
-</code></pre></div>
-</div>
 </dd></dl>
 
 </section>
@@ -185,7 +180,10 @@ oposite face cycle directions compared to the original.</p>
       <div class="d-none d-xl-block col-xl-2 compas-toc" role="toc">
         
         <ul class="nav flex-column" id="compas-toc">
-<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.vertex_neighbors</a></li>
+<li class="nav-item"><a class="nav-link reference internal" href="#">Diagram.vertex_neighbors</a><ul class="nav flex-column">
+<li class="nav-item"><a class="nav-link reference internal" href="#compas_ags.diagrams.Diagram.vertex_neighbors"><code class="docutils literal notranslate"><span class="pre">Diagram.vertex_neighbors()</span></code></a></li>
+</ul>
+</li>
 </ul>
 
       </div>
