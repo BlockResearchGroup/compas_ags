@@ -16,12 +16,12 @@ from compas_ags.ags.core import update_primal_from_dual
 
 
 __all__ = [
-    'compute_loadpath',
-    'compute_external_work',
-    'compute_internal_work',
-    'compute_internal_work_tension',
-    'compute_internal_work_compression',
-    'optimise_loadpath'
+    "compute_loadpath",
+    "compute_external_work",
+    "compute_internal_work",
+    "compute_internal_work_tension",
+    "compute_internal_work_compression",
+    "optimise_loadpath",
 ]
 
 
@@ -70,16 +70,18 @@ def compute_external_work(form, force):
     vertex_index = form.vertex_index()
     xy = array(form.xy(), dtype=float64)
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
-    C = connectivity_matrix(edges, 'csr')
+    C = connectivity_matrix(edges, "csr")
 
     _vertex_index = force.vertex_index()
     _xy = force.xy()
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
-    _C = connectivity_matrix(_edges, 'csr')
+    _C = connectivity_matrix(_edges, "csr")
 
     leaves = set(form.leaves())
-    external = [i for i, (u, v) in enumerate(form.edges()) if u in leaves or v in leaves]
+    external = [
+        i for i, (u, v) in enumerate(form.edges()) if u in leaves or v in leaves
+    ]
 
     lengths = normrow(C.dot(xy))
     forces = normrow(_C.dot(_xy))
@@ -110,16 +112,20 @@ def compute_internal_work(form, force):
     vertex_index = form.vertex_index()
     xy = array(form.xy(), dtype=float64)
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
-    C = connectivity_matrix(edges, 'csr')
+    C = connectivity_matrix(edges, "csr")
 
     _vertex_index = force.vertex_index()
     _xy = force.xy()
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
-    _C = connectivity_matrix(_edges, 'csr')
+    _C = connectivity_matrix(_edges, "csr")
 
     leaves = set(form.leaves())
-    internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
+    internal = [
+        i
+        for i, (u, v) in enumerate(form.edges())
+        if u not in leaves and v not in leaves
+    ]
 
     lengths = normrow(C.dot(xy))
     forces = normrow(_C.dot(_xy))
@@ -150,17 +156,21 @@ def compute_internal_work_tension(form, force):
     vertex_index = form.vertex_index()
     xy = array(form.xy(), dtype=float64)
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
-    C = connectivity_matrix(edges, 'csr')
+    C = connectivity_matrix(edges, "csr")
     q = array(form.q(), dtype=float64).reshape((-1, 1))
 
     _vertex_index = force.vertex_index()
     _xy = force.xy()
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
-    _C = connectivity_matrix(_edges, 'csr')
+    _C = connectivity_matrix(_edges, "csr")
 
     leaves = set(form.leaves())
-    internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
+    internal = [
+        i
+        for i, (u, v) in enumerate(form.edges())
+        if u not in leaves and v not in leaves
+    ]
     tension = [i for i in internal if q[i, 0] > 0]
 
     lengths = normrow(C.dot(xy))
@@ -192,17 +202,21 @@ def compute_internal_work_compression(form, force):
     vertex_index = form.vertex_index()
     xy = array(form.xy(), dtype=float64)
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
-    C = connectivity_matrix(edges, 'csr')
+    C = connectivity_matrix(edges, "csr")
     q = array(form.q(), dtype=float64).reshape((-1, 1))
 
     _vertex_index = force.vertex_index()
     _xy = force.xy()
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
-    _C = connectivity_matrix(_edges, 'csr')
+    _C = connectivity_matrix(_edges, "csr")
 
     leaves = set(form.leaves())
-    internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
+    internal = [
+        i
+        for i, (u, v) in enumerate(form.edges())
+        if u not in leaves and v not in leaves
+    ]
     compression = [i for i in internal if q[i, 0] < 0]
 
     lengths = normrow(C.dot(xy))
@@ -211,7 +225,7 @@ def compute_internal_work_compression(form, force):
     return lengths[compression].T.dot(forces[compression])[0, 0]
 
 
-def optimise_loadpath(form, force, algo='COBYLA'):
+def optimise_loadpath(form, force, algo="COBYLA"):
     """Optimise the loadpath using the parameters of the force domain. The parameters
     of the force domain are the coordinates of the vertices of the force diagram.
 
@@ -253,18 +267,29 @@ def optimise_loadpath(form, force, algo='COBYLA'):
     """
     vertex_index = form.vertex_index()
     edge_index = form.edge_index()
-    i_j = {vertex_index[vertex]: [vertex_index[nbr] for nbr in form.vertex_neighbors(vertex)] for vertex in form.vertices()}
+    i_j = {
+        vertex_index[vertex]: [
+            vertex_index[nbr] for nbr in form.vertex_neighbors(vertex)
+        ]
+        for vertex in form.vertices()
+    }
     ij_e = {(vertex_index[u], vertex_index[v]): edge_index[u, v] for u, v in edge_index}
-    ij_e.update({(vertex_index[v], vertex_index[u]): edge_index[u, v] for u, v in edge_index})
+    ij_e.update(
+        {(vertex_index[v], vertex_index[u]): edge_index[u, v] for u, v in edge_index}
+    )
 
     xy = array(form.xy(), dtype=float64)
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
-    C = connectivity_matrix(edges, 'csr')
+    C = connectivity_matrix(edges, "csr")
 
     leaves = [vertex_index[key] for key in form.leaves()]
     fixed = [vertex_index[key] for key in form.fixed()]
     free = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
-    internal = [i for i, (u, v) in enumerate(form.edges()) if vertex_index[u] not in leaves and vertex_index[v] not in leaves]
+    internal = [
+        i
+        for i, (u, v) in enumerate(form.edges())
+        if vertex_index[u] not in leaves and vertex_index[v] not in leaves
+    ]
 
     _vertex_index = force.vertex_index()
     _edge_index = force.edge_index(form)
@@ -273,9 +298,9 @@ def optimise_loadpath(form, force, algo='COBYLA'):
     _xy = array(force.xy(), dtype=float64)
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
-    _C = connectivity_matrix(_edges, 'csr')
+    _C = connectivity_matrix(_edges, "csr")
 
-    _free = [key for key, attr in force.vertices(True) if attr['is_param']]
+    _free = [key for key, attr in force.vertices(True) if attr["is_param"]]
     _free = [_vertex_index[key] for key in _free]
 
     def objfunc(_x):
@@ -288,11 +313,13 @@ def optimise_loadpath(form, force, algo='COBYLA'):
         lp = length[internal].T.dot(force[internal])[0, 0]
 
         print(lp)
-        return(lp)
+        return lp
 
     x0 = _xy[_free, 0]
 
-    result = minimize(objfunc, x0, method=algo, tol=1e-12, options={'maxiter': 1000})  # noqa: F841
+    result = minimize(
+        objfunc, x0, method=algo, tol=1e-12, options={"maxiter": 1000}
+    )  # noqa: F841
 
     uv = C.dot(xy)
     _uv = _C.dot(_xy)
@@ -303,29 +330,29 @@ def optimise_loadpath(form, force, algo='COBYLA'):
 
     for vertex, attr in form.vertices(True):
         index = vertex_index[vertex]
-        attr['x'] = xy[index, 0]
-        attr['y'] = xy[index, 1]
+        attr["x"] = xy[index, 0]
+        attr["y"] = xy[index, 1]
 
     for edge, attr in form.edges(True):
         index = edge_index[edge]
-        attr['l'] = lengths[index, 0]
-        attr['a'] = angles[index]
+        attr["l"] = lengths[index, 0]
+        attr["a"] = angles[index]
         if (angles[index] - 3.14159) ** 2 < 0.25 * 3.14159:
-            attr['f'] = - forces[index, 0]
-            attr['q'] = - q[index, 0]
+            attr["f"] = -forces[index, 0]
+            attr["q"] = -q[index, 0]
         else:
-            attr['f'] = forces[index, 0]
-            attr['q'] = q[index, 0]
+            attr["f"] = forces[index, 0]
+            attr["q"] = q[index, 0]
 
     for vertex, attr in force.vertices(True):
         index = _vertex_index[vertex]
-        attr['x'] = _xy[index, 0]
-        attr['y'] = _xy[index, 1]
+        attr["x"] = _xy[index, 0]
+        attr["y"] = _xy[index, 1]
 
     for edge, attr in force.edges(True):
         index = _edge_index[edge]
-        attr['a'] = angles[index]
-        attr['l'] = forces[index, 0]
+        attr["a"] = angles[index]
+        attr["l"] = forces[index, 0]
 
     return form, force
 
