@@ -14,7 +14,7 @@ from compas_plotters import MeshPlotter
 # Construct the graph of a Fink truss.
 # ==============================================================================
 
-graph = FormGraph.from_obj(compas_ags.get('paper/fink.obj'))
+graph = FormGraph.from_obj(compas_ags.get("paper/fink.obj"))
 
 # ==============================================================================
 # Identify the fixed points of the graph.
@@ -53,22 +53,22 @@ if embedding.is_crossed():
     length = 0.5 * L / E
 
     for node in noleaves.nodes():
-        embedding.node_attributes(node, 'xy', noleaves.node_attributes(node, 'xy'))
+        embedding.node_attributes(node, "xy", noleaves.node_attributes(node, "xy"))
 
     for node in embedding.leaves():
         u = embedding.neighbors(node)[0]
         if u in fixed:
             continue
 
-        a = embedding.node_attributes(u, 'xyz')
+        a = embedding.node_attributes(u, "xyz")
 
         vectors = []
         for v in noleaves.neighbors(u):
-            b = embedding.node_attributes(v, 'xyz')
+            b = embedding.node_attributes(v, "xyz")
             vectors.append(normalize_vector(subtract_vectors(b, a)))
 
         ab = scale_vector(normalize_vector(scale_vector(sum_vectors(vectors), 1 / len(vectors))), length)
-        embedding.node_attributes(node, 'xyz', subtract_vectors(a, ab))
+        embedding.node_attributes(node, "xyz", subtract_vectors(a, ab))
 
 # ==============================================================================
 # Construct a form diagram of the embedding
@@ -81,6 +81,6 @@ form = FormDiagram.from_graph(embedding)
 # ==============================================================================
 
 plotter = MeshPlotter(form, figsize=(12, 7.5))
-plotter.draw_vertices(text='key', radius=0.3)
+plotter.draw_vertices(text="key", radius=0.3)
 plotter.draw_edges()
 plotter.show()
