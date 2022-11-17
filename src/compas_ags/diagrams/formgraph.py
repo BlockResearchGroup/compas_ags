@@ -77,9 +77,7 @@ class FormGraph(Network):
             proxy = Proxy("compas.datastructures")
 
             def network_embed_in_plane(network, fixed, straightline):
-                network.data = proxy.network_embed_in_plane_proxy(
-                    network.data, fixed, straightline
-                )
+                network.data = proxy.network_embed_in_plane_proxy(network.data, fixed, straightline)
 
         else:
             from compas.datastructures import network_embed_in_plane

@@ -1,36 +1,29 @@
-name: Release
-
 on:
   push:
     tags:
       - 'v*'
 
+name: Create Release
+
 jobs:
-  Release:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ['3.8', '3.9', '3.10']
+
     steps:
-
-      - uses: actions/checkout@v2
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: compas-dev/compas-actions.build@v2
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          draft: false
-          prerelease: false
+          python: ${{ matrix.python }}
+          test_lint: true
 
   Publish:
-    needs: Release
+    needs: build
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-    - uses: compas-dev/compas-actions.publish@v1.0.0
-      with:
-        token: ${{ secrets.PYPI }}
+      - uses: compas-dev/compas-actions.publish@v2
+        with:
+          pypi_token: ${{ secrets.PYPI }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
