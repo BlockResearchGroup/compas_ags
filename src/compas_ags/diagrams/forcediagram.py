@@ -16,9 +16,7 @@ class ForceDiagram(Diagram):
     def __init__(self):
         super(ForceDiagram, self).__init__()
         self.attributes.update({"name": "Force"})
-        self.update_default_vertex_attributes(
-            {"is_fixed": False, "line_constraint": None, "is_param": False}
-        )
+        self.update_default_vertex_attributes({"is_fixed": False, "line_constraint": None, "is_param": False})
         self.update_default_edge_attributes({"l": 0.0, "target_vector": None})
 
     # --------------------------------------------------------------------------
@@ -312,9 +310,7 @@ class ForceDiagram(Diagram):
         ordered_edges = self.ordered_edges(self.dual)
         edges_orient = []
 
-        for edge in self.edges_where_dual(
-            {"is_ind": True}
-        ):  # Fix vertices of dual independent edge
+        for edge in self.edges_where_dual({"is_ind": True}):  # Fix vertices of dual independent edge
             self.vertices_attribute("is_fixed", True, keys=edge)
             edges_orient.append(edge)
 

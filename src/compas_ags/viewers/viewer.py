@@ -106,18 +106,10 @@ class Viewer(object):
         vertexlabel = vertexlabel or {}
         edgelabel = edgelabel or {}
         facelabel = facelabel or {}
-        vertexsize = size_to_sizedict(
-            vertexsize, self.form.vertices(), self.default_vertexsize
-        )
-        vertexcolor = color_to_colordict(
-            vertexcolor, self.form.vertices(), self.default_vertexcolor
-        )
-        edgecolor = color_to_colordict(
-            edgecolor, self.form.edges(), self.default_edgecolor
-        )
-        facecolor = color_to_colordict(
-            facecolor, self.form.faces(), self.default_facecolor
-        )
+        vertexsize = size_to_sizedict(vertexsize, self.form.vertices(), self.default_vertexsize)
+        vertexcolor = color_to_colordict(vertexcolor, self.form.vertices(), self.default_vertexcolor)
+        edgecolor = color_to_colordict(edgecolor, self.form.edges(), self.default_edgecolor)
+        facecolor = color_to_colordict(facecolor, self.form.faces(), self.default_facecolor)
 
         # scale and position
 
@@ -148,12 +140,8 @@ class Viewer(object):
                         "facecolor": vertexcolor[key],
                         "edgecolor": self.default_edgecolor,
                         "linewidth": self.default_edgewidth * 0.5,
-                        "text": None
-                        if key not in vertexlabel
-                        else str(vertexlabel[key]),
-                        "textcolor": "#000000"
-                        if is_color_light(bgcolor)
-                        else "#ffffff",
+                        "text": None if key not in vertexlabel else str(vertexlabel[key]),
+                        "textcolor": "#000000" if is_color_light(bgcolor) else "#ffffff",
                         "fontsize": self.default_fontsize,
                     }
                 )
@@ -174,9 +162,7 @@ class Viewer(object):
 
                 if external_on:
                     if u in leaves or v in leaves:
-                        text = (
-                            None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
-                        )
+                        text = None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
                         _arrows.append(
                             {
                                 "start": sp,
@@ -184,9 +170,7 @@ class Viewer(object):
                                 "width": self.default_externalforcewidth
                                 if not attr["is_ind"]
                                 else self.default_edgewidth * 3,
-                                "color": self.default_externalforcecolor
-                                if not attr["is_ind"]
-                                else "#000000",
+                                "color": self.default_externalforcecolor if not attr["is_ind"] else "#000000",
                                 "text": text,
                                 "fontsize": self.default_fontsize,
                             }
@@ -194,16 +178,8 @@ class Viewer(object):
                     else:
                         if forces_on:
                             width = forcescale * fabs(attr["f"])
-                            color = (
-                                self.default_tensioncolor
-                                if attr["f"] > 0
-                                else self.default_compressioncolor
-                            )
-                            text = (
-                                None
-                                if (u, v) not in edgelabel
-                                else str(edgelabel[(u, v)])
-                            )
+                            color = self.default_tensioncolor if attr["f"] > 0 else self.default_compressioncolor
+                            text = None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
                             _lines.append(
                                 {
                                     "start": sp,
@@ -214,20 +190,12 @@ class Viewer(object):
                                     "fontsize": self.default_fontsize,
                                 }
                             )
-                        _arrows.append(
-                            {"start": sp, "end": ep, "width": self.default_edgewidth}
-                        )
+                        _arrows.append({"start": sp, "end": ep, "width": self.default_edgewidth})
                 else:
                     if forces_on:
                         width = forcescale * fabs(attr["f"])
-                        color = (
-                            self.default_tensioncolor
-                            if attr["f"] > 0
-                            else self.default_compressioncolor
-                        )
-                        text = (
-                            None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
-                        )
+                        color = self.default_tensioncolor if attr["f"] > 0 else self.default_compressioncolor
+                        text = None if (u, v) not in edgelabel else str(edgelabel[(u, v)])
                         _lines.append(
                             {
                                 "start": sp,
@@ -242,9 +210,7 @@ class Viewer(object):
                         {
                             "start": sp,
                             "end": ep,
-                            "width": self.default_edgewidth
-                            if not attr["is_ind"]
-                            else self.default_edgewidth * 3,
+                            "width": self.default_edgewidth if not attr["is_ind"] else self.default_edgewidth * 3,
                         }
                     )
 
@@ -262,9 +228,7 @@ class Viewer(object):
             _face_polygons = []
             for fkey in self.form.faces():
                 vkeys = [vkey for vkey in self.form.face_vertices(fkey)]
-                polygon_vertices = [
-                    self.form.vertex_coordinates(vkey, axes="xy") for vkey in vkeys
-                ]
+                polygon_vertices = [self.form.vertex_coordinates(vkey, axes="xy") for vkey in vkeys]
                 polygon_vertices = [
                     [(x + dx) / scale, (y + dy) / scale] for (x, y) in polygon_vertices
                 ]  # scale the polygon
@@ -274,11 +238,8 @@ class Viewer(object):
                         "facecolor": "#e5e5e5",
                         "edgecolor": "#ffffff",
                         "edgewidth": 10.0,
-                        "text": str(fkey)
-                        if fkey not in facelabel
-                        else str(facelabel[fkey]),
-                        "fontsize": self.default_fontsize
-                        * 2,  # TEMP! TO DIFFER FROM OTHER LABELS
+                        "text": str(fkey) if fkey not in facelabel else str(facelabel[fkey]),
+                        "fontsize": self.default_fontsize * 2,  # TEMP! TO DIFFER FROM OTHER LABELS
                         "textcolor": self.default_textcolor,
                     }
                 )
@@ -360,15 +321,9 @@ class Viewer(object):
         vertexlabel = vertexlabel or {}
         edgelabel = edgelabel or {}
         facelabel = facelabel or {}
-        vertexsize = size_to_sizedict(
-            vertexsize, self.force.vertices(), self.default_vertexsize
-        )
-        vertexcolor = color_to_colordict(
-            vertexcolor, self.force.vertices(), self.default_vertexcolor
-        )
-        edgecolor = color_to_colordict(
-            edgecolor, self.force.edges(), self.default_edgecolor
-        )
+        vertexsize = size_to_sizedict(vertexsize, self.force.vertices(), self.default_vertexsize)
+        vertexcolor = color_to_colordict(vertexcolor, self.force.vertices(), self.default_vertexcolor)
+        edgecolor = color_to_colordict(edgecolor, self.force.edges(), self.default_edgecolor)
 
         # scale and position
 
@@ -396,12 +351,8 @@ class Viewer(object):
                         "facecolor": bgcolor,
                         "edgecolor": self.default_edgecolor,
                         "linewidth": self.default_edgewidth * 0.5,
-                        "text": None
-                        if key not in vertexlabel
-                        else str(vertexlabel[key]),
-                        "textcolor": "#000000"
-                        if is_color_light(bgcolor)
-                        else "#ffffff",
+                        "text": None if key not in vertexlabel else str(vertexlabel[key]),
+                        "textcolor": "#000000" if is_color_light(bgcolor) else "#ffffff",
                         "fontsize": self.default_fontsize,
                     }
                 )
@@ -487,9 +438,7 @@ class Viewer(object):
             _face_polygons = []
             for fkey in self.force.faces():
                 vkeys = [vkey for vkey in self.force.face_vertices(fkey)]
-                polygon_vertices = [
-                    self.force.vertex_coordinates(vkey, axes="xy") for vkey in vkeys
-                ]
+                polygon_vertices = [self.force.vertex_coordinates(vkey, axes="xy") for vkey in vkeys]
                 polygon_vertices = [
                     [(x + dx) / scale, (y + dy) / scale] for (x, y) in polygon_vertices
                 ]  # scale the polygon
@@ -499,11 +448,8 @@ class Viewer(object):
                         "facecolor": "#e5e5e5",
                         "edgecolor": "#ffffff",
                         "edgewidth": 10.0,
-                        "text": str(fkey)
-                        if fkey not in facelabel
-                        else str(facelabel[fkey]),
-                        "fontsize": self.default_fontsize
-                        * 2,  # TEMP! TO DIFFER FROM OTHER LABELS
+                        "text": str(fkey) if fkey not in facelabel else str(facelabel[fkey]),
+                        "fontsize": self.default_fontsize * 2,  # TEMP! TO DIFFER FROM OTHER LABELS
                         "textcolor": self.default_textcolor,
                     }
                 )

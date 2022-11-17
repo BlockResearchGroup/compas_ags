@@ -256,9 +256,7 @@ class FormDiagram(Diagram):
             dy = ep[1] - sp[1]
             length = (dx**2 + dy**2) ** 0.5
             self.edge_attribute(edge, "target_vector", [dx / length, dy / length])
-            self.edge_attribute(
-                edge, "is_load", True
-            )  # by default loads are leaves connected to non fixed vertices
+            self.edge_attribute(edge, "is_load", True)  # by default loads are leaves connected to non fixed vertices
             if edge[0] in fixed or edge[1] in fixed:
                 self.edge_attribute(
                     edge, "is_reaction", True

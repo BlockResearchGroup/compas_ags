@@ -220,9 +220,7 @@ def update_primal_from_dual(
                     if target_vectors[ij_e[(i, j)]]:
                         n = array(target_vectors[ij_e[(i, j)]]).reshape(1, -1)
 
-                r = I - n.T.dot(
-                    n
-                )  # projection into the orthogonal space of the direction vector
+                r = I - n.T.dot(n)  # projection into the orthogonal space of the direction vector
                 a = xy[j, None]  # a point on the line (the neighbour of the vertex)
                 R += r
                 q += r.dot(a.T)
@@ -337,18 +335,14 @@ def parallelise_edges(
 
                 if target_lengths[e] is not None:  # edges with constraint on length ...
                     lij = target_lengths[e]
-                    if target_vectors[
-                        e
-                    ]:  # edges with constraint on length + orientation
+                    if target_vectors[e]:  # edges with constraint on length + orientation
                         tx, ty = target_vectors[e]
                     else:  # edges with constraint on length only
                         if lengths[e] == 0.0:
                             tx = ty = 0.0
                         else:
                             tx = (xy0[v][0] - xy0[u][0]) / lengths[e]
-                            ty = (xy0[v][1] - xy0[u][1]) / lengths[
-                                e
-                            ]  # check if xy0 is indeed better than xy
+                            ty = (xy0[v][1] - xy0[u][1]) / lengths[e]  # check if xy0 is indeed better than xy
                 else:
                     if target_vectors[e]:  # edges with constraint on orientation only
                         tx, ty = target_vectors[e]
@@ -429,9 +423,7 @@ def get_jacobian_and_residual(form, force, _X_goal, constraints=None):
     _k_i = force.key_index()
     _known = _k_i[force.anchor()]
     _bc = [_known, _vcount + _known]
-    _X_iteration = array(
-        force.vertices_attribute("x") + force.vertices_attribute("y")
-    ).reshape(-1, 1)
+    _X_iteration = array(force.vertices_attribute("x") + force.vertices_attribute("y")).reshape(-1, 1)
     r = _X_iteration - _X_goal
 
     if constraints:
@@ -504,9 +496,7 @@ def compute_jacobian(form, force):
     q = array(form.q(), dtype=float64).reshape((-1, 1))
     Q = diag(q.flatten())  # TODO: Explore sparse (diags)
 
-    independent_edges = [
-        (k_i[u], k_i[v]) for (u, v) in list(form.edges_where({"is_ind": True}))
-    ]
+    independent_edges = [(k_i[u], k_i[v]) for (u, v) in list(form.edges_where({"is_ind": True}))]
     independent_edges_idx = [edges.index(i) for i in independent_edges]
     dependent_edges_idx = list(set(range(ecount)) - set(independent_edges_idx))
 
@@ -562,13 +552,9 @@ def compute_jacobian(form, force):
                     d_XdXiTop,
                     _known,
                 )
-                d_XdXiBot = solve_with_known(
-                    _L, (_Ct.dot(dQdXi.dot(v))).flatten(), d_XdXiBot, _known
-                )
+                d_XdXiBot = solve_with_known(_L, (_Ct.dot(dQdXi.dot(v))).flatten(), d_XdXiBot, _known)
             elif j == 1:
-                d_XdXiTop = solve_with_known(
-                    _L, (_Ct.dot(dQdXi.dot(u))).flatten(), d_XdXiTop, _known
-                )
+                d_XdXiTop = solve_with_known(_L, (_Ct.dot(dQdXi.dot(u))).flatten(), d_XdXiTop, _known)
                 d_XdXiBot = solve_with_known(
                     _L,
                     (_Ct.dot(dQdXi.dot(v) + Q.dot(dxdxi))).flatten(),

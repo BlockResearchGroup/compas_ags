@@ -79,9 +79,7 @@ def compute_external_work(form, force):
     _C = connectivity_matrix(_edges, "csr")
 
     leaves = set(form.leaves())
-    external = [
-        i for i, (u, v) in enumerate(form.edges()) if u in leaves or v in leaves
-    ]
+    external = [i for i, (u, v) in enumerate(form.edges()) if u in leaves or v in leaves]
 
     lengths = normrow(C.dot(xy))
     forces = normrow(_C.dot(_xy))
@@ -121,11 +119,7 @@ def compute_internal_work(form, force):
     _C = connectivity_matrix(_edges, "csr")
 
     leaves = set(form.leaves())
-    internal = [
-        i
-        for i, (u, v) in enumerate(form.edges())
-        if u not in leaves and v not in leaves
-    ]
+    internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
 
     lengths = normrow(C.dot(xy))
     forces = normrow(_C.dot(_xy))
@@ -166,11 +160,7 @@ def compute_internal_work_tension(form, force):
     _C = connectivity_matrix(_edges, "csr")
 
     leaves = set(form.leaves())
-    internal = [
-        i
-        for i, (u, v) in enumerate(form.edges())
-        if u not in leaves and v not in leaves
-    ]
+    internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
     tension = [i for i in internal if q[i, 0] > 0]
 
     lengths = normrow(C.dot(xy))
@@ -212,11 +202,7 @@ def compute_internal_work_compression(form, force):
     _C = connectivity_matrix(_edges, "csr")
 
     leaves = set(form.leaves())
-    internal = [
-        i
-        for i, (u, v) in enumerate(form.edges())
-        if u not in leaves and v not in leaves
-    ]
+    internal = [i for i, (u, v) in enumerate(form.edges()) if u not in leaves and v not in leaves]
     compression = [i for i in internal if q[i, 0] < 0]
 
     lengths = normrow(C.dot(xy))
@@ -268,15 +254,10 @@ def optimise_loadpath(form, force, algo="COBYLA"):
     vertex_index = form.vertex_index()
     edge_index = form.edge_index()
     i_j = {
-        vertex_index[vertex]: [
-            vertex_index[nbr] for nbr in form.vertex_neighbors(vertex)
-        ]
-        for vertex in form.vertices()
+        vertex_index[vertex]: [vertex_index[nbr] for nbr in form.vertex_neighbors(vertex)] for vertex in form.vertices()
     }
     ij_e = {(vertex_index[u], vertex_index[v]): edge_index[u, v] for u, v in edge_index}
-    ij_e.update(
-        {(vertex_index[v], vertex_index[u]): edge_index[u, v] for u, v in edge_index}
-    )
+    ij_e.update({(vertex_index[v], vertex_index[u]): edge_index[u, v] for u, v in edge_index})
 
     xy = array(form.xy(), dtype=float64)
     edges = [(vertex_index[u], vertex_index[v]) for u, v in form.edges()]
@@ -286,9 +267,7 @@ def optimise_loadpath(form, force, algo="COBYLA"):
     fixed = [vertex_index[key] for key in form.fixed()]
     free = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
     internal = [
-        i
-        for i, (u, v) in enumerate(form.edges())
-        if vertex_index[u] not in leaves and vertex_index[v] not in leaves
+        i for i, (u, v) in enumerate(form.edges()) if vertex_index[u] not in leaves and vertex_index[v] not in leaves
     ]
 
     _vertex_index = force.vertex_index()
@@ -317,9 +296,7 @@ def optimise_loadpath(form, force, algo="COBYLA"):
 
     x0 = _xy[_free, 0]
 
-    result = minimize(
-        objfunc, x0, method=algo, tol=1e-12, options={"maxiter": 1000}
-    )  # noqa: F841
+    result = minimize(objfunc, x0, method=algo, tol=1e-12, options={"maxiter": 1000})  # noqa: F841
 
     uv = C.dot(xy)
     _uv = _C.dot(_xy)
