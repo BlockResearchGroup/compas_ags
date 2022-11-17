@@ -12,7 +12,7 @@ from compas_ags.viewers import Viewer
 #    make form and force diagrams
 # ------------------------------------------------------------------------------
 
-graph = FormGraph.from_obj(compas_ags.get('paper/gs_form_force.obj'))
+graph = FormGraph.from_obj(compas_ags.get("paper/gs_form_force.obj"))
 
 form = FormDiagram.from_graph(graph)
 force = ForceDiagram.from_formdiagram(form)
@@ -35,17 +35,16 @@ graphstatics.force_update_from_form(force, form)
 
 viewer = Viewer(form, force, delay_setup=False, figsize=(12, 7.5))
 
-left = list(form.vertices_where({'x': 0.0, 'y': 0.0}))[0]
-right = list(form.vertices_where({'x': 6.0, 'y': 0.0}))[0]
+left = list(form.vertices_where({"x": 0.0, "y": 0.0}))[0]
+right = list(form.vertices_where({"x": 6.0, "y": 0.0}))[0]
 
 viewer.draw_form(
     vertexsize=0.15,
-    vertexcolor={key: '#000000' for key in (left, right)},
+    vertexcolor={key: "#000000" for key in (left, right)},
     vertexlabel={key: key for key in form.vertices()},
-    edgelabel={uv: index for index, uv in enumerate(form.edges())})
+    edgelabel={uv: index for index, uv in enumerate(form.edges())},
+)
 
-viewer.draw_force(
-    vertexsize=0.15,
-    vertexlabel={key: key for key in force.vertices()})
+viewer.draw_force(vertexsize=0.15, vertexlabel={key: key for key in force.vertices()})
 
 viewer.show()

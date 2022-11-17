@@ -10,19 +10,21 @@ import sphinx_compas_theme
 
 # -- General configuration ------------------------------------------------
 
-project = 'compas-ags'
-copyright = '2017, Block Research Group - ETH Zurich'
-author = 'Tom Van Mele'
-release = '1.1.1'
+project = "compas-ags"
+copyright = "2017, Block Research Group - ETH Zurich"
+author = "Tom Van Mele"
+release = "1.1.1"
 
-version = '.'.join(release.split('.')[0:2])
+version = ".".join(release.split(".")[0:2])
 
-master_doc = 'index'
-source_suffix = ['.rst', ]
-templates_path = ['_templates']
+master_doc = "index"
+source_suffix = [
+    ".rst",
+]
+templates_path = ["_templates"]
 exclude_patterns = []
 
-pygments_style = 'sphinx'
+pygments_style = "sphinx"
 show_authors = True
 add_module_names = True
 language = None
@@ -31,14 +33,14 @@ language = None
 # -- Extension configuration ------------------------------------------------
 
 extensions = [
-    'sphinx.ext.autodoc',
-    'sphinx.ext.autosummary',
-    'sphinx.ext.doctest',
-    'sphinx.ext.intersphinx',
-    'sphinx.ext.mathjax',
-    'sphinx.ext.napoleon',
-    'sphinx.ext.viewcode',
-    'matplotlib.sphinxext.plot_directive',
+    "sphinx.ext.autodoc",
+    "sphinx.ext.autosummary",
+    "sphinx.ext.doctest",
+    "sphinx.ext.intersphinx",
+    "sphinx.ext.mathjax",
+    "sphinx.ext.napoleon",
+    "sphinx.ext.viewcode",
+    "matplotlib.sphinxext.plot_directive",
 ]
 
 # autodoc options
@@ -46,11 +48,11 @@ extensions = [
 autodoc_mock_imports = ["Rhino", "System", "scriptcontext", "rhinoscriptsyntax", "clr", "bpy"]
 
 autodoc_default_options = {
-    'undoc-members': True,
-    'show-inheritance': True,
+    "undoc-members": True,
+    "show-inheritance": True,
 }
 
-autodoc_member_order = 'groupwise'
+autodoc_member_order = "groupwise"
 
 autoclass_content = "class"
 
@@ -76,21 +78,21 @@ napoleon_use_rtype = False
 
 # first, we define new methods for any new sections and add them to the class
 def parse_keys_section(self, section):
-    return self._format_fields('Keys', self._consume_fields())
+    return self._format_fields("Keys", self._consume_fields())
 
 
 NumpyDocstring._parse_keys_section = parse_keys_section
 
 
 def parse_attributes_section(self, section):
-    return self._format_fields('Attributes', self._consume_fields())
+    return self._format_fields("Attributes", self._consume_fields())
 
 
 NumpyDocstring._parse_attributes_section = parse_attributes_section
 
 
 def parse_class_attributes_section(self, section):
-    return self._format_fields('Class Attributes', self._consume_fields())
+    return self._format_fields("Class Attributes", self._consume_fields())
 
 
 NumpyDocstring._parse_class_attributes_section = parse_class_attributes_section
@@ -99,8 +101,8 @@ NumpyDocstring._parse_class_attributes_section = parse_class_attributes_section
 # we now patch the parse method to guarantee that the the above methods are
 # assigned to the _section dict
 def patched_parse(self):
-    self._sections['keys'] = self._parse_keys_section
-    self._sections['class attributes'] = self._parse_class_attributes_section
+    self._sections["keys"] = self._parse_keys_section
+    self._sections["class attributes"] = self._parse_class_attributes_section
     self._unpatched_parse()
 
 
@@ -124,14 +126,14 @@ plot_html_show_formats = False
 # intersphinx options
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/', None),
-    'compas': ('https://compas-dev.github.io/compas', 'https://compas-dev.github.io/compas/objects.inv'),
+    "python": ("https://docs.python.org/", None),
+    "compas": ("https://compas-dev.github.io/compas", "https://compas-dev.github.io/compas/objects.inv"),
 }
 
 
 # -- Options for HTML output ----------------------------------------------
 
-html_theme = 'compaspkg'
+html_theme = "compaspkg"
 html_theme_path = sphinx_compas_theme.get_html_theme_path()
 html_theme_options = {
     "package_name": "compas_ags",
@@ -141,14 +143,14 @@ html_theme_options = {
     "package_description": "COMPAS package for Algebraic Graph Statics",
     "package_repo": "https://github.com/BlockResearchGroup/compas_ags",
     "package_docs": "https://blockresearchgroup.github.io/compas_ags/",
-    "package_old_versions_txt": "https://blockresearchgroup.github.io/compas_ags/doc_versions.txt"
+    "package_old_versions_txt": "https://blockresearchgroup.github.io/compas_ags/doc_versions.txt",
 }
 html_context = {}
 html_static_path = []
-html_extra_path = ['.nojekyll']
-html_last_updated_fmt = ''
+html_extra_path = [".nojekyll"]
+html_last_updated_fmt = ""
 html_copy_source = False
 html_show_sourcelink = False
-html_add_permalinks = ''
+html_add_permalinks = ""
 html_experimental_html5_writer = True
 html_compact_lists = True
