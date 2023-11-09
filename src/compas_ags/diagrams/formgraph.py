@@ -46,10 +46,11 @@ class FormGraph(Network):
         if compas.IPY:
             from compas.rpc import Proxy
 
-            planarity = Proxy("planarity")
+            proxy = Proxy("compas.datastructures")
+            network_is_planar = proxy.network_is_planar
         else:
-            import planarity
-        return planarity.is_planar(list(self.edges()))
+            from compas.datastructures import network_is_planar
+        return network_is_planar(self)
 
     def is_crossed(self):
         """Verify that the current embedding of the graph has crossing edges.
