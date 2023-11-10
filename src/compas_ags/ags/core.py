@@ -367,7 +367,7 @@ def parallelise_edges(
                         xy[j][0] = pt_proj[0]
                         xy[j][1] = pt_proj[1]
 
-        for (i, j) in ij_e:
+        for i, j in ij_e:
             e = ij_e[(i, j)]
 
             if lengths[e] == 0.0 or target_lengths[e] == 0.0:
