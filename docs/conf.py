@@ -146,7 +146,7 @@ html_theme_options = {
     "package_old_versions_txt": "https://blockresearchgroup.github.io/compas_ags/doc_versions.txt",
 }
 html_context = {}
-html_static_path = []
+html_static_path = sphinx_compas_theme.get_html_static_path()
 html_extra_path = [".nojekyll"]
 html_last_updated_fmt = ""
 html_copy_source = False
