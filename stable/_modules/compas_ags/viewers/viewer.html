@@ -46,7 +46,7 @@
         <meta id="doc_versions" data-url="https://blockresearchgroup.github.io/compas_ags/doc_versions.txt" data-docs="https://blockresearchgroup.github.io/compas_ags/">
         <li class="nav-item nav-versions dropdown">
           <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            1.2.0
+            1.2.1
           </a>
           <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
         </li>
@@ -115,9 +115,9 @@
 
 
 <div class="viewcode-block" id="Viewer"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.html#compas_ags.viewers.Viewer">[docs]</a><span class="k">class</span> <span class="nc">Viewer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Viewer.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.__init__.html#compas_ags.viewers.Viewer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">delay_setup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">)):</span>
+<div class="viewcode-block" id="Viewer.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.html#compas_ags.viewers.Viewer.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">delay_setup</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">9</span><span class="p">)):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">form</span> <span class="o">=</span> <span class="n">form</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">force</span> <span class="o">=</span> <span class="n">force</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="kc">None</span>
@@ -149,7 +149,7 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="n">delay_setup</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">setup</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="Viewer.setup"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.setup.html#compas_ags.viewers.Viewer.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">figsize</span><span class="p">,</span> <span class="n">tight_layout</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">96</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="s2">&quot;121&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="s2">&quot;122&quot;</span><span class="p">)</span>
@@ -169,9 +169,9 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">11.0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fig</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s2">&quot;white&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;off&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Viewer.draw_form"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.draw_form.html#compas_ags.viewers.Viewer.draw_form">[docs]</a>    <span class="k">def</span> <span class="nf">draw_form</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">draw_form</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">vertices_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">edges_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -190,7 +190,7 @@
         <span class="n">lines</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
         <span class="c1"># preprocess</span>
 
         <span class="n">vertexlabel</span> <span class="o">=</span> <span class="n">vertexlabel</span> <span class="ow">or</span> <span class="p">{}</span>
@@ -386,9 +386,9 @@
                     <span class="p">}</span>
                 <span class="p">)</span>
             <span class="k">for</span> <span class="n">style</span> <span class="ow">in</span> <span class="n">_lines</span><span class="p">:</span>
-                <span class="n">draw_xlines_xy</span><span class="p">(</span><span class="n">_lines</span><span class="p">[</span><span class="n">style</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">)</span></div>
+                <span class="n">draw_xlines_xy</span><span class="p">(</span><span class="n">_lines</span><span class="p">[</span><span class="n">style</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="n">style</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Viewer.draw_force"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.draw_force.html#compas_ags.viewers.Viewer.draw_force">[docs]</a>    <span class="k">def</span> <span class="nf">draw_force</span><span class="p">(</span>
+    <span class="k">def</span> <span class="nf">draw_force</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">vertices_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="n">edges_on</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
@@ -405,7 +405,7 @@
         <span class="n">lines</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;&quot;&quot;&quot;</span>
         <span class="c1"># preprocess</span>
 
         <span class="n">vertexlabel</span> <span class="o">=</span> <span class="n">vertexlabel</span> <span class="ow">or</span> <span class="p">{}</span>
@@ -544,13 +544,13 @@
                     <span class="p">}</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="n">_face_polygons</span><span class="p">:</span>
-                <span class="n">draw_xpolygons_xy</span><span class="p">(</span><span class="n">_face_polygons</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="p">)</span></div>
+                <span class="n">draw_xpolygons_xy</span><span class="p">(</span><span class="n">_face_polygons</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ax2</span><span class="p">)</span>
 
-<div class="viewcode-block" id="Viewer.show"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.show.html#compas_ags.viewers.Viewer.show">[docs]</a>    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+    <span class="k">def</span> <span class="nf">show</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 
-<div class="viewcode-block" id="Viewer.save"><a class="viewcode-back" href="../../../api/generated/compas_ags.viewers.Viewer.save.html#compas_ags.viewers.Viewer.save">[docs]</a>    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Saves the plot to a file.</span>
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Saves the plot to a file.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -566,7 +566,7 @@
 <span class="sd">        .. [1] https://matplotlib.org/2.0.2/api/pyplot_api.html#matplotlib.pyplot.savefig</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+        <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <span class="c1"># ==============================================================================</span>
