@@ -46,7 +46,7 @@
         <meta id="doc_versions" data-url="https://blockresearchgroup.github.io/compas_ags/doc_versions.txt" data-docs="https://blockresearchgroup.github.io/compas_ags/">
         <li class="nav-item nav-versions dropdown">
           <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            1.2.0
+            1.2.1
           </a>
           <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
         </li>
@@ -139,7 +139,7 @@
 
 
 <div class="viewcode-block" id="form_identify_dof"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.form_identify_dof.html#compas_ags.ags.form_identify_dof">[docs]</a><span class="k">def</span> <span class="nf">form_identify_dof</span><span class="p">(</span><span class="n">form</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Identify the DOF of a form diagram.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Identify the DOF of a form diagram.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -199,7 +199,7 @@
 
 
 <div class="viewcode-block" id="form_count_dof"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.form_count_dof.html#compas_ags.ags.form_count_dof">[docs]</a><span class="k">def</span> <span class="nf">form_count_dof</span><span class="p">(</span><span class="n">form</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Count the number of degrees of freedom of a form diagram.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Count the number of degrees of freedom of a form diagram.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -247,7 +247,7 @@
 
 
 <span class="k">def</span> <span class="nf">form_compute_nullspace</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the nullspaces of a form diagram assuming a set of constraints.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Compute the nullspaces of a form diagram assuming a set of constraints.</span>
 
 <span class="sd">    It returns a list with the displacements that apply to the form diagram representing</span>
 <span class="sd">    how the latter can be moved in the plan without modifying the force diagram and</span>
@@ -313,7 +313,7 @@
 
 
 <div class="viewcode-block" id="form_update_q_from_qind"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.form_update_q_from_qind.html#compas_ags.ags.form_update_q_from_qind">[docs]</a><span class="k">def</span> <span class="nf">form_update_q_from_qind</span><span class="p">(</span><span class="n">form</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Update the force densities of the dependent edges of a form diagram using</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the force densities of the dependent edges of a form diagram using</span>
 <span class="sd">    the values of the independent ones.</span>
 
 <span class="sd">    Parameters</span>
@@ -360,7 +360,7 @@
 
 
 <div class="viewcode-block" id="form_update_from_force"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.form_update_from_force.html#compas_ags.ags.form_update_from_force">[docs]</a><span class="k">def</span> <span class="nf">form_update_from_force</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the form diagram after a modification of the force diagram.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the form diagram after a modification of the force diagram.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -491,7 +491,7 @@
 
 
 <span class="k">def</span> <span class="nf">form_update_from_force_newton</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">constraints</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
-    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the form diagram after a modification of the force diagram.</span>
+<span class="w">    </span><span class="sa">r</span><span class="sd">&quot;&quot;&quot;Update the form diagram after a modification of the force diagram.</span>
 
 <span class="sd">    Compute the geometry of the form diagram from the geometry of the force diagram</span>
 <span class="sd">    and some constraints, including non-linear.</span>
@@ -577,7 +577,7 @@
 
 
 <div class="viewcode-block" id="force_update_from_form"><a class="viewcode-back" href="../../../api/generated/compas_ags.ags.force_update_from_form.html#compas_ags.ags.force_update_from_form">[docs]</a><span class="k">def</span> <span class="nf">force_update_from_form</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Update the force diagram after modifying the (force densities of) the form diagram.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the force diagram after modifying the (force densities of) the form diagram.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -628,7 +628,7 @@
 
 
 <span class="k">def</span> <span class="nf">force_update_from_form_geometrical</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">form</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Update the force diagram after modifying the (geometry of) the form diagram.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the force diagram after modifying the (geometry of) the form diagram.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -713,7 +713,7 @@
 
 
 <span class="k">def</span> <span class="nf">force_update_from_constraints</span><span class="p">(</span><span class="n">force</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Update the force diagram from constraints on length and orientation imposed in the form diagram,</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the force diagram from constraints on length and orientation imposed in the form diagram,</span>
 <span class="sd">    and already carried out as attributes in the force diagram.</span>
 
 <span class="sd">    Parameters</span>
@@ -787,7 +787,7 @@
 
 
 <span class="k">def</span> <span class="nf">update_diagrams_from_constraints</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">force</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">kmax</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Update the form and force diagram after constraints / or movements are imposed to the diagrams.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Update the form and force diagram after constraints / or movements are imposed to the diagrams.</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -819,7 +819,6 @@
     <span class="n">niter</span> <span class="o">=</span> <span class="mi">0</span>
 
     <span class="k">while</span> <span class="n">niter</span> <span class="o">&lt;</span> <span class="n">max_iter</span><span class="p">:</span>
-
         <span class="c1"># Propose a force diagram based on constraints -&gt; Using paralellise</span>
         <span class="n">force_update_from_constraints</span><span class="p">(</span><span class="n">force</span><span class="p">)</span>
 

@@ -46,7 +46,7 @@
         <meta id="doc_versions" data-url="https://blockresearchgroup.github.io/compas_ags/doc_versions.txt" data-docs="https://blockresearchgroup.github.io/compas_ags/">
         <li class="nav-item nav-versions dropdown">
           <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            1.2.0
+            1.2.1
           </a>
           <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
         </li>
@@ -101,16 +101,16 @@
 
 
 <div class="viewcode-block" id="FormGraph"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.html#compas_ags.diagrams.FormGraph">[docs]</a><span class="k">class</span> <span class="nc">FormGraph</span><span class="p">(</span><span class="n">Network</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;A graph representing the geometry and connectivity of the lines of a form diagram.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A graph representing the geometry and connectivity of the lines of a form diagram.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="FormGraph.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.__init__.html#compas_ags.diagrams.FormGraph.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="FormGraph.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.html#compas_ags.diagrams.FormGraph.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">FormGraph</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="FormGraph.node_index"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.node_index.html#compas_ags.diagrams.FormGraph.node_index">[docs]</a>    <span class="k">def</span> <span class="nf">node_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">())}</span></div>
+    <span class="k">def</span> <span class="nf">node_index</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">node</span><span class="p">:</span> <span class="n">index</span> <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">node</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">nodes</span><span class="p">())}</span>
 
-<div class="viewcode-block" id="FormGraph.is_2d"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.is_2d.html#compas_ags.diagrams.FormGraph.is_2d">[docs]</a>    <span class="k">def</span> <span class="nf">is_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Verify that all nodes of the graph lie in a horizontal plane.</span>
+    <span class="k">def</span> <span class="nf">is_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify that all nodes of the graph lie in a horizontal plane.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -121,13 +121,13 @@
         <span class="n">zmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
         <span class="k">if</span> <span class="p">(</span><span class="n">zmax</span> <span class="o">-</span> <span class="n">zmin</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">&gt;</span> <span class="mf">0.001</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">False</span>
-        <span class="k">return</span> <span class="kc">True</span></div>
+        <span class="k">return</span> <span class="kc">True</span>
 
     <span class="c1"># def make_2d(self):</span>
     <span class="c1">#     self.nodes_attribute(&#39;z&#39;, 0.0)</span>
 
-<div class="viewcode-block" id="FormGraph.is_planar"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.is_planar.html#compas_ags.diagrams.FormGraph.is_planar">[docs]</a>    <span class="k">def</span> <span class="nf">is_planar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Verify that the graph has a planar embedding.</span>
+    <span class="k">def</span> <span class="nf">is_planar</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify that the graph has a planar embedding.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -136,26 +136,27 @@
         <span class="k">if</span> <span class="n">compas</span><span class="o">.</span><span class="n">IPY</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">compas.rpc</span> <span class="kn">import</span> <span class="n">Proxy</span>
 
-            <span class="n">planarity</span> <span class="o">=</span> <span class="n">Proxy</span><span class="p">(</span><span class="s2">&quot;planarity&quot;</span><span class="p">)</span>
+            <span class="n">proxy</span> <span class="o">=</span> <span class="n">Proxy</span><span class="p">(</span><span class="s2">&quot;compas.datastructures&quot;</span><span class="p">)</span>
+            <span class="n">network_is_planar</span> <span class="o">=</span> <span class="n">proxy</span><span class="o">.</span><span class="n">network_is_planar</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="kn">import</span> <span class="nn">planarity</span>
-        <span class="k">return</span> <span class="n">planarity</span><span class="o">.</span><span class="n">is_planar</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">edges</span><span class="p">()))</span></div>
+            <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">network_is_planar</span>
+        <span class="k">return</span> <span class="n">network_is_planar</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FormGraph.is_crossed"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.is_crossed.html#compas_ags.diagrams.FormGraph.is_crossed">[docs]</a>    <span class="k">def</span> <span class="nf">is_crossed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Verify that the current embedding of the graph has crossing edges.</span>
+    <span class="k">def</span> <span class="nf">is_crossed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify that the current embedding of the graph has crossing edges.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">network_is_crossed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">network_is_crossed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
-<div class="viewcode-block" id="FormGraph.is_planar_embedding"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.is_planar_embedding.html#compas_ags.diagrams.FormGraph.is_planar_embedding">[docs]</a>    <span class="k">def</span> <span class="nf">is_planar_embedding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Verify that the current embedding of the graph is planar.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_2d</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_planar</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_crossed</span><span class="p">()</span></div>
+    <span class="k">def</span> <span class="nf">is_planar_embedding</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify that the current embedding of the graph is planar.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_2d</span><span class="p">()</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_planar</span><span class="p">()</span> <span class="ow">and</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_crossed</span><span class="p">()</span>
 
-<div class="viewcode-block" id="FormGraph.embed"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.FormGraph.embed.html#compas_ags.diagrams.FormGraph.embed">[docs]</a>    <span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">straightline</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Compute a geometry for the graph that embeds it in the plane.</span>
+    <span class="k">def</span> <span class="nf">embed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">straightline</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Compute a geometry for the graph that embeds it in the plane.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -171,7 +172,7 @@
 
         <span class="k">else</span><span class="p">:</span>
             <span class="kn">from</span> <span class="nn">compas.datastructures</span> <span class="kn">import</span> <span class="n">network_embed_in_plane</span>
-        <span class="k">return</span> <span class="n">network_embed_in_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixed</span><span class="p">,</span> <span class="n">straightline</span><span class="p">)</span></div></div>
+        <span class="k">return</span> <span class="n">network_embed_in_plane</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fixed</span><span class="p">,</span> <span class="n">straightline</span><span class="p">)</span></div>
 
 
 <span class="c1"># ==============================================================================</span>

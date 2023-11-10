@@ -46,7 +46,7 @@
         <meta id="doc_versions" data-url="https://blockresearchgroup.github.io/compas_ags/doc_versions.txt" data-docs="https://blockresearchgroup.github.io/compas_ags/">
         <li class="nav-item nav-versions dropdown">
           <a class="nav-item nav-link dropdown-toggle mr-md-2" href="#" id="bd-versions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            1.2.0
+            1.2.1
           </a>
           <div id="doc_version_list" class="dropdown-menu dropdown-menu-md-right" aria-labelledby="bd-versions"></div>
         </li>
@@ -101,9 +101,9 @@
 
 
 <div class="viewcode-block" id="ForceDiagram"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.html#compas_ags.diagrams.ForceDiagram">[docs]</a><span class="k">class</span> <span class="nc">ForceDiagram</span><span class="p">(</span><span class="n">Diagram</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Mesh-based data structure for force diagrams in AGS.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Mesh-based data structure for force diagrams in AGS.&quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="ForceDiagram.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.__init__.html#compas_ags.diagrams.ForceDiagram.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ForceDiagram.__init__"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.html#compas_ags.diagrams.ForceDiagram.__init__">[docs]</a>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">ForceDiagram</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">attributes</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Force&quot;</span><span class="p">})</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update_default_vertex_attributes</span><span class="p">({</span><span class="s2">&quot;is_fixed&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;line_constraint&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;is_param&quot;</span><span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
@@ -113,9 +113,9 @@
     <span class="c1"># Constructors</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="ForceDiagram.from_formdiagram"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.from_formdiagram.html#compas_ags.diagrams.ForceDiagram.from_formdiagram">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">from_formdiagram</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">formdiagram</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Construct a force diagram from a form diagram.</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a force diagram from a form diagram.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -129,45 +129,45 @@
         <span class="n">forcediagram</span> <span class="o">=</span> <span class="n">mesh_dual</span><span class="p">(</span><span class="n">formdiagram</span><span class="p">,</span> <span class="bp">cls</span><span class="p">)</span>
         <span class="n">forcediagram</span><span class="o">.</span><span class="n">dual</span> <span class="o">=</span> <span class="n">formdiagram</span>
         <span class="n">formdiagram</span><span class="o">.</span><span class="n">dual</span> <span class="o">=</span> <span class="n">forcediagram</span>
-        <span class="k">return</span> <span class="n">forcediagram</span></div>
+        <span class="k">return</span> <span class="n">forcediagram</span>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Convenience functions for retrieving attributes of the force diagram.</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="ForceDiagram.xy"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.xy.html#compas_ags.diagrams.ForceDiagram.xy">[docs]</a>    <span class="k">def</span> <span class="nf">xy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The XY coordinates of the vertices.</span>
+    <span class="k">def</span> <span class="nf">xy</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The XY coordinates of the vertices.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attributes</span><span class="p">(</span><span class="s2">&quot;xy&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices_attributes</span><span class="p">(</span><span class="s2">&quot;xy&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ForceDiagram.fixed"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.fixed.html#compas_ags.diagrams.ForceDiagram.fixed">[docs]</a>    <span class="k">def</span> <span class="nf">fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;The identifiers of the fixed vertices.</span>
+    <span class="k">def</span> <span class="nf">fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;The identifiers of the fixed vertices.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        list</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s2">&quot;is_fixed&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span></div>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices_where</span><span class="p">({</span><span class="s2">&quot;is_fixed&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}))</span>
 
-<div class="viewcode-block" id="ForceDiagram.anchor"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.anchor.html#compas_ags.diagrams.ForceDiagram.anchor">[docs]</a>    <span class="k">def</span> <span class="nf">anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get an anchor to the force diagram.</span>
+    <span class="k">def</span> <span class="nf">anchor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get an anchor to the force diagram.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
 <span class="sd">        int</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">())</span></div>
+        <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">())</span>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Helpers</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="ForceDiagram.edges_where_dual"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.edges_where_dual.html#compas_ags.diagrams.ForceDiagram.edges_where_dual">[docs]</a>    <span class="k">def</span> <span class="nf">edges_where_dual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Get edges for which a certain condition or set of conditions is true for the corresponding edges in the diagram&#39;s dual.</span>
+    <span class="k">def</span> <span class="nf">edges_where_dual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">conditions</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get edges for which a certain condition or set of conditions is true for the corresponding edges in the diagram&#39;s dual.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -199,7 +199,7 @@
             <span class="k">for</span> <span class="n">cond_name</span><span class="p">,</span> <span class="n">cond_value</span> <span class="ow">in</span> <span class="n">conditions</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">dual_method</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="p">,</span> <span class="n">cond_name</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">dual_method</span> <span class="ow">and</span> <span class="n">callable</span><span class="p">(</span><span class="n">dual_method</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">dual_method</span> <span class="ow">and</span> <span class="nb">callable</span><span class="p">(</span><span class="n">dual_method</span><span class="p">):</span>
                     <span class="n">dual_value</span> <span class="o">=</span> <span class="n">dual_method</span><span class="p">(</span><span class="n">dual_edge</span><span class="p">)</span>
                 <span class="k">elif</span> <span class="n">cond_name</span> <span class="ow">in</span> <span class="n">dual_edge_attr</span><span class="p">:</span>
                     <span class="n">dual_value</span> <span class="o">=</span> <span class="n">dual_edge_attr</span><span class="p">[</span><span class="n">cond_name</span><span class="p">]</span>
@@ -225,10 +225,10 @@
                 <span class="k">if</span> <span class="n">data</span><span class="p">:</span>
                     <span class="k">yield</span> <span class="n">edge</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_attributes</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="k">yield</span> <span class="n">edge</span></div>
+                    <span class="k">yield</span> <span class="n">edge</span>
 
-<div class="viewcode-block" id="ForceDiagram.dual_edge"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.dual_edge.html#compas_ags.diagrams.ForceDiagram.dual_edge">[docs]</a>    <span class="k">def</span> <span class="nf">dual_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Find the cooresponding edge in the diagram&#39;s dual.</span>
+    <span class="k">def</span> <span class="nf">dual_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Find the cooresponding edge in the diagram&#39;s dual.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -244,24 +244,10 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">u</span><span class="p">]</span> <span class="o">==</span> <span class="n">edge</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
                 <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">has_edge</span><span class="p">((</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)):</span>
                     <span class="k">return</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span>
-                <span class="k">return</span> <span class="n">v</span><span class="p">,</span> <span class="n">u</span></div>
+                <span class="k">return</span> <span class="n">v</span><span class="p">,</span> <span class="n">u</span>
 
-<div class="viewcode-block" id="ForceDiagram.is_dual_edge_external"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.is_dual_edge_external.html#compas_ags.diagrams.ForceDiagram.is_dual_edge_external">[docs]</a>    <span class="k">def</span> <span class="nf">is_dual_edge_external</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Verify if the corresponding edge in the diagram&#39;s dual is marked as &quot;external&quot;.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        edge : tuple of int</span>
-<span class="sd">            The edge identifier.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        bool</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;is_external&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="ForceDiagram.is_dual_edge_reaction"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.is_dual_edge_reaction.html#compas_ags.diagrams.ForceDiagram.is_dual_edge_reaction">[docs]</a>    <span class="k">def</span> <span class="nf">is_dual_edge_reaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Verify if the corresponding edge in the diagram&#39;s dual is marked as &quot;reaction&quot;.</span>
+    <span class="k">def</span> <span class="nf">is_dual_edge_external</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify if the corresponding edge in the diagram&#39;s dual is marked as &quot;external&quot;.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -272,24 +258,10 @@
 <span class="sd">        -------</span>
 <span class="sd">        bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;is_reaction&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;is_external&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ForceDiagram.is_dual_edge_load"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.is_dual_edge_load.html#compas_ags.diagrams.ForceDiagram.is_dual_edge_load">[docs]</a>    <span class="k">def</span> <span class="nf">is_dual_edge_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Verify if the corresponding edge in the diagram&#39;s dual is marked as &quot;load&quot;.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        edge : tuple of int</span>
-<span class="sd">            The edge identifier.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        bool</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;is_load&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="ForceDiagram.is_dual_edge_ind"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.is_dual_edge_ind.html#compas_ags.diagrams.ForceDiagram.is_dual_edge_ind">[docs]</a>    <span class="k">def</span> <span class="nf">is_dual_edge_ind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Verify if the corresponding edge in the diagram&#39;s dual is marked as &quot;independent&quot;.</span>
+    <span class="k">def</span> <span class="nf">is_dual_edge_reaction</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify if the corresponding edge in the diagram&#39;s dual is marked as &quot;reaction&quot;.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -300,10 +272,38 @@
 <span class="sd">        -------</span>
 <span class="sd">        bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;is_ind&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;is_reaction&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ForceDiagram.dual_edge_force"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.dual_edge_force.html#compas_ags.diagrams.ForceDiagram.dual_edge_force">[docs]</a>    <span class="k">def</span> <span class="nf">dual_edge_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve the force in the corresponding edge of the diagram&#39;s dual.</span>
+    <span class="k">def</span> <span class="nf">is_dual_edge_load</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify if the corresponding edge in the diagram&#39;s dual is marked as &quot;load&quot;.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        edge : tuple of int</span>
+<span class="sd">            The edge identifier.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;is_load&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">is_dual_edge_ind</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify if the corresponding edge in the diagram&#39;s dual is marked as &quot;independent&quot;.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        edge : tuple of int</span>
+<span class="sd">            The edge identifier.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;is_ind&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">dual_edge_force</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the force in the corresponding edge of the diagram&#39;s dual.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -314,24 +314,10 @@
 <span class="sd">        -------</span>
 <span class="sd">        float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;f&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ForceDiagram.dual_edge_angledeviation"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.dual_edge_angledeviation.html#compas_ags.diagrams.ForceDiagram.dual_edge_angledeviation">[docs]</a>    <span class="k">def</span> <span class="nf">dual_edge_angledeviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve the angle deviation in the corresponding edge of the diagram&#39;s dual.</span>
-
-<span class="sd">        Parameters</span>
-<span class="sd">        ----------</span>
-<span class="sd">        edge : tuple(int, int)</span>
-<span class="sd">            The edge identifier.</span>
-
-<span class="sd">        Returns</span>
-<span class="sd">        -------</span>
-<span class="sd">        float</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span></div>
-
-<div class="viewcode-block" id="ForceDiagram.dual_edge_targetforce"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.dual_edge_targetforce.html#compas_ags.diagrams.ForceDiagram.dual_edge_targetforce">[docs]</a>    <span class="k">def</span> <span class="nf">dual_edge_targetforce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Retrieve the target force in the corresponding edge of the diagram&#39;s dual.</span>
+    <span class="k">def</span> <span class="nf">dual_edge_angledeviation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the angle deviation in the corresponding edge of the diagram&#39;s dual.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -342,10 +328,24 @@
 <span class="sd">        -------</span>
 <span class="sd">        float</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;target_force&quot;</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span>
 
-<div class="viewcode-block" id="ForceDiagram.edge_index"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.edge_index.html#compas_ags.diagrams.ForceDiagram.edge_index">[docs]</a>    <span class="k">def</span> <span class="nf">edge_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Construct a mapping between the identifiers of edges and the corresponding indices in a list of edges.</span>
+    <span class="k">def</span> <span class="nf">dual_edge_targetforce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">edge</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Retrieve the target force in the corresponding edge of the diagram&#39;s dual.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        edge : tuple(int, int)</span>
+<span class="sd">            The edge identifier.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        float</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">dual</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dual_edge</span><span class="p">(</span><span class="n">edge</span><span class="p">),</span> <span class="s2">&quot;target_force&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">edge_index</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Construct a mapping between the identifiers of edges and the corresponding indices in a list of edges.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -367,10 +367,10 @@
             <span class="n">f2</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">halfedge</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="n">u</span><span class="p">]</span>
             <span class="n">edge_index</span><span class="p">[</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
             <span class="c1"># the weird side-effect of this is that edges get rotated if necessary</span>
-        <span class="k">return</span> <span class="n">edge_index</span></div>
+        <span class="k">return</span> <span class="n">edge_index</span>
 
-<div class="viewcode-block" id="ForceDiagram.ordered_edges"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.ordered_edges.html#compas_ags.diagrams.ForceDiagram.ordered_edges">[docs]</a>    <span class="k">def</span> <span class="nf">ordered_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; &quot;Construct a list of edges with the same order as the corresponding edges of the form diagram.</span>
+    <span class="k">def</span> <span class="nf">ordered_edges</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">form</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; &quot;Construct a list of edges with the same order as the corresponding edges of the form diagram.</span>
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -383,14 +383,14 @@
         <span class="n">edge_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">edge_index</span><span class="p">(</span><span class="n">form</span><span class="o">=</span><span class="n">form</span><span class="p">)</span>
         <span class="n">index_edge</span> <span class="o">=</span> <span class="p">{</span><span class="n">index</span><span class="p">:</span> <span class="n">edge</span> <span class="k">for</span> <span class="n">edge</span><span class="p">,</span> <span class="n">index</span> <span class="ow">in</span> <span class="n">edge_index</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
         <span class="n">edges</span> <span class="o">=</span> <span class="p">[</span><span class="n">index_edge</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="k">for</span> <span class="n">index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_edges</span><span class="p">())]</span>
-        <span class="k">return</span> <span class="n">edges</span></div>
+        <span class="k">return</span> <span class="n">edges</span>
 
     <span class="c1"># --------------------------------------------------------------------------</span>
     <span class="c1"># Helpers</span>
     <span class="c1"># --------------------------------------------------------------------------</span>
 
-<div class="viewcode-block" id="ForceDiagram.constraints_from_dual"><a class="viewcode-back" href="../../../api/generated/compas_ags.diagrams.ForceDiagram.constraints_from_dual.html#compas_ags.diagrams.ForceDiagram.constraints_from_dual">[docs]</a>    <span class="k">def</span> <span class="nf">constraints_from_dual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">10e-4</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; &quot;Reflect constraints from the form diagram in the force diagram.</span>
+    <span class="k">def</span> <span class="nf">constraints_from_dual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tol</span><span class="o">=</span><span class="mf">10e-4</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot; &quot;Reflect constraints from the form diagram in the force diagram.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
@@ -430,7 +430,7 @@
             <span class="n">dx</span> <span class="o">=</span> <span class="n">ep</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">sp</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">dy</span> <span class="o">=</span> <span class="n">ep</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">sp</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
             <span class="n">length</span> <span class="o">=</span> <span class="p">(</span><span class="n">dx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">dy</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s2">&quot;target_vector&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">dx</span> <span class="o">/</span> <span class="n">length</span><span class="p">,</span> <span class="n">dy</span> <span class="o">/</span> <span class="n">length</span><span class="p">])</span></div></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="s2">&quot;target_vector&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">dx</span> <span class="o">/</span> <span class="n">length</span><span class="p">,</span> <span class="n">dy</span> <span class="o">/</span> <span class="n">length</span><span class="p">])</span></div>
 
     <span class="c1"># def compute_constraints(self, form, M):</span>
     <span class="c1">#     r&quot;&quot;&quot;Computes the form diagram constraints used</span>
