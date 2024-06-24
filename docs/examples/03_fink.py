@@ -1,18 +1,11 @@
-from compas_viewer import Viewer
-from compas_viewer.config import Config
-
 import compas_ags
-from compas.colors import Color
-from compas.geometry import Box
-from compas.geometry import Circle
-from compas.geometry import Polygon
-from compas.geometry import bounding_box
 from compas.geometry import normalize_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
 from compas.geometry import sum_vectors
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import FormGraph
+from compas_ags.viewer import AGSViewer
 
 # ==============================================================================
 # Construct the graph of a Fink truss.
@@ -84,20 +77,6 @@ form = FormDiagram.from_graph(embedding)
 # Visualize the result
 # ==============================================================================
 
-loadcolor = Color.green().darkened(50)
-reactioncolor = Color.green().darkened(50)
-tensioncolor = Color.red().lightened(25)
-compressioncolor = Color.blue().lightened(25)
-
-config = Config()
-config.renderer.view = "top"
-config.renderer.gridsize = [100, 100, 100, 100]
-
-viewer = Viewer(config=config)
-
-viewer.scene.add(form, show_faces=False, show_lines=True, linewidth=2, name="FormDiagram")
-
-circles = [Circle.from_point_and_radius(form.vertex_point(vertex) + [0, 0, 0.001], 0.1).to_polygon(n=128) for vertex in form.vertices()]
-viewer.scene.add(circles, name="Vertices", facecolor=Color.white(), linecolor=Color.black())
-
+viewer = AGSViewer()
+viewer.add_form(form, show_forces=False)
 viewer.show()
