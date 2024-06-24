@@ -553,7 +553,15 @@ document.write(`
 <figure class="figure align-default">
 <img alt="../_images/example_fink.png" class="figure-img img-fluid" src="../_images/example_fink.png" />
 </figure>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">compas_ags</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compas_viewer</span> <span class="kn">import</span> <span class="n">Viewer</span>
+<span class="kn">from</span> <span class="nn">compas_viewer.config</span> <span class="kn">import</span> <span class="n">Config</span>
+
+<span class="kn">import</span> <span class="nn">compas_ags</span>
+<span class="kn">from</span> <span class="nn">compas.colors</span> <span class="kn">import</span> <span class="n">Color</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Box</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Circle</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Polygon</span>
+<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">bounding_box</span>
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">normalize_vector</span>
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">scale_vector</span>
 <span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">subtract_vectors</span>
@@ -584,7 +592,7 @@ document.write(`
 <span class="c1"># Construct a planar embedding of the graph</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">embedding</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">embedding</span><span class="p">:</span> <span class="n">FormGraph</span> <span class="o">=</span> <span class="n">graph</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
 <span class="k">if</span> <span class="n">embedding</span><span class="o">.</span><span class="n">is_crossed</span><span class="p">():</span>
 
@@ -593,7 +601,7 @@ document.write(`
     <span class="c1"># and compute a spring layout to find a planar embedding</span>
     <span class="c1"># finally we re-add the leaves towards &quot;the outside&quot;</span>
 
-    <span class="n">noleaves</span> <span class="o">=</span> <span class="n">embedding</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">noleaves</span><span class="p">:</span> <span class="n">FormGraph</span> <span class="o">=</span> <span class="n">embedding</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">node</span> <span class="ow">in</span> <span class="n">embedding</span><span class="o">.</span><span class="n">leaves</span><span class="p">():</span>
         <span class="n">noleaves</span><span class="o">.</span><span class="n">delete_node</span><span class="p">(</span><span class="n">node</span><span class="p">)</span>
 
@@ -631,10 +639,23 @@ document.write(`
 <span class="c1"># Visualize the result</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="c1"># plotter = MeshPlotter(form, figsize=(12, 7.5))</span>
-<span class="c1"># plotter.draw_vertices(text=&quot;key&quot;, radius=0.3)</span>
-<span class="c1"># plotter.draw_edges()</span>
-<span class="c1"># plotter.show()</span>
+<span class="n">loadcolor</span> <span class="o">=</span> <span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">()</span><span class="o">.</span><span class="n">darkened</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">reactioncolor</span> <span class="o">=</span> <span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">()</span><span class="o">.</span><span class="n">darkened</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">tensioncolor</span> <span class="o">=</span> <span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">()</span><span class="o">.</span><span class="n">lightened</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+<span class="n">compressioncolor</span> <span class="o">=</span> <span class="n">Color</span><span class="o">.</span><span class="n">blue</span><span class="p">()</span><span class="o">.</span><span class="n">lightened</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
+<span class="n">config</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="s2">&quot;top&quot;</span>
+<span class="n">config</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">gridsize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
+
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+
+<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">show_faces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_lines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FormDiagram&quot;</span><span class="p">)</span>
+
+<span class="n">circles</span> <span class="o">=</span> <span class="p">[</span><span class="n">Circle</span><span class="o">.</span><span class="n">from_point_and_radius</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertex_point</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">],</span> <span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">to_polygon</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">()]</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">circles</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vertices&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">white</span><span class="p">(),</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">black</span><span class="p">())</span>
+
+<span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
