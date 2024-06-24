@@ -1,4 +1,11 @@
-# from compas_ags.viewers import Viewer
+from compas_viewer import Viewer
+from compas_viewer.config import Config
+
+from compas.colors import Color
+from compas.geometry import Box
+from compas.geometry import Circle
+from compas.geometry import Polygon
+from compas.geometry import bounding_box
 from compas_ags.ags import graphstatics
 from compas_ags.ags import loadpath
 from compas_ags.diagrams import ForceDiagram
@@ -115,9 +122,53 @@ loadpath.optimise_loadpath(form, force)
 # 4. display force and form diagrams
 # ------------------------------------------------------------------------------
 
-# viewer = Viewer(form, force, delay_setup=False, figsize=(12, 7.5))
+loadcolor = Color.green().darkened(50)
+reactioncolor = Color.green().darkened(50)
+tensioncolor = Color.red().lightened(25)
+compressioncolor = Color.blue().lightened(25)
 
-# viewer.draw_form(forcescale=5, vertexlabel={key: str(key) for key in form.vertices()}, vertexsize=0.2)
-# viewer.draw_force(vertexlabel={key: str(key) for key in force.vertices()}, vertexsize=0.2)
+b1 = Box.from_bounding_box(bounding_box(form.vertices_attributes("xyz")))
+b2 = Box.from_bounding_box(bounding_box(force.vertices_attributes("xyz")))
 
-# viewer.show()
+dx = b2.xmin - b1.xmax
+if dx < 1:
+    dx = 1.5 * (b1.xmax - b2.xmin)
+else:
+    dx = 0
+
+config = Config()
+config.renderer.view = "top"
+config.renderer.gridsize = [100, 100, 100, 100]
+
+viewer = Viewer(config=config)
+
+viewer.scene.add(form, show_faces=False, show_lines=False, name="FormDiagram")
+viewer.scene.add(force.translated([dx, 0, 0]), show_faces=False, name="ForceDiagram")
+
+circles = [Circle.from_point_and_radius(form.vertex_point(vertex) + [0, 0, 0.001], 0.1).to_polygon(n=128) for vertex in form.vertices()]
+viewer.scene.add(circles, name="Vertices", facecolor=Color.white(), linecolor=Color.black())
+
+external = []
+compression = []
+tension = []
+for edge in form.edges():
+    line = form.edge_line(edge)
+    vector = line.direction.cross([0, 0, 1])
+    force = form.edge_attribute(edge, name="f")
+    w = 0.01 * 0.5 * abs(force)
+    a = line.start + vector * -w
+    b = line.end + vector * -w
+    c = line.end + vector * +w
+    d = line.start + vector * +w
+    if form.edge_attribute(edge, name="is_external"):
+        external.append(Polygon([a, b, c, d]))
+    elif force > 0:
+        tension.append(Polygon([a, b, c, d]))
+    elif force < 0:
+        compression.append(Polygon([a, b, c, d]))
+
+viewer.scene.add(external, name="External Forces", facecolor=reactioncolor, linecolor=reactioncolor.contrast)
+viewer.scene.add(compression, name="Compression", facecolor=compressioncolor, linecolor=compressioncolor.contrast)
+viewer.scene.add(tension, name="Tension", facecolor=tensioncolor, linecolor=tensioncolor.contrast)
+
+viewer.show()

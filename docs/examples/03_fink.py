@@ -1,4 +1,12 @@
+from compas_viewer import Viewer
+from compas_viewer.config import Config
+
 import compas_ags
+from compas.colors import Color
+from compas.geometry import Box
+from compas.geometry import Circle
+from compas.geometry import Polygon
+from compas.geometry import bounding_box
 from compas.geometry import normalize_vector
 from compas.geometry import scale_vector
 from compas.geometry import subtract_vectors
@@ -29,7 +37,7 @@ assert graph.is_planar(), "The graph is not planar."
 # Construct a planar embedding of the graph
 # ==============================================================================
 
-embedding = graph.copy()
+embedding: FormGraph = graph.copy()
 
 if embedding.is_crossed():
 
@@ -38,7 +46,7 @@ if embedding.is_crossed():
     # and compute a spring layout to find a planar embedding
     # finally we re-add the leaves towards "the outside"
 
-    noleaves = embedding.copy()
+    noleaves: FormGraph = embedding.copy()
     for node in embedding.leaves():
         noleaves.delete_node(node)
 
@@ -76,7 +84,20 @@ form = FormDiagram.from_graph(embedding)
 # Visualize the result
 # ==============================================================================
 
-# plotter = MeshPlotter(form, figsize=(12, 7.5))
-# plotter.draw_vertices(text="key", radius=0.3)
-# plotter.draw_edges()
-# plotter.show()
+loadcolor = Color.green().darkened(50)
+reactioncolor = Color.green().darkened(50)
+tensioncolor = Color.red().lightened(25)
+compressioncolor = Color.blue().lightened(25)
+
+config = Config()
+config.renderer.view = "top"
+config.renderer.gridsize = [100, 100, 100, 100]
+
+viewer = Viewer(config=config)
+
+viewer.scene.add(form, show_faces=False, show_lines=True, linewidth=2, name="FormDiagram")
+
+circles = [Circle.from_point_and_radius(form.vertex_point(vertex) + [0, 0, 0.001], 0.1).to_polygon(n=128) for vertex in form.vertices()]
+viewer.scene.add(circles, name="Vertices", facecolor=Color.white(), linecolor=Color.black())
+
+viewer.show()

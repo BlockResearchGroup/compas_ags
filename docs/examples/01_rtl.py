@@ -12,8 +12,6 @@ from compas_ags.diagrams import ForceDiagram
 from compas_ags.diagrams import FormDiagram
 from compas_ags.diagrams import FormGraph
 
-# from compas_ags.viewers import Viewer
-
 # ==============================================================================
 # Construct the graph of a single panel truss,
 # including loads and reaction forces.
