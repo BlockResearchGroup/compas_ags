@@ -17,10 +17,7 @@ def view_form_force(form, force, forcescale=0.5, edge_label=True):
         force_edge_label = None
 
     viewer = Viewer(form, force, delay_setup=False)
-    viewer.draw_form(edgelabel=form_edge_label,
-                     forces_on=True,
-                     forcescale=forcescale,
-                     vertexcolor={key: '#000000' for key in form.vertices_where({'is_fixed': True})})
+    viewer.draw_form(edgelabel=form_edge_label, forces_on=True, forcescale=forcescale, vertexcolor={key: "#000000" for key in form.vertices_where({"is_fixed": True})})
     viewer.draw_force(edgelabel=force_edge_label)
     viewer.show()
 
@@ -34,15 +31,15 @@ def view_with_initial_stage(form, force, forcescale=0.5, edge_label=True):
         force_edge_label = None
 
     viewer = Viewer(form, force, delay_setup=False)
-    viewer.draw_form(lines=form_lines,
-                     forces_on=True,
-                     external_on=True,
-                     forcescale=forcescale,
-                     edgelabel=form_edge_label,
-                     vertexcolor={key: '#000000' for key in form.vertices_where({'is_fixed': True})})
-    viewer.draw_force(lines=force_lines,
-                      edgelabel=force_edge_label
-                      )
+    viewer.draw_form(
+        lines=form_lines,
+        forces_on=True,
+        external_on=True,
+        forcescale=forcescale,
+        edgelabel=form_edge_label,
+        vertexcolor={key: "#000000" for key in form.vertices_where({"is_fixed": True})},
+    )
+    viewer.draw_force(lines=force_lines, edgelabel=force_edge_label)
     viewer.show()
 
 
@@ -50,23 +47,11 @@ def store_initial_lines(form, force):
 
     form_lines = []
     for u, v in form.edges():
-        form_lines.append({
-            'start': form.vertex_coordinates(u, 'xy'),
-            'end': form.vertex_coordinates(v, 'xy'),
-            'width': 1.0,
-            'color': '#cccccc',
-            'style': '--'
-        })
+        form_lines.append({"start": form.vertex_coordinates(u, "xy"), "end": form.vertex_coordinates(v, "xy"), "width": 1.0, "color": "#cccccc", "style": "--"})
 
     force_lines = []
     for u, v in force.edges():
-        force_lines.append({
-            'start': force.vertex_coordinates(u, 'xy'),
-            'end': force.vertex_coordinates(v, 'xy'),
-            'width': 1.0,
-            'color': '#cccccc',
-            'style': '--'
-        })
+        force_lines.append({"start": force.vertex_coordinates(u, "xy"), "end": force.vertex_coordinates(v, "xy"), "width": 1.0, "color": "#cccccc", "style": "--"})
 
     return form_lines, force_lines
 
@@ -82,7 +67,7 @@ def store_initial_lines(form, force):
 #   1. Get geometry, apply loads and and compute equilibrium
 # ------------------------------------------------------------------------------
 
-input_file = compas_ags.get('paper/exD_truss.obj')
+input_file = compas_ags.get("paper/exD_truss.obj")
 
 graph = FormGraph.from_obj(input_file)
 form = FormDiagram.from_graph(graph)
@@ -99,8 +84,8 @@ edges_ind = [
 ]
 for index in edges_ind:
     u, v = index
-    form.edge_attribute((u, v), 'is_ind', True)
-    form.edge_attribute((u, v), 'q', +2.)
+    form.edge_attribute((u, v), "is_ind", True)
+    form.edge_attribute((u, v), "q", +2.0)
 
 index_edge = form.index_edge()
 
@@ -108,7 +93,7 @@ index_edge = form.index_edge()
 fixed = [5, 1]
 
 for key in fixed:
-    form.vertex_attribute(key, 'is_fixed', True)
+    form.vertex_attribute(key, "is_fixed", True)
 
 # update the diagrams
 form_update_q_from_qind(form)
@@ -128,25 +113,25 @@ edges_fix_orient = [13, 19, 17, 15, 4]
 
 for index in edges_fix_orient:
     edge = index_edge[index]
-    sp, ep = form.edge_coordinates(*edge)
+    sp, ep = form.edge_coordinates(edge)
     dx = ep[0] - sp[0]
     dy = ep[1] - sp[1]
-    length = (dx**2 + dy**2)**0.5
-    form.edge_attribute(edge, 'target_vector', [dx/length, dy/length])
+    length = (dx**2 + dy**2) ** 0.5
+    form.edge_attribute(edge, "target_vector", [dx / length, dy / length])
 
 # B. Assign forces on the top chord to have the same length
 index_edges_constant_force = [9, 7, 5, 0, 1]
 L = 5.0
 
 for index in index_edges_constant_force:
-    form.edge_attribute(index_edge[index], 'target_force', L)
+    form.edge_attribute(index_edge[index], "target_force", L)
 
 # C. Guarantee constant force application
 index_edges_constant_load = [20, 18, 16, 14]
 load = 2.0
 
 for index in index_edges_constant_load:
-    form.edge_attribute(index_edge[index], 'target_force', load)
+    form.edge_attribute(index_edge[index], "target_force", load)
 
 # Identify auto constraints
 form.identify_constraints()
