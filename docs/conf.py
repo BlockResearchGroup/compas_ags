@@ -1,156 +1,158 @@
+# flake8: noqa
 # -*- coding: utf-8 -*-
 
-# If your documentation needs a minimal Sphinx version, state it here.
-#
-# needs_sphinx = '1.0'
-
-from sphinx.ext.napoleon.docstring import NumpyDocstring
-
-import sphinx_compas_theme
+from sphinx.writers import html, html5
+import sphinx_compas2_theme
 
 # -- General configuration ------------------------------------------------
 
-project = "compas-ags"
-copyright = "2017, Block Research Group - ETH Zurich"
-author = "Tom Van Mele"
-release = "1.2.1"
-
-version = ".".join(release.split(".")[0:2])
+project = "COMPAS AGS"
+copyright = "Block Research Group - ETH Zurich"
+package = "compas_ags"
+organization = "blockresearchgroup"
 
 master_doc = "index"
-source_suffix = [
-    ".rst",
-]
-templates_path = ["_templates"]
-exclude_patterns = []
-
-pygments_style = "sphinx"
-show_authors = True
+source_suffix = {".rst": "restructuredtext", ".md": "markdown"}
+templates_path = sphinx_compas2_theme.get_autosummary_templates_path()
+exclude_patterns = sphinx_compas2_theme.default_exclude_patterns
 add_module_names = True
-language = None
+language = "en"
 
+latest_version = sphinx_compas2_theme.get_latest_version()
+
+if latest_version == "Unreleased":
+    release = "Unreleased"
+    version = "latest"
+else:
+    release = latest_version
+    version = ".".join(release.split(".")[0:2])  # type: ignore
 
 # -- Extension configuration ------------------------------------------------
 
-extensions = [
-    "sphinx.ext.autodoc",
-    "sphinx.ext.autosummary",
-    "sphinx.ext.doctest",
-    "sphinx.ext.intersphinx",
-    "sphinx.ext.mathjax",
-    "sphinx.ext.napoleon",
-    "sphinx.ext.viewcode",
-    "matplotlib.sphinxext.plot_directive",
-]
+extensions = sphinx_compas2_theme.default_extensions
+extensions.remove("sphinx.ext.linkcode")
+
+# numpydoc options
+
+numpydoc_show_class_members = False
+numpydoc_class_members_toctree = False
+numpydoc_attributes_as_param_list = True
+
+# bibtex options
 
 # autodoc options
 
-autodoc_mock_imports = ["Rhino", "System", "scriptcontext", "rhinoscriptsyntax", "clr", "bpy"]
+autodoc_type_aliases = {}
 
+autodoc_typehints_description_target = "documented"
+autodoc_mock_imports = sphinx_compas2_theme.default_mock_imports
 autodoc_default_options = {
     "undoc-members": True,
     "show-inheritance": True,
 }
-
 autodoc_member_order = "groupwise"
+autodoc_typehints = "description"
+autodoc_class_signature = "separated"
 
 autoclass_content = "class"
+
+
+def setup(app):
+    app.connect("autodoc-skip-member", sphinx_compas2_theme.skip)
+
 
 # autosummary options
 
 autosummary_generate = True
-autosummary_mock_imports = ["Rhino", "System", "scriptcontext", "rhinoscriptsyntax", "clr", "bpy"]
+autosummary_mock_imports = sphinx_compas2_theme.default_mock_imports
 
-# napoleon options
-
-napoleon_google_docstring = False
-napoleon_numpy_docstring = True
-napoleon_include_init_with_doc = False
-napoleon_include_private_with_doc = False
-napoleon_include_special_with_doc = True
-napoleon_use_admonition_for_examples = False
-napoleon_use_admonition_for_notes = False
-napoleon_use_admonition_for_references = False
-napoleon_use_ivar = False
-napoleon_use_param = False
-napoleon_use_rtype = False
-
-
-# first, we define new methods for any new sections and add them to the class
-def parse_keys_section(self, section):
-    return self._format_fields("Keys", self._consume_fields())
-
-
-NumpyDocstring._parse_keys_section = parse_keys_section
-
-
-def parse_attributes_section(self, section):
-    return self._format_fields("Attributes", self._consume_fields())
-
-
-NumpyDocstring._parse_attributes_section = parse_attributes_section
-
-
-def parse_class_attributes_section(self, section):
-    return self._format_fields("Class Attributes", self._consume_fields())
-
-
-NumpyDocstring._parse_class_attributes_section = parse_class_attributes_section
-
-
-# we now patch the parse method to guarantee that the the above methods are
-# assigned to the _section dict
-def patched_parse(self):
-    self._sections["keys"] = self._parse_keys_section
-    self._sections["class attributes"] = self._parse_class_attributes_section
-    self._unpatched_parse()
-
-
-NumpyDocstring._unpatched_parse = NumpyDocstring._parse
-NumpyDocstring._parse = patched_parse
+# graph options
 
 # plot options
-
-# plot_include_source
-# plot_pre_code
-# plot_basedir
-# plot_formats
-# plot_rcparams
-# plot_apply_rcparams
-# plot_working_directory
-# plot_template
-
-plot_html_show_source_link = False
-plot_html_show_formats = False
 
 # intersphinx options
 
 intersphinx_mapping = {
     "python": ("https://docs.python.org/", None),
-    "compas": ("https://compas-dev.github.io/compas", "https://compas-dev.github.io/compas/objects.inv"),
+    "compas": ("https://compas.dev/compas/latest/", None),
 }
 
+# linkcode
+
+# linkcode_resolve = sphinx_compas2_theme.get_linkcode_resolve(organization, package)
+
+# extlinks
+
+extlinks = {
+    "rhino": ("https://developer.rhino3d.com/api/RhinoCommon/html/T_%s.htm", "%s"),
+}
+
+# from pytorch
+
+sphinx_compas2_theme.replace(html.HTMLTranslator)
+sphinx_compas2_theme.replace(html5.HTML5Translator)
 
 # -- Options for HTML output ----------------------------------------------
 
-html_theme = "compaspkg"
-html_theme_path = sphinx_compas_theme.get_html_theme_path()
+html_theme = "sidebaronly"
+html_title = project
+
+favicons = [
+    {
+        "rel": "icon",
+        "href": "compas.ico",
+    }
+]
+
 html_theme_options = {
-    "package_name": "compas_ags",
-    "package_title": project,
-    "package_version": release,
-    "package_author": "Tom Van Mele",
-    "package_description": "COMPAS package for Algebraic Graph Statics",
-    "package_repo": "https://github.com/BlockResearchGroup/compas_ags",
-    "package_docs": "https://blockresearchgroup.github.io/compas_ags/",
-    "package_old_versions_txt": "https://blockresearchgroup.github.io/compas_ags/doc_versions.txt",
+    "icon_links": [
+        {
+            "name": "GitHub",
+            "url": f"https://github.com/{organization}/{package}",
+            "icon": "fa-brands fa-github",
+            "type": "fontawesome",
+        },
+        {
+            "name": "Discourse",
+            "url": "http://forum.compas-framework.org/",
+            "icon": "fa-brands fa-discourse",
+            "type": "fontawesome",
+        },
+        {
+            "name": "PyPI",
+            "url": f"https://pypi.org/project/{package}/",
+            "icon": "fa-brands fa-python",
+            "type": "fontawesome",
+        },
+    ],
+    "switcher": {
+        "json_url": f"https://raw.githubusercontent.com/{organization}/{package}/gh-pages/versions.json",
+        "version_match": version,
+    },
+    "check_switcher": False,
+    "logo": {
+        "image_light": "_static/compas_icon_white.png",
+        "image_dark": "_static/compas_icon_white.png",
+        "text": project,
+    },
+    "navigation_depth": 3,
 }
-html_context = {}
-html_static_path = sphinx_compas_theme.get_html_static_path()
-html_extra_path = [".nojekyll"]
+
+
+html_context = {
+    "github_url": "https://github.com",
+    "github_user": organization,
+    "github_repo": package,
+    "github_version": "main",
+    "doc_path": "docs",
+}
+
+html_static_path = sphinx_compas2_theme.get_html_static_path() + ["_static"]
+html_css_files = []
+html_extra_path = []
 html_last_updated_fmt = ""
 html_copy_source = False
-html_show_sourcelink = False
-html_add_permalinks = ""
-html_experimental_html5_writer = True
+html_show_sourcelink = True
+html_permalinks = False
+html_permalinks_icon = ""
 html_compact_lists = True

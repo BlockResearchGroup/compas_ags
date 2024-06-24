@@ -1,6 +1,11 @@
 ********************************************************************************
-Algebraic Graph Statics
+Documentation of compas_ags
 ********************************************************************************
+
+.. figure:: /_images/AGS_intro.png
+   :figclass: figure
+   :class: figure-img img-fluid
+
 
 Graphic Statics
 ===============
@@ -33,9 +38,8 @@ Table of Contents
    :titlesonly:
 
    Introduction<self>
-   gettingstarted
+   installation
    examples
    api
-   devguide
    publications
    license

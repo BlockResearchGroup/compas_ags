@@ -1,11 +1,9 @@
-from compas_ags.diagrams import FormGraph
-from compas_ags.diagrams import FormDiagram
-from compas_ags.diagrams import ForceDiagram
-
-from compas_ags.viewers import Viewer
-
+# from compas_ags.viewers import Viewer
 from compas_ags.ags import graphstatics
 from compas_ags.ags import loadpath
+from compas_ags.diagrams import ForceDiagram
+from compas_ags.diagrams import FormDiagram
+from compas_ags.diagrams import FormGraph
 
 # ------------------------------------------------------------------------------
 # 1. create a planar truss structure, its applied loads and boundary conditions
@@ -117,9 +115,9 @@ loadpath.optimise_loadpath(form, force)
 # 4. display force and form diagrams
 # ------------------------------------------------------------------------------
 
-viewer = Viewer(form, force, delay_setup=False, figsize=(12, 7.5))
+# viewer = Viewer(form, force, delay_setup=False, figsize=(12, 7.5))
 
-viewer.draw_form(forcescale=5, vertexlabel={key: str(key) for key in form.vertices()}, vertexsize=0.2)
-viewer.draw_force(vertexlabel={key: str(key) for key in force.vertices()}, vertexsize=0.2)
+# viewer.draw_form(forcescale=5, vertexlabel={key: str(key) for key in form.vertices()}, vertexsize=0.2)
+# viewer.draw_force(vertexlabel={key: str(key) for key in force.vertices()}, vertexsize=0.2)
 
-viewer.show()
+# viewer.show()

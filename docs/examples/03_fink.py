@@ -1,14 +1,10 @@
 import compas_ags
-
-from compas.geometry import subtract_vectors
-from compas.geometry import sum_vectors
 from compas.geometry import normalize_vector
 from compas.geometry import scale_vector
-
-from compas_ags.diagrams import FormGraph
+from compas.geometry import subtract_vectors
+from compas.geometry import sum_vectors
 from compas_ags.diagrams import FormDiagram
-
-from compas_plotters import MeshPlotter
+from compas_ags.diagrams import FormGraph
 
 # ==============================================================================
 # Construct the graph of a Fink truss.
@@ -49,7 +45,7 @@ if embedding.is_crossed():
     assert noleaves.embed(fixed=fixed), "The graph could not be embedded in the plane using a spring layout."
 
     E = noleaves.number_of_edges()
-    L = sum(noleaves.edge_length(*edge) for edge in noleaves.edges())
+    L = sum(noleaves.edge_length(edge) for edge in noleaves.edges())
     length = 0.5 * L / E
 
     for node in noleaves.nodes():
@@ -80,7 +76,7 @@ form = FormDiagram.from_graph(embedding)
 # Visualize the result
 # ==============================================================================
 
-plotter = MeshPlotter(form, figsize=(12, 7.5))
-plotter.draw_vertices(text="key", radius=0.3)
-plotter.draw_edges()
-plotter.show()
+# plotter = MeshPlotter(form, figsize=(12, 7.5))
+# plotter.draw_vertices(text="key", radius=0.3)
+# plotter.draw_edges()
+# plotter.show()
