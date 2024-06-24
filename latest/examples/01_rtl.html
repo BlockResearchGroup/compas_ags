@@ -553,19 +553,12 @@ document.write(`
 <figure class="figure align-default">
 <img alt="../_images/example_rtl.png" class="figure-img img-fluid" src="../_images/example_rtl.png" />
 </figure>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">compas_viewer</span> <span class="kn">import</span> <span class="n">Viewer</span>
-<span class="kn">from</span> <span class="nn">compas_viewer.config</span> <span class="kn">import</span> <span class="n">Config</span>
-
-<span class="kn">import</span> <span class="nn">compas_ags</span>
-<span class="kn">from</span> <span class="nn">compas.colors</span> <span class="kn">import</span> <span class="n">Color</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Box</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Circle</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">Polygon</span>
-<span class="kn">from</span> <span class="nn">compas.geometry</span> <span class="kn">import</span> <span class="n">bounding_box</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">compas_ags</span>
 <span class="kn">from</span> <span class="nn">compas_ags.ags</span> <span class="kn">import</span> <span class="n">graphstatics</span>
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">ForceDiagram</span>
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">FormDiagram</span>
 <span class="kn">from</span> <span class="nn">compas_ags.diagrams</span> <span class="kn">import</span> <span class="n">FormGraph</span>
+<span class="kn">from</span> <span class="nn">compas_ags.viewer</span> <span class="kn">import</span> <span class="n">AGSViewer</span>
 
 <span class="c1"># ==============================================================================</span>
 <span class="c1"># Construct the graph of a single panel truss,</span>
@@ -629,55 +622,9 @@ document.write(`
 <span class="c1"># Visualize the result.</span>
 <span class="c1"># ==============================================================================</span>
 
-<span class="n">loadcolor</span> <span class="o">=</span> <span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">()</span><span class="o">.</span><span class="n">darkened</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
-<span class="n">reactioncolor</span> <span class="o">=</span> <span class="n">Color</span><span class="o">.</span><span class="n">green</span><span class="p">()</span><span class="o">.</span><span class="n">darkened</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
-<span class="n">tensioncolor</span> <span class="o">=</span> <span class="n">Color</span><span class="o">.</span><span class="n">red</span><span class="p">()</span><span class="o">.</span><span class="n">lightened</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
-<span class="n">compressioncolor</span> <span class="o">=</span> <span class="n">Color</span><span class="o">.</span><span class="n">blue</span><span class="p">()</span><span class="o">.</span><span class="n">lightened</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
-
-<span class="n">b1</span> <span class="o">=</span> <span class="n">Box</span><span class="o">.</span><span class="n">from_bounding_box</span><span class="p">(</span><span class="n">bounding_box</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertices_attributes</span><span class="p">(</span><span class="s2">&quot;xyz&quot;</span><span class="p">)))</span>
-<span class="n">b2</span> <span class="o">=</span> <span class="n">Box</span><span class="o">.</span><span class="n">from_bounding_box</span><span class="p">(</span><span class="n">bounding_box</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">vertices_attributes</span><span class="p">(</span><span class="s2">&quot;xyz&quot;</span><span class="p">)))</span>
-
-<span class="n">dx</span> <span class="o">=</span> <span class="n">b2</span><span class="o">.</span><span class="n">xmin</span> <span class="o">-</span> <span class="n">b1</span><span class="o">.</span><span class="n">xmax</span>
-<span class="k">if</span> <span class="n">dx</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-    <span class="n">dx</span> <span class="o">=</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">b1</span><span class="o">.</span><span class="n">xmax</span> <span class="o">-</span> <span class="n">b2</span><span class="o">.</span><span class="n">xmin</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="n">dx</span> <span class="o">=</span> <span class="mi">0</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">Config</span><span class="p">()</span>
-<span class="n">config</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="s2">&quot;top&quot;</span>
-<span class="n">config</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">gridsize</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">]</span>
-
-<span class="n">viewer</span> <span class="o">=</span> <span class="n">Viewer</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
-
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">show_faces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">show_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;FormDiagram&quot;</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">force</span><span class="o">.</span><span class="n">translated</span><span class="p">([</span><span class="n">dx</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">show_faces</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;ForceDiagram&quot;</span><span class="p">)</span>
-
-<span class="n">circles</span> <span class="o">=</span> <span class="p">[</span><span class="n">Circle</span><span class="o">.</span><span class="n">from_point_and_radius</span><span class="p">(</span><span class="n">form</span><span class="o">.</span><span class="n">vertex_point</span><span class="p">(</span><span class="n">vertex</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">],</span> <span class="mf">0.1</span><span class="p">)</span><span class="o">.</span><span class="n">to_polygon</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span> <span class="k">for</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">vertices</span><span class="p">()]</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">circles</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Vertices&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">white</span><span class="p">(),</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">Color</span><span class="o">.</span><span class="n">black</span><span class="p">())</span>
-
-<span class="n">external</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">compression</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="n">tension</span> <span class="o">=</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">form</span><span class="o">.</span><span class="n">edges</span><span class="p">():</span>
-    <span class="n">line</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">edge_line</span><span class="p">(</span><span class="n">edge</span><span class="p">)</span>
-    <span class="n">vector</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">direction</span><span class="o">.</span><span class="n">cross</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
-    <span class="n">force</span> <span class="o">=</span> <span class="n">form</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;f&quot;</span><span class="p">)</span>
-    <span class="n">w</span> <span class="o">=</span> <span class="mf">0.01</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">force</span><span class="p">)</span>
-    <span class="n">a</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="n">vector</span> <span class="o">*</span> <span class="o">-</span><span class="n">w</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">end</span> <span class="o">+</span> <span class="n">vector</span> <span class="o">*</span> <span class="o">-</span><span class="n">w</span>
-    <span class="n">c</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">end</span> <span class="o">+</span> <span class="n">vector</span> <span class="o">*</span> <span class="o">+</span><span class="n">w</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">start</span> <span class="o">+</span> <span class="n">vector</span> <span class="o">*</span> <span class="o">+</span><span class="n">w</span>
-    <span class="k">if</span> <span class="n">form</span><span class="o">.</span><span class="n">edge_attribute</span><span class="p">(</span><span class="n">edge</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;is_external&quot;</span><span class="p">):</span>
-        <span class="n">external</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Polygon</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">]))</span>
-    <span class="k">elif</span> <span class="n">force</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">tension</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Polygon</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">]))</span>
-    <span class="k">elif</span> <span class="n">force</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">compression</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Polygon</span><span class="p">([</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">d</span><span class="p">]))</span>
-
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">external</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;External Forces&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">reactioncolor</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">reactioncolor</span><span class="o">.</span><span class="n">contrast</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">compression</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Compression&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">compressioncolor</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">compressioncolor</span><span class="o">.</span><span class="n">contrast</span><span class="p">)</span>
-<span class="n">viewer</span><span class="o">.</span><span class="n">scene</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tension</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Tension&quot;</span><span class="p">,</span> <span class="n">facecolor</span><span class="o">=</span><span class="n">tensioncolor</span><span class="p">,</span> <span class="n">linecolor</span><span class="o">=</span><span class="n">tensioncolor</span><span class="o">.</span><span class="n">contrast</span><span class="p">)</span>
-
+<span class="n">viewer</span> <span class="o">=</span> <span class="n">AGSViewer</span><span class="p">()</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">add_form</span><span class="p">(</span><span class="n">form</span><span class="p">,</span> <span class="n">scale_forces</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="n">viewer</span><span class="o">.</span><span class="n">add_force</span><span class="p">(</span><span class="n">force</span><span class="p">)</span>
 <span class="n">viewer</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
