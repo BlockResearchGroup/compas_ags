@@ -1,49 +1,74 @@
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
-
 import sys
 
+import numpy.typing as npt
 from numpy import array
-from numpy import eye
-from numpy import zeros
-from numpy import float64
+from numpy import asarray
+from numpy import atleast_2d
 from numpy import delete
-from numpy import vstack
 from numpy import diag
+from numpy import eye
+from numpy import float64
 from numpy import hstack
-from numpy.linalg import inv
+from numpy import vstack
+from numpy import zeros
 from numpy.linalg import cond
+from numpy.linalg import inv
 from numpy.linalg import matrix_rank
-
-from scipy.linalg import solve
 from scipy.linalg import lstsq
+from scipy.linalg import solve
+from scipy.sparse import spmatrix
 
-from compas.numerical import normrow
-from compas.numerical import normalizerow
-from compas.numerical import connectivity_matrix
-from compas.numerical import equilibrium_matrix
-from compas.numerical import laplacian_matrix
-from compas.numerical import solve_with_known
+from compas.geometry import Line
 from compas.geometry import midpoint_point_point_xy
 from compas.geometry import project_point_line_xy
-
+from compas.linalg import normalizerow
+from compas.linalg import normrow
+from compas.linalg import solve_with_known
+from compas.matrices import connectivity_matrix
+from compas.matrices import equilibrium_matrix
+from compas.matrices import laplacian_matrix
 from compas_ags.exceptions import SolutionError
-
-
-__all__ = [
-    "update_q_from_qind",
-    "update_primal_from_dual",
-    "get_jacobian_and_residual",
-    "compute_jacobian",
-    "parallelise_edges",
-]
-
 
 EPS = 1 / sys.float_info.epsilon
 
 
-def update_q_from_qind(E, q, dep, ind):
+def rref_sympy(A, tol=None):
+    r"""Reduced row-echelon form of matrix A.
+
+    Parameters
+    ----------
+    A : array-like
+        Matrix A represented as an array or list.
+    tol : float
+        Tolerance.
+
+    Returns
+    -------
+    array
+        RREF of A.
+
+    Notes
+    -----
+    A matrix is in reduced row-echelon form after Gauss-Jordan elimination, the
+    result is independent of the method/algorithm used.
+
+    Examples
+    --------
+    >>> A = [[1, 0, 1, 3], [2, 3, 4, 7], [-1, -3, -3, -4]]
+    >>> n = rref_sympy(A)
+    >>> array(n)
+    array([[1, 0, 1.00000000000000, 3.00000000000000],
+           [0, 1, 0.666666666666667, 0.333333333333333],
+           [0, 0, 0, 0]], dtype=object)
+
+    """
+    import sympy
+
+    A = atleast_2d(asarray(A, dtype=float))
+    return sympy.Matrix(A).rref()[0].tolist()
+
+
+def update_q_from_qind(E: spmatrix, q: npt.NDArray, dep: list[int], ind: list[int]) -> None:
     """Update the full set of force densities using the values of the independent edges.
 
     Parameters
@@ -86,18 +111,18 @@ def update_q_from_qind(E, q, dep, ind):
 
 
 def update_primal_from_dual(
-    xy,
-    _xy,
-    free,
-    i_nbrs,
-    ij_e,
-    _C,
-    line_constraints=None,
-    target_lengths=[],
-    target_vectors=[],
-    leaves=[],
-    kmax=100,
-):
+    xy: npt.ArrayLike,
+    _xy: npt.ArrayLike,
+    free: list[int],
+    i_nbrs: list[list[int]],
+    ij_e: dict[tuple[int, int], int],
+    _C: spmatrix,
+    line_constraints: list = None,
+    target_lengths: list[float] = [],
+    target_vectors: list[list[float]] = [],
+    leaves: list[int] = [],
+    kmax: int = 100,
+) -> None:
     r"""Update the coordinates of the primal diagram using the coordinates of the corresponding dual diagram.
     This function apply to both sides, i.e. it can be used to update the form diagram from the geometry of the force
     diagram or to update the force diagram from the geometry of the force diagram.
@@ -108,6 +133,8 @@ def update_primal_from_dual(
         XY coordinates of the vertices of the primal diagram.
     _xy : array-like
         XY coordinates of the vertices of the dual diagram.
+    free : list
+        List of free vertices.
     i_nbrs : list of list of int
         Vertex neighbours per vertex.
     ij_e : dict
@@ -204,9 +231,7 @@ def update_primal_from_dual(
                 if j in leaves:
                     continue
 
-                n = _t[
-                    ij_e[(i, j)], None
-                ]  # the direction of the line (the line parallel to the corresponding line in the force diagram)
+                n = _t[ij_e[(i, j)], None]  # the direction of the line (the line parallel to the corresponding line in the force diagram)
                 _l = _uv[ij_e[(i, j)], None]
 
                 if normrow(_l)[0, 0] < 0.001:
@@ -226,7 +251,7 @@ def update_primal_from_dual(
                 q += r.dot(a.T)
 
             if line_constraints:
-                line = line_constraints[count]
+                line: Line = line_constraints[count]
                 if line:
                     n_ = array(line.direction[:2]).reshape(1, 2)
                     r = I - n_.T.dot(n_)
@@ -565,11 +590,3 @@ def compute_jacobian(form, force):
             d_XdXi = hstack((d_XdXiTop, d_XdXiBot))
             jacobian[:, i + j * vcount] = d_XdXi
     return jacobian
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass

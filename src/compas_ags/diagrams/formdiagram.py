@@ -1,21 +1,19 @@
-from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+from __future__ import print_function
 
 from itertools import islice
-from compas_ags.diagrams import Diagram
-from compas.datastructures import network_find_cycles
+
 from compas.geometry import Line
-
-
-__all__ = ["FormDiagram"]
+from compas_ags.diagrams import Diagram
+from compas_ags.diagrams import FormGraph  # noqa: F401
 
 
 class FormDiagram(Diagram):
     """Mesh-based data structure for form diagrams in AGS."""
 
-    def __init__(self):
-        super(FormDiagram, self).__init__()
+    def __init__(self, **kwargs):
+        super(FormDiagram, self).__init__(**kwargs)
         self._graph = None
         self.attributes.update(
             {
@@ -56,6 +54,7 @@ class FormDiagram(Diagram):
 
     @classmethod
     def from_graph(cls, graph):
+        # type: (FormGraph) -> FormDiagram
         """Construct a form diagram from a form graph.
 
         This constructor converts the form graph into a mesh by finding the cycles of its planar embedding.
@@ -74,7 +73,7 @@ class FormDiagram(Diagram):
             if graph.degree(node) == 2:
                 graph.delete_node(node)
         node_index = graph.node_index()
-        cycles = network_find_cycles(graph, breakpoints=graph.leaves())
+        cycles = graph.find_cycles(breakpoints=graph.leaves())
         points = graph.nodes_attributes("xyz")
         cycles[:] = [[node_index[node] for node in cycle] for cycle in cycles]
         form = cls.from_vertices_and_faces(points, cycles)
@@ -88,6 +87,7 @@ class FormDiagram(Diagram):
     # --------------------------------------------------------------------------
 
     def leaves(self):
+        # type: () -> list[int]
         """Identify the leaves of the form diagram.
 
         Returns
@@ -171,7 +171,7 @@ class FormDiagram(Diagram):
             The current forcedensity in the edge if no new value is given.
             Otherwise, nothing.
         """
-        if type(edge) is int:
+        if isinstance(edge, int):
             edge = next(islice(self.edges(), edge, None))
         if q is None:
             return self.edge_attribute(edge, "q")
@@ -195,9 +195,9 @@ class FormDiagram(Diagram):
             The current force in the edge if no new value is given.
             Otherwise, nothing.
         """
-        if type(edge) is int:
+        if isinstance(edge, int):
             edge = next(islice(self.edges(), edge, None))
-        length = self.edge_length(*edge)
+        length = self.edge_length(edge)
         q = self.edge_attribute(edge, "q")
         if force is None:
             return q * length
@@ -250,7 +250,7 @@ class FormDiagram(Diagram):
         fixed = self.fixed()
         leaves = self.leaves()
         for edge in self.leaf_edges():
-            sp, ep = self.edge_coordinates(*edge)
+            sp, ep = self.edge_coordinates(edge)
             line = Line(sp, ep)
             dx = ep[0] - sp[0]
             dy = ep[1] - sp[1]
@@ -258,9 +258,7 @@ class FormDiagram(Diagram):
             self.edge_attribute(edge, "target_vector", [dx / length, dy / length])
             self.edge_attribute(edge, "is_load", True)  # by default loads are leaves connected to non fixed vertices
             if edge[0] in fixed or edge[1] in fixed:
-                self.edge_attribute(
-                    edge, "is_reaction", True
-                )  # by default reactions are leaves connected to fixed vertices
+                self.edge_attribute(edge, "is_reaction", True)  # by default reactions are leaves connected to fixed vertices
                 self.edge_attribute(edge, "is_load", False)
                 continue
             if edge[0] in leaves:
@@ -294,11 +292,3 @@ class FormDiagram(Diagram):
     #                 key = xy_key[gkey]
     #                 self.vertex[key]['cx'] = 1.0
     #                 self.vertex[key]['cy'] = 1.0
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass

@@ -1,11 +1,8 @@
-from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+from __future__ import print_function
 
 from compas.datastructures import Mesh
-
-
-__all__ = ["Diagram"]
 
 
 class Diagram(Mesh):
@@ -18,13 +15,12 @@ class Diagram(Mesh):
 
     """
 
-    def __init__(self):
-        super(Diagram, self).__init__()
+    def __init__(self, **kwargs):
+        super(Diagram, self).__init__(**kwargs)
         self._dual = None
 
     @property
     def dual(self):
-        """The dual of this diagram."""
         return self._dual
 
     @dual.setter
@@ -42,11 +38,3 @@ class Diagram(Mesh):
 
     def index_edge(self):
         return {index: edge for index, edge in enumerate(self.edges())}
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass

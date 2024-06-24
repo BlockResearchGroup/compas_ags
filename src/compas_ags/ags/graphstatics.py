@@ -1,54 +1,42 @@
-from __future__ import print_function
-from __future__ import absolute_import
-from __future__ import division
+from typing import Annotated
+from typing import Callable
+from typing import Literal
 
+import numpy.typing as npt
 from numpy import array
-from numpy import float64
 from numpy import delete
+from numpy import float64
 from numpy import vstack
 from numpy.linalg import lstsq
 from numpy.linalg import norm
-
 from scipy.sparse import diags
 
 from compas.geometry import angle_vectors_xy
-
-from compas.numerical import connectivity_matrix
-from compas.numerical import equilibrium_matrix
-from compas.numerical import spsolve_with_known
-from compas.numerical import normrow
-from compas.numerical import dof
-from compas.numerical import rref_sympy as rref
-from compas.numerical import nonpivots
-from compas.numerical import nullspace as matrix_nullspace
-
-from compas_ags.ags.core import update_q_from_qind
-from compas_ags.ags.core import update_primal_from_dual
-from compas_ags.ags.core import get_jacobian_and_residual
+from compas.linalg import dof
+from compas.linalg import nonpivots
+from compas.linalg import normrow
+from compas.linalg import nullspace as matrix_nullspace
+from compas.linalg import spsolve_with_known
+from compas.matrices import connectivity_matrix
+from compas.matrices import equilibrium_matrix
+from compas_ags.ags.constraints import ConstraintsCollection
 from compas_ags.ags.core import compute_jacobian
+from compas_ags.ags.core import get_jacobian_and_residual
 from compas_ags.ags.core import parallelise_edges
-
+from compas_ags.ags.core import update_primal_from_dual
+from compas_ags.ags.core import update_q_from_qind
+from compas_ags.diagrams import ForceDiagram
+from compas_ags.diagrams import FormDiagram
 from compas_ags.exceptions import SolutionError
 
-
-__all__ = [
-    "form_identify_dof",
-    "form_count_dof",
-    "form_update_q_from_qind",
-    "form_update_from_force",
-    "form_update_from_force_newton",
-    "force_update_from_form",
-    "force_update_from_constraints",
-    "update_diagrams_from_constraints",
-]
-
+from .core import rref_sympy
 
 # ==============================================================================
 # analysis form diagram
 # ==============================================================================
 
 
-def form_identify_dof(form):
+def form_identify_dof(form: FormDiagram) -> tuple[int, int, list[int]]:
     r"""Identify the DOF of a form diagram.
 
     Parameters
@@ -89,9 +77,6 @@ def form_identify_dof(form):
     vector space if they are linearly independent vectors and every vector of the
     space is a linear combination of this set.
 
-    Examples
-    --------
-    >>>
     """
     vertex_index = form.vertex_index()
 
@@ -103,12 +88,12 @@ def form_identify_dof(form):
     E = equilibrium_matrix(C, xy, free)
 
     k, m = dof(E)
-    ind = nonpivots(rref(E))
+    ind = nonpivots(rref_sympy(E))
 
     return int(k), int(m), [edges[i] for i in ind]
 
 
-def form_count_dof(form):
+def form_count_dof(form: FormDiagram) -> tuple[int, int]:
     r"""Count the number of degrees of freedom of a form diagram.
 
     Parameters
@@ -138,9 +123,6 @@ def form_count_dof(form):
         \mathbf{C}_{i}^{t}\mathbf{V}
         \end{bmatrix}
 
-    Examples
-    --------
-    >>>
     """
     vertex_index = form.vertex_index()
 
@@ -156,7 +138,11 @@ def form_count_dof(form):
     return int(k), int(m)
 
 
-def form_compute_nullspace(form, force, constraints=None):
+def form_compute_nullspace(
+    form: FormDiagram,
+    force: ForceDiagram,
+    constraints: ConstraintsCollection = None,
+) -> list[Annotated[npt.NDArray, Literal["N", 2]]]:
     r"""Compute the nullspaces of a form diagram assuming a set of constraints.
 
     It returns a list with the displacements that apply to the form diagram representing
@@ -190,9 +176,6 @@ def form_compute_nullspace(form, force, constraints=None):
     ----------
     .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
 
-    Examples
-    --------
-    >>>
     """
     jacobian = compute_jacobian(form, force)  # Jacobian matrix of size (2 _vcount, 2 vcount)
     if constraints:
@@ -201,7 +184,7 @@ def form_compute_nullspace(form, force, constraints=None):
 
     # Remove the rows of the jacobian to account for the anchored vertex in the force diagram (influence x and y directions)
     _vcount = force.number_of_vertices()
-    _k_i = force.key_index()
+    _k_i = force.vertex_index()
     _anchor = _k_i[force.anchor()]
     _anchor_xy = [_anchor, _vcount + _anchor]
 
@@ -222,7 +205,7 @@ def form_compute_nullspace(form, force, constraints=None):
 # ==============================================================================
 
 
-def form_update_q_from_qind(form):
+def form_update_q_from_qind(form: FormDiagram) -> FormDiagram:
     """Update the force densities of the dependent edges of a form diagram using
     the values of the independent ones.
 
@@ -269,7 +252,7 @@ def form_update_q_from_qind(form):
     return form
 
 
-def form_update_from_force(form, force, kmax=100):
+def form_update_from_force(form: FormDiagram, force: ForceDiagram, kmax: int = 100) -> tuple[FormDiagram, ForceDiagram]:
     r"""Update the form diagram after a modification of the force diagram.
 
     Parameters
@@ -316,10 +299,7 @@ def form_update_from_force(form, force, kmax=100):
     # --------------------------------------------------------------------------
     vertex_index = form.vertex_index()
     edge_index = form.edge_index()
-    i_j = {
-        index: [vertex_index[nbr] for nbr in form.vertex_neighbors(vertex)]
-        for index, vertex in enumerate(form.vertices())
-    }
+    i_j = {index: [vertex_index[nbr] for nbr in form.vertex_neighbors(vertex)] for index, vertex in enumerate(form.vertices())}
     ij_e = {(vertex_index[u], vertex_index[v]): edge_index[u, v] for u, v in edge_index}
     ij_e.update({(vertex_index[v], vertex_index[u]): edge_index[u, v] for u, v in edge_index})
 
@@ -400,7 +380,13 @@ def form_update_from_force(form, force, kmax=100):
     return form, force
 
 
-def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_iter=20):
+def form_update_from_force_newton(
+    form: FormDiagram,
+    force: ForceDiagram,
+    constraints: ConstraintsCollection = None,
+    tol: float = 1e-10,
+    max_iter: int = 20,
+) -> FormDiagram:
     r"""Update the form diagram after a modification of the force diagram.
 
     Compute the geometry of the form diagram from the geometry of the force diagram
@@ -486,7 +472,7 @@ def form_update_from_force_newton(form, force, constraints=None, tol=1e-10, max_
 # ==============================================================================
 
 
-def force_update_from_form(force, form):
+def force_update_from_form(force: ForceDiagram, form: FormDiagram) -> ForceDiagram:
     """Update the force diagram after modifying the (force densities of) the form diagram.
 
     Parameters
@@ -500,6 +486,7 @@ def force_update_from_form(force, form):
     -------
     force: :class:`ForceDiagram`
         The updated force diagram.
+
     """
     # --------------------------------------------------------------------------
     # form diagram
@@ -537,7 +524,7 @@ def force_update_from_form(force, form):
     return force
 
 
-def force_update_from_form_geometrical(force, form, kmax=100):
+def force_update_from_form_geometrical(force: ForceDiagram, form: FormDiagram, kmax: int = 100) -> ForceDiagram:
     """Update the force diagram after modifying the (geometry of) the form diagram.
 
     Parameters
@@ -554,6 +541,7 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     -------
     force :class:`ForceDiagram`
         The updated force diagram.
+
     """
     # --------------------------------------------------------------------------
     # form diagram
@@ -575,10 +563,7 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     _edges = force.ordered_edges(form)
     _edges[:] = [(_vertex_index[u], _vertex_index[v]) for u, v in _edges]
 
-    _i_j = {
-        index: [_vertex_index[nbr] for nbr in force.vertex_neighbors(vertex)]
-        for index, vertex in enumerate(force.vertices())
-    }
+    _i_j = {index: [_vertex_index[nbr] for nbr in force.vertex_neighbors(vertex)] for index, vertex in enumerate(force.vertices())}
     _ij_e = {(_vertex_index[u], _vertex_index[v]): _edge_index[u, v] for u, v in _edge_index}
     _ij_e.update({(_vertex_index[v], _vertex_index[u]): _edge_index[u, v] for u, v in _edge_index})
 
@@ -622,7 +607,7 @@ def force_update_from_form_geometrical(force, form, kmax=100):
     return force
 
 
-def force_update_from_constraints(force, kmax=100):
+def force_update_from_constraints(force: ForceDiagram, kmax: int = 100) -> ForceDiagram:
     """Update the force diagram from constraints on length and orientation imposed in the form diagram,
     and already carried out as attributes in the force diagram.
 
@@ -696,7 +681,13 @@ def force_update_from_constraints(force, kmax=100):
 # ==============================================================================
 
 
-def update_diagrams_from_constraints(form, force, max_iter=20, kmax=20, callback=None):
+def update_diagrams_from_constraints(
+    form: FormDiagram,
+    force: ForceDiagram,
+    max_iter: int = 20,
+    kmax: int = 20,
+    callback: Callable = None,
+) -> tuple[FormDiagram, ForceDiagram]:
     """Update the form and force diagram after constraints / or movements are imposed to the diagrams.
 
     Parameters
@@ -721,6 +712,7 @@ def update_diagrams_from_constraints(form, force, max_iter=20, kmax=20, callback
         The updated form diagram.
     force: :class:`ForceDiagram`
         The updated force diagram.
+
     """
 
     form.dual = force
@@ -750,11 +742,3 @@ def update_diagrams_from_constraints(form, force, max_iter=20, kmax=20, callback
         niter += 1
 
     return form, force
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass

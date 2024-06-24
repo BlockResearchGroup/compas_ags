@@ -1,28 +1,15 @@
-from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+from __future__ import print_function
 
 from numpy import array
 from numpy import float64
-
 from scipy.optimize import minimize
 
 from compas.geometry import angle_vectors_xy
-
-from compas.numerical import connectivity_matrix
-from compas.numerical import normrow
-
+from compas.linalg import normrow
+from compas.matrices import connectivity_matrix
 from compas_ags.ags.core import update_primal_from_dual
-
-
-__all__ = [
-    "compute_loadpath",
-    "compute_external_work",
-    "compute_internal_work",
-    "compute_internal_work_tension",
-    "compute_internal_work_compression",
-    "optimise_loadpath",
-]
 
 
 def compute_loadpath(form, force):
@@ -253,9 +240,7 @@ def optimise_loadpath(form, force, algo="COBYLA"):
     """
     vertex_index = form.vertex_index()
     edge_index = form.edge_index()
-    i_j = {
-        vertex_index[vertex]: [vertex_index[nbr] for nbr in form.vertex_neighbors(vertex)] for vertex in form.vertices()
-    }
+    i_j = {vertex_index[vertex]: [vertex_index[nbr] for nbr in form.vertex_neighbors(vertex)] for vertex in form.vertices()}
     ij_e = {(vertex_index[u], vertex_index[v]): edge_index[u, v] for u, v in edge_index}
     ij_e.update({(vertex_index[v], vertex_index[u]): edge_index[u, v] for u, v in edge_index})
 
@@ -266,9 +251,7 @@ def optimise_loadpath(form, force, algo="COBYLA"):
     leaves = [vertex_index[key] for key in form.leaves()]
     fixed = [vertex_index[key] for key in form.fixed()]
     free = list(set(range(form.number_of_vertices())) - set(fixed) - set(leaves))
-    internal = [
-        i for i, (u, v) in enumerate(form.edges()) if vertex_index[u] not in leaves and vertex_index[v] not in leaves
-    ]
+    internal = [i for i, (u, v) in enumerate(form.edges()) if vertex_index[u] not in leaves and vertex_index[v] not in leaves]
 
     _vertex_index = force.vertex_index()
     _edge_index = force.edge_index(form)
@@ -285,7 +268,7 @@ def optimise_loadpath(form, force, algo="COBYLA"):
     def objfunc(_x):
         _xy[_free, 0] = _x
 
-        update_primal_from_dual(xy, _xy, free, leaves, i_j, ij_e, _C)
+        update_primal_from_dual(xy, _xy, free, i_j, ij_e, _C, leaves=leaves)
 
         length = normrow(C.dot(xy))
         force = normrow(_C.dot(_xy))
@@ -332,11 +315,3 @@ def optimise_loadpath(form, force, algo="COBYLA"):
         attr["l"] = forces[index, 0]
 
     return form, force
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass

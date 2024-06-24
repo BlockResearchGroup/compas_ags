@@ -1,9 +1,6 @@
-from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
-
-
-__all__ = ["SolutionError"]
+from __future__ import print_function
 
 
 class SolutionError(Exception):
@@ -14,11 +11,3 @@ class SolutionError(Exception):
 
     def __str__(self):
         return repr(self.value)
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass

@@ -1,23 +1,27 @@
-from __future__ import print_function
 from __future__ import absolute_import
 from __future__ import division
+from __future__ import print_function
 
-from compas.datastructures import mesh_dual
-from compas_ags.diagrams import Diagram
+from compas.datastructures.mesh.duality import mesh_dual
 from compas.geometry import Line
-
-
-__all__ = ["ForceDiagram"]
+from compas_ags.diagrams import Diagram
+from compas_ags.diagrams import FormDiagram  # noqa: F401
 
 
 class ForceDiagram(Diagram):
     """Mesh-based data structure for force diagrams in AGS."""
 
-    def __init__(self):
-        super(ForceDiagram, self).__init__()
-        self.attributes.update({"name": "Force"})
-        self.update_default_vertex_attributes({"is_fixed": False, "line_constraint": None, "is_param": False})
-        self.update_default_edge_attributes({"l": 0.0, "target_vector": None})
+    def __init__(self, **kwargs):
+        super(ForceDiagram, self).__init__(**kwargs)
+        self.update_default_vertex_attributes(
+            is_fixed=False,
+            line_constraint=None,
+            is_param=False,
+        )
+        self.update_default_edge_attributes(
+            l=0.0,
+            target_vector=None,
+        )
 
     # --------------------------------------------------------------------------
     # Constructors
@@ -25,6 +29,7 @@ class ForceDiagram(Diagram):
 
     @classmethod
     def from_formdiagram(cls, formdiagram):
+        # type: (FormDiagram) -> ForceDiagram
         """Construct a force diagram from a form diagram.
 
         Parameters
@@ -36,7 +41,7 @@ class ForceDiagram(Diagram):
         -------
         :class:`compas_ags.diagrams.ForceDiagram`
         """
-        forcediagram = mesh_dual(formdiagram, cls)
+        forcediagram = mesh_dual(formdiagram, cls)  # type: ForceDiagram
         forcediagram.dual = formdiagram
         formdiagram.dual = forcediagram
         return forcediagram
@@ -314,12 +319,10 @@ class ForceDiagram(Diagram):
             self.vertices_attribute("is_fixed", True, keys=edge)
             edges_orient.append(edge)
 
-        for edge in self.edges_where_dual(
-            {"is_load": True}
-        ):  # If loads are orthogonal the force dual edge gets constrained
+        for edge in self.edges_where_dual({"is_load": True}):  # If loads are orthogonal the force dual edge gets constrained
             self.edge_attribute(edge, "is_load", True)
             edges_orient.append(edge)
-            sp, ep = self.edge_coordinates(*edge)
+            sp, ep = self.edge_coordinates(edge)
             line = Line(sp, ep)
             self.vertices_attribute("line_constraint", value=line, keys=edge)
 
@@ -336,7 +339,7 @@ class ForceDiagram(Diagram):
 
         for edge in edges_orient:
             edge = edge if edge in list(self.edges()) else (edge[1], edge[0])
-            sp, ep = self.edge_coordinates(*edge)
+            sp, ep = self.edge_coordinates(edge)
             dx = ep[0] - sp[0]
             dy = ep[1] - sp[1]
             length = (dx**2 + dy**2) ** 0.5
@@ -380,11 +383,3 @@ class ForceDiagram(Diagram):
     #         constraint_rows = np.vstack((constraint_rows, constraint_jac_row))
     #         residual = np.vstack((residual, attr['y']))
     #     return constraint_rows, residual
-
-
-# ==============================================================================
-# Main
-# ==============================================================================
-
-if __name__ == "__main__":
-    pass
