@@ -1,26 +1,130 @@
-[tool.black]
-line-length = 120
+[build-system]
+requires = ["setuptools>=66.0"]
+build-backend = "setuptools.build_meta"
+
+# ============================================================================
+# project info
+# ============================================================================
+
+[project]
+name = "compas_ags"
+description = "COMPAS package for Computational Graphic Statics"
+keywords = ['graphic statics', '2D structures']
+authors = [
+    { name = "tom van mele", email = "tom.v.mele@gmail.com" },
+    { name = "Vedad Alic", email = "vedad.alic@outlook.com" },
+    { name = "Andrew Liew", email = "a.liew@sheffield.ac.uk" },
+]
+license = { file = "LICENSE" }
+readme = "README.md"
+requires-python = ">=3.9"
+dynamic = ['dependencies', 'optional-dependencies', 'version']
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Topic :: Scientific/Engineering",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+]
+
+[project.urls]
+Homepage = "https://compas-dev.github.io/compas_ags"
+Documentation = "https://compas-dev.github.io/compas_ags"
+Repository = "https://github.com/compas-dev/compas_ags.git"
+Changelog = "https://github.com/compas-dev/compas_ags/blob/main/CHANGELOG.md"
+
+# ============================================================================
+# setuptools config
+# ============================================================================
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+include-package-data = true
+zip-safe = false
+
+[tool.setuptools.dynamic]
+version = { attr = "compas_ags.__version__" }
+dependencies = { file = "requirements.txt" }
+optional-dependencies = { dev = { file = "requirements-dev.txt" }, dof = { file = "requirements-dof.txt" } }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+compas_ags = ['config.json']
+"compas_ags.icons" = ["*.svg", "*.png"]
+"compas_ags.components.renderer.shaders" = ["*.vert", "*.frag"]
+"compas_ags.configurations.default_config" = ["*.json", "*.ttf"]
+
+# ============================================================================
+# replace pytest.ini
+# ============================================================================
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-testpaths = ["tests"]
-python_files = [
-    "test_*.py",
-    "tests.py"
+testpaths = ["tests", "src/compas_ags"]
+python_files = ["test_*.py", "*_test.py", "test.py"]
+addopts = ["-ra", "--strict-markers", "--doctest-glob=*.rst", "--tb=short"]
+doctest_optionflags = [
+    "NORMALIZE_WHITESPACE",
+    "IGNORE_EXCEPTION_DETAIL",
+    "ALLOW_UNICODE",
+    "ALLOW_BYTES",
+    "NUMBER",
 ]
-addopts = "-ra --strict --doctest-modules --doctest-glob=*.rst --tb=short"
-doctest_optionflags= "NORMALIZE_WHITESPACE IGNORE_EXCEPTION_DETAIL ALLOW_UNICODE ALLOW_BYTES NUMBER"
-filterwarnings = "ignore::DeprecationWarning"
 
-[tool.isort]
-line_length = 120
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-use_parentheses = true
-force_single_line = true
-ensure_newline_before_comments = true
-known_first_party = "compas"
-default_section = "THIRDPARTY"
-forced_separate = "test_compas"
-skip = ["__init__.py"]
+# ============================================================================
+# replace bumpversion.cfg
+# ============================================================================
+
+[tool.bumpversion]
+current_version = "1.2.1"
+message = "Bump version to {new_version}"
+commit = true
+tag = true
+
+[[tool.bumpversion.files]]
+filename = "src/compas_ags/__init__.py"
+search = "{current_version}"
+replace = "{new_version}"
+
+[[tool.bumpversion.files]]
+filename = "CHANGELOG.md"
+search = "Unreleased"
+replace = "[{new_version}] {now:%Y-%m-%d}"
+
+# ============================================================================
+# replace setup.cfg
+# ============================================================================
+
+[tool.black]
+line-length = 179
+
+[tool.ruff]
+line-length = 179
+indent-width = 4
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["I001"]
+"tests/*" = ["I001"]
+"tasks.py" = ["I001"]
+
+[tool.ruff.lint.isort]
+force-single-line = true
+known-first-party = ["compas", "compas_ags"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
+
+[tool.ruff.lint.pycodestyle]
+max-doc-length = 179
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = "dynamic"
