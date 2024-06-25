@@ -1,2 +1,2 @@
-compas >= 2.1
+compas >= 2.2
 sympy
