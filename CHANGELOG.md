@@ -9,9 +9,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Added viewer based on `compas_viewer`.
+* Added `compas_ags.ags.core.rref_sympy`.
+* Added type annotations where possible.
+* Added `requirements-dof.txt` to include `sympy` as optional dependency.
+
 ### Changed
 
+* Changed examples to use new viewer.
+
 ### Removed
+
+* Removed viewer based on `compas_plotter`.
 
 
 ## [1.2.1] 2023-11-10
