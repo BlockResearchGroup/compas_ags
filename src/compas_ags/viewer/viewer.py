@@ -16,13 +16,16 @@ compressioncolor = Color.blue().lightened(25)
 
 
 class AGSViewer(Viewer):
-
     def __init__(self, config: Config | None = None, **kwargs):
         config = config or Config()
         config.renderer.view = "top"
+        config.camera.target = [0, 0, 0]
+        config.camera.position = [0, 0, 10]
         config.renderer.gridsize = [100, 100, 100, 100]
 
         super().__init__(config, **kwargs)
+
+        self.renderer.camera.rotation.set(0, 0, 0, False)
 
         self.form: FormDiagram = None
         self.force: ForceDiagram = None
