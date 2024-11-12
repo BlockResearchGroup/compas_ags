@@ -1,7 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from compas.datastructures import Mesh
 
 
@@ -16,7 +12,7 @@ class Diagram(Mesh):
     """
 
     def __init__(self, **kwargs):
-        super(Diagram, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         self._dual = None
 
     @property

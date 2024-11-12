@@ -18,7 +18,3 @@ def get(relpath):
 
 
 __all__ = ["HOME", "DATA", "DOCS", "TEMP"]
-
-__all_plugins__ = [
-    "compas_ags.rhino.install",
-]

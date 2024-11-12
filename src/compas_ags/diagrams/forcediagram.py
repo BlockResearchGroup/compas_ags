@@ -1,6 +1,6 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+from typing import Generator
+from typing import Optional
+from typing import Union
 
 from compas.datastructures.mesh.duality import mesh_dual
 from compas.geometry import Line
@@ -11,8 +11,11 @@ from compas_ags.diagrams import FormDiagram  # noqa: F401
 class ForceDiagram(Diagram):
     """Mesh-based data structure for force diagrams in AGS."""
 
+    dual: FormDiagram
+
     def __init__(self, **kwargs):
-        super(ForceDiagram, self).__init__(**kwargs)
+        super().__init__(**kwargs)
+
         self.update_default_vertex_attributes(
             is_fixed=False,
             line_constraint=None,
@@ -28,8 +31,7 @@ class ForceDiagram(Diagram):
     # --------------------------------------------------------------------------
 
     @classmethod
-    def from_formdiagram(cls, formdiagram):
-        # type: (FormDiagram) -> ForceDiagram
+    def from_formdiagram(cls, formdiagram: FormDiagram) -> "ForceDiagram":
         """Construct a force diagram from a form diagram.
 
         Parameters
@@ -40,8 +42,9 @@ class ForceDiagram(Diagram):
         Returns
         -------
         :class:`compas_ags.diagrams.ForceDiagram`
+
         """
-        forcediagram = mesh_dual(formdiagram, cls)  # type: ForceDiagram
+        forcediagram: ForceDiagram = mesh_dual(formdiagram, cls)
         forcediagram.dual = formdiagram
         formdiagram.dual = forcediagram
         return forcediagram
@@ -50,30 +53,33 @@ class ForceDiagram(Diagram):
     # Convenience functions for retrieving attributes of the force diagram.
     # --------------------------------------------------------------------------
 
-    def xy(self):
+    def xy(self) -> list[list[float]]:
         """The XY coordinates of the vertices.
 
         Returns
         -------
         list
+
         """
         return self.vertices_attributes("xy")
 
-    def fixed(self):
+    def fixed(self) -> list[int]:
         """The identifiers of the fixed vertices.
 
         Returns
         -------
         list
+
         """
         return list(self.vertices_where({"is_fixed": True}))
 
-    def anchor(self):
+    def anchor(self) -> list[int]:
         """Get an anchor to the force diagram.
 
         Returns
         -------
         int
+
         """
         return next(self.vertices())
 
@@ -81,7 +87,11 @@ class ForceDiagram(Diagram):
     # Helpers
     # --------------------------------------------------------------------------
 
-    def edges_where_dual(self, conditions, data=False):
+    def edges_where_dual(
+        self,
+        conditions: dict,
+        data: bool = False,
+    ) -> Generator[Union[tuple[int, int], tuple[tuple[int, int], dict]], None, None]:
         """Get edges for which a certain condition or set of conditions is true for the corresponding edges in the diagram's dual.
 
         Parameters
@@ -99,10 +109,6 @@ class ForceDiagram(Diagram):
         2-tuple
             The next edge as a (u, v) tuple, if ``data=False``.
             The next edge as a ((u, v), data) tuple, if ``data=True``.
-
-        Examples
-        --------
-        >>>
 
         """
         for edge in list(self.edges()):
@@ -142,7 +148,7 @@ class ForceDiagram(Diagram):
                 else:
                     yield edge
 
-    def dual_edge(self, edge):
+    def dual_edge(self, edge: tuple[int, int]) -> Union[tuple[int, int], None]:
         """Find the cooresponding edge in the diagram's dual.
 
         Parameters
@@ -154,6 +160,7 @@ class ForceDiagram(Diagram):
         -------
         tuple (int, int) or None
             The identifier of the dual edge if it exists.
+
         """
         for u, v in self.dual.face_halfedges(edge[0]):
             if self.dual.halfedge[v][u] == edge[1]:
@@ -161,7 +168,7 @@ class ForceDiagram(Diagram):
                     return u, v
                 return v, u
 
-    def is_dual_edge_external(self, edge):
+    def is_dual_edge_external(self, edge: tuple[int, int]) -> bool:
         """Verify if the corresponding edge in the diagram's dual is marked as "external".
 
         Parameters
@@ -172,10 +179,11 @@ class ForceDiagram(Diagram):
         Returns
         -------
         bool
+
         """
         return self.dual.edge_attribute(self.dual_edge(edge), "is_external")
 
-    def is_dual_edge_reaction(self, edge):
+    def is_dual_edge_reaction(self, edge: tuple[int, int]) -> bool:
         """Verify if the corresponding edge in the diagram's dual is marked as "reaction".
 
         Parameters
@@ -186,10 +194,11 @@ class ForceDiagram(Diagram):
         Returns
         -------
         bool
+
         """
         return self.dual.edge_attribute(self.dual_edge(edge), "is_reaction")
 
-    def is_dual_edge_load(self, edge):
+    def is_dual_edge_load(self, edge: tuple[int, int]) -> bool:
         """Verify if the corresponding edge in the diagram's dual is marked as "load".
 
         Parameters
@@ -200,10 +209,11 @@ class ForceDiagram(Diagram):
         Returns
         -------
         bool
+
         """
         return self.dual.edge_attribute(self.dual_edge(edge), "is_load")
 
-    def is_dual_edge_ind(self, edge):
+    def is_dual_edge_ind(self, edge: tuple[int, int]) -> bool:
         """Verify if the corresponding edge in the diagram's dual is marked as "independent".
 
         Parameters
@@ -214,10 +224,11 @@ class ForceDiagram(Diagram):
         Returns
         -------
         bool
+
         """
         return self.dual.edge_attribute(self.dual_edge(edge), "is_ind")
 
-    def dual_edge_force(self, edge):
+    def dual_edge_force(self, edge: tuple[int, int]) -> float:
         """Retrieve the force in the corresponding edge of the diagram's dual.
 
         Parameters
@@ -228,10 +239,11 @@ class ForceDiagram(Diagram):
         Returns
         -------
         float
+
         """
         return self.dual.edge_attribute(self.dual_edge(edge), "f")
 
-    def dual_edge_angledeviation(self, edge):
+    def dual_edge_angledeviation(self, edge: tuple[int, int]) -> float:
         """Retrieve the angle deviation in the corresponding edge of the diagram's dual.
 
         Parameters
@@ -242,6 +254,7 @@ class ForceDiagram(Diagram):
         Returns
         -------
         float
+
         """
         return self.dual.edge_attribute(self.dual_edge(edge), "a")
 
@@ -259,7 +272,7 @@ class ForceDiagram(Diagram):
         """
         return self.dual.edge_attribute(self.dual_edge(edge), "target_force")
 
-    def edge_index(self, form=None):
+    def edge_index(self, form: Optional[FormDiagram] = None) -> dict[tuple[int, int], int]:
         """Construct a mapping between the identifiers of edges and the corresponding indices in a list of edges.
 
         Parameters
@@ -284,7 +297,7 @@ class ForceDiagram(Diagram):
             # the weird side-effect of this is that edges get rotated if necessary
         return edge_index
 
-    def ordered_edges(self, form):
+    def ordered_edges(self, form: FormDiagram) -> list[tuple[int, int]]:
         """ "Construct a list of edges with the same order as the corresponding edges of the form diagram.
 
         Parameters
@@ -304,29 +317,24 @@ class ForceDiagram(Diagram):
     # Helpers
     # --------------------------------------------------------------------------
 
-    def constraints_from_dual(self, tol=10e-4):
-        """ "Reflect constraints from the form diagram in the force diagram.
-
-        Returns
-        -------
-        ForceDiagram is modified in place.
-        """
+    def constraints_from_dual(self, tol: float = 10e-4) -> None:
+        """ "Reflect constraints from the form diagram in the force diagram."""
         edge_index = self.dual.edge_index()
         ordered_edges = self.ordered_edges(self.dual)
         edges_orient = []
 
-        for edge in self.edges_where_dual({"is_ind": True}):  # Fix vertices of dual independent edge
+        for edge in self.edges_where_dual(is_ind=True):  # Fix vertices of dual independent edge
             self.vertices_attribute("is_fixed", True, keys=edge)
             edges_orient.append(edge)
 
-        for edge in self.edges_where_dual({"is_load": True}):  # If loads are orthogonal the force dual edge gets constrained
+        for edge in self.edges_where_dual(is_load=True):  # If loads are orthogonal the force dual edge gets constrained
             self.edge_attribute(edge, "is_load", True)
             edges_orient.append(edge)
             sp, ep = self.edge_coordinates(edge)
             line = Line(sp, ep)
             self.vertices_attribute("line_constraint", value=line, keys=edge)
 
-        for edge in self.edges_where_dual({"is_reaction": True}):
+        for edge in self.edges_where_dual(is_reaction=True):
             self.edge_attribute(edge, "is_reaction", True)
             edges_orient.append(edge)
 

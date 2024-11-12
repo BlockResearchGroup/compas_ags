@@ -13,10 +13,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Added `compas_ags.ags.core.rref_sympy`.
 * Added type annotations where possible.
 * Added `requirements-dof.txt` to include `sympy` as optional dependency.
+* Added annotations.
 
 ### Changed
 
 * Changed examples to use new viewer.
+* Fixed bug in viewer rotation.
+* Changed code to be compatible with COMPAS 2.
 
 ### Removed
 

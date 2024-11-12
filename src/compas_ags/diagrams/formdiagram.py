@@ -1,12 +1,11 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from itertools import islice
+from typing import Generator
+from typing import Optional
+from typing import Union
 
 from compas.geometry import Line
 from compas_ags.diagrams import Diagram
-from compas_ags.diagrams import FormGraph  # noqa: F401
+from compas_ags.diagrams import FormGraph
 
 
 class FormDiagram(Diagram):
@@ -45,16 +44,15 @@ class FormDiagram(Diagram):
         )
 
     @property
-    def graph(self):
+    def graph(self) -> FormGraph:
         return self._graph
 
     @graph.setter
-    def graph(self, graph):
+    def graph(self, graph: FormGraph):
         self._graph = graph
 
     @classmethod
-    def from_graph(cls, graph):
-        # type: (FormGraph) -> FormDiagram
+    def from_graph(cls, graph: FormGraph) -> "FormDiagram":
         """Construct a form diagram from a form graph.
 
         This constructor converts the form graph into a mesh by finding the cycles of its planar embedding.
@@ -86,8 +84,7 @@ class FormDiagram(Diagram):
     # vertices
     # --------------------------------------------------------------------------
 
-    def leaves(self):
-        # type: () -> list[int]
+    def leaves(self) -> list[int]:
         """Identify the leaves of the form diagram.
 
         Returns
@@ -110,7 +107,7 @@ class FormDiagram(Diagram):
     # edges
     # --------------------------------------------------------------------------
 
-    def edges(self, data=False):
+    def edges(self, data: bool = False) -> Generator[Union[tuple[int, int], tuple[tuple[int, int], dict]], None, None]:
         """Edge iterator automatically discarding mesh edges that are not relevant in AGS.
 
         Parameters
@@ -138,7 +135,7 @@ class FormDiagram(Diagram):
                 else:
                     yield (u, v), self.edge_attributes((u, v))
 
-    def leaf_edges(self):
+    def leaf_edges(self) -> list[tuple[int, int]]:
         """Identify the edges connecting leaf vertices to the diagram.
 
         Returns
@@ -153,7 +150,11 @@ class FormDiagram(Diagram):
                 edges.append((u, v))
         return edges
 
-    def edge_forcedensity(self, edge, q=None):
+    def edge_forcedensity(
+        self,
+        edge: Union[tuple[int, int], int],
+        q: Optional[float] = None,
+    ) -> float:
         """Get or set the forcedensity in an edge.
 
         Parameters
@@ -167,17 +168,19 @@ class FormDiagram(Diagram):
 
         Returns
         -------
-        float or None
-            The current forcedensity in the edge if no new value is given.
-            Otherwise, nothing.
+        float
+            The value of the force density in the edge.
+
         """
         if isinstance(edge, int):
             edge = next(islice(self.edges(), edge, None))
+
         if q is None:
             return self.edge_attribute(edge, "q")
-        self.edge_attribute(edge, "q", q)
 
-    def edge_force(self, edge, force=None):
+        return self.edge_attribute(edge, "q", q)
+
+    def edge_force(self, edge: Union[tuple[int, int], int], force: Optional[float] = None) -> float:
         """Get or set the force in an edge.
 
         Parameters
@@ -191,48 +194,52 @@ class FormDiagram(Diagram):
 
         Returns
         -------
-        float or None
-            The current force in the edge if no new value is given.
-            Otherwise, nothing.
+        float
+            The current force in the edge.
+
         """
         if isinstance(edge, int):
             edge = next(islice(self.edges(), edge, None))
+
         length = self.edge_length(edge)
         q = self.edge_attribute(edge, "q")
+
         if force is None:
             return q * length
+
         self.edge_attribute(edge, "is_ind", True)
         self.edge_attribute(edge, "q", force / length)
+        return force
 
     # --------------------------------------------------------------------------
     # Convenience functions for retrieving the attributes of the formdiagram.
     # --------------------------------------------------------------------------
 
-    def q(self):
+    def q(self) -> list[float]:
         return self.edges_attribute("q")
 
-    def xy(self):
+    def xy(self) -> list[list[float]]:
         return self.vertices_attributes("xy")
 
-    def fixed(self):
-        return list(self.vertices_where({"is_fixed": True}))
+    def fixed(self) -> list[int]:
+        return list(self.vertices_where(is_fixed=True))
 
-    def constrained(self):
-        return [key for key, attr in self.vertices(True) if attr["cx"] or attr["cy"]]
+    def constrained(self) -> list[int]:
+        return [vertex for vertex, attr in self.vertices(True) if attr["cx"] or attr["cy"]]
 
-    def constraints(self):
+    def constraints(self) -> tuple[float, float]:
         cx = self.vertices_attribute("cx")
         cy = self.vertices_attribute("cy")
         return cx, cy
 
-    def ind(self):
-        return list(self.edges_where({"is_ind": True}))
+    def ind(self) -> list[tuple[int, int]]:
+        return list(self.edges_where(is_ind=True))
 
     # --------------------------------------------------------------------------
     # Identify features of the formdiagram based on geometrical inputs.
     # --------------------------------------------------------------------------
 
-    def identify_constraints(self, tol=10e-4):
+    def identify_constraints(self, tol: float = 10e-4) -> None:
         """Identify constraints on the Form Diagram based on the geometry.
         External loads define a line-load which constraint vertices in x, or y.
 
@@ -246,21 +253,28 @@ class FormDiagram(Diagram):
         -------
         None
             The FormDiagram is modified in place.
+
         """
         fixed = self.fixed()
         leaves = self.leaves()
+
         for edge in self.leaf_edges():
             sp, ep = self.edge_coordinates(edge)
             line = Line(sp, ep)
             dx = ep[0] - sp[0]
             dy = ep[1] - sp[1]
             length = (dx**2 + dy**2) ** 0.5
+
             self.edge_attribute(edge, "target_vector", [dx / length, dy / length])
-            self.edge_attribute(edge, "is_load", True)  # by default loads are leaves connected to non fixed vertices
+            # by default loads are leaves connected to non fixed vertices
+            self.edge_attribute(edge, "is_load", True)
+
             if edge[0] in fixed or edge[1] in fixed:
-                self.edge_attribute(edge, "is_reaction", True)  # by default reactions are leaves connected to fixed vertices
+                # by default reactions are leaves connected to fixed vertices
+                self.edge_attribute(edge, "is_reaction", True)
                 self.edge_attribute(edge, "is_load", False)
                 continue
+
             if edge[0] in leaves:
                 self.vertex_attribute(edge[1], "line_constraint", line)
             else:

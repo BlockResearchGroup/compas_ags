@@ -87,9 +87,6 @@ def update_q_from_qind(E: spmatrix, q: npt.NDArray, dep: list[int], ind: list[in
     None
         The force densities are modified in-place.
 
-    Examples
-    --------
-    >>>
     """
     m = E.shape[0] - len(dep)
     qi = q[ind]
@@ -199,9 +196,6 @@ def update_primal_from_dual(
 
         \mathbf{p} = (\mathbf{R}^{T}\mathbf{R})^{-1}\mathbf{R}^{T}\mathbf{q}
 
-    Examples
-    --------
-    >>>
     """
     _uv = _C.dot(_xy)
     _t = normalizerow(_uv)
@@ -325,9 +319,6 @@ def parallelise_edges(
     -----
     This implementation is based on the function ``compas_tna.equilibrium.parallelisation.parallelise_edges``.
 
-    Examples
-    --------
-    >>>
     """
     if callback:
         if not callable(callback):
@@ -437,9 +428,6 @@ def get_jacobian_and_residual(form, force, _X_goal, constraints=None):
     ----------
     .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
 
-    Examples
-    --------
-    >>>
     """
 
     jacobian = compute_jacobian(form, force)
@@ -495,9 +483,6 @@ def compute_jacobian(form, force):
     ----------
     .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
 
-    Examples
-    --------
-    >>>
     """
     # --------------------------------------------------------------------------
     # form diagram

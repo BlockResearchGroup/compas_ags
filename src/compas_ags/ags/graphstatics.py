@@ -290,9 +290,6 @@ def form_update_from_force(form: FormDiagram, force: ForceDiagram, kmax: int = 1
     in *Fortran* order (first all x-coordinates, then all y-coordinates),
     and  :math:`\mathbf{b}` ....
 
-    Examples
-    --------
-    >>>
     """
     # --------------------------------------------------------------------------
     # form diagram
@@ -421,10 +418,6 @@ def form_update_from_force_newton(
     References
     ----------
     .. [1] Alic, V. and Åkesson, D., 2017. Bi-directional algebraic graphic statics. Computer-Aided Design, 93, pp.26-37.
-
-    Examples
-    --------
-    >>>
 
     """
     X = array(form.vertices_attribute("x") + form.vertices_attribute("y")).reshape(-1, 1)
@@ -623,6 +616,7 @@ def force_update_from_constraints(force: ForceDiagram, kmax: int = 100) -> Force
     -------
     force :class:`ForceDiagram`
         The updated force diagram.
+
     """
 
     # --------------------------------------------------------------------------

@@ -5,7 +5,7 @@ from abc import abstractmethod
 import numpy as np
 import numpy.typing as npt
 
-from compas_ags.diagrams import FormDiagram  # noqa: F401
+from compas_ags.diagrams import FormDiagram
 
 
 class AbstractConstraint(ABC):
@@ -13,7 +13,7 @@ class AbstractConstraint(ABC):
 
     Parameters
     -----------
-    form: :class:`FormDiagram`
+    form : :class:`FormDiagram`
 
     """
 
@@ -46,7 +46,7 @@ class AbstractConstraint(ABC):
         pass
 
 
-class ConstraintsCollection(object):
+class ConstraintsCollection:
     """Computes the Jacobian d_X/dX and residual r of the added constraints
     where X contains the form diagram coordinates in *Fortran* order
     (first all x-coordinates, then all y-coordinates) and _X contains the
@@ -55,7 +55,7 @@ class ConstraintsCollection(object):
 
     Parameters
     -----------
-    form: :class:`FormDiagram`
+    form : :class:`FormDiagram`
 
     References
     ----------
@@ -121,9 +121,9 @@ class HorizontalFix(AbstractConstraint):
 
     Parameters
     -----------
-    form: :class:`FormDiagram`
+    form : :class:`FormDiagram`
         The Form Diagram to constraint
-    vertex: int
+    vertex : int
         Idenfifier ofthe vertex to fix.
 
     """
@@ -170,9 +170,9 @@ class VerticalFix(AbstractConstraint):
 
     Parameters
     -----------
-    form: :class:`FormDiagram`
+    form : :class:`FormDiagram`
         The Form Diagram to constraint
-    vertex: int
+    vertex : int
         Idenfifier ofthe vertex to fix.
 
     """
@@ -219,11 +219,11 @@ class AngleFix(AbstractConstraint):
 
     Parameters
     -----------
-    form: :class:`FormDiagram`
+    form : :class:`FormDiagram`
         The Form Diagram to constraint
-    vertex: int
+    vertex : int
         Idenfifier ofthe vertex to fix.
-    angle: float
+    angle : float
         Angle (clockwise) to fix the vertex to.
 
     """
@@ -283,7 +283,7 @@ class LengthFix(AbstractConstraint):
 
     Parameters
     -----------
-    form: :class:`FormDiagram`
+    form : :class:`FormDiagram`
         The Form Diagram to constraint
     edge : 2-tuple of int
         The identifier of the edge as a pair of vertex identifiers.
@@ -327,11 +327,11 @@ class SetLength(LengthFix):
 
     Parameters
     -----------
-    form: :class:`FormDiagram`
+    form : :class:`FormDiagram`
         The Form Diagram to constraint
     edge : 2-tuple of int
         The identifier of the edge as a pair of vertex identifiers.
-    length: float
+    length : float
         Length to set to the edge.
 
     """
@@ -349,11 +349,11 @@ class SetOrientation(AbstractConstraint):
 
     Parameters
     -----------
-    form: :class:`FormDiagram`
+    form : :class:`FormDiagram`
         The Form Diagram to constraint
     edge : 2-tuple of int
         The identifier of the edge as a pair of vertex identifiers.
-    angle: float
+    angle : float
         Angle to orient the edge to set to the edge.
 
     """

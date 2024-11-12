@@ -1,7 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 from numpy import array
 from numpy import float64
 from scipy.optimize import minimize
@@ -10,27 +6,30 @@ from compas.geometry import angle_vectors_xy
 from compas.linalg import normrow
 from compas.matrices import connectivity_matrix
 from compas_ags.ags.core import update_primal_from_dual
+from compas_ags.diagrams import ForceDiagram
+from compas_ags.diagrams import FormDiagram
 
 
-def compute_loadpath(form, force):
+def compute_loadpath(form: FormDiagram, force: ForceDiagram):
     """Compute the internal work of a structure.
 
     Parameters
     ----------
-    form : FormDiagram
+    form : :class:`FormDiagram`
         The form diagram.
-    force : ForceDiagram
+    force : :class:`ForceDiagram`
         The force diagram.
 
     Returns
     -------
     float
         The internal work done by the structure.
+
     """
     return compute_internal_work(form, force)
 
 
-def compute_external_work(form, force):
+def compute_external_work(form: FormDiagram, force: ForceDiagram):
     """Compute the external work of a structure.
 
     The external work done by a structure is equal to the work done by the external
@@ -39,19 +38,15 @@ def compute_external_work(form, force):
 
     Parameters
     ----------
-    form : FormDiagram
+    form : :class:`FormDiagram`
         The form diagram.
-    force : ForceDiagram
+    force : :class:`ForceDiagram`
         The force diagram.
 
     Returns
     -------
     float
         The external work done by the structure.
-
-    Examples
-    --------
-    >>>
 
     """
     vertex_index = form.vertex_index()
@@ -74,24 +69,20 @@ def compute_external_work(form, force):
     return lengths[external].T.dot(forces[external])[0, 0]
 
 
-def compute_internal_work(form, force):
+def compute_internal_work(form: FormDiagram, force: ForceDiagram):
     """Compute the work done by the internal forces of a structure.
 
     Parameters
     ----------
-    form : FormDiagram
+    form : :class:`FormDiagram`
         The form diagram.
-    force : ForceDiagram
+    force : :class:`ForceDiagram`
         The force diagram.
 
     Returns
     -------
     float
         The internal work done by the structure.
-
-    Examples
-    --------
-    >>>
 
     """
     vertex_index = form.vertex_index()
@@ -114,24 +105,20 @@ def compute_internal_work(form, force):
     return lengths[internal].T.dot(forces[internal])[0, 0]
 
 
-def compute_internal_work_tension(form, force):
+def compute_internal_work_tension(form: FormDiagram, force: ForceDiagram):
     """Compute the work done by the internal tensile forces of a structure.
 
     Parameters
     ----------
-    form : FormDiagram
+    form : :class:`FormDiagram`
         The form diagram.
-    force : ForceDiagram
+    force : :class:`ForceDiagram`
         The force diagram.
 
     Returns
     -------
     float
         The internal work done by the tensile forces in a structure.
-
-    Examples
-    --------
-    >>>
 
     """
     vertex_index = form.vertex_index()
@@ -156,24 +143,20 @@ def compute_internal_work_tension(form, force):
     return lengths[tension].T.dot(forces[tension])[0, 0]
 
 
-def compute_internal_work_compression(form, force):
+def compute_internal_work_compression(form: FormDiagram, force: ForceDiagram):
     """Compute the work done by the internal compressive forces of a structure.
 
     Parameters
     ----------
-    form : FormDiagram
+    form : :class:`FormDiagram`
         The form diagram.
-    force : ForceDiagram
+    force : :class:`ForceDiagram`
         The force diagram.
 
     Returns
     -------
     float
         The internal work done by the compressive forces in a structure.
-
-    Examples
-    --------
-    >>>
 
     """
     vertex_index = form.vertex_index()
@@ -198,15 +181,15 @@ def compute_internal_work_compression(form, force):
     return lengths[compression].T.dot(forces[compression])[0, 0]
 
 
-def optimise_loadpath(form, force, algo="COBYLA"):
+def optimise_loadpath(form: FormDiagram, force, algo="COBYLA"):
     """Optimise the loadpath using the parameters of the force domain. The parameters
     of the force domain are the coordinates of the vertices of the force diagram.
 
     Parameters
     ----------
-    form : FormDiagram
+    form : :class:`FormDiagram`
         The form diagram.
-    force : ForceDiagram
+    force : :class:`ForceDiagram`
         The force diagram.
     algo : {'COBYLA', L-BFGS-B', 'SLSQ', 'MMA', 'GMMA'}, optional
         The optimisation algorithm.
