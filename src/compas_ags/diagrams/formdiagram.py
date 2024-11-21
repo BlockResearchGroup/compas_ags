@@ -67,14 +67,20 @@ class FormDiagram(Diagram):
         -------
         :class:`compas_ags.diagrams.FormDiagram`
         """
-        for node in list(graph.nodes()):
-            if graph.degree(node) == 2:
-                graph.delete_node(node)
+        # these are zero-force members
+        while True:
+            degree_2 = list(graph.nodes_where(degree=2))
+            if len(degree_2) == 0:
+                break
+            for node in degree_2:
+                if graph.has_node(node):
+                    graph.delete_node(node)
+
         node_index = graph.node_index()
         cycles = graph.find_cycles(breakpoints=graph.leaves())
         points = graph.nodes_attributes("xyz")
         cycles[:] = [[node_index[node] for node in cycle] for cycle in cycles]
-        form = cls.from_vertices_and_faces(points, cycles)
+        form: FormDiagram = cls.from_vertices_and_faces(points, cycles)
         form.edges_attribute("_is_edge", False, keys=list(form.edges_on_boundary()))
         form.edges_attribute("is_external", True, keys=form.leaf_edges())
         form.graph = graph
