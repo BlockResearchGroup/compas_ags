@@ -1,0 +1,1331 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="../../_static/compas.ico" type="image/x-icon">
+    <title>ForceDiagram &#8212; COMPAS AGS</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../_static/css/compas.css?v=617b33e2" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=4c969af8" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script src="../../_static/documentation_options.js?v=5ffbd191"></script>
+    <script src="../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/tabs.js?v=3ee01567"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js?v=4a39c7ea"></script>
+    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'api/generated/compas_ags.diagrams.ForceDiagram';</script>
+    <script>
+        DOCUMENTATION_OPTIONS.theme_switcher_json_url = 'https://raw.githubusercontent.com/blockresearchgroup/compas_ags/gh-pages/versions.json';
+        DOCUMENTATION_OPTIONS.theme_switcher_version_match = '1.3';
+        </script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="ForceDiagram.anchor" href="compas_ags.diagrams.ForceDiagram.anchor.html" />
+    <link rel="prev" title="FormDiagram.weld" href="compas_ags.diagrams.FormDiagram.weld.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+<div class="bd-header__inner bd-page-width">
+  <label class="sidebar-toggle primary-toggle" for="__primary">
+    <span class="fa-solid fa-bars"></span>
+  </label>
+  
+  <div class="navbar-header-items__start">
+    
+      <div class="navbar-item">
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/compas_icon_white.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../_static/compas_icon_white.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+    <p class="title logo__title">COMPAS AGS</p>
+  
+</a></div>
+    
+  </div>
+  
+  
+  <div class=" navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item"><nav class="navbar-nav">
+  <!-- <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../index.html">
+                        Introduction
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../installation.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../examples.html">
+                        Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../../api.html">
+                        API Reference
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../publications.html">
+                        Publications
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../license.html">
+                        License
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul> -->
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+        </div>
+      
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-bs-toggle="dropdown">
+      1.3  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+      
+        <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/blockresearchgroup/compas_ags" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="http://forum.compas-framework.org/" title="Discourse" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/compas_ags/" title="PyPI" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-python"></i></span>
+            <label class="sr-only">PyPI</label></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+    </div>
+  
+
+  
+    <label class="sidebar-toggle secondary-toggle" for="__secondary">
+      <span class="fa-solid fa-outdent"></span>
+    </label>
+  
+</div>
+
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          <div class="navbar-item"><nav class="navbar-nav">
+  <!-- <p class="sidebar-header-items__title"
+     role="heading"
+     aria-level="1"
+     aria-label="Site Navigation">
+    Site Navigation
+  </p>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../index.html">
+                        Introduction
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../installation.html">
+                        Installation
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../examples.html">
+                        Examples
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item current active">
+                      <a class="nav-link nav-internal" href="../../api.html">
+                        API Reference
+                      </a>
+                    </li>
+                
+
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../publications.html">
+                        Publications
+                      </a>
+                    </li>
+                
+            <div class="nav-item dropdown">
+                <button class="btn dropdown-toggle nav-item" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    More
+                </button>
+                <div class="dropdown-menu">
+                    
+                    <li class="nav-item">
+                      <a class="nav-link nav-internal" href="../../license.html">
+                        License
+                      </a>
+                    </li>
+                
+                </div>
+            </div>
+            
+  </ul> -->
+</nav></div>
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <div class="version-switcher__container dropdown">
+    <button type="button" class="version-switcher__button btn btn-sm navbar-btn dropdown-toggle" data-bs-toggle="dropdown">
+      1.3  <!-- this text may get changed later by javascript -->
+      <span class="caret"></span>
+    </button>
+    <div class="version-switcher__menu dropdown-menu list-group-flush py-0">
+    <!-- dropdown will be populated by javascript on page load -->
+    </div>
+  </div>
+`);
+</script></div>
+        
+          <div class="navbar-item">
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links navbar-nav"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/blockresearchgroup/compas_ags" title="GitHub" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-github"></i></span>
+            <label class="sr-only">GitHub</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="http://forum.compas-framework.org/" title="Discourse" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-discourse"></i></span>
+            <label class="sr-only">Discourse</label></a>
+        </li>
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://pypi.org/project/compas_ags/" title="PyPI" class="nav-link" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><span><i class="fa-brands fa-python"></i></span>
+            <label class="sr-only">PyPI</label></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../examples.html">Examples</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/00_basic.html">Basic example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/01_rtl.html">Updating the form diagram</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/02_lpopt.html">Optimise the load path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../examples/03_fink.html">Fink Truss</a></li>
+</ul>
+</li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="../../api.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 current active has-children"><a class="reference internal" href="../compas_ags.html">compas_ags</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../compas_ags.ags.html">compas_ags.ags</a></li>
+<li class="toctree-l3 current active"><a class="reference internal" href="../compas_ags.diagrams.html">compas_ags.diagrams</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../compas_ags.exceptions.html">compas_ags.exceptions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../publications.html">Publications</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-4"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../publications/ags.html">Algebraic Graph Statics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../publications/bi-ags.html">Bi-directional Algebraic Graph Statics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../publications/interactive-ags.html">Interactive Graphic Statics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../publications/loadpath.html">Load-path optimisation of funicular networks</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../license.html">License</a></li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="sidebar-primary-item"><div class="sidebar-primary-item">
+    <a href="https://compas.dev" target="_blank">
+        COMPAS.dev <i class="fa fa-external-link" aria-hidden="true"></i>
+    </a>
+</div></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+
+
+
+
+<nav aria-label="Breadcrumbs">
+  <ul class="bd-breadcrumbs" role="navigation" aria-label="Breadcrumb">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../../api.html" class="nav-link">API Reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><i class="fa-solid fa-ellipsis"></i></li>
+    
+    
+    <li class="breadcrumb-item"><a href="../compas_ags.diagrams.html" class="nav-link">compas_ags.diagrams</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page">ForceDiagram</li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="forcediagram">
+<h1>ForceDiagram</h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="compas_ags.diagrams.ForceDiagram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">compas_ags.diagrams.</span></span><span class="sig-name descname"><span class="pre">ForceDiagram</span></span></dt>
+<dd><p>Bases: <a class="reference internal" href="compas_ags.diagrams.Diagram.html#compas_ags.diagrams.Diagram" title="compas_ags.diagrams.diagram.Diagram"><code class="xref py py-class docutils literal notranslate"><span class="pre">Diagram</span></code></a></p>
+<p>Mesh-based data structure for force diagrams in AGS.</p>
+<p class="rubric">Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.anchor.html#compas_ags.diagrams.ForceDiagram.anchor" title="compas_ags.diagrams.ForceDiagram.anchor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">anchor</span></code></a></p></td>
+<td><p>Get an anchor to the force diagram.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.constraints_from_dual.html#compas_ags.diagrams.ForceDiagram.constraints_from_dual" title="compas_ags.diagrams.ForceDiagram.constraints_from_dual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">constraints_from_dual</span></code></a></p></td>
+<td><p>&quot;Reflect constraints from the form diagram in the force diagram.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.dual_edge.html#compas_ags.diagrams.ForceDiagram.dual_edge" title="compas_ags.diagrams.ForceDiagram.dual_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dual_edge</span></code></a></p></td>
+<td><p>Find the cooresponding edge in the diagram's dual.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.dual_edge_angledeviation.html#compas_ags.diagrams.ForceDiagram.dual_edge_angledeviation" title="compas_ags.diagrams.ForceDiagram.dual_edge_angledeviation"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dual_edge_angledeviation</span></code></a></p></td>
+<td><p>Retrieve the angle deviation in the corresponding edge of the diagram's dual.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.dual_edge_force.html#compas_ags.diagrams.ForceDiagram.dual_edge_force" title="compas_ags.diagrams.ForceDiagram.dual_edge_force"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dual_edge_force</span></code></a></p></td>
+<td><p>Retrieve the force in the corresponding edge of the diagram's dual.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.dual_edge_targetforce.html#compas_ags.diagrams.ForceDiagram.dual_edge_targetforce" title="compas_ags.diagrams.ForceDiagram.dual_edge_targetforce"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dual_edge_targetforce</span></code></a></p></td>
+<td><p>Retrieve the target force in the corresponding edge of the diagram's dual.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_index.html#compas_ags.diagrams.ForceDiagram.edge_index" title="compas_ags.diagrams.ForceDiagram.edge_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_index</span></code></a></p></td>
+<td><p>Construct a mapping between the identifiers of edges and the corresponding indices in a list of edges.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edges_where_dual.html#compas_ags.diagrams.ForceDiagram.edges_where_dual" title="compas_ags.diagrams.ForceDiagram.edges_where_dual"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges_where_dual</span></code></a></p></td>
+<td><p>Get edges for which a certain condition or set of conditions is true for the corresponding edges in the diagram's dual.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.fixed.html#compas_ags.diagrams.ForceDiagram.fixed" title="compas_ags.diagrams.ForceDiagram.fixed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">fixed</span></code></a></p></td>
+<td><p>The identifiers of the fixed vertices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_formdiagram.html#compas_ags.diagrams.ForceDiagram.from_formdiagram" title="compas_ags.diagrams.ForceDiagram.from_formdiagram"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_formdiagram</span></code></a></p></td>
+<td><p>Construct a force diagram from a form diagram.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_dual_edge_external.html#compas_ags.diagrams.ForceDiagram.is_dual_edge_external" title="compas_ags.diagrams.ForceDiagram.is_dual_edge_external"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_dual_edge_external</span></code></a></p></td>
+<td><p>Verify if the corresponding edge in the diagram's dual is marked as &quot;external&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_dual_edge_ind.html#compas_ags.diagrams.ForceDiagram.is_dual_edge_ind" title="compas_ags.diagrams.ForceDiagram.is_dual_edge_ind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_dual_edge_ind</span></code></a></p></td>
+<td><p>Verify if the corresponding edge in the diagram's dual is marked as &quot;independent&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_dual_edge_load.html#compas_ags.diagrams.ForceDiagram.is_dual_edge_load" title="compas_ags.diagrams.ForceDiagram.is_dual_edge_load"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_dual_edge_load</span></code></a></p></td>
+<td><p>Verify if the corresponding edge in the diagram's dual is marked as &quot;load&quot;.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_dual_edge_reaction.html#compas_ags.diagrams.ForceDiagram.is_dual_edge_reaction" title="compas_ags.diagrams.ForceDiagram.is_dual_edge_reaction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_dual_edge_reaction</span></code></a></p></td>
+<td><p>Verify if the corresponding edge in the diagram's dual is marked as &quot;reaction&quot;.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.ordered_edges.html#compas_ags.diagrams.ForceDiagram.ordered_edges" title="compas_ags.diagrams.ForceDiagram.ordered_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ordered_edges</span></code></a></p></td>
+<td><p>&quot;Construct a list of edges with the same order as the corresponding edges of the form diagram.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.xy.html#compas_ags.diagrams.ForceDiagram.xy" title="compas_ags.diagrams.ForceDiagram.xy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">xy</span></code></a></p></td>
+<td><p>The XY coordinates of the vertices.</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Inherited Methods</p>
+<table class="autosummary longtable table autosummary">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.ToString.html#compas_ags.diagrams.ForceDiagram.ToString" title="compas_ags.diagrams.ForceDiagram.ToString"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ToString</span></code></a></p></td>
+<td><p>Converts the instance to a string.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.aabb.html#compas_ags.diagrams.ForceDiagram.aabb" title="compas_ags.diagrams.ForceDiagram.aabb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">aabb</span></code></a></p></td>
+<td><p>Calculate the axis aligned bounding box of the mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.add_face.html#compas_ags.diagrams.ForceDiagram.add_face" title="compas_ags.diagrams.ForceDiagram.add_face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_face</span></code></a></p></td>
+<td><p>Add a face to the mesh object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.add_vertex.html#compas_ags.diagrams.ForceDiagram.add_vertex" title="compas_ags.diagrams.ForceDiagram.add_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">add_vertex</span></code></a></p></td>
+<td><p>Add a vertex to the mesh object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.adjacency_matrix.html#compas_ags.diagrams.ForceDiagram.adjacency_matrix" title="compas_ags.diagrams.ForceDiagram.adjacency_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">adjacency_matrix</span></code></a></p></td>
+<td><p>Compute the adjacency matrix of the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.area.html#compas_ags.diagrams.ForceDiagram.area" title="compas_ags.diagrams.ForceDiagram.area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">area</span></code></a></p></td>
+<td><p>Calculate the total mesh area.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.centroid.html#compas_ags.diagrams.ForceDiagram.centroid" title="compas_ags.diagrams.ForceDiagram.centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">centroid</span></code></a></p></td>
+<td><p>Calculate the mesh centroid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.clear.html#compas_ags.diagrams.ForceDiagram.clear" title="compas_ags.diagrams.ForceDiagram.clear"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clear</span></code></a></p></td>
+<td><p>Clear all the mesh data.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.collapse_edge.html#compas_ags.diagrams.ForceDiagram.collapse_edge" title="compas_ags.diagrams.ForceDiagram.collapse_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collapse_edge</span></code></a></p></td>
+<td><p>Collapse an edge to its first or second vertex, or to an intermediate point.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.compute_aabb.html#compas_ags.diagrams.ForceDiagram.compute_aabb" title="compas_ags.diagrams.ForceDiagram.compute_aabb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_aabb</span></code></a></p></td>
+<td><p>Compute the axis-aligned bounding box of the datastructure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.compute_obb.html#compas_ags.diagrams.ForceDiagram.compute_obb" title="compas_ags.diagrams.ForceDiagram.compute_obb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">compute_obb</span></code></a></p></td>
+<td><p>Compute the oriented bounding box of the datastructure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.connected_faces.html#compas_ags.diagrams.ForceDiagram.connected_faces" title="compas_ags.diagrams.ForceDiagram.connected_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">connected_faces</span></code></a></p></td>
+<td><p>Find groups of connected faces.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.connected_vertices.html#compas_ags.diagrams.ForceDiagram.connected_vertices" title="compas_ags.diagrams.ForceDiagram.connected_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">connected_vertices</span></code></a></p></td>
+<td><p>Find groups of connected vertices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.connectivity_matrix.html#compas_ags.diagrams.ForceDiagram.connectivity_matrix" title="compas_ags.diagrams.ForceDiagram.connectivity_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">connectivity_matrix</span></code></a></p></td>
+<td><p>Compute the connectivity matrix of the mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.copy.html#compas_ags.diagrams.ForceDiagram.copy" title="compas_ags.diagrams.ForceDiagram.copy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">copy</span></code></a></p></td>
+<td><p>Make an independent copy of the data object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.cull_vertices.html#compas_ags.diagrams.ForceDiagram.cull_vertices" title="compas_ags.diagrams.ForceDiagram.cull_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">cull_vertices</span></code></a></p></td>
+<td><p>Remove all unused vertices from the mesh object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.degree_matrix.html#compas_ags.diagrams.ForceDiagram.degree_matrix" title="compas_ags.diagrams.ForceDiagram.degree_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">degree_matrix</span></code></a></p></td>
+<td><p>Compute the degree matrix of the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.delete_face.html#compas_ags.diagrams.ForceDiagram.delete_face" title="compas_ags.diagrams.ForceDiagram.delete_face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_face</span></code></a></p></td>
+<td><p>Delete a face from the mesh object.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.delete_vertex.html#compas_ags.diagrams.ForceDiagram.delete_vertex" title="compas_ags.diagrams.ForceDiagram.delete_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">delete_vertex</span></code></a></p></td>
+<td><p>Delete a vertex from the mesh and everything that is attached to it.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_attribute.html#compas_ags.diagrams.ForceDiagram.edge_attribute" title="compas_ags.diagrams.ForceDiagram.edge_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_attribute</span></code></a></p></td>
+<td><p>Get or set an attribute of an edge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_attributes.html#compas_ags.diagrams.ForceDiagram.edge_attributes" title="compas_ags.diagrams.ForceDiagram.edge_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_attributes</span></code></a></p></td>
+<td><p>Get or set multiple attributes of an edge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_coordinates.html#compas_ags.diagrams.ForceDiagram.edge_coordinates" title="compas_ags.diagrams.ForceDiagram.edge_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_coordinates</span></code></a></p></td>
+<td><p>Return the coordinates of the start and end point of an edge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_direction.html#compas_ags.diagrams.ForceDiagram.edge_direction" title="compas_ags.diagrams.ForceDiagram.edge_direction"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_direction</span></code></a></p></td>
+<td><p>Return the direction vector of an edge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_end.html#compas_ags.diagrams.ForceDiagram.edge_end" title="compas_ags.diagrams.ForceDiagram.edge_end"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_end</span></code></a></p></td>
+<td><p>Return the point at the end of an edge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_faces.html#compas_ags.diagrams.ForceDiagram.edge_faces" title="compas_ags.diagrams.ForceDiagram.edge_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_faces</span></code></a></p></td>
+<td><p>Find the two faces adjacent to an edge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_length.html#compas_ags.diagrams.ForceDiagram.edge_length" title="compas_ags.diagrams.ForceDiagram.edge_length"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_length</span></code></a></p></td>
+<td><p>Return the length of an edge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_line.html#compas_ags.diagrams.ForceDiagram.edge_line" title="compas_ags.diagrams.ForceDiagram.edge_line"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_line</span></code></a></p></td>
+<td><p>Return the line of an edge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_loop.html#compas_ags.diagrams.ForceDiagram.edge_loop" title="compas_ags.diagrams.ForceDiagram.edge_loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_loop</span></code></a></p></td>
+<td><p>Find all edges on the same loop as a given edge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_midpoint.html#compas_ags.diagrams.ForceDiagram.edge_midpoint" title="compas_ags.diagrams.ForceDiagram.edge_midpoint"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_midpoint</span></code></a></p></td>
+<td><p>Return the midpoint of an edge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_point.html#compas_ags.diagrams.ForceDiagram.edge_point" title="compas_ags.diagrams.ForceDiagram.edge_point"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_point</span></code></a></p></td>
+<td><p>Return a point along an edge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_sample.html#compas_ags.diagrams.ForceDiagram.edge_sample" title="compas_ags.diagrams.ForceDiagram.edge_sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_sample</span></code></a></p></td>
+<td><p>A random sample of the edges.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_start.html#compas_ags.diagrams.ForceDiagram.edge_start" title="compas_ags.diagrams.ForceDiagram.edge_start"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_start</span></code></a></p></td>
+<td><p>Return the point at the start of an edge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_strip.html#compas_ags.diagrams.ForceDiagram.edge_strip" title="compas_ags.diagrams.ForceDiagram.edge_strip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_strip</span></code></a></p></td>
+<td><p>Find all edges on the same strip as a given edge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edge_vector.html#compas_ags.diagrams.ForceDiagram.edge_vector" title="compas_ags.diagrams.ForceDiagram.edge_vector"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edge_vector</span></code></a></p></td>
+<td><p>Return the vector of an edge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edges.html#compas_ags.diagrams.ForceDiagram.edges" title="compas_ags.diagrams.ForceDiagram.edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges</span></code></a></p></td>
+<td><p>Iterate over the edges of the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edges_attribute.html#compas_ags.diagrams.ForceDiagram.edges_attribute" title="compas_ags.diagrams.ForceDiagram.edges_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges_attribute</span></code></a></p></td>
+<td><p>Get or set an attribute of multiple edges.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edges_attributes.html#compas_ags.diagrams.ForceDiagram.edges_attributes" title="compas_ags.diagrams.ForceDiagram.edges_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges_attributes</span></code></a></p></td>
+<td><p>Get or set multiple attributes of multiple edges.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edges_on_boundaries.html#compas_ags.diagrams.ForceDiagram.edges_on_boundaries" title="compas_ags.diagrams.ForceDiagram.edges_on_boundaries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges_on_boundaries</span></code></a></p></td>
+<td><p>Find the edges on all boundaries of the mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edges_on_boundary.html#compas_ags.diagrams.ForceDiagram.edges_on_boundary" title="compas_ags.diagrams.ForceDiagram.edges_on_boundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges_on_boundary</span></code></a></p></td>
+<td><p>Find the edges on the longest boundary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edges_where.html#compas_ags.diagrams.ForceDiagram.edges_where" title="compas_ags.diagrams.ForceDiagram.edges_where"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges_where</span></code></a></p></td>
+<td><p>Get edges for which a certain condition or set of conditions is true.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.edges_where_predicate.html#compas_ags.diagrams.ForceDiagram.edges_where_predicate" title="compas_ags.diagrams.ForceDiagram.edges_where_predicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">edges_where_predicate</span></code></a></p></td>
+<td><p>Get edges for which a certain condition or set of conditions is true using a lambda function.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.euler.html#compas_ags.diagrams.ForceDiagram.euler" title="compas_ags.diagrams.ForceDiagram.euler"><code class="xref py py-obj docutils literal notranslate"><span class="pre">euler</span></code></a></p></td>
+<td><p>Calculate the Euler characteristic.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.exploded.html#compas_ags.diagrams.ForceDiagram.exploded" title="compas_ags.diagrams.ForceDiagram.exploded"><code class="xref py py-obj docutils literal notranslate"><span class="pre">exploded</span></code></a></p></td>
+<td><p>Explode the mesh into its connected components.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_adjacency_halfedge.html#compas_ags.diagrams.ForceDiagram.face_adjacency_halfedge" title="compas_ags.diagrams.ForceDiagram.face_adjacency_halfedge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_adjacency_halfedge</span></code></a></p></td>
+<td><p>Find one half-edge over which two faces are adjacent.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_adjacency_vertices.html#compas_ags.diagrams.ForceDiagram.face_adjacency_vertices" title="compas_ags.diagrams.ForceDiagram.face_adjacency_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_adjacency_vertices</span></code></a></p></td>
+<td><p>Find all vertices over which two faces are adjacent.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_area.html#compas_ags.diagrams.ForceDiagram.face_area" title="compas_ags.diagrams.ForceDiagram.face_area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_area</span></code></a></p></td>
+<td><p>Compute the area of a face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_aspect_ratio.html#compas_ags.diagrams.ForceDiagram.face_aspect_ratio" title="compas_ags.diagrams.ForceDiagram.face_aspect_ratio"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_aspect_ratio</span></code></a></p></td>
+<td><p>Face aspect ratio as the ratio between the lengths of the maximum and minimum face edges.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_attribute.html#compas_ags.diagrams.ForceDiagram.face_attribute" title="compas_ags.diagrams.ForceDiagram.face_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_attribute</span></code></a></p></td>
+<td><p>Get or set an attribute of a face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_attributes.html#compas_ags.diagrams.ForceDiagram.face_attributes" title="compas_ags.diagrams.ForceDiagram.face_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_attributes</span></code></a></p></td>
+<td><p>Get or set multiple attributes of a face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_center.html#compas_ags.diagrams.ForceDiagram.face_center" title="compas_ags.diagrams.ForceDiagram.face_center"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_center</span></code></a></p></td>
+<td><p>Compute the point at the center of mass of a face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_centroid.html#compas_ags.diagrams.ForceDiagram.face_centroid" title="compas_ags.diagrams.ForceDiagram.face_centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_centroid</span></code></a></p></td>
+<td><p>Compute the point at the centroid of a face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_circle.html#compas_ags.diagrams.ForceDiagram.face_circle" title="compas_ags.diagrams.ForceDiagram.face_circle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_circle</span></code></a></p></td>
+<td><p>The circle of a face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_coordinates.html#compas_ags.diagrams.ForceDiagram.face_coordinates" title="compas_ags.diagrams.ForceDiagram.face_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_coordinates</span></code></a></p></td>
+<td><p>Compute the coordinates of the vertices of a face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_corners.html#compas_ags.diagrams.ForceDiagram.face_corners" title="compas_ags.diagrams.ForceDiagram.face_corners"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_corners</span></code></a></p></td>
+<td><p>Return triplets of face vertices forming the corners of the face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_curvature.html#compas_ags.diagrams.ForceDiagram.face_curvature" title="compas_ags.diagrams.ForceDiagram.face_curvature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_curvature</span></code></a></p></td>
+<td><p>Dimensionless face curvature.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_degree.html#compas_ags.diagrams.ForceDiagram.face_degree" title="compas_ags.diagrams.ForceDiagram.face_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_degree</span></code></a></p></td>
+<td><p>Count the neighbors of a face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_flatness.html#compas_ags.diagrams.ForceDiagram.face_flatness" title="compas_ags.diagrams.ForceDiagram.face_flatness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_flatness</span></code></a></p></td>
+<td><p>Compute the flatness of the mesh face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_frame.html#compas_ags.diagrams.ForceDiagram.face_frame" title="compas_ags.diagrams.ForceDiagram.face_frame"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_frame</span></code></a></p></td>
+<td><p>The frame of a face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_halfedges.html#compas_ags.diagrams.ForceDiagram.face_halfedges" title="compas_ags.diagrams.ForceDiagram.face_halfedges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_halfedges</span></code></a></p></td>
+<td><p>The halfedges of a face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_matrix.html#compas_ags.diagrams.ForceDiagram.face_matrix" title="compas_ags.diagrams.ForceDiagram.face_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_matrix</span></code></a></p></td>
+<td><p>Compute the face matrix of the mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_max_degree.html#compas_ags.diagrams.ForceDiagram.face_max_degree" title="compas_ags.diagrams.ForceDiagram.face_max_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_max_degree</span></code></a></p></td>
+<td><p>Compute the maximum degree of all faces.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_min_degree.html#compas_ags.diagrams.ForceDiagram.face_min_degree" title="compas_ags.diagrams.ForceDiagram.face_min_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_min_degree</span></code></a></p></td>
+<td><p>Compute the minimum degree of all faces.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_neighborhood.html#compas_ags.diagrams.ForceDiagram.face_neighborhood" title="compas_ags.diagrams.ForceDiagram.face_neighborhood"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_neighborhood</span></code></a></p></td>
+<td><p>Return the faces in the neighborhood of a face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_neighbors.html#compas_ags.diagrams.ForceDiagram.face_neighbors" title="compas_ags.diagrams.ForceDiagram.face_neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_neighbors</span></code></a></p></td>
+<td><p>Return the neighbors of a face across its edges.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_normal.html#compas_ags.diagrams.ForceDiagram.face_normal" title="compas_ags.diagrams.ForceDiagram.face_normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_normal</span></code></a></p></td>
+<td><p>Compute the normal of a face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_plane.html#compas_ags.diagrams.ForceDiagram.face_plane" title="compas_ags.diagrams.ForceDiagram.face_plane"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_plane</span></code></a></p></td>
+<td><p>A plane defined by the centroid and the normal of the face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_points.html#compas_ags.diagrams.ForceDiagram.face_points" title="compas_ags.diagrams.ForceDiagram.face_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_points</span></code></a></p></td>
+<td><p>Compute the points of the vertices of a face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_polygon.html#compas_ags.diagrams.ForceDiagram.face_polygon" title="compas_ags.diagrams.ForceDiagram.face_polygon"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_polygon</span></code></a></p></td>
+<td><p>The polygon of a face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_sample.html#compas_ags.diagrams.ForceDiagram.face_sample" title="compas_ags.diagrams.ForceDiagram.face_sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_sample</span></code></a></p></td>
+<td><p>A random sample of the faces.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_skewness.html#compas_ags.diagrams.ForceDiagram.face_skewness" title="compas_ags.diagrams.ForceDiagram.face_skewness"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_skewness</span></code></a></p></td>
+<td><p>Face skewness as the maximum absolute angular deviation from the idefault_edge_attributesl polygon angle.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_vertex_after.html#compas_ags.diagrams.ForceDiagram.face_vertex_after" title="compas_ags.diagrams.ForceDiagram.face_vertex_after"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_vertex_after</span></code></a></p></td>
+<td><p>Return the n-th vertex after the specified vertex in a specific face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_vertex_ancestor.html#compas_ags.diagrams.ForceDiagram.face_vertex_ancestor" title="compas_ags.diagrams.ForceDiagram.face_vertex_ancestor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_vertex_ancestor</span></code></a></p></td>
+<td><p>Return the n-th vertex before the specified vertex in a specific face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_vertex_before.html#compas_ags.diagrams.ForceDiagram.face_vertex_before" title="compas_ags.diagrams.ForceDiagram.face_vertex_before"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_vertex_before</span></code></a></p></td>
+<td><p>Return the n-th vertex before the specified vertex in a specific face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_vertex_descendant.html#compas_ags.diagrams.ForceDiagram.face_vertex_descendant" title="compas_ags.diagrams.ForceDiagram.face_vertex_descendant"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_vertex_descendant</span></code></a></p></td>
+<td><p>Return the n-th vertex after the specified vertex in a specific face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.face_vertices.html#compas_ags.diagrams.ForceDiagram.face_vertices" title="compas_ags.diagrams.ForceDiagram.face_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">face_vertices</span></code></a></p></td>
+<td><p>The vertices of a face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.faces.html#compas_ags.diagrams.ForceDiagram.faces" title="compas_ags.diagrams.ForceDiagram.faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">faces</span></code></a></p></td>
+<td><p>Iterate over the faces of the mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.faces_attribute.html#compas_ags.diagrams.ForceDiagram.faces_attribute" title="compas_ags.diagrams.ForceDiagram.faces_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">faces_attribute</span></code></a></p></td>
+<td><p>Get or set an attribute of multiple faces.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.faces_attributes.html#compas_ags.diagrams.ForceDiagram.faces_attributes" title="compas_ags.diagrams.ForceDiagram.faces_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">faces_attributes</span></code></a></p></td>
+<td><p>Get or set multiple attributes of multiple faces.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.faces_on_boundaries.html#compas_ags.diagrams.ForceDiagram.faces_on_boundaries" title="compas_ags.diagrams.ForceDiagram.faces_on_boundaries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">faces_on_boundaries</span></code></a></p></td>
+<td><p>Find the faces on all boundaries of the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.faces_on_boundary.html#compas_ags.diagrams.ForceDiagram.faces_on_boundary" title="compas_ags.diagrams.ForceDiagram.faces_on_boundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">faces_on_boundary</span></code></a></p></td>
+<td><p>Find the faces on the longest boundary.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.faces_where.html#compas_ags.diagrams.ForceDiagram.faces_where" title="compas_ags.diagrams.ForceDiagram.faces_where"><code class="xref py py-obj docutils literal notranslate"><span class="pre">faces_where</span></code></a></p></td>
+<td><p>Get faces for which a certain condition or set of conditions is true.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.faces_where_predicate.html#compas_ags.diagrams.ForceDiagram.faces_where_predicate" title="compas_ags.diagrams.ForceDiagram.faces_where_predicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">faces_where_predicate</span></code></a></p></td>
+<td><p>Get faces for which a certain condition or set of conditions is true using a lambda function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.flip_cycles.html#compas_ags.diagrams.ForceDiagram.flip_cycles" title="compas_ags.diagrams.ForceDiagram.flip_cycles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flip_cycles</span></code></a></p></td>
+<td><p>Flip the cycle directions of all faces.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_json.html#compas_ags.diagrams.ForceDiagram.from_json" title="compas_ags.diagrams.ForceDiagram.from_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_json</span></code></a></p></td>
+<td><p>Construct an object of this type from a JSON file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_jsonstring.html#compas_ags.diagrams.ForceDiagram.from_jsonstring" title="compas_ags.diagrams.ForceDiagram.from_jsonstring"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_jsonstring</span></code></a></p></td>
+<td><p>Construct an object of this type from a JSON string.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_lines.html#compas_ags.diagrams.ForceDiagram.from_lines" title="compas_ags.diagrams.ForceDiagram.from_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_lines</span></code></a></p></td>
+<td><p>Construct a mesh object from a list of lines described by start and end point coordinates.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_meshgrid.html#compas_ags.diagrams.ForceDiagram.from_meshgrid" title="compas_ags.diagrams.ForceDiagram.from_meshgrid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_meshgrid</span></code></a></p></td>
+<td><p>Construct a mesh from faces and vertices on a regular grid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_obj.html#compas_ags.diagrams.ForceDiagram.from_obj" title="compas_ags.diagrams.ForceDiagram.from_obj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_obj</span></code></a></p></td>
+<td><p>Construct a mesh object from the data described in an OBJ file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_off.html#compas_ags.diagrams.ForceDiagram.from_off" title="compas_ags.diagrams.ForceDiagram.from_off"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_off</span></code></a></p></td>
+<td><p>Construct a mesh object from the data described in a OFF file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_ply.html#compas_ags.diagrams.ForceDiagram.from_ply" title="compas_ags.diagrams.ForceDiagram.from_ply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_ply</span></code></a></p></td>
+<td><p>Construct a mesh object from the data described in a PLY file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_points.html#compas_ags.diagrams.ForceDiagram.from_points" title="compas_ags.diagrams.ForceDiagram.from_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_points</span></code></a></p></td>
+<td><p>Construct a mesh from a delaunay triangulation of a set of points.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_polygons.html#compas_ags.diagrams.ForceDiagram.from_polygons" title="compas_ags.diagrams.ForceDiagram.from_polygons"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_polygons</span></code></a></p></td>
+<td><p>Construct a mesh from a series of polygons.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_polyhedron.html#compas_ags.diagrams.ForceDiagram.from_polyhedron" title="compas_ags.diagrams.ForceDiagram.from_polyhedron"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_polyhedron</span></code></a></p></td>
+<td><p>Construct a mesh from a platonic solid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_polylines.html#compas_ags.diagrams.ForceDiagram.from_polylines" title="compas_ags.diagrams.ForceDiagram.from_polylines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_polylines</span></code></a></p></td>
+<td><p>Construct mesh from polylines.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_shape.html#compas_ags.diagrams.ForceDiagram.from_shape" title="compas_ags.diagrams.ForceDiagram.from_shape"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_shape</span></code></a></p></td>
+<td><p>Construct a mesh from a primitive shape.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_stl.html#compas_ags.diagrams.ForceDiagram.from_stl" title="compas_ags.diagrams.ForceDiagram.from_stl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_stl</span></code></a></p></td>
+<td><p>Construct a mesh object from the data described in a STL file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.from_vertices_and_faces.html#compas_ags.diagrams.ForceDiagram.from_vertices_and_faces" title="compas_ags.diagrams.ForceDiagram.from_vertices_and_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">from_vertices_and_faces</span></code></a></p></td>
+<td><p>Construct a mesh object from a list of vertices and faces.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.gkey_vertex.html#compas_ags.diagrams.ForceDiagram.gkey_vertex" title="compas_ags.diagrams.ForceDiagram.gkey_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">gkey_vertex</span></code></a></p></td>
+<td><p>Returns a dictionary that maps <em>geometric keys</em> of a certain precision to the keys of the corresponding vertices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.halfedge_after.html#compas_ags.diagrams.ForceDiagram.halfedge_after" title="compas_ags.diagrams.ForceDiagram.halfedge_after"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfedge_after</span></code></a></p></td>
+<td><p>Find the halfedge after the given halfedge in the same face.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.halfedge_before.html#compas_ags.diagrams.ForceDiagram.halfedge_before" title="compas_ags.diagrams.ForceDiagram.halfedge_before"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfedge_before</span></code></a></p></td>
+<td><p>Find the halfedge before the given halfedge in the same face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.halfedge_face.html#compas_ags.diagrams.ForceDiagram.halfedge_face" title="compas_ags.diagrams.ForceDiagram.halfedge_face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfedge_face</span></code></a></p></td>
+<td><p>Find the face corresponding to a halfedge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.halfedge_loop.html#compas_ags.diagrams.ForceDiagram.halfedge_loop" title="compas_ags.diagrams.ForceDiagram.halfedge_loop"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfedge_loop</span></code></a></p></td>
+<td><p>Find all edges on the same loop as the halfedge, in the direction of the halfedge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.halfedge_loop_vertices.html#compas_ags.diagrams.ForceDiagram.halfedge_loop_vertices" title="compas_ags.diagrams.ForceDiagram.halfedge_loop_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfedge_loop_vertices</span></code></a></p></td>
+<td><p>Find all vertices on the same loop as a given halfedge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.halfedge_strip.html#compas_ags.diagrams.ForceDiagram.halfedge_strip" title="compas_ags.diagrams.ForceDiagram.halfedge_strip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfedge_strip</span></code></a></p></td>
+<td><p>Find all edges on the same strip as a given halfedge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.halfedge_strip_faces.html#compas_ags.diagrams.ForceDiagram.halfedge_strip_faces" title="compas_ags.diagrams.ForceDiagram.halfedge_strip_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">halfedge_strip_faces</span></code></a></p></td>
+<td><p>Find all faces on the same strip as a given halfedge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.has_edge.html#compas_ags.diagrams.ForceDiagram.has_edge" title="compas_ags.diagrams.ForceDiagram.has_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_edge</span></code></a></p></td>
+<td><p>Verify that the mesh contains a specific edge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.has_face.html#compas_ags.diagrams.ForceDiagram.has_face" title="compas_ags.diagrams.ForceDiagram.has_face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_face</span></code></a></p></td>
+<td><p>Verify that a face is part of the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.has_halfedge.html#compas_ags.diagrams.ForceDiagram.has_halfedge" title="compas_ags.diagrams.ForceDiagram.has_halfedge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_halfedge</span></code></a></p></td>
+<td><p>Verify that a halfedge is part of the mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.has_vertex.html#compas_ags.diagrams.ForceDiagram.has_vertex" title="compas_ags.diagrams.ForceDiagram.has_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">has_vertex</span></code></a></p></td>
+<td><p>Verify that a vertex is in the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.index_edge.html#compas_ags.diagrams.ForceDiagram.index_edge" title="compas_ags.diagrams.ForceDiagram.index_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index_edge</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.index_vertex.html#compas_ags.diagrams.ForceDiagram.index_vertex" title="compas_ags.diagrams.ForceDiagram.index_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">index_vertex</span></code></a></p></td>
+<td><p>Returns a dictionary that maps the indices of a vertex list to the corresponding vertex identifiers.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.insert_vertex.html#compas_ags.diagrams.ForceDiagram.insert_vertex" title="compas_ags.diagrams.ForceDiagram.insert_vertex"><code class="xref py py-obj docutils literal notranslate"><span class="pre">insert_vertex</span></code></a></p></td>
+<td><p>Insert a vertex in the specified face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_closed.html#compas_ags.diagrams.ForceDiagram.is_closed" title="compas_ags.diagrams.ForceDiagram.is_closed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_closed</span></code></a></p></td>
+<td><p>Verify that the mesh is closed.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_connected.html#compas_ags.diagrams.ForceDiagram.is_connected" title="compas_ags.diagrams.ForceDiagram.is_connected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_connected</span></code></a></p></td>
+<td><p>Verify that the mesh is connected.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_edge_on_boundary.html#compas_ags.diagrams.ForceDiagram.is_edge_on_boundary" title="compas_ags.diagrams.ForceDiagram.is_edge_on_boundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_edge_on_boundary</span></code></a></p></td>
+<td><p>Verify that an edge is on the boundary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_empty.html#compas_ags.diagrams.ForceDiagram.is_empty" title="compas_ags.diagrams.ForceDiagram.is_empty"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_empty</span></code></a></p></td>
+<td><p>Verify that the mesh is empty.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_face_on_boundary.html#compas_ags.diagrams.ForceDiagram.is_face_on_boundary" title="compas_ags.diagrams.ForceDiagram.is_face_on_boundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_face_on_boundary</span></code></a></p></td>
+<td><p>Verify that a face is on a boundary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_manifold.html#compas_ags.diagrams.ForceDiagram.is_manifold" title="compas_ags.diagrams.ForceDiagram.is_manifold"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_manifold</span></code></a></p></td>
+<td><p>Verify that the mesh is manifold.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_orientable.html#compas_ags.diagrams.ForceDiagram.is_orientable" title="compas_ags.diagrams.ForceDiagram.is_orientable"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_orientable</span></code></a></p></td>
+<td><p>Verify that the mesh is orientable.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_quadmesh.html#compas_ags.diagrams.ForceDiagram.is_quadmesh" title="compas_ags.diagrams.ForceDiagram.is_quadmesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_quadmesh</span></code></a></p></td>
+<td><p>Verify that the mesh consists of only quads.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_regular.html#compas_ags.diagrams.ForceDiagram.is_regular" title="compas_ags.diagrams.ForceDiagram.is_regular"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_regular</span></code></a></p></td>
+<td><p>Verify that the mesh is regular.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_trimesh.html#compas_ags.diagrams.ForceDiagram.is_trimesh" title="compas_ags.diagrams.ForceDiagram.is_trimesh"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_trimesh</span></code></a></p></td>
+<td><p>Verify that the mesh consists of only triangles.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_valid.html#compas_ags.diagrams.ForceDiagram.is_valid" title="compas_ags.diagrams.ForceDiagram.is_valid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_valid</span></code></a></p></td>
+<td><p>Verify that the mesh is valid.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_vertex_connected.html#compas_ags.diagrams.ForceDiagram.is_vertex_connected" title="compas_ags.diagrams.ForceDiagram.is_vertex_connected"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_vertex_connected</span></code></a></p></td>
+<td><p>Verify that a vertex is connected.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.is_vertex_on_boundary.html#compas_ags.diagrams.ForceDiagram.is_vertex_on_boundary" title="compas_ags.diagrams.ForceDiagram.is_vertex_on_boundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">is_vertex_on_boundary</span></code></a></p></td>
+<td><p>Verify that a vertex is on a boundary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.join.html#compas_ags.diagrams.ForceDiagram.join" title="compas_ags.diagrams.ForceDiagram.join"><code class="xref py py-obj docutils literal notranslate"><span class="pre">join</span></code></a></p></td>
+<td><p>Add the vertices and faces of another mesh to the current mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.laplacian_matrix.html#compas_ags.diagrams.ForceDiagram.laplacian_matrix" title="compas_ags.diagrams.ForceDiagram.laplacian_matrix"><code class="xref py py-obj docutils literal notranslate"><span class="pre">laplacian_matrix</span></code></a></p></td>
+<td><p>Compute the Laplacian matrix of the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.merge_faces.html#compas_ags.diagrams.ForceDiagram.merge_faces" title="compas_ags.diagrams.ForceDiagram.merge_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">merge_faces</span></code></a></p></td>
+<td><p>Merge two faces of a mesh over their shared edge.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.normal.html#compas_ags.diagrams.ForceDiagram.normal" title="compas_ags.diagrams.ForceDiagram.normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">normal</span></code></a></p></td>
+<td><p>Calculate the average mesh normal.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.number_of_edges.html#compas_ags.diagrams.ForceDiagram.number_of_edges" title="compas_ags.diagrams.ForceDiagram.number_of_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_edges</span></code></a></p></td>
+<td><p>Count the number of edges in the mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.number_of_faces.html#compas_ags.diagrams.ForceDiagram.number_of_faces" title="compas_ags.diagrams.ForceDiagram.number_of_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_faces</span></code></a></p></td>
+<td><p>Count the number of faces in the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.number_of_vertices.html#compas_ags.diagrams.ForceDiagram.number_of_vertices" title="compas_ags.diagrams.ForceDiagram.number_of_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">number_of_vertices</span></code></a></p></td>
+<td><p>Count the number of vertices in the mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.obb.html#compas_ags.diagrams.ForceDiagram.obb" title="compas_ags.diagrams.ForceDiagram.obb"><code class="xref py py-obj docutils literal notranslate"><span class="pre">obb</span></code></a></p></td>
+<td><p>Calculate the oriented bounding box of the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.offset.html#compas_ags.diagrams.ForceDiagram.offset" title="compas_ags.diagrams.ForceDiagram.offset"><code class="xref py py-obj docutils literal notranslate"><span class="pre">offset</span></code></a></p></td>
+<td><p>Generate an offset mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.quads_to_triangles.html#compas_ags.diagrams.ForceDiagram.quads_to_triangles" title="compas_ags.diagrams.ForceDiagram.quads_to_triangles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quads_to_triangles</span></code></a></p></td>
+<td><p>Convert all quadrilateral faces to triangles by adding a diagonal edge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.remove_duplicate_vertices.html#compas_ags.diagrams.ForceDiagram.remove_duplicate_vertices" title="compas_ags.diagrams.ForceDiagram.remove_duplicate_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_duplicate_vertices</span></code></a></p></td>
+<td><p>Remove all duplicate vertices and clean up any affected faces.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.remove_unused_vertices.html#compas_ags.diagrams.ForceDiagram.remove_unused_vertices" title="compas_ags.diagrams.ForceDiagram.remove_unused_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remove_unused_vertices</span></code></a></p></td>
+<td><p>Remove all unused vertices from the mesh object.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.rotate.html#compas_ags.diagrams.ForceDiagram.rotate" title="compas_ags.diagrams.ForceDiagram.rotate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotate</span></code></a></p></td>
+<td><p>Rotate the datastructure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.rotated.html#compas_ags.diagrams.ForceDiagram.rotated" title="compas_ags.diagrams.ForceDiagram.rotated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">rotated</span></code></a></p></td>
+<td><p>Returns a rotated copy of this geometry.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.scale.html#compas_ags.diagrams.ForceDiagram.scale" title="compas_ags.diagrams.ForceDiagram.scale"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scale</span></code></a></p></td>
+<td><p>Scale the datastructure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.scaled.html#compas_ags.diagrams.ForceDiagram.scaled" title="compas_ags.diagrams.ForceDiagram.scaled"><code class="xref py py-obj docutils literal notranslate"><span class="pre">scaled</span></code></a></p></td>
+<td><p>Returns a scaled copy of this geometry.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.set_vertex_point.html#compas_ags.diagrams.ForceDiagram.set_vertex_point" title="compas_ags.diagrams.ForceDiagram.set_vertex_point"><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_vertex_point</span></code></a></p></td>
+<td><p>Set the point of a vertex.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.sha256.html#compas_ags.diagrams.ForceDiagram.sha256" title="compas_ags.diagrams.ForceDiagram.sha256"><code class="xref py py-obj docutils literal notranslate"><span class="pre">sha256</span></code></a></p></td>
+<td><p>Compute a hash of the data for comparison during version control using the sha256 algorithm.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.slice.html#compas_ags.diagrams.ForceDiagram.slice" title="compas_ags.diagrams.ForceDiagram.slice"><code class="xref py py-obj docutils literal notranslate"><span class="pre">slice</span></code></a></p></td>
+<td><p>Slice a mesh with a plane and construct the resulting submeshes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.smooth_area.html#compas_ags.diagrams.ForceDiagram.smooth_area" title="compas_ags.diagrams.ForceDiagram.smooth_area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smooth_area</span></code></a></p></td>
+<td><p>Smooth a mesh by moving each vertex to the barycenter of the centroids of the surrounding faces, weighted by area.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.smooth_centroid.html#compas_ags.diagrams.ForceDiagram.smooth_centroid" title="compas_ags.diagrams.ForceDiagram.smooth_centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">smooth_centroid</span></code></a></p></td>
+<td><p>Smooth a mesh by moving every free vertex to the centroid of its neighbors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.split_edge.html#compas_ags.diagrams.ForceDiagram.split_edge" title="compas_ags.diagrams.ForceDiagram.split_edge"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_edge</span></code></a></p></td>
+<td><p>Split and edge by inserting a vertex along its length.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.split_face.html#compas_ags.diagrams.ForceDiagram.split_face" title="compas_ags.diagrams.ForceDiagram.split_face"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_face</span></code></a></p></td>
+<td><p>Split a face by inserting an edge between two specified vertices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.split_strip.html#compas_ags.diagrams.ForceDiagram.split_strip" title="compas_ags.diagrams.ForceDiagram.split_strip"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_strip</span></code></a></p></td>
+<td><p>Split the srip of faces corresponding to a given edge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.subdivided.html#compas_ags.diagrams.ForceDiagram.subdivided" title="compas_ags.diagrams.ForceDiagram.subdivided"><code class="xref py py-obj docutils literal notranslate"><span class="pre">subdivided</span></code></a></p></td>
+<td><p>Subdivide the input mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.summary.html#compas_ags.diagrams.ForceDiagram.summary" title="compas_ags.diagrams.ForceDiagram.summary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">summary</span></code></a></p></td>
+<td><p>Print a summary of the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.thickened.html#compas_ags.diagrams.ForceDiagram.thickened" title="compas_ags.diagrams.ForceDiagram.thickened"><code class="xref py py-obj docutils literal notranslate"><span class="pre">thickened</span></code></a></p></td>
+<td><p>Generate a thicknened mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_json.html#compas_ags.diagrams.ForceDiagram.to_json" title="compas_ags.diagrams.ForceDiagram.to_json"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_json</span></code></a></p></td>
+<td><p>Convert an object to its native data representation and save it to a JSON file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_jsonstring.html#compas_ags.diagrams.ForceDiagram.to_jsonstring" title="compas_ags.diagrams.ForceDiagram.to_jsonstring"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_jsonstring</span></code></a></p></td>
+<td><p>Convert an object to its native data representation and save it to a JSON string.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_lines.html#compas_ags.diagrams.ForceDiagram.to_lines" title="compas_ags.diagrams.ForceDiagram.to_lines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_lines</span></code></a></p></td>
+<td><p>Return the lines of the mesh as pairs of start and end point coordinates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_obj.html#compas_ags.diagrams.ForceDiagram.to_obj" title="compas_ags.diagrams.ForceDiagram.to_obj"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_obj</span></code></a></p></td>
+<td><p>Write the mesh to an OBJ file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_off.html#compas_ags.diagrams.ForceDiagram.to_off" title="compas_ags.diagrams.ForceDiagram.to_off"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_off</span></code></a></p></td>
+<td><p>Write a mesh object to an OFF file.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_ply.html#compas_ags.diagrams.ForceDiagram.to_ply" title="compas_ags.diagrams.ForceDiagram.to_ply"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_ply</span></code></a></p></td>
+<td><p>Write a mesh object to a PLY file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_points.html#compas_ags.diagrams.ForceDiagram.to_points" title="compas_ags.diagrams.ForceDiagram.to_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_points</span></code></a></p></td>
+<td><p>Convert the mesh to a collection of points.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_polygons.html#compas_ags.diagrams.ForceDiagram.to_polygons" title="compas_ags.diagrams.ForceDiagram.to_polygons"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_polygons</span></code></a></p></td>
+<td><p>Convert the mesh to a collection of polygons.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_polylines.html#compas_ags.diagrams.ForceDiagram.to_polylines" title="compas_ags.diagrams.ForceDiagram.to_polylines"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_polylines</span></code></a></p></td>
+<td><p>Convert the mesh to a collection of polylines.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_stl.html#compas_ags.diagrams.ForceDiagram.to_stl" title="compas_ags.diagrams.ForceDiagram.to_stl"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_stl</span></code></a></p></td>
+<td><p>Write a mesh to an STL file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.to_vertices_and_faces.html#compas_ags.diagrams.ForceDiagram.to_vertices_and_faces" title="compas_ags.diagrams.ForceDiagram.to_vertices_and_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">to_vertices_and_faces</span></code></a></p></td>
+<td><p>Return the vertices and faces of a mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.transform.html#compas_ags.diagrams.ForceDiagram.transform" title="compas_ags.diagrams.ForceDiagram.transform"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform</span></code></a></p></td>
+<td><p>Transform the mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.transform_numpy.html#compas_ags.diagrams.ForceDiagram.transform_numpy" title="compas_ags.diagrams.ForceDiagram.transform_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transform_numpy</span></code></a></p></td>
+<td><p>Transform the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.transformed.html#compas_ags.diagrams.ForceDiagram.transformed" title="compas_ags.diagrams.ForceDiagram.transformed"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transformed</span></code></a></p></td>
+<td><p>Returns a transformed copy of this data structure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.transformed_numpy.html#compas_ags.diagrams.ForceDiagram.transformed_numpy" title="compas_ags.diagrams.ForceDiagram.transformed_numpy"><code class="xref py py-obj docutils literal notranslate"><span class="pre">transformed_numpy</span></code></a></p></td>
+<td><p>Returns a transformed copy of this data structure.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.translate.html#compas_ags.diagrams.ForceDiagram.translate" title="compas_ags.diagrams.ForceDiagram.translate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">translate</span></code></a></p></td>
+<td><p>Translate the datastructure.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.translated.html#compas_ags.diagrams.ForceDiagram.translated" title="compas_ags.diagrams.ForceDiagram.translated"><code class="xref py py-obj docutils literal notranslate"><span class="pre">translated</span></code></a></p></td>
+<td><p>Returns a translated copy of this geometry.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.unify_cycles.html#compas_ags.diagrams.ForceDiagram.unify_cycles" title="compas_ags.diagrams.ForceDiagram.unify_cycles"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unify_cycles</span></code></a></p></td>
+<td><p>Unify the cycles of the mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.unset_edge_attribute.html#compas_ags.diagrams.ForceDiagram.unset_edge_attribute" title="compas_ags.diagrams.ForceDiagram.unset_edge_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unset_edge_attribute</span></code></a></p></td>
+<td><p>Unset the attribute of an edge.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.unset_face_attribute.html#compas_ags.diagrams.ForceDiagram.unset_face_attribute" title="compas_ags.diagrams.ForceDiagram.unset_face_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unset_face_attribute</span></code></a></p></td>
+<td><p>Unset the attribute of a face.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.unset_vertex_attribute.html#compas_ags.diagrams.ForceDiagram.unset_vertex_attribute" title="compas_ags.diagrams.ForceDiagram.unset_vertex_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unset_vertex_attribute</span></code></a></p></td>
+<td><p>Unset the attribute of a vertex.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.unweld_edges.html#compas_ags.diagrams.ForceDiagram.unweld_edges" title="compas_ags.diagrams.ForceDiagram.unweld_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unweld_edges</span></code></a></p></td>
+<td><p>Unwelds a mesh along edges.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.unweld_vertices.html#compas_ags.diagrams.ForceDiagram.unweld_vertices" title="compas_ags.diagrams.ForceDiagram.unweld_vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unweld_vertices</span></code></a></p></td>
+<td><p>Unweld a face of the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.update_default_edge_attributes.html#compas_ags.diagrams.ForceDiagram.update_default_edge_attributes" title="compas_ags.diagrams.ForceDiagram.update_default_edge_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_default_edge_attributes</span></code></a></p></td>
+<td><p>Update the default edge attributes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.update_default_face_attributes.html#compas_ags.diagrams.ForceDiagram.update_default_face_attributes" title="compas_ags.diagrams.ForceDiagram.update_default_face_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_default_face_attributes</span></code></a></p></td>
+<td><p>Update the default face attributes.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.update_default_vertex_attributes.html#compas_ags.diagrams.ForceDiagram.update_default_vertex_attributes" title="compas_ags.diagrams.ForceDiagram.update_default_vertex_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">update_default_vertex_attributes</span></code></a></p></td>
+<td><p>Update the default vertex attributes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.validate_data.html#compas_ags.diagrams.ForceDiagram.validate_data" title="compas_ags.diagrams.ForceDiagram.validate_data"><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_data</span></code></a></p></td>
+<td><p>Validate the data against the object's data schema.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_area.html#compas_ags.diagrams.ForceDiagram.vertex_area" title="compas_ags.diagrams.ForceDiagram.vertex_area"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_area</span></code></a></p></td>
+<td><p>Compute the tributary area of a vertex.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_attribute.html#compas_ags.diagrams.ForceDiagram.vertex_attribute" title="compas_ags.diagrams.ForceDiagram.vertex_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_attribute</span></code></a></p></td>
+<td><p>Get or set an attribute of a vertex.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_attributes.html#compas_ags.diagrams.ForceDiagram.vertex_attributes" title="compas_ags.diagrams.ForceDiagram.vertex_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_attributes</span></code></a></p></td>
+<td><p>Get or set multiple attributes of a vertex.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_coordinates.html#compas_ags.diagrams.ForceDiagram.vertex_coordinates" title="compas_ags.diagrams.ForceDiagram.vertex_coordinates"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_coordinates</span></code></a></p></td>
+<td><p>Return the coordinates of a vertex.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_curvature.html#compas_ags.diagrams.ForceDiagram.vertex_curvature" title="compas_ags.diagrams.ForceDiagram.vertex_curvature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_curvature</span></code></a></p></td>
+<td><p>Dimensionless vertex curvature.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_degree.html#compas_ags.diagrams.ForceDiagram.vertex_degree" title="compas_ags.diagrams.ForceDiagram.vertex_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_degree</span></code></a></p></td>
+<td><p>Count the neighbors of a vertex.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_edges.html#compas_ags.diagrams.ForceDiagram.vertex_edges" title="compas_ags.diagrams.ForceDiagram.vertex_edges"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_edges</span></code></a></p></td>
+<td><p>Find all edges connected to a given vertex.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_faces.html#compas_ags.diagrams.ForceDiagram.vertex_faces" title="compas_ags.diagrams.ForceDiagram.vertex_faces"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_faces</span></code></a></p></td>
+<td><p>The faces connected to a vertex.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_gkey.html#compas_ags.diagrams.ForceDiagram.vertex_gkey" title="compas_ags.diagrams.ForceDiagram.vertex_gkey"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_gkey</span></code></a></p></td>
+<td><p>Returns a dictionary that maps vertex dictionary keys to the corresponding <em>geometric key</em> up to a certain precision.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_index.html#compas_ags.diagrams.ForceDiagram.vertex_index" title="compas_ags.diagrams.ForceDiagram.vertex_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_index</span></code></a></p></td>
+<td><p>Returns a dictionary that maps vertex identifiers to the corresponding index in a vertex list or array.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_laplacian.html#compas_ags.diagrams.ForceDiagram.vertex_laplacian" title="compas_ags.diagrams.ForceDiagram.vertex_laplacian"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_laplacian</span></code></a></p></td>
+<td><p>Compute the vector from a vertex to the centroid of its neighbors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_max_degree.html#compas_ags.diagrams.ForceDiagram.vertex_max_degree" title="compas_ags.diagrams.ForceDiagram.vertex_max_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_max_degree</span></code></a></p></td>
+<td><p>Compute the maximum degree of all vertices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_min_degree.html#compas_ags.diagrams.ForceDiagram.vertex_min_degree" title="compas_ags.diagrams.ForceDiagram.vertex_min_degree"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_min_degree</span></code></a></p></td>
+<td><p>Compute the minimum degree of all vertices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_neighborhood.html#compas_ags.diagrams.ForceDiagram.vertex_neighborhood" title="compas_ags.diagrams.ForceDiagram.vertex_neighborhood"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_neighborhood</span></code></a></p></td>
+<td><p>Return the vertices in the neighborhood of a vertex.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_neighborhood_centroid.html#compas_ags.diagrams.ForceDiagram.vertex_neighborhood_centroid" title="compas_ags.diagrams.ForceDiagram.vertex_neighborhood_centroid"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_neighborhood_centroid</span></code></a></p></td>
+<td><p>Compute the centroid of the neighbors of a vertex.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_neighbors.html#compas_ags.diagrams.ForceDiagram.vertex_neighbors" title="compas_ags.diagrams.ForceDiagram.vertex_neighbors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_neighbors</span></code></a></p></td>
+<td><p>Return the neighbors of a vertex.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_normal.html#compas_ags.diagrams.ForceDiagram.vertex_normal" title="compas_ags.diagrams.ForceDiagram.vertex_normal"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_normal</span></code></a></p></td>
+<td><p>Return the normal vector at the vertex as the weighted average of the normals of the neighboring faces.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_point.html#compas_ags.diagrams.ForceDiagram.vertex_point" title="compas_ags.diagrams.ForceDiagram.vertex_point"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_point</span></code></a></p></td>
+<td><p>Return the point of a vertex.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertex_sample.html#compas_ags.diagrams.ForceDiagram.vertex_sample" title="compas_ags.diagrams.ForceDiagram.vertex_sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertex_sample</span></code></a></p></td>
+<td><p>A random sample of the vertices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertices.html#compas_ags.diagrams.ForceDiagram.vertices" title="compas_ags.diagrams.ForceDiagram.vertices"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices</span></code></a></p></td>
+<td><p>Iterate over the vertices of the mesh.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertices_attribute.html#compas_ags.diagrams.ForceDiagram.vertices_attribute" title="compas_ags.diagrams.ForceDiagram.vertices_attribute"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_attribute</span></code></a></p></td>
+<td><p>Get or set an attribute of multiple vertices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertices_attributes.html#compas_ags.diagrams.ForceDiagram.vertices_attributes" title="compas_ags.diagrams.ForceDiagram.vertices_attributes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_attributes</span></code></a></p></td>
+<td><p>Get or set multiple attributes of multiple vertices.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertices_on_boundaries.html#compas_ags.diagrams.ForceDiagram.vertices_on_boundaries" title="compas_ags.diagrams.ForceDiagram.vertices_on_boundaries"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_on_boundaries</span></code></a></p></td>
+<td><p>Find the vertices on all boundaries of the mesh.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertices_on_boundary.html#compas_ags.diagrams.ForceDiagram.vertices_on_boundary" title="compas_ags.diagrams.ForceDiagram.vertices_on_boundary"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_on_boundary</span></code></a></p></td>
+<td><p>Find the vertices on the longest boundary.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertices_points.html#compas_ags.diagrams.ForceDiagram.vertices_points" title="compas_ags.diagrams.ForceDiagram.vertices_points"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_points</span></code></a></p></td>
+<td><p>Return the points of multiple vertices.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertices_where.html#compas_ags.diagrams.ForceDiagram.vertices_where" title="compas_ags.diagrams.ForceDiagram.vertices_where"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_where</span></code></a></p></td>
+<td><p>Get vertices for which a certain condition or set of conditions is true.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.vertices_where_predicate.html#compas_ags.diagrams.ForceDiagram.vertices_where_predicate" title="compas_ags.diagrams.ForceDiagram.vertices_where_predicate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">vertices_where_predicate</span></code></a></p></td>
+<td><p>Get vertices for which a certain condition or set of conditions is true using a lambda function.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="compas_ags.diagrams.ForceDiagram.weld.html#compas_ags.diagrams.ForceDiagram.weld" title="compas_ags.diagrams.ForceDiagram.weld"><code class="xref py py-obj docutils literal notranslate"><span class="pre">weld</span></code></a></p></td>
+<td><p>Weld vertices that are closer than a given precision.</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+                <footer class="bd-footer-article">
+                  
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#compas_ags.diagrams.ForceDiagram"><code class="docutils literal notranslate"><span class="pre">ForceDiagram</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+  <p class="copyright">
+    
+      © Copyright Block Research Group - ETH Zurich.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.1.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item"><p class="theme-version">
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.13.3.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
