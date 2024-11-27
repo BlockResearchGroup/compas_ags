@@ -10,7 +10,7 @@ __author__ = "Tom Van Mele and others"
 __copyright__ = "Copyright 2014-2018 - Block Research Group, ETH Zurich"
 __license__ = "MIT License"
 __email__ = "vanmelet@ethz.ch"
-__version__ = "1.3.2"
+__version__ = "1.3.3"
 
 
 def get(relpath):
