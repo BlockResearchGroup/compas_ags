@@ -3,7 +3,6 @@ from typing import Optional
 from typing import Union
 
 from compas.datastructures.mesh.duality import mesh_dual
-from compas.geometry import Line
 from compas_ags.diagrams import Diagram
 from compas_ags.diagrams import FormDiagram  # noqa: F401
 
@@ -272,7 +271,9 @@ class ForceDiagram(Diagram):
         """
         return self.dual.edge_attribute(self.dual_edge(edge), "target_force")
 
-    def edge_index(self, form: Optional[FormDiagram] = None) -> dict[tuple[int, int], int]:
+    def edge_index(
+        self, form: Optional[FormDiagram] = None
+    ) -> dict[tuple[int, int], int]:
         """Construct a mapping between the identifiers of edges and the corresponding indices in a list of edges.
 
         Parameters
@@ -319,6 +320,7 @@ class ForceDiagram(Diagram):
 
     def constraints_from_dual(self, tol: float = 10e-4) -> None:
         """ "Reflect constraints from the form diagram in the force diagram."""
+        edges = list(self.edges())
         edge_index = self.dual.edge_index()
         ordered_edges = self.ordered_edges(self.dual)
         edges_orient = []
@@ -332,8 +334,7 @@ class ForceDiagram(Diagram):
         for edge in self.edges_where_dual({"is_load": True}):
             self.edge_attribute(edge, "is_load", True)
             edges_orient.append(edge)
-            sp, ep = self.edge_coordinates(edge)
-            line = Line(sp, ep)
+            line = self.edge_line(edge)
             self.vertices_attribute("line_constraint", value=line, keys=edge)
 
         for edge in self.edges_where_dual({"is_reaction": True}):
@@ -348,12 +349,9 @@ class ForceDiagram(Diagram):
                 edges_orient.append(force_edge)
 
         for edge in edges_orient:
-            edge = edge if edge in list(self.edges()) else (edge[1], edge[0])
-            sp, ep = self.edge_coordinates(edge)
-            dx = ep[0] - sp[0]
-            dy = ep[1] - sp[1]
-            length = (dx**2 + dy**2) ** 0.5
-            self.edge_attribute(edge, "target_vector", [dx / length, dy / length])
+            edge = edge if edge in edges else (edge[1], edge[0])
+            direction = self.edge_direction(edge)
+            self.edge_attribute(edge, "target_vector", direction[:2])
 
     # def compute_constraints(self, form, M):
     #     r"""Computes the form diagram constraints used

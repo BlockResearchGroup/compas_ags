@@ -113,7 +113,9 @@ class FormDiagram(Diagram):
     # edges
     # --------------------------------------------------------------------------
 
-    def edges(self, data: bool = False) -> Generator[Union[tuple[int, int], tuple[tuple[int, int], dict]], None, None]:
+    def edges(
+        self, data: bool = False
+    ) -> Generator[Union[tuple[int, int], tuple[tuple[int, int], dict]], None, None]:
         """Edge iterator automatically discarding mesh edges that are not relevant in AGS.
 
         Parameters
@@ -186,7 +188,9 @@ class FormDiagram(Diagram):
 
         return self.edge_attribute(edge, "q", q)
 
-    def edge_force(self, edge: Union[tuple[int, int], int], force: Optional[float] = None) -> float:
+    def edge_force(
+        self, edge: Union[tuple[int, int], int], force: Optional[float] = None
+    ) -> float:
         """Get or set the force in an edge.
 
         Parameters
@@ -231,7 +235,9 @@ class FormDiagram(Diagram):
         return list(self.vertices_where(is_fixed=True))
 
     def constrained(self) -> list[int]:
-        return [vertex for vertex, attr in self.vertices(True) if attr["cx"] or attr["cy"]]
+        return [
+            vertex for vertex, attr in self.vertices(True) if attr["cx"] or attr["cy"]
+        ]
 
     def constraints(self) -> tuple[float, float]:
         cx = self.vertices_attribute("cx")
@@ -245,7 +251,7 @@ class FormDiagram(Diagram):
     # Identify features of the formdiagram based on geometrical inputs.
     # --------------------------------------------------------------------------
 
-    def identify_constraints(self, tol: float = 10e-4) -> None:
+    def identify_constraints(self, tol: float = 1e-4) -> None:
         """Identify constraints on the Form Diagram based on the geometry.
         External loads define a line-load which constraint vertices in x, or y.
 
@@ -265,13 +271,8 @@ class FormDiagram(Diagram):
         leaves = self.leaves()
 
         for edge in self.leaf_edges():
-            sp, ep = self.edge_coordinates(edge)
-            line = Line(sp, ep)
-            dx = ep[0] - sp[0]
-            dy = ep[1] - sp[1]
-            length = (dx**2 + dy**2) ** 0.5
-
-            self.edge_attribute(edge, "target_vector", [dx / length, dy / length])
+            line = self.edge_line(edge)
+            self.edge_attribute(edge, "target_vector", line.direction[:2])
             # by default loads are leaves connected to non fixed vertices
             self.edge_attribute(edge, "is_load", True)
 

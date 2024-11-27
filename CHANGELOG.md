@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+* Changed calculation of target vectors to use edge geometry directly (`edge_line` and `edge_direction`).
+
 ### Removed
 
 
