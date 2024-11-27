@@ -271,9 +271,7 @@ class ForceDiagram(Diagram):
         """
         return self.dual.edge_attribute(self.dual_edge(edge), "target_force")
 
-    def edge_index(
-        self, form: Optional[FormDiagram] = None
-    ) -> dict[tuple[int, int], int]:
+    def edge_index(self, form: Optional[FormDiagram] = None) -> dict[tuple[int, int], int]:
         """Construct a mapping between the identifiers of edges and the corresponding indices in a list of edges.
 
         Parameters

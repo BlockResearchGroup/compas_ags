@@ -3,7 +3,6 @@ from typing import Generator
 from typing import Optional
 from typing import Union
 
-from compas.geometry import Line
 from compas_ags.diagrams import Diagram
 from compas_ags.diagrams import FormGraph
 
@@ -113,9 +112,7 @@ class FormDiagram(Diagram):
     # edges
     # --------------------------------------------------------------------------
 
-    def edges(
-        self, data: bool = False
-    ) -> Generator[Union[tuple[int, int], tuple[tuple[int, int], dict]], None, None]:
+    def edges(self, data: bool = False) -> Generator[Union[tuple[int, int], tuple[tuple[int, int], dict]], None, None]:
         """Edge iterator automatically discarding mesh edges that are not relevant in AGS.
 
         Parameters
@@ -188,9 +185,7 @@ class FormDiagram(Diagram):
 
         return self.edge_attribute(edge, "q", q)
 
-    def edge_force(
-        self, edge: Union[tuple[int, int], int], force: Optional[float] = None
-    ) -> float:
+    def edge_force(self, edge: Union[tuple[int, int], int], force: Optional[float] = None) -> float:
         """Get or set the force in an edge.
 
         Parameters
@@ -235,9 +230,7 @@ class FormDiagram(Diagram):
         return list(self.vertices_where(is_fixed=True))
 
     def constrained(self) -> list[int]:
-        return [
-            vertex for vertex, attr in self.vertices(True) if attr["cx"] or attr["cy"]
-        ]
+        return [vertex for vertex, attr in self.vertices(True) if attr["cx"] or attr["cy"]]
 
     def constraints(self) -> tuple[float, float]:
         cx = self.vertices_attribute("cx")
