@@ -9,7 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+* Added `tests/test_ags_compas2_api.py` covering the constraints/Newton/nullspace code paths.
+
 ### Changed
+
+* Fixed remaining COMPAS 1.x API calls that raise under COMPAS 2.x: `key_index()` is now `vertex_index()` (`ags/core.py`), and `edge_length`/`edge_coordinates` take a single edge tuple instead of two positional vertex keys (`ags/constraints.py`).
+* Fixed `force_update_from_constraints` call inside `update_diagrams_from_constraints` (`ags/graphstatics.py`) not forwarding `kmax`, which always solved with the default of 100 iterations.
+* Exported `form_compute_nullspace` and `force_update_from_form_geometrical` from `compas_ags.ags`.
 
 ### Removed
 

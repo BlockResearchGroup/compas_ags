@@ -716,7 +716,7 @@ def update_diagrams_from_constraints(
 
     while niter < max_iter:
         # Propose a force diagram based on constraints -> Using paralellise
-        force_update_from_constraints(force)
+        force_update_from_constraints(force, kmax=kmax)
 
         if callback:
             callback(form, force)
