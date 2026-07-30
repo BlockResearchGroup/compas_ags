@@ -300,12 +300,12 @@ class LengthFix(AbstractConstraint):
         self.set_initial_length()
 
     def set_initial_length(self) -> None:
-        self.length = self.form.edge_length(*self.edge)  # Initial length
+        self.length = self.form.edge_length(self.edge)  # Initial length
 
     def compute_constraint(self) -> tuple[npt.NDArray, float]:
         constraint_jac_row = np.zeros((1, self.number_of_cols))
 
-        s, e = self.form.edge_coordinates(*self.edge)
+        s, e = self.form.edge_coordinates(self.edge)
         dx = s[0] - e[0]
         dy = s[1] - e[1]
         length = math.sqrt(dx**2 + dy**2)  # Current length

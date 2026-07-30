@@ -433,7 +433,7 @@ def get_jacobian_and_residual(form, force, _X_goal, constraints=None):
     jacobian = compute_jacobian(form, force)
 
     _vcount = force.number_of_vertices()
-    _k_i = force.key_index()
+    _k_i = force.vertex_index()
     _known = _k_i[force.anchor()]
     _bc = [_known, _vcount + _known]
     _X_iteration = array(force.vertices_attribute("x") + force.vertices_attribute("y")).reshape(-1, 1)
@@ -488,7 +488,7 @@ def compute_jacobian(form, force):
     # form diagram
     # --------------------------------------------------------------------------
     vcount = form.number_of_vertices()
-    k_i = form.key_index()
+    k_i = form.vertex_index()
     leaves = [k_i[key] for key in form.leaves()]
     free = list(set(range(form.number_of_vertices())) - set(leaves))
     vicount = len(free)
